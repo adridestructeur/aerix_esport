@@ -67,7 +67,7 @@
     <!-- Barre de navigation -->
     <nav class="fixed w-full z-50 border-b border-white/5 bg-[#080808]/90 backdrop-blur-md">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="cursor-pointer flex items-center" onclick="navigate('home')">
+            <div class="cursor-pointer flex items-center" onclick="handleLogoClick()" title="Cliquez 5 fois pour l'admin">
                 <img src="transparent-blanc.png" alt="AERIX Logo" class="h-10 w-auto object-contain transition-all duration-300 hover:drop-shadow-[0_0_15px_rgba(139,92,246,0.8)]">
             </div>
             
@@ -238,7 +238,7 @@
         </div>
     </footer>
 
-    <!-- MODAUX EXISTANTS -->
+    <!-- MODAUX -->
     <div id="product-modal" class="fixed inset-0 z-[120] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-sm">
         <div class="glass-panel w-full max-w-5xl h-[85vh] md:h-[650px] rounded-[2rem] flex flex-col md:flex-row overflow-hidden relative shadow-2xl">
             <button onclick="closeProductModal()" class="absolute top-6 right-6 text-gray-400 hover:text-white z-50 bg-black/50 w-10 h-10 rounded-full flex items-center justify-center border border-white/10">✕</button>
@@ -426,16 +426,13 @@
             <div id="admin-tab-parametres" class="admin-tab hidden space-y-6">
                 <div><h4 class="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-3">Ordre du menu</h4><div id="admin-tabs-order" class="space-y-2"></div></div>
                 <div class="border-t border-white/10 pt-6"><h4 class="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-3">Visibilité</h4><div id="admin-tabs-visibility" class="grid grid-cols-2 gap-3"></div></div>
-                <div class="border-t border-white/10 pt-6"><h4 class="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-3">Fonds d'écran</h4><div id="admin-page-bgs" class="space-y-4"></div></div>
+                <div class="border-t border-white/10 pt-6"><h4 class="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-3">Fonds d'écran (Synchronisés globalement)</h4><div id="admin-page-bgs" class="space-y-4"></div></div>
             </div>
         </div>
     </div>
 
     <!-- SCRIPTS CORE -->
     <script>
-        // --------------------------------------------------------
-        // CONFIGURATION ET INITIALISATION FIREBASE
-        // --------------------------------------------------------
         const firebaseConfig = {
             apiKey: "AIzaSyCD4RcLGWDM4qP9XWU_B-ogvStpuaORugo",
             authDomain: "aerix-4172f.firebaseapp.com",
@@ -460,9 +457,6 @@
         }
         let currentFilters = { effectifs: 'Tous', annonces: 'Tous', palmares: 'Tous' };
 
-        // --------------------------------------------------------
-        // SYNCHRONISATION EN TEMPS RÉEL
-        // --------------------------------------------------------
         function startSync() {
             db.collection("shop").onSnapshot((snapshot) => {
                 globalShop = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -508,9 +502,6 @@
             });
         }
 
-        // --------------------------------------------------------
-        // FONCTIONS D'AFFICHAGE (RENDER)
-        // --------------------------------------------------------
         function getGameBadge(game) {
             if(!game || game === 'Tous') return `<span class="bg-white/10 text-gray-300 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-white/10">AERIX</span>`;
             if(game === 'Rocket League') return `<span class="bg-aerix-rl/20 text-aerix-rl text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-aerix-rl/30">Rocket League</span>`;
@@ -612,16 +603,35 @@
             setTimeout(revealActiveElements, 20);
         }
 
-        // --------------------------------------------------------
-        // PANNEAU D'ADMINISTRATION (Mot de passe mis à jour)
-        // --------------------------------------------------------
+        // SYSTÈME ADMIN (Mot de passe simple "aerixadmin*" + double sécurité clic logo)
+        const ADMIN_PWD = "aerixadmin*";
+
         window.addEventListener('keydown', (e) => {
             if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'x') {
-                const pwd = prompt("Accès Admin - Mot de passe :");
-                if (pwd === "Aerix_adminmdp*") { toggleAdmin(); } 
-                else if (pwd !== null) { alert("Accès refusé."); }
+                promptAdmin();
             }
         });
+
+        let logoClicks = 0;
+        function handleLogoClick() {
+            logoClicks++;
+            if(logoClicks >= 5) {
+                logoClicks = 0;
+                promptAdmin();
+            } else {
+                navigate('home');
+            }
+            setTimeout(() => { logoClicks = 0; }, 2000);
+        }
+
+        function promptAdmin() {
+            const pwd = prompt("Accès Admin - Mot de passe :");
+            if (pwd === ADMIN_PWD) { 
+                toggleAdmin(); 
+            } else if (pwd !== null) { 
+                alert("Mot de passe incorrect."); 
+            }
+        }
 
         function renderAdminLists() {
             document.getElementById('admin-list-boutique').innerHTML = globalShop.map(item => `<div class="bg-black/50 p-4 rounded-xl border border-white/5 flex justify-between items-center"><div><div class="text-white font-bold text-sm">${item.name}</div><div class="text-xs text-gray-500">${item.price} €</div></div><button onclick="deleteItem('shop', '${item.id}')" class="text-red-400 text-xs bg-red-500/10 px-3 py-1.5 rounded-lg">Suppr</button></div>`).join('');
@@ -704,12 +714,9 @@
 
             const bgs = JSON.parse(localStorage.getItem('aerix_page_bgs')) || {};
             const pages = { home: "Accueil", histoire: "Histoire", effectifs: "Effectifs", palmares: "Palmarès", boutique: "Boutique", partenaires: "Partenaires", annonces: "Annonces" };
-            document.getElementById('admin-page-bgs').innerHTML = Object.keys(pages).map(pId => `<div class="flex items-center justify-between bg-black/40 p-3 rounded-xl border border-white/5"><span class="text-sm font-bold text-white">${pages[pId]}</span><div class="flex gap-3 items-center"><span class="text-xs text-gray-400">${bgs[pId]?'Image ok':'Aucun'}</span><button onclick="triggerPageBgUpload('${pId}')" class="bg-white/10 text-white text-xs px-3 py-1.5 rounded-lg">Changer</button>${bgs[pId] ? `<button onclick="removePageBg('${pId}')" class="text-red-400 text-xs">Retirer</button>` : ''}</div></div>`).join('');
+            document.getElementById('admin-page-bgs').innerHTML = Object.keys(pages).map(pId => `<div class="flex items-center justify-between bg-black/40 p-3 rounded-xl border border-white/5"><span class="text-sm font-bold text-white">${pages[pId]}</span><div class="flex gap-3 items-center"><span class="text-xs text-gray-400">${bgs[pId]?'Image ok':'Défaut'}</span><button onclick="triggerPageBgUpload('${pId}')" class="bg-white/10 text-white text-xs px-3 py-1.5 rounded-lg">Changer</button>${bgs[pId] ? `<button onclick="removePageBg('${pId}')" class="text-red-400 text-xs">Retirer</button>` : ''}</div></div>`).join('');
         }
 
-        // --------------------------------------------------------
-        // NAVIGATION & UI
-        // --------------------------------------------------------
         function setFilter(section, filterValue) { currentFilters[section] = filterValue; updateFilterUI(section); if(section === 'effectifs') renderEffectifs(); if(section === 'palmares') renderPalmares(); if(section === 'annonces') renderAnnonces(); }
         function updateFilterUI(section) { const container = document.getElementById(`filters-${section}`); if(!container) return; const currentVal = currentFilters[section]; container.querySelectorAll('.filter-btn').forEach(btn => { if(btn.getAttribute('data-filter') === currentVal) { btn.classList.add('active'); } else { btn.classList.remove('active'); } }); }
         
@@ -732,7 +739,6 @@
             if (activePage) { const activeBtn = document.getElementById('nav-' + activePage.id.replace('page-', '')); if(activeBtn) { document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active')); activeBtn.classList.add('active'); setTimeout(() => updateNavPill(activeBtn), 10); } }
         }
 
-        // CORRECTION : L'image de fond s'applique maintenant à TOUTES les pages par défaut
         function applyPageBackground(pageId) {
             const bgs = JSON.parse(localStorage.getItem('aerix_page_bgs')) || {};
             const bgLayer = document.getElementById('page-bg-layer');
@@ -758,7 +764,6 @@
 
         document.addEventListener('mousemove', (e) => { document.documentElement.style.setProperty('--mouse-x', `${e.clientX}px`); document.documentElement.style.setProperty('--mouse-y', `${e.clientY}px`); });
 
-        // OUTILS CROPPER
         let cropper = null, cropCallback = null;
         function openCropper(file, ratio, callback) { const reader = new FileReader(); reader.onload = (e) => { const image = document.getElementById('crop-image'); image.src = e.target.result; document.getElementById('crop-modal').classList.remove('hidden'); if (cropper) cropper.destroy(); cropper = new Cropper(image, { aspectRatio: ratio, viewMode: 1, background: false, autoCropArea: 1 }); cropCallback = callback; }; reader.readAsDataURL(file); }
         function confirmCrop() { if (!cropper) return; const canvas = cropper.getCroppedCanvas({ maxWidth: 1200, maxHeight: 1200, fillColor: 'transparent' }); document.getElementById('crop-modal').classList.add('hidden'); cropper.destroy(); cropper = null; if (cropCallback) cropCallback(canvas.toDataURL('image/webp', 0.8)); }
@@ -789,7 +794,6 @@
         function openLegal(type) { document.getElementById('legal-title').innerText = type.toUpperCase(); document.getElementById('legal-content').innerHTML = legalTexts[type]; document.getElementById('legal-modal').classList.remove('hidden'); }
         function closeLegal() { document.getElementById('legal-modal').classList.add('hidden'); }
         
-        // Démarrage
         startSync();
         navigate('home');
     </script>
