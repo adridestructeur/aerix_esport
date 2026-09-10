@@ -449,14 +449,12 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Variables Globales pour stocker les données en direct
         let globalShop = [];
         let globalEffectifs = [];
         let globalPalmares = [];
         let globalAnnonces = [];
         let globalPartners = [];
         
-        // Initialisation de l'ordre par défaut si le site est vierge
         if(!localStorage.getItem('aerix_tab_order')) {
             localStorage.setItem('aerix_tab_order', JSON.stringify(['histoire', 'effectifs', 'palmares', 'annonces', 'boutique', 'partenaires']));
         }
@@ -466,42 +464,36 @@
         // SYNCHRONISATION EN TEMPS RÉEL
         // --------------------------------------------------------
         function startSync() {
-            // Synchronisation de la Boutique
             db.collection("shop").onSnapshot((snapshot) => {
                 globalShop = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 renderShop();
                 renderAdminLists();
             });
 
-            // Synchronisation des Effectifs
             db.collection("effectifs").onSnapshot((snapshot) => {
                 globalEffectifs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 renderEffectifs();
                 renderAdminLists();
             });
 
-            // Synchronisation du Palmarès
             db.collection("palmares").onSnapshot((snapshot) => {
                 globalPalmares = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 renderPalmares();
                 renderAdminLists();
             });
 
-            // Synchronisation des Annonces
             db.collection("annonces").onSnapshot((snapshot) => {
                 globalAnnonces = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 renderAnnonces();
                 renderAdminLists();
             });
 
-            // Synchronisation des Partenaires
             db.collection("partners").onSnapshot((snapshot) => {
                 globalPartners = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 renderPartners();
                 renderAdminLists();
             });
 
-            // Synchronisation des Paramètres globaux (Onglets et Fonds d'écran)
             db.collection("settings").doc("global").onSnapshot((doc) => {
                 if(doc.exists) {
                     const data = doc.data();
@@ -621,12 +613,12 @@
         }
 
         // --------------------------------------------------------
-        // PANNEAU D'ADMINISTRATION
+        // PANNEAU D'ADMINISTRATION (Mot de passe mis à jour)
         // --------------------------------------------------------
         window.addEventListener('keydown', (e) => {
             if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'x') {
                 const pwd = prompt("Accès Admin - Mot de passe :");
-                if (pwd === "aerixadmin") { toggleAdmin(); } 
+                if (pwd === "Aerix_adminmdp*") { toggleAdmin(); } 
                 else if (pwd !== null) { alert("Accès refusé."); }
             }
         });
@@ -716,7 +708,7 @@
         }
 
         // --------------------------------------------------------
-        // NAVIGATION & UI EXISTANTE
+        // NAVIGATION & UI
         // --------------------------------------------------------
         function setFilter(section, filterValue) { currentFilters[section] = filterValue; updateFilterUI(section); if(section === 'effectifs') renderEffectifs(); if(section === 'palmares') renderPalmares(); if(section === 'annonces') renderAnnonces(); }
         function updateFilterUI(section) { const container = document.getElementById(`filters-${section}`); if(!container) return; const currentVal = currentFilters[section]; container.querySelectorAll('.filter-btn').forEach(btn => { if(btn.getAttribute('data-filter') === currentVal) { btn.classList.add('active'); } else { btn.classList.remove('active'); } }); }
@@ -740,12 +732,17 @@
             if (activePage) { const activeBtn = document.getElementById('nav-' + activePage.id.replace('page-', '')); if(activeBtn) { document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active')); activeBtn.classList.add('active'); setTimeout(() => updateNavPill(activeBtn), 10); } }
         }
 
+        // CORRECTION : L'image de fond s'applique maintenant à TOUTES les pages par défaut
         function applyPageBackground(pageId) {
             const bgs = JSON.parse(localStorage.getItem('aerix_page_bgs')) || {};
             const bgLayer = document.getElementById('page-bg-layer');
-            if (bgs[pageId]) { bgLayer.style.backgroundImage = `linear-gradient(to bottom, rgba(5,5,5,0.65), rgba(5,5,5,0.85)), url(${bgs[pageId]})`; } 
-            else if (pageId === 'home') { bgLayer.style.backgroundImage = `linear-gradient(to bottom, rgba(5,5,5,0.65), rgba(5,5,5,0.85)), url('abstract-black-violet-colors-background-design-flat_662214-314713.avif')`; } 
-            else { bgLayer.style.backgroundImage = 'none'; }
+            const defaultBg = "abstract-black-violet-colors-background-design-flat_662214-314713.avif";
+            
+            if (bgs[pageId]) { 
+                bgLayer.style.backgroundImage = `linear-gradient(to bottom, rgba(5,5,5,0.65), rgba(5,5,5,0.85)), url(${bgs[pageId]})`; 
+            } else { 
+                bgLayer.style.backgroundImage = `linear-gradient(to bottom, rgba(5,5,5,0.65), rgba(5,5,5,0.85)), url('${defaultBg}')`; 
+            }
         }
 
         function navigate(pageId) {
