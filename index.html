@@ -36,7 +36,6 @@
             -moz-user-select: none; 
             -ms-user-select: none; 
         }
-        /* Permettre la saisie dans les inputs et textareas */
         input, textarea, select { 
             user-select: text; 
             -webkit-user-select: text; 
@@ -44,7 +43,6 @@
 
         #mouse-glow { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0; background: radial-gradient(350px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(139, 92, 246, 0.08), transparent 80%); transition: background 0.1s ease-out; }
         
-        /* EFFET GLASSMORPHISM PREMIUM */
         .glass-panel { 
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%); 
             backdrop-filter: blur(40px) saturate(120%); 
@@ -91,7 +89,8 @@
 <body class="antialiased selection:bg-purple-500 selection:text-white min-h-screen flex flex-col relative">
 
     <div id="mouse-glow"></div>
-    <div id="page-bg-layer" class="fixed inset-0 pointer-events-none z-[-2] transition-all duration-700 bg-cover bg-center"></div>
+    <!-- Fond d'écran configuré directement en dur avec l'image uploadée -->
+    <div id="page-bg-layer" class="fixed inset-0 pointer-events-none z-[-2] transition-all duration-700 bg-cover bg-center" style="background-image: linear-gradient(to bottom, rgba(5,5,5,0.65), rgba(5,5,5,0.85)), url('abstract-black-violet-colors-background-design-flat_662214-314713.avif');"></div>
 
     <button id="scrollTopBtn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="fixed bottom-6 right-6 z-[90] glass-panel-no-hover text-white p-4 rounded-full opacity-0 pointer-events-none transition-all duration-500 hover:bg-aerix-purple/20 hover:border-aerix-purple shadow-lg">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"></path></svg>
@@ -164,7 +163,7 @@
         <main id="page-effectifs" class="page-view px-6 max-w-7xl mx-auto">
             <div class="mb-10 text-center animate-fade-up opacity-0">
                 <h2 class="text-sm font-semibold text-aerix-purple uppercase tracking-widest mb-2">Divisions</h2>
-                <h3 class="text-3xl font-bold text-white mb-8">Nos équipes de haut niveau</h3>
+                <h3 class="text-3xl font-bold text-white mb-8">Nos équipes professionnelles</h3>
                 
                 <div class="flex flex-wrap justify-center gap-3" id="filters-effectifs">
                     <button onclick="setFilter('effectifs', 'Tous')" data-filter="Tous" class="filter-btn active">Tous</button>
@@ -214,7 +213,7 @@
                     <div class="absolute w-4 h-4 bg-aerix-purple rounded-full -left-[8.5px] top-1.5 shadow-[0_0_15px_#8B5CF6]"></div>
                     <div class="text-aerix-purple font-bold text-xl mb-2">Mai 2026</div>
                     <h4 class="text-2xl font-bold text-white mb-4">L'expansion Esport</h4>
-                    <div class="glass-panel p-8 rounded-3xl"><p class="text-gray-400 text-sm leading-relaxed">Entrée officielle sur <strong class="text-white">Rocket League</strong> avec d'excellents joueurs.</p></div>
+                    <div class="glass-panel p-8 rounded-3xl"><p class="text-gray-400 text-sm leading-relaxed">Entrée officielle sur <strong class="text-white">Rocket League</strong> avec des joueurs de rang Grand Champion.</p></div>
                 </div>
             </div>
         </main>
@@ -467,15 +466,12 @@
 
     <!-- SCRIPTS CORE -->
     <script>
-        // MIGRATION DONNÉES (Rosters -> Effectifs)
         if(localStorage.getItem('aerix_rosters') && !localStorage.getItem('aerix_effectifs')) {
             localStorage.setItem('aerix_effectifs', localStorage.getItem('aerix_rosters'));
         }
 
-        // ÉTAT DES FILTRES
         let currentFilters = { effectifs: 'Tous', annonces: 'Tous', palmares: 'Tous' };
 
-        // DÉTECTION ADMIN SECRET (Ctrl + Maj + X)
         window.addEventListener('keydown', (e) => {
             if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'x') {
                 const pwd = prompt("Accès Admin - Mot de passe :");
@@ -574,8 +570,13 @@
         function applyPageBackground(pageId) {
             const bgs = JSON.parse(localStorage.getItem('aerix_page_bgs')) || {};
             const bgLayer = document.getElementById('page-bg-layer');
-            if (bgs[pageId]) bgLayer.style.backgroundImage = `linear-gradient(to bottom, rgba(5,5,5,0.85), rgba(5,5,5,0.96)), url(${bgs[pageId]})`;
-            else bgLayer.style.backgroundImage = 'none';
+            if (bgs[pageId]) {
+                bgLayer.style.backgroundImage = `linear-gradient(to bottom, rgba(5,5,5,0.65), rgba(5,5,5,0.85)), url(${bgs[pageId]})`;
+            } else if (pageId === 'home') {
+                bgLayer.style.backgroundImage = `linear-gradient(to bottom, rgba(5,5,5,0.65), rgba(5,5,5,0.85)), url('abstract-black-violet-colors-background-design-flat_662214-314713.avif')`;
+            } else {
+                bgLayer.style.backgroundImage = 'none';
+            }
         }
 
         document.addEventListener('mousemove', (e) => {
@@ -653,7 +654,6 @@
             updateFilterUI('palmares');
             updateFilterUI('annonces');
 
-            // 1. BOUTIQUE
             currentShopItems = JSON.parse(localStorage.getItem('aerix_shop')) || [];
             const shopContainer = document.getElementById('shop-container');
             shopContainer.innerHTML = currentShopItems.length ? '' : '<p class="text-gray-500 text-sm italic col-span-full text-center">Boutique vide.</p>';
@@ -673,7 +673,6 @@
                     </div>`;
             });
 
-            // 2. EFFECTIFS (Propre sans doublons mock)
             let effectifs = JSON.parse(localStorage.getItem('aerix_effectifs')) || [];
             if(currentFilters.effectifs !== 'Tous') {
                 effectifs = effectifs.filter(e => (e.game || 'Tous') === currentFilters.effectifs);
@@ -701,7 +700,6 @@
                     </div>`;
             });
 
-            // 3. PALMARÈS (Propre sans doublons mock)
             let palmares = JSON.parse(localStorage.getItem('aerix_palmares')) || [];
             if(currentFilters.palmares !== 'Tous') {
                 palmares = palmares.filter(p => (p.game || 'Tous') === currentFilters.palmares);
@@ -721,7 +719,6 @@
                     </div>`;
             });
 
-            // 4. ANNONCES (Propre sans doublons mock)
             let announcements = JSON.parse(localStorage.getItem('aerix_announcements')) || [];
             if(currentFilters.annonces !== 'Tous') {
                 announcements = announcements.filter(a => (a.game || 'Tous') === currentFilters.annonces);
@@ -743,7 +740,6 @@
                     </div>`;
             });
 
-            // 5. PARTENAIRES
             const partners = JSON.parse(localStorage.getItem('aerix_partners')) || [];
             const partContainer = document.getElementById('partners-container');
             partContainer.innerHTML = partners.length ? '' : '<p class="text-gray-500 text-sm italic">Aucun partenaire renseigné.</p>';
@@ -768,7 +764,6 @@
             }
         }
 
-        // GESTION MODAL BOUTIQUE
         function openProductModal(index) {
             const item = currentShopItems[index]; if(!item) return;
             document.getElementById('modal-product-title').innerText = item.name;
@@ -794,7 +789,6 @@
         function prevProductImg() { currentModalImgIndex = (currentModalImgIndex - 1 + currentModalImages.length) % currentModalImages.length; updateSliderView(); }
         function closeProductModal() { document.getElementById('product-modal').classList.add('hidden'); }
 
-        // ADMIN LOGIC
         function toggleAdmin() { document.getElementById('admin-modal').classList.toggle('hidden'); }
         function switchAdminTab(tab) {
             document.querySelectorAll('.admin-tab').forEach(t => t.classList.add('hidden'));
