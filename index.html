@@ -90,6 +90,9 @@
             </div>
 
             <div class="hidden md:flex items-center gap-3">
+                <button onclick="openAccountRequestModal()" class="text-xs text-aerix-purple transition px-4 py-1.5 rounded-full border border-aerix-purple/40 bg-aerix-purple/10 hover:bg-aerix-purple/20 font-medium flex items-center gap-2">
+                    Demande de compte
+                </button>
                 <a href="https://discord.gg/dJcHwYT4HY" target="_blank" rel="noopener noreferrer" class="text-xs text-white transition px-4 py-1.5 rounded-full border border-aerix-purple/40 bg-aerix-purple/10 hover:bg-aerix-purple/20 flex items-center gap-2 font-medium">
                     <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.927 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
                     Discord
@@ -106,7 +109,8 @@
         <div id="mobile-menu" class="hidden md:hidden bg-[#080808]/98 backdrop-blur-2xl border-b border-white/10 px-6 py-6 flex flex-col gap-3 shadow-2xl">
             <button onclick="navigate('home'); toggleMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-white bg-white/5 border border-white/5">Accueil</button>
             <div id="mobile-dynamic-links" class="flex flex-col gap-2"></div>
-            <a href="https://discord.gg/dJcHwYT4HY" target="_blank" rel="noopener noreferrer" class="mt-2 text-center text-xs text-white py-3.5 rounded-xl border border-aerix-purple/40 bg-aerix-purple/20 font-bold flex items-center justify-center gap-2">
+            <button onclick="openAccountRequestModal(); toggleMobileMenu();" class="text-center text-xs text-aerix-purple py-3.5 rounded-xl border border-aerix-purple/40 bg-aerix-purple/20 font-bold">Demande de compte</button>
+            <a href="https://discord.gg/dJcHwYT4HY" target="_blank" rel="noopener noreferrer" class="text-center text-xs text-white py-3.5 rounded-xl border border-aerix-purple/40 bg-aerix-purple/20 font-bold flex items-center justify-center gap-2">
                 <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.927 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
                 Rejoindre le Discord
             </a>
@@ -223,11 +227,11 @@
 
         <!-- 6. PARTENAIRES -->
         <main id="page-partenaires" class="page-view px-6 max-w-7xl mx-auto text-center mt-12">
-            <div class="animate-fade-up opacity-0">
+            <div class="animate-fade-up opacity-0 mb-12">
                 <h2 class="text-sm font-semibold text-aerix-purple uppercase tracking-widest mb-2">Sponsors & Affiliés</h2>
-                <h3 class="text-3xl font-bold text-white mb-16">Partenaires Techniques</h3>
+                <h3 class="text-3xl font-bold text-white">Partenaires Techniques</h3>
             </div>
-            <div id="partners-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 items-center"></div>
+            <div id="partners-container" class="space-y-12"></div>
         </main>
 
         <!-- 7. ANNONCES avec Filtres -->
@@ -255,7 +259,6 @@
                 <div class="flex space-x-6 text-xs text-gray-500">
                     <button onclick="openLegal('mentions')" class="hover:text-white transition">Mentions légales</button>
                     <button onclick="openLegal('confidentialite')" class="hover:text-white transition">Confidentialité</button>
-                    <button onclick="openAccountRequestModal()" class="hover:text-aerix-purple transition text-aerix-purple/80">Demander un accès compte</button>
                 </div>
             </div>
             <div class="flex items-center gap-4">
@@ -450,6 +453,12 @@
                     <h4 id="partner-form-title" class="text-lg font-bold text-white mb-4">Ajouter un partenaire</h4>
                     <input type="hidden" id="edit-partner-id" value="">
                     <input type="text" id="add-partner-name" placeholder="Nom de l'entreprise" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm mb-4 outline-none">
+                    <select id="add-partner-category" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm mb-4 outline-none">
+                        <option value="Équipementier">Équipementier</option>
+                        <option value="Setup & Simracing">Setup & Simracing</option>
+                        <option value="Partenaire Officiel">Partenaire Officiel</option>
+                        <option value="Affilié">Affilié</option>
+                    </select>
                     <input type="url" id="add-partner-url" placeholder="Lien vers leur site web (https://...)" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm mb-4 outline-none">
                     
                     <div id="partner-img-preview" class="w-32 h-16 bg-white/5 rounded-xl mb-4 hidden bg-contain bg-center bg-no-repeat border border-white/10 relative">
@@ -681,11 +690,33 @@
 
         function renderPartners() {
             const container = document.getElementById('partners-container');
-            container.innerHTML = globalPartners.length ? '' : '<p class="text-gray-500 text-sm italic col-span-full text-center">Aucun partenaire renseigné.</p>';
-            globalPartners.forEach((p, index) => {
-                const contentHTML = p.image ? `<img src="${p.image}" alt="${p.name}" class="h-16 object-contain opacity-75 group-hover:opacity-100 transition duration-500">` : `<span class="text-xl font-bold text-white tracking-tighter opacity-75 group-hover:opacity-100 transition">${p.name}</span>`;
-                const wrapperHTML = p.url ? `<a href="${p.url}" target="_blank" class="glass-panel partner-card p-6 rounded-2xl flex items-center justify-center min-h-[110px] group reveal delay-${(index%4)*100}">${contentHTML}</a>` : `<div class="glass-panel partner-card p-6 rounded-2xl flex items-center justify-center min-h-[110px] group reveal delay-${(index%4)*100}">${contentHTML}</div>`;
-                container.innerHTML += wrapperHTML;
+            if(!globalPartners.length) {
+                container.innerHTML = '<p class="text-gray-500 text-sm italic text-center">Aucun partenaire renseigné.</p>';
+                return;
+            }
+
+            const categories = {};
+            globalPartners.forEach(p => {
+                const cat = p.category || 'Partenaires & Affiliés';
+                if(!categories[cat]) categories[cat] = [];
+                categories[cat].push(p);
+            });
+
+            container.innerHTML = '';
+            Object.keys(categories).forEach(cat => {
+                let sectionHTML = `
+                    <div class="mb-10">
+                        <h4 class="text-sm font-semibold text-aerix-purple uppercase tracking-widest mb-6 border-b border-white/10 pb-3 text-left">${cat}</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 items-center">`;
+                
+                categories[cat].forEach((p, index) => {
+                    const contentHTML = p.image ? `<img src="${p.image}" alt="${p.name}" class="h-16 object-contain opacity-75 group-hover:opacity-100 transition duration-500">` : `<span class="text-xl font-bold text-white tracking-tighter opacity-75 group-hover:opacity-100 transition">${p.name}</span>`;
+                    const wrapperHTML = p.url ? `<a href="${p.url}" target="_blank" class="glass-panel partner-card p-6 rounded-2xl flex items-center justify-center min-h-[110px] group reveal delay-${(index%4)*100}">${contentHTML}</a>` : `<div class="glass-panel partner-card p-6 rounded-2xl flex items-center justify-center min-h-[110px] group reveal delay-${(index%4)*100}">${contentHTML}</div>`;
+                    sectionHTML += wrapperHTML;
+                });
+
+                sectionHTML += `</div></div>`;
+                container.innerHTML += sectionHTML;
             });
             setTimeout(revealActiveElements, 20);
         }
@@ -792,7 +823,7 @@
             document.getElementById('admin-list-boutique').innerHTML = globalShop.map(item => `<div class="bg-black/50 p-4 rounded-xl border border-white/5 flex justify-between items-center"><div><div class="text-white font-bold text-sm">${item.name}</div><div class="text-xs text-gray-500">${item.price} €</div></div><div class="flex gap-2"><button onclick="startEditShop('${item.id}')" class="text-aerix-purple text-xs bg-aerix-purple/10 px-3 py-1.5 rounded-lg">Éditer</button><button onclick="deleteItem('shop', '${item.id}')" class="text-red-400 text-xs bg-red-500/10 px-3 py-1.5 rounded-lg">Suppr</button></div></div>`).join('');
             document.getElementById('admin-list-effectifs').innerHTML = globalEffectifs.map(r => `<div class="bg-black/50 p-4 rounded-xl border border-white/5 flex justify-between items-center"><div><div class="text-white font-bold text-sm">${r.name}</div><div class="text-xs text-gray-500">${r.game || 'Général'}</div></div><div class="flex gap-2"><button onclick="startEditEffectif('${r.id}')" class="text-aerix-purple text-xs bg-aerix-purple/10 px-3 py-1.5 rounded-lg">Éditer</button><button onclick="deleteItem('effectifs', '${r.id}')" class="text-red-400 text-xs bg-red-500/10 px-3 py-1.5 rounded-lg">Suppr</button></div></div>`).join('');
             document.getElementById('admin-list-palmares').innerHTML = globalPalmares.map(p => `<div class="bg-black/50 p-4 rounded-xl border border-white/5 flex justify-between items-center"><div><div class="text-white font-bold text-sm">${p.title}</div><div class="text-xs text-gray-500">${p.game || 'Général'}</div></div><div class="flex gap-2"><button onclick="startEditPalmares('${p.id}')" class="text-aerix-purple text-xs bg-aerix-purple/10 px-3 py-1.5 rounded-lg">Éditer</button><button onclick="deleteItem('palmares', '${p.id}')" class="text-red-400 text-xs bg-red-500/10 px-3 py-1.5 rounded-lg">Suppr</button></div></div>`).join('');
-            document.getElementById('admin-list-partenaires').innerHTML = globalPartners.map(p => `<div class="bg-black/50 p-4 rounded-xl border border-white/5 flex justify-between items-center"><div class="text-white font-bold text-sm">${p.name}</div><div class="flex gap-2"><button onclick="startEditPartner('${p.id}')" class="text-aerix-purple text-xs bg-aerix-purple/10 px-3 py-1.5 rounded-lg">Éditer</button><button onclick="deleteItem('partners', '${p.id}')" class="text-red-400 text-xs bg-red-500/10 px-3 py-1.5 rounded-lg">Suppr</button></div></div>`).join('');
+            document.getElementById('admin-list-partenaires').innerHTML = globalPartners.map(p => `<div class="bg-black/50 p-4 rounded-xl border border-white/5 flex justify-between items-center"><div><div class="text-white font-bold text-sm">${p.name}</div><div class="text-xs text-gray-500">${p.category || 'Partenaire'}</div></div><div class="flex gap-2"><button onclick="startEditPartner('${p.id}')" class="text-aerix-purple text-xs bg-aerix-purple/10 px-3 py-1.5 rounded-lg">Éditer</button><button onclick="deleteItem('partners', '${p.id}')" class="text-red-400 text-xs bg-red-500/10 px-3 py-1.5 rounded-lg">Suppr</button></div></div>`).join('');
             document.getElementById('admin-list-annonces').innerHTML = globalAnnonces.map(a => `<div class="bg-black/50 p-4 rounded-xl border border-white/5 flex justify-between items-center"><div><div class="text-white font-bold text-sm">${a.title}</div><div class="text-xs text-gray-500">${a.game || 'Général'}</div></div><div class="flex gap-2"><button onclick="startEditAnnouncement('${a.id}')" class="text-aerix-purple text-xs bg-aerix-purple/10 px-3 py-1.5 rounded-lg">Éditer</button><button onclick="deleteItem('annonces', '${a.id}')" class="text-red-400 text-xs bg-red-500/10 px-3 py-1.5 rounded-lg">Suppr</button></div></div>`).join('');
         }
 
@@ -947,6 +978,7 @@
             if(!item) return;
             document.getElementById('edit-partner-id').value = item.id;
             document.getElementById('add-partner-name').value = item.name;
+            document.getElementById('add-partner-category').value = item.category || 'Équipementier';
             document.getElementById('add-partner-url').value = item.url || '';
             tempPartnerImage = item.image || null;
             if(tempPartnerImage) {
@@ -959,6 +991,7 @@
         function resetPartnerForm() {
             document.getElementById('edit-partner-id').value = '';
             document.getElementById('add-partner-name').value = '';
+            document.getElementById('add-partner-category').value = 'Équipementier';
             document.getElementById('add-partner-url').value = '';
             tempPartnerImage = null;
             document.getElementById('partner-img-preview').classList.add('hidden');
@@ -968,10 +1001,11 @@
         async function savePartner() {
             const id = document.getElementById('edit-partner-id').value;
             const name = document.getElementById('add-partner-name').value;
+            const category = document.getElementById('add-partner-category').value;
             const url = document.getElementById('add-partner-url').value;
             if(!name) return alert("Nom obligatoire.");
 
-            const data = { name, url, image: tempPartnerImage || "" };
+            const data = { name, category, url, image: tempPartnerImage || "" };
             if(id) {
                 await db.collection("partners").doc(id).update(data);
             } else {
