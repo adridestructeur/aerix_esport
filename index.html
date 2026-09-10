@@ -255,6 +255,7 @@
                 <div class="flex space-x-6 text-xs text-gray-500">
                     <button onclick="openLegal('mentions')" class="hover:text-white transition">Mentions légales</button>
                     <button onclick="openLegal('confidentialite')" class="hover:text-white transition">Confidentialité</button>
+                    <button onclick="openAccountRequestModal()" class="hover:text-aerix-purple transition text-aerix-purple/80">Demander un accès compte</button>
                 </div>
             </div>
             <div class="flex items-center gap-4">
@@ -291,6 +292,22 @@
         </div>
     </div>
 
+    <!-- MODAL DEMANDE DE COMPTE -->
+    <div id="account-request-modal" class="fixed inset-0 z-[120] hidden flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
+        <div class="glass-panel-no-hover w-full max-w-md rounded-[2rem] p-8 border border-white/10 shadow-2xl">
+            <div class="flex justify-between items-center mb-6 border-b border-white/10 pb-4">
+                <h3 class="text-xl font-bold text-white">Demande de création de compte</h3>
+                <button onclick="closeAccountRequestModal()" class="text-gray-400 hover:text-white">✕</button>
+            </div>
+            <p class="text-xs text-gray-400 mb-6">Remplis ce formulaire pour envoyer une demande d'accès. L'administrateur validera ton compte manuellement.</p>
+            <div class="space-y-4">
+                <input type="text" id="req-username" placeholder="Ton pseudo" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none">
+                <input type="email" id="req-email" placeholder="Ton adresse email" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none">
+                <button onclick="submitAccountRequest()" class="w-full bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition">Envoyer la demande</button>
+            </div>
+        </div>
+    </div>
+
     <div id="legal-modal" class="fixed inset-0 z-[120] hidden flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
         <div class="glass-panel-no-hover w-full max-w-3xl max-h-[80vh] rounded-[2rem] p-8 overflow-y-auto border border-white/10">
             <div class="flex justify-between items-center mb-8 border-b border-white/10 pb-4">
@@ -323,19 +340,21 @@
             </div>
             
             <div class="flex gap-2 mb-8 bg-black/50 p-1.5 rounded-xl border border-white/10 flex-wrap">
-                <button onclick="switchAdminTab('boutique')" id="tab-btn-boutique" class="flex-1 min-w-[100px] py-2.5 text-xs font-bold rounded-lg bg-white/10 text-white transition">Boutique</button>
-                <button onclick="switchAdminTab('effectifs')" id="tab-btn-effectifs" class="flex-1 min-w-[100px] py-2.5 text-xs font-bold rounded-lg text-gray-500 hover:text-white transition">Effectifs</button>
-                <button onclick="switchAdminTab('palmares')" id="tab-btn-palmares" class="flex-1 min-w-[100px] py-2.5 text-xs font-bold rounded-lg text-gray-500 hover:text-white transition">Palmarès</button>
-                <button onclick="switchAdminTab('partenaires')" id="tab-btn-partenaires" class="flex-1 min-w-[100px] py-2.5 text-xs font-bold rounded-lg text-gray-500 hover:text-white transition">Partenaires</button>
-                <button onclick="switchAdminTab('annonces')" id="tab-btn-annonces" class="flex-1 min-w-[100px] py-2.5 text-xs font-bold rounded-lg text-gray-500 hover:text-white transition">Annonces</button>
-                <button onclick="switchAdminTab('parametres')" id="tab-btn-parametres" class="flex-1 min-w-[100px] py-2.5 text-xs font-bold rounded-lg text-gray-500 hover:text-white transition">Paramètres</button>
+                <button onclick="switchAdminTab('boutique')" id="tab-btn-boutique" class="flex-1 min-w-[90px] py-2.5 text-xs font-bold rounded-lg bg-white/10 text-white transition">Boutique</button>
+                <button onclick="switchAdminTab('effectifs')" id="tab-btn-effectifs" class="flex-1 min-w-[90px] py-2.5 text-xs font-bold rounded-lg text-gray-500 hover:text-white transition">Effectifs</button>
+                <button onclick="switchAdminTab('palmares')" id="tab-btn-palmares" class="flex-1 min-w-[90px] py-2.5 text-xs font-bold rounded-lg text-gray-500 hover:text-white transition">Palmarès</button>
+                <button onclick="switchAdminTab('partenaires')" id="tab-btn-partenaires" class="flex-1 min-w-[90px] py-2.5 text-xs font-bold rounded-lg text-gray-500 hover:text-white transition">Partenaires</button>
+                <button onclick="switchAdminTab('annonces')" id="tab-btn-annonces" class="flex-1 min-w-[90px] py-2.5 text-xs font-bold rounded-lg text-gray-500 hover:text-white transition">Annonces</button>
+                <button onclick="switchAdminTab('comptes')" id="tab-btn-comptes" class="flex-1 min-w-[90px] py-2.5 text-xs font-bold rounded-lg text-gray-500 hover:text-white transition">Comptes <span id="pending-badge" class="bg-aerix-purple px-1.5 py-0.5 rounded-full text-[9px] ml-1 hidden">0</span></button>
+                <button onclick="switchAdminTab('parametres')" id="tab-btn-parametres" class="flex-1 min-w-[90px] py-2.5 text-xs font-bold rounded-lg text-gray-500 hover:text-white transition">Paramètres</button>
             </div>
 
             <!-- TAB: BOUTIQUE -->
             <div id="admin-tab-boutique" class="admin-tab space-y-6">
                 <div><h4 class="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-3">Produits</h4><div id="admin-list-boutique" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div></div>
                 <div class="border-t border-white/10 pt-6">
-                    <h4 class="text-lg font-bold text-white mb-4">Ajouter un produit</h4>
+                    <h4 id="shop-form-title" class="text-lg font-bold text-white mb-4">Ajouter un produit</h4>
+                    <input type="hidden" id="edit-shop-id" value="">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <input type="text" id="add-shop-name" placeholder="Nom du produit" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none">
                         <input type="number" id="add-shop-price" placeholder="Prix (€)" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none">
@@ -346,7 +365,10 @@
                     <div id="shop-img-previews" class="flex gap-2 flex-wrap mb-4"></div>
                     <button type="button" onclick="document.getElementById('shop-img-input').click()" class="bg-white/5 border border-white/10 text-white text-xs px-4 py-3 rounded-xl w-full mb-6">+ Photo</button>
                     <input type="file" id="shop-img-input" accept="image/*" class="hidden">
-                    <button onclick="addShopItem()" class="w-full bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition">Enregistrer</button>
+                    <div class="flex gap-3">
+                        <button id="shop-cancel-btn" onclick="resetShopForm()" class="hidden px-6 py-3 bg-white/10 text-white rounded-xl text-sm font-bold">Annuler</button>
+                        <button onclick="saveShopItem()" class="flex-1 bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition">Enregistrer</button>
+                    </div>
                 </div>
             </div>
 
@@ -354,7 +376,8 @@
             <div id="admin-tab-effectifs" class="admin-tab hidden space-y-6">
                 <div><h4 class="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-3">Effectifs Actuels</h4><div id="admin-list-effectifs" class="grid grid-cols-1 gap-3"></div></div>
                 <div class="border-t border-white/10 pt-6">
-                    <h4 class="text-lg font-bold text-white mb-4">Créer une équipe</h4>
+                    <h4 id="effectif-form-title" class="text-lg font-bold text-white mb-4">Créer une équipe</h4>
+                    <input type="hidden" id="edit-effectif-id" value="">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <input type="text" id="add-roster-name" placeholder="Nom de l'équipe (ex: Roster 1)" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none">
                         <select id="add-roster-game" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none">
@@ -383,7 +406,10 @@
                             <button type="button" onclick="addTempPlayer()" class="bg-white/10 hover:bg-white/20 text-white text-sm px-6 py-3 rounded-xl transition">Ajouter</button>
                         </div>
                     </div>
-                    <button onclick="addEffectif()" class="w-full bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition">Enregistrer l'équipe</button>
+                    <div class="flex gap-3">
+                        <button id="effectif-cancel-btn" onclick="resetEffectifForm()" class="hidden px-6 py-3 bg-white/10 text-white rounded-xl text-sm font-bold">Annuler</button>
+                        <button onclick="saveEffectif()" class="flex-1 bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition">Enregistrer l'équipe</button>
+                    </div>
                 </div>
             </div>
 
@@ -391,7 +417,8 @@
             <div id="admin-tab-palmares" class="admin-tab hidden space-y-6">
                 <div><h4 class="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-3">Trophées & Résultats</h4><div id="admin-list-palmares" class="flex flex-col gap-3"></div></div>
                 <div class="border-t border-white/10 pt-6">
-                    <h4 class="text-lg font-bold text-white mb-4">Ajouter un résultat</h4>
+                    <h4 id="palmares-form-title" class="text-lg font-bold text-white mb-4">Ajouter un résultat</h4>
+                    <input type="hidden" id="edit-palmares-id" value="">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <input type="text" id="add-palm-title" placeholder="Titre (ex: Champion Div 1)" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none">
                         <input type="text" id="add-palm-date" placeholder="Date (ex: Août 2026)" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none">
@@ -409,7 +436,10 @@
                     <button type="button" onclick="document.getElementById('palm-img-input').click()" class="bg-white/5 border border-white/10 text-white text-xs px-4 py-3 rounded-xl w-full mb-6">+ Ajouter une image (16:9)</button>
                     <input type="file" id="palm-img-input" accept="image/*" class="hidden">
 
-                    <button onclick="addPalmares()" class="w-full bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition">Enregistrer le résultat</button>
+                    <div class="flex gap-3">
+                        <button id="palmares-cancel-btn" onclick="resetPalmaresForm()" class="hidden px-6 py-3 bg-white/10 text-white rounded-xl text-sm font-bold">Annuler</button>
+                        <button onclick="savePalmares()" class="flex-1 bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition">Enregistrer le résultat</button>
+                    </div>
                 </div>
             </div>
 
@@ -417,7 +447,8 @@
             <div id="admin-tab-partenaires" class="admin-tab hidden space-y-6">
                 <div><h4 class="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-3">Partenaires existants</h4><div id="admin-list-partenaires" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div></div>
                 <div class="border-t border-white/10 pt-6">
-                    <h4 class="text-lg font-bold text-white mb-4">Ajouter un partenaire</h4>
+                    <h4 id="partner-form-title" class="text-lg font-bold text-white mb-4">Ajouter un partenaire</h4>
+                    <input type="hidden" id="edit-partner-id" value="">
                     <input type="text" id="add-partner-name" placeholder="Nom de l'entreprise" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm mb-4 outline-none">
                     <input type="url" id="add-partner-url" placeholder="Lien vers leur site web (https://...)" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm mb-4 outline-none">
                     
@@ -426,7 +457,10 @@
                     </div>
                     <button type="button" onclick="document.getElementById('partner-img-input').click()" class="bg-white/5 border border-white/10 text-white text-xs px-4 py-3 rounded-xl w-full mb-6">+ Uploader le logo</button>
                     <input type="file" id="partner-img-input" accept="image/*" class="hidden">
-                    <button onclick="addPartner()" class="w-full bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition">Ajouter</button>
+                    <div class="flex gap-3">
+                        <button id="partner-cancel-btn" onclick="resetPartnerForm()" class="hidden px-6 py-3 bg-white/10 text-white rounded-xl text-sm font-bold">Annuler</button>
+                        <button onclick="savePartner()" class="flex-1 bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition">Enregistrer</button>
+                    </div>
                 </div>
             </div>
 
@@ -434,7 +468,8 @@
             <div id="admin-tab-annonces" class="admin-tab hidden space-y-6">
                 <div><h4 class="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-3">Annonces</h4><div id="admin-list-annonces" class="flex flex-col gap-3"></div></div>
                 <div class="border-t border-white/10 pt-6">
-                    <h4 class="text-lg font-bold text-white mb-4">Publier une annonce</h4>
+                    <h4 id="announcement-form-title" class="text-lg font-bold text-white mb-4">Publier une annonce</h4>
+                    <input type="hidden" id="edit-announcement-id" value="">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <input type="text" id="add-announcement-title" placeholder="Titre" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none">
                         <input type="text" id="add-announcement-date" placeholder="Date" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none">
@@ -451,7 +486,18 @@
                     </div>
                     <button type="button" onclick="document.getElementById('announcement-img-input').click()" class="bg-white/5 border border-white/10 text-white text-xs px-4 py-3 rounded-xl w-full mb-6">+ Ajouter une image (16:9)</button>
                     <input type="file" id="announcement-img-input" accept="image/*" class="hidden">
-                    <button onclick="addAnnouncement()" class="w-full bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition">Publier</button>
+                    <div class="flex gap-3">
+                        <button id="announcement-cancel-btn" onclick="resetAnnouncementForm()" class="hidden px-6 py-3 bg-white/10 text-white rounded-xl text-sm font-bold">Annuler</button>
+                        <button onclick="saveAnnouncement()" class="flex-1 bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition">Enregistrer</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: COMPTES (DEMANDES) -->
+            <div id="admin-tab-comptes" class="admin-tab hidden space-y-6">
+                <div>
+                    <h4 class="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-3">Demandes de création de compte en attente</h4>
+                    <div id="admin-list-requests" class="flex flex-col gap-3"></div>
                 </div>
             </div>
 
@@ -484,6 +530,7 @@
         let globalPalmares = [];
         let globalAnnonces = [];
         let globalPartners = [];
+        let globalRequests = [];
         
         if(!localStorage.getItem('aerix_tab_order')) {
             localStorage.setItem('aerix_tab_order', JSON.stringify(['histoire', 'effectifs', 'palmares', 'annonces', 'boutique', 'partenaires']));
@@ -519,6 +566,11 @@
                 globalPartners = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 renderPartners();
                 renderAdminLists();
+            });
+
+            db.collection("account_requests").onSnapshot((snapshot) => {
+                globalRequests = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderAdminRequests();
             });
 
             db.collection("settings").doc("global").onSnapshot((doc) => {
@@ -672,12 +724,76 @@
             menu.classList.toggle('hidden');
         }
 
+        function openAccountRequestModal() {
+            document.getElementById('account-request-modal').classList.remove('hidden');
+        }
+        function closeAccountRequestModal() {
+            document.getElementById('account-request-modal').classList.add('hidden');
+        }
+
+        async function submitAccountRequest() {
+            const username = document.getElementById('req-username').value.trim();
+            const email = document.getElementById('req-email').value.trim();
+            if(!username || !email) return alert("Remplis tous les champs.");
+            
+            try {
+                await db.collection("account_requests").add({
+                    username,
+                    email,
+                    status: 'pending',
+                    createdAt: new Date().toISOString()
+                });
+                alert("Demande envoyée avec succès ! L'administrateur va l'examiner.");
+                document.getElementById('req-username').value = '';
+                document.getElementById('req-email').value = '';
+                closeAccountRequestModal();
+            } catch(e) {
+                console.error(e);
+                alert("Erreur lors de l'envoi de la demande.");
+            }
+        }
+
+        function renderAdminRequests() {
+            const container = document.getElementById('admin-list-requests');
+            const badge = document.getElementById('pending-badge');
+            const pending = globalRequests.filter(r => r.status === 'pending');
+            
+            if(pending.length > 0) {
+                badge.innerText = pending.length;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+
+            container.innerHTML = pending.length ? '' : '<p class="text-gray-500 text-sm italic">Aucune demande en attente.</p>';
+            pending.forEach(req => {
+                container.innerHTML += `
+                    <div class="bg-black/50 p-4 rounded-xl border border-white/5 flex justify-between items-center">
+                        <div>
+                            <div class="text-white font-bold text-sm">${req.username}</div>
+                            <div class="text-xs text-gray-400">${req.email}</div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="approveRequest('${req.id}', '${req.email}')" class="bg-green-500/20 text-green-400 text-xs px-3 py-1.5 rounded-lg border border-green-500/30 font-bold hover:bg-green-500/30">Valider</button>
+                            <button onclick="deleteItem('account_requests', '${req.id}')" class="bg-red-500/20 text-red-400 text-xs px-3 py-1.5 rounded-lg border border-red-500/30">Refuser</button>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        async function approveRequest(id, email) {
+            if(confirm(`Voulez-vous valider le compte pour ${email} ?`)) {
+                await db.collection("account_requests").doc(id).delete();
+                alert(`Compte validé pour ${email} ! (Vous pouvez lui envoyer ses accès par message).`);
+            }
+        }
+
         function renderAdminLists() {
-            document.getElementById('admin-list-boutique').innerHTML = globalShop.map(item => `<div class="bg-black/50 p-4 rounded-xl border border-white/5 flex justify-between items-center"><div><div class="text-white font-bold text-sm">${item.name}</div><div class="text-xs text-gray-500">${item.price} €</div></div><button onclick="deleteItem('shop', '${item.id}')" class="text-red-400 text-xs bg-red-500/10 px-3 py-1.5 rounded-lg">Suppr</button></div>`).join('');
-            document.getElementById('admin-list-effectifs').innerHTML = globalEffectifs.map(r => `<div class="bg-black/50 p-4 rounded-xl border border-white/5 flex justify-between items-center"><div><div class="text-white font-bold text-sm">${r.name}</div><div class="text-xs text-gray-500">${r.game || 'Général'}</div></div><button onclick="deleteItem('effectifs', '${r.id}')" class="text-red-400 text-xs bg-red-500/10 px-3 py-1.5 rounded-lg">Suppr</button></div>`).join('');
-            document.getElementById('admin-list-palmares').innerHTML = globalPalmares.map(p => `<div class="bg-black/50 p-4 rounded-xl border border-white/5 flex justify-between items-center"><div><div class="text-white font-bold text-sm">${p.title}</div><div class="text-xs text-gray-500">${p.game || 'Général'}</div></div><button onclick="deleteItem('palmares', '${p.id}')" class="text-red-400 text-xs bg-red-500/10 px-3 py-1.5 rounded-lg">Suppr</button></div>`).join('');
-            document.getElementById('admin-list-partenaires').innerHTML = globalPartners.map(p => `<div class="bg-black/50 p-4 rounded-xl border border-white/5 flex justify-between items-center"><div class="text-white font-bold text-sm">${p.name}</div><button onclick="deleteItem('partners', '${p.id}')" class="text-red-400 text-xs bg-red-500/10 px-3 py-1.5 rounded-lg">Suppr</button></div>`).join('');
-            document.getElementById('admin-list-annonces').innerHTML = globalAnnonces.map(a => `<div class="bg-black/50 p-4 rounded-xl border border-white/5 flex justify-between items-center"><div><div class="text-white font-bold text-sm">${a.title}</div><div class="text-xs text-gray-500">${a.game || 'Général'}</div></div><button onclick="deleteItem('annonces', '${a.id}')" class="text-red-400 text-xs bg-red-500/10 px-3 py-1.5 rounded-lg">Suppr</button></div>`).join('');
+            document.getElementById('admin-list-boutique').innerHTML = globalShop.map(item => `<div class="bg-black/50 p-4 rounded-xl border border-white/5 flex justify-between items-center"><div><div class="text-white font-bold text-sm">${item.name}</div><div class="text-xs text-gray-500">${item.price} €</div></div><div class="flex gap-2"><button onclick="startEditShop('${item.id}')" class="text-aerix-purple text-xs bg-aerix-purple/10 px-3 py-1.5 rounded-lg">Éditer</button><button onclick="deleteItem('shop', '${item.id}')" class="text-red-400 text-xs bg-red-500/10 px-3 py-1.5 rounded-lg">Suppr</button></div></div>`).join('');
+            document.getElementById('admin-list-effectifs').innerHTML = globalEffectifs.map(r => `<div class="bg-black/50 p-4 rounded-xl border border-white/5 flex justify-between items-center"><div><div class="text-white font-bold text-sm">${r.name}</div><div class="text-xs text-gray-500">${r.game || 'Général'}</div></div><div class="flex gap-2"><button onclick="startEditEffectif('${r.id}')" class="text-aerix-purple text-xs bg-aerix-purple/10 px-3 py-1.5 rounded-lg">Éditer</button><button onclick="deleteItem('effectifs', '${r.id}')" class="text-red-400 text-xs bg-red-500/10 px-3 py-1.5 rounded-lg">Suppr</button></div></div>`).join('');
+            document.getElementById('admin-list-palmares').innerHTML = globalPalmares.map(p => `<div class="bg-black/50 p-4 rounded-xl border border-white/5 flex justify-between items-center"><div><div class="text-white font-bold text-sm">${p.title}</div><div class="text-xs text-gray-500">${p.game || 'Général'}</div></div><div class="flex gap-2"><button onclick="startEditPalmares('${p.id}')" class="text-aerix-purple text-xs bg-aerix-purple/10 px-3 py-1.5 rounded-lg">Éditer</button><button onclick="deleteItem('palmares', '${p.id}')" class="text-red-400 text-xs bg-red-500/10 px-3 py-1.5 rounded-lg">Suppr</button></div></div>`).join('');
+            document.getElementById('admin-list-partenaires').innerHTML = globalPartners.map(p => `<div class="bg-black/50 p-4 rounded-xl border border-white/5 flex justify-between items-center"><div class="text-white font-bold text-sm">${p.name}</div><div class="flex gap-2"><button onclick="startEditPartner('${p.id}')" class="text-aerix-purple text-xs bg-aerix-purple/10 px-3 py-1.5 rounded-lg">Éditer</button><button onclick="deleteItem('partners', '${p.id}')" class="text-red-400 text-xs bg-red-500/10 px-3 py-1.5 rounded-lg">Suppr</button></div></div>`).join('');
+            document.getElementById('admin-list-annonces').innerHTML = globalAnnonces.map(a => `<div class="bg-black/50 p-4 rounded-xl border border-white/5 flex justify-between items-center"><div><div class="text-white font-bold text-sm">${a.title}</div><div class="text-xs text-gray-500">${a.game || 'Général'}</div></div><div class="flex gap-2"><button onclick="startEditAnnouncement('${a.id}')" class="text-aerix-purple text-xs bg-aerix-purple/10 px-3 py-1.5 rounded-lg">Éditer</button><button onclick="deleteItem('annonces', '${a.id}')" class="text-red-400 text-xs bg-red-500/10 px-3 py-1.5 rounded-lg">Suppr</button></div></div>`).join('');
         }
 
         async function deleteItem(collectionName, docId) {
@@ -687,41 +803,230 @@
             }
         }
 
-        async function addShopItem() {
-            const name = document.getElementById('add-shop-name').value, price = document.getElementById('add-shop-price').value, sizes = document.getElementById('add-shop-sizes').value, desc = document.getElementById('add-shop-desc').value;
+        // --- EDITION & AJOUT BOUTIQUE ---
+        function startEditShop(id) {
+            const item = globalShop.find(s => s.id === id);
+            if(!item) return;
+            document.getElementById('edit-shop-id').value = item.id;
+            document.getElementById('add-shop-name').value = item.name;
+            document.getElementById('add-shop-price').value = item.price;
+            document.getElementById('add-shop-sizes').value = item.sizes || '';
+            document.getElementById('add-shop-desc').value = item.desc || '';
+            tempShopImages = item.images ? [...item.images] : (item.image ? [item.image] : []);
+            renderShopPreviews();
+            document.getElementById('shop-form-title').innerText = "Modifier le produit";
+            document.getElementById('shop-cancel-btn').classList.remove('hidden');
+        }
+        function resetShopForm() {
+            document.getElementById('edit-shop-id').value = '';
+            document.getElementById('add-shop-name').value = '';
+            document.getElementById('add-shop-price').value = '';
+            document.getElementById('add-shop-sizes').value = '';
+            document.getElementById('add-shop-desc').value = '';
+            tempShopImages = [];
+            renderShopPreviews();
+            document.getElementById('shop-form-title').innerText = "Ajouter un produit";
+            document.getElementById('shop-cancel-btn').classList.add('hidden');
+        }
+        async function saveShopItem() {
+            const id = document.getElementById('edit-shop-id').value;
+            const name = document.getElementById('add-shop-name').value;
+            const price = document.getElementById('add-shop-price').value;
+            const sizes = document.getElementById('add-shop-sizes').value;
+            const desc = document.getElementById('add-shop-desc').value;
             if(!name || !price) return alert("Nom et prix obligatoires.");
-            await db.collection("shop").add({ name, price, sizes, desc, images: tempShopImages });
-            document.getElementById('add-shop-name').value = ''; document.getElementById('add-shop-price').value = ''; document.getElementById('add-shop-desc').value = ''; tempShopImages = []; renderShopPreviews(); navigate('boutique'); toggleAdmin();
+
+            if(id) {
+                await db.collection("shop").doc(id).update({ name, price, sizes, desc, images: tempShopImages });
+            } else {
+                await db.collection("shop").add({ name, price, sizes, desc, images: tempShopImages });
+            }
+            resetShopForm();
+            navigate('boutique');
+            toggleAdmin();
         }
 
-        async function addEffectif() {
-            const name = document.getElementById('add-roster-name').value, game = document.getElementById('add-roster-game').value, desc = document.getElementById('add-roster-desc').value;
+        // --- EDITION & AJOUT EFFECTIFS ---
+        function startEditEffectif(id) {
+            const item = globalEffectifs.find(e => e.id === id);
+            if(!item) return;
+            document.getElementById('edit-effectif-id').value = item.id;
+            document.getElementById('add-roster-name').value = item.name;
+            document.getElementById('add-roster-game').value = item.game || 'Tous';
+            document.getElementById('add-roster-desc').value = item.desc || '';
+            tempRosterImage = item.image || null;
+            if(tempRosterImage) {
+                document.getElementById('roster-img-preview').style.backgroundImage = `url(${tempRosterImage})`;
+                document.getElementById('roster-img-preview').classList.remove('hidden');
+            }
+            tempPlayers = item.players ? [...item.players] : [];
+            renderTempPlayers();
+            document.getElementById('effectif-form-title').innerText = "Modifier l'équipe";
+            document.getElementById('effectif-cancel-btn').classList.remove('hidden');
+        }
+        function resetEffectifForm() {
+            document.getElementById('edit-effectif-id').value = '';
+            document.getElementById('add-roster-name').value = '';
+            document.getElementById('add-roster-game').value = 'Tous';
+            document.getElementById('add-roster-desc').value = '';
+            tempRosterImage = null;
+            tempPlayers = [];
+            document.getElementById('roster-img-preview').classList.add('hidden');
+            renderTempPlayers();
+            document.getElementById('effectif-form-title').innerText = "Créer une équipe";
+            document.getElementById('effectif-cancel-btn').classList.add('hidden');
+        }
+        async function saveEffectif() {
+            const id = document.getElementById('edit-effectif-id').value;
+            const name = document.getElementById('add-roster-name').value;
+            const game = document.getElementById('add-roster-game').value;
+            const desc = document.getElementById('add-roster-desc').value;
             if(!name) return alert("Nom obligatoire.");
-            await db.collection("effectifs").add({ name, game, desc, image: tempRosterImage || "", players: tempPlayers });
-            document.getElementById('add-roster-name').value = ''; document.getElementById('add-roster-game').value = 'Tous'; document.getElementById('add-roster-desc').value = ''; tempRosterImage = null; tempPlayers = []; document.getElementById('roster-img-preview').classList.add('hidden'); renderTempPlayers(); navigate('effectifs'); toggleAdmin();
+
+            const data = { name, game, desc, image: tempRosterImage || "", players: tempPlayers };
+            if(id) {
+                await db.collection("effectifs").doc(id).update(data);
+            } else {
+                await db.collection("effectifs").add(data);
+            }
+            resetEffectifForm();
+            navigate('effectifs');
+            toggleAdmin();
         }
 
-        async function addPalmares() {
-            const title = document.getElementById('add-palm-title').value, date = document.getElementById('add-palm-date').value, game = document.getElementById('add-palm-game').value, desc = document.getElementById('add-palm-desc').value;
+        // --- EDITION & AJOUT PALMARÈS ---
+        function startEditPalmares(id) {
+            const item = globalPalmares.find(p => p.id === id);
+            if(!item) return;
+            document.getElementById('edit-palmares-id').value = item.id;
+            document.getElementById('add-palm-title').value = item.title;
+            document.getElementById('add-palm-date').value = item.date || '';
+            document.getElementById('add-palm-game').value = item.game || 'Tous';
+            document.getElementById('add-palm-desc').value = item.desc || '';
+            tempPalmImage = item.image || null;
+            if(tempPalmImage) {
+                document.getElementById('palm-img-preview').style.backgroundImage = `url(${tempPalmImage})`;
+                document.getElementById('palm-img-preview').classList.remove('hidden');
+            }
+            document.getElementById('palmares-form-title').innerText = "Modifier le résultat";
+            document.getElementById('palmares-cancel-btn').classList.remove('hidden');
+        }
+        function resetPalmaresForm() {
+            document.getElementById('edit-palmares-id').value = '';
+            document.getElementById('add-palm-title').value = '';
+            document.getElementById('add-palm-date').value = '';
+            document.getElementById('add-palm-game').value = 'Tous';
+            document.getElementById('add-palm-desc').value = '';
+            tempPalmImage = null;
+            document.getElementById('palm-img-preview').classList.add('hidden');
+            document.getElementById('palmares-form-title').innerText = "Ajouter un résultat";
+            document.getElementById('palmares-cancel-btn').classList.add('hidden');
+        }
+        async function savePalmares() {
+            const id = document.getElementById('edit-palmares-id').value;
+            const title = document.getElementById('add-palm-title').value;
+            const date = document.getElementById('add-palm-date').value;
+            const game = document.getElementById('add-palm-game').value;
+            const desc = document.getElementById('add-palm-desc').value;
             if(!title) return alert("Titre obligatoire.");
-            await db.collection("palmares").add({ title, date, game, desc, image: tempPalmImage || "" });
-            document.getElementById('add-palm-title').value = ''; document.getElementById('add-palm-date').value = ''; document.getElementById('add-palm-desc').value = ''; document.getElementById('add-palm-game').value = 'Tous'; 
-            tempPalmImage = null; document.getElementById('palm-img-preview').classList.add('hidden');
-            navigate('palmares'); toggleAdmin();
+
+            const data = { title, date, game, desc, image: tempPalmImage || "" };
+            if(id) {
+                await db.collection("palmares").doc(id).update(data);
+            } else {
+                await db.collection("palmares").add(data);
+            }
+            resetPalmaresForm();
+            navigate('palmares');
+            toggleAdmin();
         }
 
-        async function addPartner() {
-            const name = document.getElementById('add-partner-name').value, url = document.getElementById('add-partner-url').value;
+        // --- EDITION & AJOUT PARTENAIRES ---
+        function startEditPartner(id) {
+            const item = globalPartners.find(p => p.id === id);
+            if(!item) return;
+            document.getElementById('edit-partner-id').value = item.id;
+            document.getElementById('add-partner-name').value = item.name;
+            document.getElementById('add-partner-url').value = item.url || '';
+            tempPartnerImage = item.image || null;
+            if(tempPartnerImage) {
+                document.getElementById('partner-img-preview').style.backgroundImage = `url(${tempPartnerImage})`;
+                document.getElementById('partner-img-preview').classList.remove('hidden');
+            }
+            document.getElementById('partner-form-title').innerText = "Modifier le partenaire";
+            document.getElementById('partner-cancel-btn').classList.remove('hidden');
+        }
+        function resetPartnerForm() {
+            document.getElementById('edit-partner-id').value = '';
+            document.getElementById('add-partner-name').value = '';
+            document.getElementById('add-partner-url').value = '';
+            tempPartnerImage = null;
+            document.getElementById('partner-img-preview').classList.add('hidden');
+            document.getElementById('partner-form-title').innerText = "Ajouter un partenaire";
+            document.getElementById('partner-cancel-btn').classList.add('hidden');
+        }
+        async function savePartner() {
+            const id = document.getElementById('edit-partner-id').value;
+            const name = document.getElementById('add-partner-name').value;
+            const url = document.getElementById('add-partner-url').value;
             if(!name) return alert("Nom obligatoire.");
-            await db.collection("partners").add({ name, url, image: tempPartnerImage || "" });
-            document.getElementById('add-partner-name').value = ''; document.getElementById('add-partner-url').value = ''; tempPartnerImage = null; document.getElementById('partner-img-preview').classList.add('hidden'); navigate('partenaires'); toggleAdmin();
+
+            const data = { name, url, image: tempPartnerImage || "" };
+            if(id) {
+                await db.collection("partners").doc(id).update(data);
+            } else {
+                await db.collection("partners").add(data);
+            }
+            resetPartnerForm();
+            navigate('partenaires');
+            toggleAdmin();
         }
 
-        async function addAnnouncement() {
-            const title = document.getElementById('add-announcement-title').value, date = document.getElementById('add-announcement-date').value, game = document.getElementById('add-announcement-game').value, desc = document.getElementById('add-announcement-desc').value;
+        // --- EDITION & AJOUT ANNONCES ---
+        function startEditAnnouncement(id) {
+            const item = globalAnnonces.find(a => a.id === id);
+            if(!item) return;
+            document.getElementById('edit-announcement-id').value = item.id;
+            document.getElementById('add-announcement-title').value = item.title;
+            document.getElementById('add-announcement-date').value = item.date || '';
+            document.getElementById('add-announcement-game').value = item.game || 'Tous';
+            document.getElementById('add-announcement-desc').value = item.desc || '';
+            tempAnnouncementImage = item.image || null;
+            if(tempAnnouncementImage) {
+                document.getElementById('announcement-img-preview').style.backgroundImage = `url(${tempAnnouncementImage})`;
+                document.getElementById('announcement-img-preview').classList.remove('hidden');
+            }
+            document.getElementById('announcement-form-title').innerText = "Modifier l'annonce";
+            document.getElementById('announcement-cancel-btn').classList.remove('hidden');
+        }
+        function resetAnnouncementForm() {
+            document.getElementById('edit-announcement-id').value = '';
+            document.getElementById('add-announcement-title').value = '';
+            document.getElementById('add-announcement-date').value = '';
+            document.getElementById('add-announcement-game').value = 'Tous';
+            document.getElementById('add-announcement-desc').value = '';
+            tempAnnouncementImage = null;
+            document.getElementById('announcement-img-preview').classList.add('hidden');
+            document.getElementById('announcement-form-title').innerText = "Publier une annonce";
+            document.getElementById('announcement-cancel-btn').classList.add('hidden');
+        }
+        async function saveAnnouncement() {
+            const id = document.getElementById('edit-announcement-id').value;
+            const title = document.getElementById('add-announcement-title').value;
+            const date = document.getElementById('add-announcement-date').value;
+            const game = document.getElementById('add-announcement-game').value;
+            const desc = document.getElementById('add-announcement-desc').value;
             if(!title || !desc) return alert("Titre et contenu obligatoires.");
-            await db.collection("annonces").add({ title, date: date || "Aujourd'hui", game, desc, image: tempAnnouncementImage || "" });
-            document.getElementById('add-announcement-title').value = ''; document.getElementById('add-announcement-date').value = ''; document.getElementById('add-announcement-desc').value = ''; document.getElementById('add-announcement-game').value = 'Tous'; tempAnnouncementImage = null; document.getElementById('announcement-img-preview').classList.add('hidden'); navigate('annonces'); toggleAdmin();
+
+            const data = { title, date: date || "Aujourd'hui", game, desc, image: tempAnnouncementImage || "" };
+            if(id) {
+                await db.collection("annonces").doc(id).update(data);
+            } else {
+                await db.collection("annonces").add(data);
+            }
+            resetAnnouncementForm();
+            navigate('annonces');
+            toggleAdmin();
         }
 
         async function saveSettingsToFirebase() {
@@ -780,7 +1085,6 @@
             order.forEach(tabId => {
                 if(hiddenTabs[tabId] || !labels[tabId]) return;
                 
-                // Desktop Link
                 const btn = document.createElement('button'); 
                 btn.id = 'nav-' + tabId; 
                 btn.className = "nav-btn hover:text-white"; 
@@ -788,7 +1092,6 @@
                 btn.setAttribute('onclick', `navigate('${tabId}')`); 
                 container.appendChild(btn);
 
-                // Mobile Link
                 if(mobileContainer) {
                     const mobBtn = document.createElement('button');
                     mobBtn.className = "text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition";
@@ -856,7 +1159,7 @@
         document.getElementById('announcement-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 16/9, b => { tempAnnouncementImage = b; document.getElementById('announcement-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('announcement-img-preview').classList.remove('hidden'); }); e.target.value=''; });
 
         function toggleAdmin() { document.getElementById('admin-modal').classList.toggle('hidden'); }
-        function switchAdminTab(tab) { document.querySelectorAll('.admin-tab').forEach(t => t.classList.add('hidden')); document.getElementById('admin-tab-' + tab).classList.remove('hidden'); ['boutique', 'effectifs', 'palmares', 'partenaires', 'annonces', 'parametres'].forEach(t => { const btn = document.getElementById('tab-btn-' + t); if(btn) btn.className = "flex-1 min-w-[100px] py-2.5 text-xs font-bold rounded-lg text-gray-500 hover:text-white transition"; }); const activeTabBtn = document.getElementById('tab-btn-' + tab); if(activeTabBtn) activeTabBtn.className = "flex-1 min-w-[100px] py-2.5 text-xs font-bold rounded-lg bg-white/10 text-white transition"; }
+        function switchAdminTab(tab) { document.querySelectorAll('.admin-tab').forEach(t => t.classList.add('hidden')); document.getElementById('admin-tab-' + tab).classList.remove('hidden'); ['boutique', 'effectifs', 'palmares', 'partenaires', 'annonces', 'comptes', 'parametres'].forEach(t => { const btn = document.getElementById('tab-btn-' + t); if(btn) btn.className = "flex-1 min-w-[90px] py-2.5 text-xs font-bold rounded-lg text-gray-500 hover:text-white transition"; }); const activeTabBtn = document.getElementById('tab-btn-' + tab); if(activeTabBtn) activeTabBtn.className = "flex-1 min-w-[90px] py-2.5 text-xs font-bold rounded-lg bg-white/10 text-white transition"; }
 
         let currentModalImages = [], currentModalImgIndex = 0;
         function openProductModal(index) { const item = globalShop[index]; if(!item) return; document.getElementById('modal-product-title').innerText = item.name; document.getElementById('modal-product-price').innerText = item.price + " €"; document.getElementById('modal-product-desc').innerText = item.desc || ""; const sizesDiv = document.getElementById('modal-product-sizes'); sizesDiv.innerHTML = ''; const sizesArray = item.sizes ? item.sizes.split(',').map(s => s.trim()) : ["Unique"]; sizesArray.forEach(size => { sizesDiv.innerHTML += `<button class="w-12 h-12 rounded-xl border border-white/20 text-white text-sm font-bold flex items-center justify-center hover:border-aerix-purple hover:bg-aerix-purple/10 transition">${size}</button>`; }); currentModalImages = Array.isArray(item.images) && item.images.length > 0 ? item.images : (item.image ? [item.image] : []); const btnPrev = document.getElementById('slider-prev'), btnNext = document.getElementById('slider-next'); if(currentModalImages.length > 0) { currentModalImgIndex = 0; document.getElementById('modal-product-img').style.display = 'block'; updateSliderView(); if(currentModalImages.length > 1) { btnPrev.classList.remove('hidden'); btnNext.classList.remove('hidden'); } else { btnPrev.classList.add('hidden'); btnNext.classList.add('hidden'); } } else { document.getElementById('modal-product-img').style.display = 'none'; btnPrev.classList.add('hidden'); btnNext.classList.add('hidden'); document.getElementById('slider-dots').innerHTML = ''; } document.getElementById('product-modal').classList.remove('hidden'); }
