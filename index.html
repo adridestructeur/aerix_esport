@@ -13,6 +13,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
 
+    <!-- Firebase Compat SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+
     <script>
         tailwind.config = {
             theme: {
@@ -26,80 +30,43 @@
         }
     </script>
     <style>
-        body { 
-            background-color: #050505; 
-            color: #f3f4f6; 
-            overflow-x: hidden; 
-            scroll-behavior: smooth; 
-            user-select: none; 
-            -webkit-user-select: none; 
-            -moz-user-select: none; 
-            -ms-user-select: none; 
-        }
-        input, textarea, select { 
-            user-select: text; 
-            -webkit-user-select: text; 
-        }
-
+        body { background-color: #050505; color: #f3f4f6; overflow-x: hidden; scroll-behavior: smooth; user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; }
+        input, textarea, select { user-select: text; -webkit-user-select: text; }
         #mouse-glow { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0; background: radial-gradient(350px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(139, 92, 246, 0.08), transparent 80%); transition: background 0.1s ease-out; }
-        
-        .glass-panel { 
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%); 
-            backdrop-filter: blur(40px) saturate(120%); 
-            -webkit-backdrop-filter: blur(40px) saturate(120%); 
-            border: 1px solid rgba(255, 255, 255, 0.1); 
-            box-shadow: inset 1px 1px 0px rgba(255, 255, 255, 0.2), 0 8px 32px 0 rgba(0, 0, 0, 0.4);
-            position: relative; 
-            z-index: 10; 
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
-        }
-        .glass-panel:hover { 
-            border-color: rgba(139, 92, 246, 0.5); 
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 100%);
-            box-shadow: inset 1px 1px 0px rgba(255, 255, 255, 0.3), 0 10px 40px 0 rgba(139, 92, 246, 0.3);
-            transform: translateY(-4px); 
-        }
-        
+        .glass-panel { background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%); backdrop-filter: blur(40px) saturate(120%); -webkit-backdrop-filter: blur(40px) saturate(120%); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: inset 1px 1px 0px rgba(255, 255, 255, 0.2), 0 8px 32px 0 rgba(0, 0, 0, 0.4); position: relative; z-index: 10; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .glass-panel:hover { border-color: rgba(139, 92, 246, 0.5); background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 100%); box-shadow: inset 1px 1px 0px rgba(255, 255, 255, 0.3), 0 10px 40px 0 rgba(139, 92, 246, 0.3); transform: translateY(-4px); }
         .glass-panel-no-hover { background: rgba(20, 20, 20, 0.85); backdrop-filter: blur(30px); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.05); }
-        
         .nav-btn { padding: 0.4rem 1.2rem; border-radius: 9999px; transition: color 0.3s ease; position: relative; z-index: 2; background: transparent; border: none; cursor: pointer; white-space: nowrap; }
         .nav-btn.active { color: #ffffff; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
-
         .filter-btn { padding: 0.5rem 1.2rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; transition: all 0.3s ease; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: #9ca3af; cursor: pointer; }
         .filter-btn.active { background: #8B5CF6; color: white; border-color: #8B5CF6; box-shadow: 0 0 20px rgba(139,92,246,0.6); }
         .filter-btn:hover:not(.active) { background: rgba(255,255,255,0.1); color: white; }
-
         .page-view { display: none; }
         .page-view.active { display: block; }
-        
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #050505; }
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #8B5CF6; }
-
         .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); will-change: opacity, transform; }
         .reveal.active { opacity: 1; transform: translateY(0); }
         .delay-100 { transition-delay: 0.1s; }
         .delay-200 { transition-delay: 0.2s; }
         .delay-300 { transition-delay: 0.3s; }
-        
         #crop-image-container { max-height: 50vh; }
     </style>
 </head>
 <body class="antialiased selection:bg-purple-500 selection:text-white min-h-screen flex flex-col relative">
 
     <div id="mouse-glow"></div>
-    <!-- Fond d'écran configuré directement en dur avec l'image uploadée -->
     <div id="page-bg-layer" class="fixed inset-0 pointer-events-none z-[-2] transition-all duration-700 bg-cover bg-center" style="background-image: linear-gradient(to bottom, rgba(5,5,5,0.65), rgba(5,5,5,0.85)), url('abstract-black-violet-colors-background-design-flat_662214-314713.avif');"></div>
 
     <button id="scrollTopBtn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="fixed bottom-6 right-6 z-[90] glass-panel-no-hover text-white p-4 rounded-full opacity-0 pointer-events-none transition-all duration-500 hover:bg-aerix-purple/20 hover:border-aerix-purple shadow-lg">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"></path></svg>
     </button>
 
-    <!-- Barre de navigation haut harmonisée -->
+    <!-- Barre de navigation -->
     <nav class="fixed w-full z-50 border-b border-white/5 bg-[#080808]/90 backdrop-blur-md">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            
             <div class="cursor-pointer flex items-center" onclick="navigate('home')">
                 <img src="transparent-blanc.png" alt="AERIX Logo" class="h-10 w-auto object-contain transition-all duration-300 hover:drop-shadow-[0_0_15px_rgba(139,92,246,0.8)]">
             </div>
@@ -344,8 +311,8 @@
                 <div class="border-t border-white/10 pt-6">
                     <h4 class="text-lg font-bold text-white mb-4">Ajouter un produit</h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <input type="text" id="add-shop-name" placeholder="Nom du produit" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:border-aerix-purple outline-none">
-                        <input type="number" id="add-shop-price" placeholder="Prix (€)" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:border-aerix-purple outline-none">
+                        <input type="text" id="add-shop-name" placeholder="Nom du produit" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none">
+                        <input type="number" id="add-shop-price" placeholder="Prix (€)" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none">
                     </div>
                     <input type="text" id="add-shop-sizes" placeholder="Tailles (ex: S, M, L, XL)" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm mb-4 outline-none">
                     <textarea id="add-shop-desc" placeholder="Description..." class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm h-24 mb-4 outline-none"></textarea>
@@ -466,20 +433,92 @@
 
     <!-- SCRIPTS CORE -->
     <script>
-        if(localStorage.getItem('aerix_rosters') && !localStorage.getItem('aerix_effectifs')) {
-            localStorage.setItem('aerix_effectifs', localStorage.getItem('aerix_rosters'));
-        }
+        // --------------------------------------------------------
+        // CONFIGURATION ET INITIALISATION FIREBASE
+        // --------------------------------------------------------
+        const firebaseConfig = {
+            apiKey: "AIzaSyCD4RcLGWDM4qP9XWU_B-ogvStpuaORugo",
+            authDomain: "aerix-4172f.firebaseapp.com",
+            projectId: "aerix-4172f",
+            storageBucket: "aerix-4172f.firebasestorage.app",
+            messagingSenderId: "872781034781",
+            appId: "1:872781034781:web:5eae1b46e4819a2a675df4",
+            measurementId: "G-8B39F7DELZ"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
+        // Variables Globales pour stocker les données en direct
+        let globalShop = [];
+        let globalEffectifs = [];
+        let globalPalmares = [];
+        let globalAnnonces = [];
+        let globalPartners = [];
+        
+        // Initialisation de l'ordre par défaut si le site est vierge
+        if(!localStorage.getItem('aerix_tab_order')) {
+            localStorage.setItem('aerix_tab_order', JSON.stringify(['histoire', 'effectifs', 'palmares', 'annonces', 'boutique', 'partenaires']));
+        }
         let currentFilters = { effectifs: 'Tous', annonces: 'Tous', palmares: 'Tous' };
 
-        window.addEventListener('keydown', (e) => {
-            if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'x') {
-                const pwd = prompt("Accès Admin - Mot de passe :");
-                if (pwd === "aerixadmin") { toggleAdmin(); } 
-                else if (pwd !== null) { alert("Accès refusé."); }
-            }
-        });
+        // --------------------------------------------------------
+        // SYNCHRONISATION EN TEMPS RÉEL
+        // --------------------------------------------------------
+        function startSync() {
+            // Synchronisation de la Boutique
+            db.collection("shop").onSnapshot((snapshot) => {
+                globalShop = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderShop();
+                renderAdminLists();
+            });
 
+            // Synchronisation des Effectifs
+            db.collection("effectifs").onSnapshot((snapshot) => {
+                globalEffectifs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderEffectifs();
+                renderAdminLists();
+            });
+
+            // Synchronisation du Palmarès
+            db.collection("palmares").onSnapshot((snapshot) => {
+                globalPalmares = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderPalmares();
+                renderAdminLists();
+            });
+
+            // Synchronisation des Annonces
+            db.collection("annonces").onSnapshot((snapshot) => {
+                globalAnnonces = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderAnnonces();
+                renderAdminLists();
+            });
+
+            // Synchronisation des Partenaires
+            db.collection("partners").onSnapshot((snapshot) => {
+                globalPartners = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderPartners();
+                renderAdminLists();
+            });
+
+            // Synchronisation des Paramètres globaux (Onglets et Fonds d'écran)
+            db.collection("settings").doc("global").onSnapshot((doc) => {
+                if(doc.exists) {
+                    const data = doc.data();
+                    if(data.tabOrder) localStorage.setItem('aerix_tab_order', JSON.stringify(data.tabOrder));
+                    if(data.hiddenTabs) localStorage.setItem('aerix_hidden_tabs', JSON.stringify(data.hiddenTabs));
+                    if(data.pageBgs) localStorage.setItem('aerix_page_bgs', JSON.stringify(data.pageBgs));
+                }
+                renderNavbar();
+                renderAdminSettings();
+                const activePage = document.querySelector('.page-view.active');
+                if(activePage) applyPageBackground(activePage.id.replace('page-', ''));
+            });
+        }
+
+        // --------------------------------------------------------
+        // FONCTIONS D'AFFICHAGE (RENDER)
+        // --------------------------------------------------------
         function getGameBadge(game) {
             if(!game || game === 'Tous') return `<span class="bg-white/10 text-gray-300 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-white/10">AERIX</span>`;
             if(game === 'Rocket League') return `<span class="bg-aerix-rl/20 text-aerix-rl text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-aerix-rl/30">Rocket League</span>`;
@@ -487,180 +526,13 @@
             return `<span class="bg-aerix-purple/20 text-aerix-purple text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-aerix-purple/30">${game}</span>`;
         }
 
-        window.addEventListener('scroll', () => {
-            const btn = document.getElementById('scrollTopBtn');
-            if (window.scrollY > 300) { btn.classList.remove('opacity-0', 'pointer-events-none'); btn.classList.add('opacity-100', 'pointer-events-auto', 'translate-y-0'); } 
-            else { btn.classList.add('opacity-0', 'pointer-events-none'); btn.classList.remove('opacity-100', 'pointer-events-auto'); }
-        });
-
-        const setupScrollAnimations = () => {
-            const observer = new IntersectionObserver((entries, obs) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) { entry.target.classList.add('active'); obs.unobserve(entry.target); }
-                });
-            }, { threshold: 0.1 });
-            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-        };
-
-        const revealActiveElements = () => {
-            const activePage = document.querySelector('.page-view.active');
-            if(activePage) {
-                activePage.querySelectorAll('.reveal').forEach(el => {
-                    el.classList.add('active');
-                });
-            }
-        };
-
-        function updateNavPill(activeBtn) {
-            const pill = document.getElementById('nav-pill');
-            if(!activeBtn || !pill) return;
-            pill.style.left = activeBtn.offsetLeft + 'px'; pill.style.width = activeBtn.offsetWidth + 'px';
-            pill.style.top = activeBtn.offsetTop + 'px'; pill.style.height = activeBtn.offsetHeight + 'px';
-        }
-
-        function renderNavbar() {
-            const container = document.getElementById('dynamic-nav-links');
-            if(!container) return;
-            container.innerHTML = '';
-            
-            let order = JSON.parse(localStorage.getItem('aerix_tab_order'));
-            if (!order) {
-                order = ['annonces', 'effectifs', 'palmares', 'histoire', 'boutique', 'partenaires'];
-                localStorage.setItem('aerix_tab_order', JSON.stringify(order));
-            } else {
-                order = order.map(t => t === 'rosters' ? 'effectifs' : t);
-                if(!order.includes('palmares')) {
-                    order.splice(2, 0, 'palmares');
-                    localStorage.setItem('aerix_tab_order', JSON.stringify(order));
-                }
-            }
-            
-            const hiddenTabs = JSON.parse(localStorage.getItem('aerix_hidden_tabs')) || {};
-            const labels = { histoire: "Histoire", effectifs: "Effectifs", palmares: "Palmarès", boutique: "Boutique", partenaires: "Partenaires", annonces: "Annonces" };
-
-            order.forEach(tabId => {
-                if(hiddenTabs[tabId] || !labels[tabId]) return;
-                const btn = document.createElement('button');
-                btn.id = 'nav-' + tabId;
-                btn.className = "nav-btn hover:text-white";
-                btn.innerText = labels[tabId];
-                btn.setAttribute('onclick', `navigate('${tabId}')`);
-                container.appendChild(btn);
-            });
-        }
-
-        function navigate(pageId) {
-            document.querySelectorAll('.animate-fade-up').forEach(el => { el.style.animation = 'none'; el.offsetHeight; el.style.animation = null; });
-            document.querySelectorAll('.page-view').forEach(page => page.classList.remove('active'));
-            const targetPage = document.getElementById('page-' + pageId);
-            if(targetPage) targetPage.classList.add('active');
-            
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-            const activeBtn = document.getElementById('nav-' + pageId);
-            if(activeBtn) { activeBtn.classList.add('active'); updateNavPill(activeBtn); }
-            
-            applyPageBackground(pageId);
-            window.scrollTo({top: 0, behavior: 'smooth'});
-            setTimeout(() => {
-                setupScrollAnimations();
-                revealActiveElements();
-            }, 50);
-        }
-
-        function applyPageBackground(pageId) {
-            const bgs = JSON.parse(localStorage.getItem('aerix_page_bgs')) || {};
-            const bgLayer = document.getElementById('page-bg-layer');
-            if (bgs[pageId]) {
-                bgLayer.style.backgroundImage = `linear-gradient(to bottom, rgba(5,5,5,0.65), rgba(5,5,5,0.85)), url(${bgs[pageId]})`;
-            } else if (pageId === 'home') {
-                bgLayer.style.backgroundImage = `linear-gradient(to bottom, rgba(5,5,5,0.65), rgba(5,5,5,0.85)), url('abstract-black-violet-colors-background-design-flat_662214-314713.avif')`;
-            } else {
-                bgLayer.style.backgroundImage = 'none';
-            }
-        }
-
-        document.addEventListener('mousemove', (e) => {
-            document.documentElement.style.setProperty('--mouse-x', `${e.clientX}px`);
-            document.documentElement.style.setProperty('--mouse-y', `${e.clientY}px`);
-        });
-
-        let cropper = null, cropCallback = null;
-        function openCropper(file, ratio, callback) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const image = document.getElementById('crop-image'); image.src = e.target.result;
-                document.getElementById('crop-modal').classList.remove('hidden');
-                if (cropper) cropper.destroy();
-                cropper = new Cropper(image, { aspectRatio: ratio, viewMode: 1, background: false, autoCropArea: 1 });
-                cropCallback = callback;
-            };
-            reader.readAsDataURL(file);
-        }
-        function confirmCrop() {
-            if (!cropper) return;
-            const canvas = cropper.getCroppedCanvas({ maxWidth: 1200, maxHeight: 1200, fillColor: 'transparent' });
-            document.getElementById('crop-modal').classList.add('hidden');
-            cropper.destroy(); cropper = null;
-            if (cropCallback) cropCallback(canvas.toDataURL('image/webp', 0.85));
-        }
-        function cancelCrop() { document.getElementById('crop-modal').classList.add('hidden'); if (cropper) cropper.destroy(); cropper = null; }
-
-        let tempShopImages = [], tempRosterImage = null, tempPlayerAvatar = null, tempPlayers = [], tempPartnerImage = null, tempAnnouncementImage = null;
-        const defaultAvatar = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E";
-
-        document.getElementById('shop-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 4/5, b => { tempShopImages.push(b); renderShopPreviews(); }); e.target.value=''; });
-        function renderShopPreviews() { document.getElementById('shop-img-previews').innerHTML = tempShopImages.map((src, i) => `<div class="relative w-16 h-16 rounded-lg overflow-hidden border border-white/20"><img src="${src}" class="w-full h-full object-cover"><button type="button" onclick="tempShopImages.splice(${i}, 1); renderShopPreviews()" class="absolute top-0 right-0 bg-red-500/90 text-white text-[10px] w-5 h-5">✕</button></div>`).join(''); }
-
-        document.getElementById('roster-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 21/9, b => { tempRosterImage = b; document.getElementById('roster-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('roster-img-preview').classList.remove('hidden'); }); e.target.value=''; });
-        document.getElementById('player-avatar-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 1, b => { tempPlayerAvatar = b; document.getElementById('player-avatar-preview').src = b; }); e.target.value=''; });
-        
-        function addTempPlayer() {
-            const name = document.getElementById('temp-player-name').value;
-            if(!name) return;
-            tempPlayers.push({ name, avatar: tempPlayerAvatar || defaultAvatar });
-            document.getElementById('temp-player-name').value = ''; document.getElementById('player-avatar-preview').src = defaultAvatar; tempPlayerAvatar = null; renderTempPlayers();
-        }
-        function renderTempPlayers() { document.getElementById('temp-players-list').innerHTML = tempPlayers.map((p, i) => `<div class="flex items-center justify-between bg-black/60 p-2 rounded-xl text-xs border border-white/5"><div class="flex items-center gap-3"><img src="${p.avatar}" class="w-8 h-8 rounded-full bg-gray-900 object-cover"><span class="text-white font-bold">${p.name}</span></div><button type="button" onclick="tempPlayers.splice(${i}, 1); renderTempPlayers()" class="text-red-400">Retirer</button></div>`).join(''); }
-
-        document.getElementById('partner-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], NaN, b => { tempPartnerImage = b; document.getElementById('partner-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('partner-img-preview').classList.remove('hidden'); }); e.target.value=''; });
-        document.getElementById('announcement-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 16/9, b => { tempAnnouncementImage = b; document.getElementById('announcement-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('announcement-img-preview').classList.remove('hidden'); }); e.target.value=''; });
-
-        let currentShopItems = [], currentModalImages = [], currentModalImgIndex = 0;
-
-        function setFilter(section, filterValue) {
-            currentFilters[section] = filterValue;
-            updateFilterUI(section);
-            loadData();
-            setTimeout(revealActiveElements, 20);
-        }
-
-        function updateFilterUI(section) {
-            const container = document.getElementById(`filters-${section}`);
-            if(!container) return;
-            const currentVal = currentFilters[section];
-            container.querySelectorAll('.filter-btn').forEach(btn => {
-                if(btn.getAttribute('data-filter') === currentVal) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                }
-            });
-        }
-
-        function loadData() {
-            renderNavbar();
-
-            updateFilterUI('effectifs');
-            updateFilterUI('palmares');
-            updateFilterUI('annonces');
-
-            currentShopItems = JSON.parse(localStorage.getItem('aerix_shop')) || [];
-            const shopContainer = document.getElementById('shop-container');
-            shopContainer.innerHTML = currentShopItems.length ? '' : '<p class="text-gray-500 text-sm italic col-span-full text-center">Boutique vide.</p>';
-            currentShopItems.forEach((item, index) => {
+        function renderShop() {
+            const container = document.getElementById('shop-container');
+            container.innerHTML = globalShop.length ? '' : '<p class="text-gray-500 text-sm italic col-span-full text-center">Boutique vide.</p>';
+            globalShop.forEach((item, index) => {
                 let firstImg = Array.isArray(item.images) && item.images.length > 0 ? item.images[0] : item.image;
                 const imgTag = firstImg ? `<img src="${firstImg}" class="w-full h-full object-cover transition duration-700 group-hover:scale-105">` : `<div class="w-full h-full bg-black/40 flex items-center justify-center text-xs text-gray-600">Sans image</div>`;
-                shopContainer.innerHTML += `
+                container.innerHTML += `
                     <div onclick="openProductModal(${index})" class="glass-panel rounded-[1.5rem] flex flex-col h-full cursor-pointer group reveal delay-${(index%3)*100} overflow-hidden">
                         <div class="w-full h-72 bg-[#0a0a0a] relative border-b border-white/5">${imgTag}</div>
                         <div class="p-6 pt-4 flex-grow flex flex-col">
@@ -672,15 +544,14 @@
                         </div>
                     </div>`;
             });
+            setTimeout(revealActiveElements, 20);
+        }
 
-            let effectifs = JSON.parse(localStorage.getItem('aerix_effectifs')) || [];
-            if(currentFilters.effectifs !== 'Tous') {
-                effectifs = effectifs.filter(e => (e.game || 'Tous') === currentFilters.effectifs);
-            }
-            
-            const effContainer = document.getElementById('effectifs-container');
-            effContainer.innerHTML = effectifs.length ? '' : '<p class="text-gray-500 text-sm italic col-span-full text-center">Aucun effectif pour cette catégorie.</p>';
-            effectifs.forEach((r, index) => {
+        function renderEffectifs() {
+            let filtered = currentFilters.effectifs === 'Tous' ? globalEffectifs : globalEffectifs.filter(e => (e.game || 'Tous') === currentFilters.effectifs);
+            const container = document.getElementById('effectifs-container');
+            container.innerHTML = filtered.length ? '' : '<p class="text-gray-500 text-sm italic col-span-full text-center">Aucun effectif pour cette catégorie.</p>';
+            filtered.forEach((r, index) => {
                 const imgHTML = r.image ? `<div class="w-full h-48 -mt-10 -mx-10 mb-8 rounded-t-[2rem] overflow-hidden relative border-b border-white/5"><img src="${r.image}" class="w-full h-full object-cover"><div class="absolute inset-0 bg-gradient-to-t from-[#050505] to-transparent"></div></div>` : '';
                 let playersHTML = '';
                 if(r.players && r.players.length > 0) {
@@ -688,27 +559,24 @@
                     r.players.forEach(p => { playersHTML += `<div class="flex items-center gap-3 bg-white/5 pr-4 rounded-full border border-white/5 hover:border-aerix-purple/50 transition"><img src='${p.avatar}' class="w-10 h-10 rounded-full object-cover bg-black border border-white/10"><span class="text-sm font-bold text-white">${p.name}</span></div>`; });
                     playersHTML += `</div>`;
                 }
-                effContainer.innerHTML += `
+                container.innerHTML += `
                     <div class="glass-panel rounded-[2rem] p-10 reveal delay-${(index%2)*100} relative overflow-hidden">
                         ${imgHTML}
-                        <div class="flex items-center justify-between mb-4">
-                            ${getGameBadge(r.game)}
-                        </div>
+                        <div class="flex items-center justify-between mb-4">${getGameBadge(r.game)}</div>
                         <h4 class="text-3xl font-bold text-white mb-4">${r.name}</h4>
                         <p class="text-gray-400 text-sm leading-relaxed">${r.desc}</p>
                         ${playersHTML}
                     </div>`;
             });
+            setTimeout(revealActiveElements, 20);
+        }
 
-            let palmares = JSON.parse(localStorage.getItem('aerix_palmares')) || [];
-            if(currentFilters.palmares !== 'Tous') {
-                palmares = palmares.filter(p => (p.game || 'Tous') === currentFilters.palmares);
-            }
-            
-            const palmContainer = document.getElementById('palmares-container');
-            palmContainer.innerHTML = palmares.length ? '' : '<p class="text-gray-500 text-sm italic col-span-full text-center">Aucun résultat pour cette catégorie.</p>';
-            palmares.forEach((p, index) => {
-                palmContainer.innerHTML += `
+        function renderPalmares() {
+            let filtered = currentFilters.palmares === 'Tous' ? globalPalmares : globalPalmares.filter(p => (p.game || 'Tous') === currentFilters.palmares);
+            const container = document.getElementById('palmares-container');
+            container.innerHTML = filtered.length ? '' : '<p class="text-gray-500 text-sm italic col-span-full text-center">Aucun résultat pour cette catégorie.</p>';
+            filtered.forEach((p, index) => {
+                container.innerHTML += `
                     <div class="glass-panel p-8 rounded-[2rem] reveal delay-${(index%3)*100} border-t-4 border-t-aerix-purple/50">
                         <div class="flex justify-between items-start mb-6">
                             ${getGameBadge(p.game)}
@@ -718,17 +586,16 @@
                         <p class="text-gray-400 text-sm leading-relaxed">${p.desc}</p>
                     </div>`;
             });
+            setTimeout(revealActiveElements, 20);
+        }
 
-            let announcements = JSON.parse(localStorage.getItem('aerix_announcements')) || [];
-            if(currentFilters.annonces !== 'Tous') {
-                announcements = announcements.filter(a => (a.game || 'Tous') === currentFilters.annonces);
-            }
-            
-            const annContainer = document.getElementById('announcements-container');
-            annContainer.innerHTML = announcements.length ? '' : '<p class="text-gray-500 text-sm italic text-center">Aucune annonce pour cette catégorie.</p>';
-            announcements.forEach((a, index) => {
+        function renderAnnonces() {
+            let filtered = currentFilters.annonces === 'Tous' ? globalAnnonces : globalAnnonces.filter(a => (a.game || 'Tous') === currentFilters.annonces);
+            const container = document.getElementById('announcements-container');
+            container.innerHTML = filtered.length ? '' : '<p class="text-gray-500 text-sm italic text-center">Aucune annonce pour cette catégorie.</p>';
+            filtered.forEach((a, index) => {
                 const imgHTML = a.image ? `<div class="w-full h-64 rounded-2xl overflow-hidden mb-6 border border-white/10"><img src="${a.image}" class="w-full h-full object-cover"></div>` : '';
-                annContainer.innerHTML += `
+                container.innerHTML += `
                     <div class="glass-panel rounded-3xl p-8 reveal delay-${(index%3)*100}">
                         ${imgHTML}
                         <div class="flex gap-3 items-center mb-4">
@@ -739,89 +606,100 @@
                         <p class="text-gray-400 text-sm leading-relaxed">${a.desc}</p>
                     </div>`;
             });
+            setTimeout(revealActiveElements, 20);
+        }
 
-            const partners = JSON.parse(localStorage.getItem('aerix_partners')) || [];
-            const partContainer = document.getElementById('partners-container');
-            partContainer.innerHTML = partners.length ? '' : '<p class="text-gray-500 text-sm italic">Aucun partenaire renseigné.</p>';
-            partners.forEach((p, index) => {
+        function renderPartners() {
+            const container = document.getElementById('partners-container');
+            container.innerHTML = globalPartners.length ? '' : '<p class="text-gray-500 text-sm italic">Aucun partenaire renseigné.</p>';
+            globalPartners.forEach((p, index) => {
                 const contentHTML = p.image ? `<img src="${p.image}" alt="${p.name}" class="h-16 object-contain opacity-70 hover:opacity-100 transition duration-300">` : `<span class="text-2xl font-bold text-white tracking-tighter opacity-70 hover:opacity-100 transition">${p.name}</span>`;
                 const wrapperHTML = p.url ? `<a href="${p.url}" target="_blank" class="glass-panel px-8 py-6 rounded-2xl flex items-center justify-center min-w-[200px] hover:border-aerix-purple/50 reveal delay-${(index%4)*100}">${contentHTML}</a>` : `<div class="glass-panel px-8 py-6 rounded-2xl flex items-center justify-center min-w-[200px] reveal delay-${(index%4)*100}">${contentHTML}</div>`;
-                partContainer.innerHTML += wrapperHTML;
+                container.innerHTML += wrapperHTML;
             });
+            setTimeout(revealActiveElements, 20);
+        }
 
-            renderAdminLists();
-            renderAdminSettings();
+        // --------------------------------------------------------
+        // PANNEAU D'ADMINISTRATION
+        // --------------------------------------------------------
+        window.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'x') {
+                const pwd = prompt("Accès Admin - Mot de passe :");
+                if (pwd === "aerixadmin") { toggleAdmin(); } 
+                else if (pwd !== null) { alert("Accès refusé."); }
+            }
+        });
 
-            const activePage = document.querySelector('.page-view.active');
-            if (activePage) {
-                const pageId = activePage.id.replace('page-', '');
-                const activeBtn = document.getElementById('nav-' + pageId);
-                if(activeBtn) {
-                    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-                    activeBtn.classList.add('active');
-                    updateNavPill(activeBtn);
-                }
+        function renderAdminLists() {
+            document.getElementById('admin-list-boutique').innerHTML = globalShop.map(item => `<div class="bg-black/50 p-4 rounded-xl border border-white/5 flex justify-between items-center"><div><div class="text-white font-bold text-sm">${item.name}</div><div class="text-xs text-gray-500">${item.price} €</div></div><button onclick="deleteItem('shop', '${item.id}')" class="text-red-400 text-xs bg-red-500/10 px-3 py-1.5 rounded-lg">Suppr</button></div>`).join('');
+            document.getElementById('admin-list-effectifs').innerHTML = globalEffectifs.map(r => `<div class="bg-black/50 p-4 rounded-xl border border-white/5 flex justify-between items-center"><div><div class="text-white font-bold text-sm">${r.name}</div><div class="text-xs text-gray-500">${r.game || 'Général'}</div></div><button onclick="deleteItem('effectifs', '${r.id}')" class="text-red-400 text-xs bg-red-500/10 px-3 py-1.5 rounded-lg">Suppr</button></div>`).join('');
+            document.getElementById('admin-list-palmares').innerHTML = globalPalmares.map(p => `<div class="bg-black/50 p-4 rounded-xl border border-white/5 flex justify-between items-center"><div><div class="text-white font-bold text-sm">${p.title}</div><div class="text-xs text-gray-500">${p.game || 'Général'}</div></div><button onclick="deleteItem('palmares', '${p.id}')" class="text-red-400 text-xs bg-red-500/10 px-3 py-1.5 rounded-lg">Suppr</button></div>`).join('');
+            document.getElementById('admin-list-partenaires').innerHTML = globalPartners.map(p => `<div class="bg-black/50 p-4 rounded-xl border border-white/5 flex justify-between items-center"><div class="text-white font-bold text-sm">${p.name}</div><button onclick="deleteItem('partners', '${p.id}')" class="text-red-400 text-xs bg-red-500/10 px-3 py-1.5 rounded-lg">Suppr</button></div>`).join('');
+            document.getElementById('admin-list-annonces').innerHTML = globalAnnonces.map(a => `<div class="bg-black/50 p-4 rounded-xl border border-white/5 flex justify-between items-center"><div><div class="text-white font-bold text-sm">${a.title}</div><div class="text-xs text-gray-500">${a.game || 'Général'}</div></div><button onclick="deleteItem('annonces', '${a.id}')" class="text-red-400 text-xs bg-red-500/10 px-3 py-1.5 rounded-lg">Suppr</button></div>`).join('');
+        }
+
+        async function deleteItem(collectionName, docId) {
+            if(confirm("Êtes-vous sûr de vouloir supprimer cet élément ?")) {
+                try { await db.collection(collectionName).doc(docId).delete(); } 
+                catch(e) { console.error(e); alert("Erreur lors de la suppression."); }
             }
         }
 
-        function openProductModal(index) {
-            const item = currentShopItems[index]; if(!item) return;
-            document.getElementById('modal-product-title').innerText = item.name;
-            document.getElementById('modal-product-price').innerText = item.price + " €";
-            document.getElementById('modal-product-desc').innerText = item.desc || "";
-            const sizesDiv = document.getElementById('modal-product-sizes'); sizesDiv.innerHTML = '';
-            const sizesArray = item.sizes ? item.sizes.split(',').map(s => s.trim()) : ["Unique"];
-            sizesArray.forEach(size => { sizesDiv.innerHTML += `<button class="w-12 h-12 rounded-xl border border-white/20 text-white text-sm font-bold flex items-center justify-center hover:border-aerix-purple hover:bg-aerix-purple/10 transition">${size}</button>`; });
-            currentModalImages = Array.isArray(item.images) && item.images.length > 0 ? item.images : (item.image ? [item.image] : []);
-            const btnPrev = document.getElementById('slider-prev'), btnNext = document.getElementById('slider-next');
-            if(currentModalImages.length > 0) {
-                currentModalImgIndex = 0; document.getElementById('modal-product-img').style.display = 'block'; updateSliderView();
-                if(currentModalImages.length > 1) { btnPrev.classList.remove('hidden'); btnNext.classList.remove('hidden'); } else { btnPrev.classList.add('hidden'); btnNext.classList.add('hidden'); }
-            } else { document.getElementById('modal-product-img').style.display = 'none'; btnPrev.classList.add('hidden'); btnNext.classList.add('hidden'); document.getElementById('slider-dots').innerHTML = ''; }
-            document.getElementById('product-modal').classList.remove('hidden');
-        }
-        function updateSliderView() {
-            document.getElementById('modal-product-img').src = currentModalImages[currentModalImgIndex];
-            const dotsContainer = document.getElementById('slider-dots'); dotsContainer.innerHTML = '';
-            if(currentModalImages.length > 1) { currentModalImages.forEach((_, i) => { dotsContainer.innerHTML += `<div class="h-2 rounded-full transition-all duration-300 ${i === currentModalImgIndex ? 'bg-aerix-purple w-6' : 'bg-white/30 w-2'}"></div>`; }); }
-        }
-        function nextProductImg() { currentModalImgIndex = (currentModalImgIndex + 1) % currentModalImages.length; updateSliderView(); }
-        function prevProductImg() { currentModalImgIndex = (currentModalImgIndex - 1 + currentModalImages.length) % currentModalImages.length; updateSliderView(); }
-        function closeProductModal() { document.getElementById('product-modal').classList.add('hidden'); }
-
-        function toggleAdmin() { document.getElementById('admin-modal').classList.toggle('hidden'); }
-        function switchAdminTab(tab) {
-            document.querySelectorAll('.admin-tab').forEach(t => t.classList.add('hidden'));
-            document.getElementById('admin-tab-' + tab).classList.remove('hidden');
-            ['boutique', 'effectifs', 'palmares', 'partenaires', 'annonces', 'parametres'].forEach(t => { 
-                const btn = document.getElementById('tab-btn-' + t);
-                if(btn) btn.className = "flex-1 min-w-[100px] py-2.5 text-xs font-bold rounded-lg text-gray-500 hover:text-white transition"; 
-            });
-            const activeTabBtn = document.getElementById('tab-btn-' + tab);
-            if(activeTabBtn) activeTabBtn.className = "flex-1 min-w-[100px] py-2.5 text-xs font-bold rounded-lg bg-white/10 text-white transition";
+        async function addShopItem() {
+            const name = document.getElementById('add-shop-name').value, price = document.getElementById('add-shop-price').value, sizes = document.getElementById('add-shop-sizes').value, desc = document.getElementById('add-shop-desc').value;
+            if(!name || !price) return alert("Nom et prix obligatoires.");
+            await db.collection("shop").add({ name, price, sizes, desc, images: tempShopImages });
+            document.getElementById('add-shop-name').value = ''; document.getElementById('add-shop-price').value = ''; document.getElementById('add-shop-desc').value = ''; tempShopImages = []; renderShopPreviews(); navigate('boutique'); toggleAdmin();
         }
 
-        function renderAdminLists() {
-            document.getElementById('admin-list-boutique').innerHTML = currentShopItems.map((item, i) => `<div class="bg-black/50 p-4 rounded-xl border border-white/5 flex justify-between items-center"><div><div class="text-white font-bold text-sm">${item.name}</div><div class="text-xs text-gray-500">${item.price} €</div></div><button onclick="deleteItem('aerix_shop', ${i})" class="text-red-400 text-xs bg-red-500/10 px-3 py-1.5 rounded-lg">Suppr</button></div>`).join('');
-            
-            const effectifs = JSON.parse(localStorage.getItem('aerix_effectifs')) || [];
-            document.getElementById('admin-list-effectifs').innerHTML = effectifs.map((r, i) => `<div class="bg-black/50 p-4 rounded-xl border border-white/5 flex justify-between items-center"><div><div class="text-white font-bold text-sm">${r.name}</div><div class="text-xs text-gray-500">${r.game || 'Général'}</div></div><button onclick="deleteItem('aerix_effectifs', ${i})" class="text-red-400 text-xs bg-red-500/10 px-3 py-1.5 rounded-lg">Suppr</button></div>`).join('');
-
-            const palmares = JSON.parse(localStorage.getItem('aerix_palmares')) || [];
-            document.getElementById('admin-list-palmares').innerHTML = palmares.map((p, i) => `<div class="bg-black/50 p-4 rounded-xl border border-white/5 flex justify-between items-center"><div><div class="text-white font-bold text-sm">${p.title}</div><div class="text-xs text-gray-500">${p.game || 'Général'}</div></div><button onclick="deleteItem('aerix_palmares', ${i})" class="text-red-400 text-xs bg-red-500/10 px-3 py-1.5 rounded-lg">Suppr</button></div>`).join('');
-
-            const partners = JSON.parse(localStorage.getItem('aerix_partners')) || [];
-            document.getElementById('admin-list-partenaires').innerHTML = partners.map((p, i) => `<div class="bg-black/50 p-4 rounded-xl border border-white/5 flex justify-between items-center"><div class="text-white font-bold text-sm">${p.name}</div><button onclick="deleteItem('aerix_partners', ${i})" class="text-red-400 text-xs bg-red-500/10 px-3 py-1.5 rounded-lg">Suppr</button></div>`).join('');
-
-            const announcements = JSON.parse(localStorage.getItem('aerix_announcements')) || [];
-            document.getElementById('admin-list-annonces').innerHTML = announcements.map((a, i) => `<div class="bg-black/50 p-4 rounded-xl border border-white/5 flex justify-between items-center"><div><div class="text-white font-bold text-sm">${a.title}</div><div class="text-xs text-gray-500">${a.game || 'Général'}</div></div><button onclick="deleteItem('aerix_announcements', ${i})" class="text-red-400 text-xs bg-red-500/10 px-3 py-1.5 rounded-lg">Suppr</button></div>`).join('');
+        async function addEffectif() {
+            const name = document.getElementById('add-roster-name').value, game = document.getElementById('add-roster-game').value, desc = document.getElementById('add-roster-desc').value;
+            if(!name) return alert("Nom obligatoire.");
+            await db.collection("effectifs").add({ name, game, desc, image: tempRosterImage || "", players: tempPlayers });
+            document.getElementById('add-roster-name').value = ''; document.getElementById('add-roster-game').value = 'Tous'; document.getElementById('add-roster-desc').value = ''; tempRosterImage = null; tempPlayers = []; document.getElementById('roster-img-preview').classList.add('hidden'); renderTempPlayers(); navigate('effectifs'); toggleAdmin();
         }
+
+        async function addPalmares() {
+            const title = document.getElementById('add-palm-title').value, date = document.getElementById('add-palm-date').value, game = document.getElementById('add-palm-game').value, desc = document.getElementById('add-palm-desc').value;
+            if(!title) return alert("Titre obligatoire.");
+            await db.collection("palmares").add({ title, date, game, desc });
+            document.getElementById('add-palm-title').value = ''; document.getElementById('add-palm-date').value = ''; document.getElementById('add-palm-desc').value = ''; document.getElementById('add-palm-game').value = 'Tous'; navigate('palmares'); toggleAdmin();
+        }
+
+        async function addPartner() {
+            const name = document.getElementById('add-partner-name').value, url = document.getElementById('add-partner-url').value;
+            if(!name) return alert("Nom obligatoire.");
+            await db.collection("partners").add({ name, url, image: tempPartnerImage || "" });
+            document.getElementById('add-partner-name').value = ''; document.getElementById('add-partner-url').value = ''; tempPartnerImage = null; document.getElementById('partner-img-preview').classList.add('hidden'); navigate('partenaires'); toggleAdmin();
+        }
+
+        async function addAnnouncement() {
+            const title = document.getElementById('add-announcement-title').value, date = document.getElementById('add-announcement-date').value, game = document.getElementById('add-announcement-game').value, desc = document.getElementById('add-announcement-desc').value;
+            if(!title || !desc) return alert("Titre et contenu obligatoires.");
+            await db.collection("annonces").add({ title, date: date || "Aujourd'hui", game, desc, image: tempAnnouncementImage || "" });
+            document.getElementById('add-announcement-title').value = ''; document.getElementById('add-announcement-date').value = ''; document.getElementById('add-announcement-desc').value = ''; document.getElementById('add-announcement-game').value = 'Tous'; tempAnnouncementImage = null; document.getElementById('announcement-img-preview').classList.add('hidden'); navigate('annonces'); toggleAdmin();
+        }
+
+        async function saveSettingsToFirebase() {
+            const tabOrder = JSON.parse(localStorage.getItem('aerix_tab_order')) || [];
+            const hiddenTabs = JSON.parse(localStorage.getItem('aerix_hidden_tabs')) || {};
+            const pageBgs = JSON.parse(localStorage.getItem('aerix_page_bgs')) || {};
+            await db.collection("settings").doc("global").set({ tabOrder, hiddenTabs, pageBgs });
+        }
+
+        function moveTab(index, direction) { let order = JSON.parse(localStorage.getItem('aerix_tab_order')) || []; const newIndex = index + direction; if (newIndex >= 0 && newIndex < order.length) { const temp = order[index]; order[index] = order[newIndex]; order[newIndex] = temp; localStorage.setItem('aerix_tab_order', JSON.stringify(order)); saveSettingsToFirebase(); } }
+        function toggleTabVisibility(tabId, isVisible) { let hiddenTabs = JSON.parse(localStorage.getItem('aerix_hidden_tabs')) || {}; if(isVisible) delete hiddenTabs[tabId]; else hiddenTabs[tabId] = true; localStorage.setItem('aerix_hidden_tabs', JSON.stringify(hiddenTabs)); saveSettingsToFirebase(); }
+        
+        let activeBgPage = null;
+        function triggerPageBgUpload(pageId) {
+            activeBgPage = pageId; const input = document.createElement('input'); input.type = 'file'; input.accept = 'image/*';
+            input.onchange = e => { if(e.target.files.length) { openCropper(e.target.files[0], NaN, b => { let bgs = JSON.parse(localStorage.getItem('aerix_page_bgs')) || {}; bgs[activeBgPage] = b; localStorage.setItem('aerix_page_bgs', JSON.stringify(bgs)); saveSettingsToFirebase(); }); } }; input.click();
+        }
+        function removePageBg(pageId) { let bgs = JSON.parse(localStorage.getItem('aerix_page_bgs')) || {}; delete bgs[pageId]; localStorage.setItem('aerix_page_bgs', JSON.stringify(bgs)); saveSettingsToFirebase(); }
 
         function renderAdminSettings() {
-            let order = JSON.parse(localStorage.getItem('aerix_tab_order')) || ['annonces', 'effectifs', 'palmares', 'histoire', 'boutique', 'partenaires'];
-            order = order.map(t => t === 'rosters' ? 'effectifs' : t);
-            if(!order.includes('palmares')) order.splice(2, 0, 'palmares');
-            
+            let order = JSON.parse(localStorage.getItem('aerix_tab_order')) || [];
             const tabNames = { histoire: "Histoire", effectifs: "Effectifs", palmares: "Palmarès", boutique: "Boutique", partenaires: "Partenaires", annonces: "Annonces" };
             
             document.getElementById('admin-tabs-order').innerHTML = order.map((tabId, idx) => {
@@ -837,65 +715,86 @@
             document.getElementById('admin-page-bgs').innerHTML = Object.keys(pages).map(pId => `<div class="flex items-center justify-between bg-black/40 p-3 rounded-xl border border-white/5"><span class="text-sm font-bold text-white">${pages[pId]}</span><div class="flex gap-3 items-center"><span class="text-xs text-gray-400">${bgs[pId]?'Image ok':'Aucun'}</span><button onclick="triggerPageBgUpload('${pId}')" class="bg-white/10 text-white text-xs px-3 py-1.5 rounded-lg">Changer</button>${bgs[pId] ? `<button onclick="removePageBg('${pId}')" class="text-red-400 text-xs">Retirer</button>` : ''}</div></div>`).join('');
         }
 
-        function moveTab(index, direction) { let order = JSON.parse(localStorage.getItem('aerix_tab_order')) || []; const newIndex = index + direction; if (newIndex >= 0 && newIndex < order.length) { const temp = order[index]; order[index] = order[newIndex]; order[newIndex] = temp; localStorage.setItem('aerix_tab_order', JSON.stringify(order)); loadData(); } }
-        function toggleTabVisibility(tabId, isVisible) { let hiddenTabs = JSON.parse(localStorage.getItem('aerix_hidden_tabs')) || {}; if(isVisible) delete hiddenTabs[tabId]; else hiddenTabs[tabId] = true; localStorage.setItem('aerix_hidden_tabs', JSON.stringify(hiddenTabs)); loadData(); }
+        // --------------------------------------------------------
+        // NAVIGATION & UI EXISTANTE
+        // --------------------------------------------------------
+        function setFilter(section, filterValue) { currentFilters[section] = filterValue; updateFilterUI(section); if(section === 'effectifs') renderEffectifs(); if(section === 'palmares') renderPalmares(); if(section === 'annonces') renderAnnonces(); }
+        function updateFilterUI(section) { const container = document.getElementById(`filters-${section}`); if(!container) return; const currentVal = currentFilters[section]; container.querySelectorAll('.filter-btn').forEach(btn => { if(btn.getAttribute('data-filter') === currentVal) { btn.classList.add('active'); } else { btn.classList.remove('active'); } }); }
         
-        let activeBgPage = null;
-        function triggerPageBgUpload(pageId) {
-            activeBgPage = pageId; const input = document.createElement('input'); input.type = 'file'; input.accept = 'image/*';
-            input.onchange = e => { if(e.target.files.length) { openCropper(e.target.files[0], NaN, b => { let bgs = JSON.parse(localStorage.getItem('aerix_page_bgs')) || {}; bgs[activeBgPage] = b; localStorage.setItem('aerix_page_bgs', JSON.stringify(bgs)); renderAdminSettings(); if(document.querySelector('.page-view.active').id === 'page-' + activeBgPage) applyPageBackground(activeBgPage); }); } }; input.click();
-        }
-        function removePageBg(pageId) { let bgs = JSON.parse(localStorage.getItem('aerix_page_bgs')) || {}; delete bgs[pageId]; localStorage.setItem('aerix_page_bgs', JSON.stringify(bgs)); renderAdminSettings(); applyPageBackground(pageId); }
-        function deleteItem(storageKey, index) { let items = JSON.parse(localStorage.getItem(storageKey)) || []; items.splice(index, 1); localStorage.setItem(storageKey, JSON.stringify(items)); loadData(); }
-
-        function addShopItem() {
-            const name = document.getElementById('add-shop-name').value, price = document.getElementById('add-shop-price').value, sizes = document.getElementById('add-shop-sizes').value, desc = document.getElementById('add-shop-desc').value;
-            if(!name || !price) return alert("Nom et prix obligatoires.");
-            const items = JSON.parse(localStorage.getItem('aerix_shop')) || []; items.push({ id: Date.now(), name, price, sizes, desc, images: tempShopImages }); localStorage.setItem('aerix_shop', JSON.stringify(items));
-            document.getElementById('add-shop-name').value = ''; document.getElementById('add-shop-price').value = ''; document.getElementById('add-shop-desc').value = ''; tempShopImages = []; renderShopPreviews(); loadData(); navigate('boutique'); toggleAdmin();
-        }
-
-        function addEffectif() {
-            const name = document.getElementById('add-roster-name').value, game = document.getElementById('add-roster-game').value, desc = document.getElementById('add-roster-desc').value;
-            if(!name) return alert("Nom obligatoire.");
-            const effs = JSON.parse(localStorage.getItem('aerix_effectifs')) || []; effs.push({name, game, desc, image: tempRosterImage, players: tempPlayers}); localStorage.setItem('aerix_effectifs', JSON.stringify(effs));
-            document.getElementById('add-roster-name').value = ''; document.getElementById('add-roster-game').value = 'Tous'; document.getElementById('add-roster-desc').value = ''; tempRosterImage = null; tempPlayers = []; document.getElementById('roster-img-preview').classList.add('hidden'); renderTempPlayers(); loadData(); navigate('effectifs'); toggleAdmin();
+        window.addEventListener('scroll', () => { const btn = document.getElementById('scrollTopBtn'); if (window.scrollY > 300) { btn.classList.remove('opacity-0', 'pointer-events-none'); btn.classList.add('opacity-100', 'pointer-events-auto', 'translate-y-0'); } else { btn.classList.add('opacity-0', 'pointer-events-none'); btn.classList.remove('opacity-100', 'pointer-events-auto'); } });
+        const setupScrollAnimations = () => { const observer = new IntersectionObserver((entries, obs) => { entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('active'); obs.unobserve(entry.target); } }); }, { threshold: 0.1 }); document.querySelectorAll('.reveal').forEach(el => observer.observe(el)); };
+        const revealActiveElements = () => { const activePage = document.querySelector('.page-view.active'); if(activePage) { activePage.querySelectorAll('.reveal').forEach(el => { el.classList.add('active'); }); } };
+        function updateNavPill(activeBtn) { const pill = document.getElementById('nav-pill'); if(!activeBtn || !pill) return; pill.style.left = activeBtn.offsetLeft + 'px'; pill.style.width = activeBtn.offsetWidth + 'px'; pill.style.top = activeBtn.offsetTop + 'px'; pill.style.height = activeBtn.offsetHeight + 'px'; }
+        
+        function renderNavbar() {
+            const container = document.getElementById('dynamic-nav-links');
+            if(!container) return; container.innerHTML = '';
+            let order = JSON.parse(localStorage.getItem('aerix_tab_order')) || [];
+            const hiddenTabs = JSON.parse(localStorage.getItem('aerix_hidden_tabs')) || {};
+            const labels = { histoire: "Histoire", effectifs: "Effectifs", palmares: "Palmarès", boutique: "Boutique", partenaires: "Partenaires", annonces: "Annonces" };
+            order.forEach(tabId => {
+                if(hiddenTabs[tabId] || !labels[tabId]) return;
+                const btn = document.createElement('button'); btn.id = 'nav-' + tabId; btn.className = "nav-btn hover:text-white"; btn.innerText = labels[tabId]; btn.setAttribute('onclick', `navigate('${tabId}')`); container.appendChild(btn);
+            });
+            const activePage = document.querySelector('.page-view.active');
+            if (activePage) { const activeBtn = document.getElementById('nav-' + activePage.id.replace('page-', '')); if(activeBtn) { document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active')); activeBtn.classList.add('active'); setTimeout(() => updateNavPill(activeBtn), 10); } }
         }
 
-        function addPalmares() {
-            const title = document.getElementById('add-palm-title').value, date = document.getElementById('add-palm-date').value, game = document.getElementById('add-palm-game').value, desc = document.getElementById('add-palm-desc').value;
-            if(!title) return alert("Titre obligatoire.");
-            const palms = JSON.parse(localStorage.getItem('aerix_palmares')) || []; palms.push({title, date, game, desc}); localStorage.setItem('aerix_palmares', JSON.stringify(palms));
-            document.getElementById('add-palm-title').value = ''; document.getElementById('add-palm-date').value = ''; document.getElementById('add-palm-desc').value = ''; document.getElementById('add-palm-game').value = 'Tous'; loadData(); navigate('palmares'); toggleAdmin();
+        function applyPageBackground(pageId) {
+            const bgs = JSON.parse(localStorage.getItem('aerix_page_bgs')) || {};
+            const bgLayer = document.getElementById('page-bg-layer');
+            if (bgs[pageId]) { bgLayer.style.backgroundImage = `linear-gradient(to bottom, rgba(5,5,5,0.65), rgba(5,5,5,0.85)), url(${bgs[pageId]})`; } 
+            else if (pageId === 'home') { bgLayer.style.backgroundImage = `linear-gradient(to bottom, rgba(5,5,5,0.65), rgba(5,5,5,0.85)), url('abstract-black-violet-colors-background-design-flat_662214-314713.avif')`; } 
+            else { bgLayer.style.backgroundImage = 'none'; }
         }
 
-        function addPartner() {
-            const name = document.getElementById('add-partner-name').value, url = document.getElementById('add-partner-url').value;
-            if(!name) return alert("Nom obligatoire.");
-            const partners = JSON.parse(localStorage.getItem('aerix_partners')) || []; partners.push({name, url, image: tempPartnerImage}); localStorage.setItem('aerix_partners', JSON.stringify(partners));
-            document.getElementById('add-partner-name').value = ''; document.getElementById('add-partner-url').value = ''; tempPartnerImage = null; document.getElementById('partner-img-preview').classList.add('hidden'); loadData(); navigate('partenaires'); toggleAdmin();
+        function navigate(pageId) {
+            document.querySelectorAll('.animate-fade-up').forEach(el => { el.style.animation = 'none'; el.offsetHeight; el.style.animation = null; });
+            document.querySelectorAll('.page-view').forEach(page => page.classList.remove('active'));
+            const targetPage = document.getElementById('page-' + pageId); if(targetPage) targetPage.classList.add('active');
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.getElementById('nav-' + pageId); if(activeBtn) { activeBtn.classList.add('active'); updateNavPill(activeBtn); }
+            applyPageBackground(pageId);
+            window.scrollTo({top: 0, behavior: 'smooth'});
+            setTimeout(() => { setupScrollAnimations(); revealActiveElements(); }, 50);
         }
 
-        function addAnnouncement() {
-            const title = document.getElementById('add-announcement-title').value, date = document.getElementById('add-announcement-date').value, game = document.getElementById('add-announcement-game').value, desc = document.getElementById('add-announcement-desc').value;
-            if(!title || !desc) return alert("Titre et contenu obligatoires.");
-            const anns = JSON.parse(localStorage.getItem('aerix_announcements')) || []; anns.push({ title, date: date || "Aujourd'hui", game, desc, image: tempAnnouncementImage }); localStorage.setItem('aerix_announcements', JSON.stringify(anns));
-            document.getElementById('add-announcement-title').value = ''; document.getElementById('add-announcement-date').value = ''; document.getElementById('add-announcement-desc').value = ''; document.getElementById('add-announcement-game').value = 'Tous'; tempAnnouncementImage = null; document.getElementById('announcement-img-preview').classList.add('hidden'); loadData(); navigate('annonces'); toggleAdmin();
-        }
+        document.addEventListener('mousemove', (e) => { document.documentElement.style.setProperty('--mouse-x', `${e.clientX}px`); document.documentElement.style.setProperty('--mouse-y', `${e.clientY}px`); });
 
-        const legalTexts = {
-            mentions: `<h4 class="font-bold text-white mb-2 text-lg">1. Éditeur</h4><p class="mb-6">Site AERIX, projet Esport indépendant.</p><h4 class="font-bold text-white mb-2 text-lg">2. Propriété</h4><p>La marque AERIX et les logos sont la propriété exclusive de la structure.</p>`,
-            confidentialite: `<h4 class="font-bold text-white mb-2 text-lg">Données</h4><p>Protection totale. Suppression sur simple demande.</p>`
-        };
+        // OUTILS CROPPER
+        let cropper = null, cropCallback = null;
+        function openCropper(file, ratio, callback) { const reader = new FileReader(); reader.onload = (e) => { const image = document.getElementById('crop-image'); image.src = e.target.result; document.getElementById('crop-modal').classList.remove('hidden'); if (cropper) cropper.destroy(); cropper = new Cropper(image, { aspectRatio: ratio, viewMode: 1, background: false, autoCropArea: 1 }); cropCallback = callback; }; reader.readAsDataURL(file); }
+        function confirmCrop() { if (!cropper) return; const canvas = cropper.getCroppedCanvas({ maxWidth: 1200, maxHeight: 1200, fillColor: 'transparent' }); document.getElementById('crop-modal').classList.add('hidden'); cropper.destroy(); cropper = null; if (cropCallback) cropCallback(canvas.toDataURL('image/webp', 0.8)); }
+        function cancelCrop() { document.getElementById('crop-modal').classList.add('hidden'); if (cropper) cropper.destroy(); cropper = null; }
+
+        let tempShopImages = [], tempRosterImage = null, tempPlayerAvatar = null, tempPlayers = [], tempPartnerImage = null, tempAnnouncementImage = null;
+        const defaultAvatar = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E";
+        document.getElementById('shop-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 4/5, b => { tempShopImages.push(b); renderShopPreviews(); }); e.target.value=''; });
+        function renderShopPreviews() { document.getElementById('shop-img-previews').innerHTML = tempShopImages.map((src, i) => `<div class="relative w-16 h-16 rounded-lg overflow-hidden border border-white/20"><img src="${src}" class="w-full h-full object-cover"><button type="button" onclick="tempShopImages.splice(${i}, 1); renderShopPreviews()" class="absolute top-0 right-0 bg-red-500/90 text-white text-[10px] w-5 h-5">✕</button></div>`).join(''); }
+        document.getElementById('roster-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 21/9, b => { tempRosterImage = b; document.getElementById('roster-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('roster-img-preview').classList.remove('hidden'); }); e.target.value=''; });
+        document.getElementById('player-avatar-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 1, b => { tempPlayerAvatar = b; document.getElementById('player-avatar-preview').src = b; }); e.target.value=''; });
+        function addTempPlayer() { const name = document.getElementById('temp-player-name').value; if(!name) return; tempPlayers.push({ name, avatar: tempPlayerAvatar || defaultAvatar }); document.getElementById('temp-player-name').value = ''; document.getElementById('player-avatar-preview').src = defaultAvatar; tempPlayerAvatar = null; renderTempPlayers(); }
+        function renderTempPlayers() { document.getElementById('temp-players-list').innerHTML = tempPlayers.map((p, i) => `<div class="flex items-center justify-between bg-black/60 p-2 rounded-xl text-xs border border-white/5"><div class="flex items-center gap-3"><img src="${p.avatar}" class="w-8 h-8 rounded-full bg-gray-900 object-cover"><span class="text-white font-bold">${p.name}</span></div><button type="button" onclick="tempPlayers.splice(${i}, 1); renderTempPlayers()" class="text-red-400">Retirer</button></div>`).join(''); }
+        document.getElementById('partner-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], NaN, b => { tempPartnerImage = b; document.getElementById('partner-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('partner-img-preview').classList.remove('hidden'); }); e.target.value=''; });
+        document.getElementById('announcement-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 16/9, b => { tempAnnouncementImage = b; document.getElementById('announcement-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('announcement-img-preview').classList.remove('hidden'); }); e.target.value=''; });
+
+        function toggleAdmin() { document.getElementById('admin-modal').classList.toggle('hidden'); }
+        function switchAdminTab(tab) { document.querySelectorAll('.admin-tab').forEach(t => t.classList.add('hidden')); document.getElementById('admin-tab-' + tab).classList.remove('hidden'); ['boutique', 'effectifs', 'palmares', 'partenaires', 'annonces', 'parametres'].forEach(t => { const btn = document.getElementById('tab-btn-' + t); if(btn) btn.className = "flex-1 min-w-[100px] py-2.5 text-xs font-bold rounded-lg text-gray-500 hover:text-white transition"; }); const activeTabBtn = document.getElementById('tab-btn-' + tab); if(activeTabBtn) activeTabBtn.className = "flex-1 min-w-[100px] py-2.5 text-xs font-bold rounded-lg bg-white/10 text-white transition"; }
+
+        let currentModalImages = [], currentModalImgIndex = 0;
+        function openProductModal(index) { const item = globalShop[index]; if(!item) return; document.getElementById('modal-product-title').innerText = item.name; document.getElementById('modal-product-price').innerText = item.price + " €"; document.getElementById('modal-product-desc').innerText = item.desc || ""; const sizesDiv = document.getElementById('modal-product-sizes'); sizesDiv.innerHTML = ''; const sizesArray = item.sizes ? item.sizes.split(',').map(s => s.trim()) : ["Unique"]; sizesArray.forEach(size => { sizesDiv.innerHTML += `<button class="w-12 h-12 rounded-xl border border-white/20 text-white text-sm font-bold flex items-center justify-center hover:border-aerix-purple hover:bg-aerix-purple/10 transition">${size}</button>`; }); currentModalImages = Array.isArray(item.images) && item.images.length > 0 ? item.images : (item.image ? [item.image] : []); const btnPrev = document.getElementById('slider-prev'), btnNext = document.getElementById('slider-next'); if(currentModalImages.length > 0) { currentModalImgIndex = 0; document.getElementById('modal-product-img').style.display = 'block'; updateSliderView(); if(currentModalImages.length > 1) { btnPrev.classList.remove('hidden'); btnNext.classList.remove('hidden'); } else { btnPrev.classList.add('hidden'); btnNext.classList.add('hidden'); } } else { document.getElementById('modal-product-img').style.display = 'none'; btnPrev.classList.add('hidden'); btnNext.classList.add('hidden'); document.getElementById('slider-dots').innerHTML = ''; } document.getElementById('product-modal').classList.remove('hidden'); }
+        function updateSliderView() { document.getElementById('modal-product-img').src = currentModalImages[currentModalImgIndex]; const dotsContainer = document.getElementById('slider-dots'); dotsContainer.innerHTML = ''; if(currentModalImages.length > 1) { currentModalImages.forEach((_, i) => { dotsContainer.innerHTML += `<div class="h-2 rounded-full transition-all duration-300 ${i === currentModalImgIndex ? 'bg-aerix-purple w-6' : 'bg-white/30 w-2'}"></div>`; }); } }
+        function nextProductImg() { currentModalImgIndex = (currentModalImgIndex + 1) % currentModalImages.length; updateSliderView(); }
+        function prevProductImg() { currentModalImgIndex = (currentModalImgIndex - 1 + currentModalImages.length) % currentModalImages.length; updateSliderView(); }
+        function closeProductModal() { document.getElementById('product-modal').classList.add('hidden'); }
+
+        const legalTexts = { mentions: `<h4 class="font-bold text-white mb-2 text-lg">1. Éditeur</h4><p class="mb-6">Site AERIX, projet Esport indépendant.</p><h4 class="font-bold text-white mb-2 text-lg">2. Propriété</h4><p>La marque AERIX et les logos sont la propriété exclusive de la structure.</p>`, confidentialite: `<h4 class="font-bold text-white mb-2 text-lg">Données</h4><p>Protection totale. Suppression sur simple demande.</p>` };
         function openLegal(type) { document.getElementById('legal-title').innerText = type.toUpperCase(); document.getElementById('legal-content').innerHTML = legalTexts[type]; document.getElementById('legal-modal').classList.remove('hidden'); }
         function closeLegal() { document.getElementById('legal-modal').classList.add('hidden'); }
         
+        // Démarrage
+        startSync();
         navigate('home');
-        loadData();
-        setTimeout(() => {
-            setupScrollAnimations();
-            revealActiveElements();
-        }, 100);
     </script>
 </body>
 </html>
