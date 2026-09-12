@@ -161,6 +161,7 @@
     .partner-card-tile img, .partner-card-tile span { transition: transform .4s cubic-bezier(.16,1,.3,1), filter .4s ease; }
 
     /* ÉDITEUR RICHE & TOASTS */
+    #contact-submit-btn:disabled { opacity: .45; cursor: not-allowed; }
     .rich-editor[contenteditable="true"]:empty:before { content: attr(placeholder); color: #6b7280; pointer-events: none; display: block; }
     .rich-editor h1 { font-size: 1.5rem; font-weight: bold; margin-bottom: 0.5rem; }
     .rich-editor h2 { font-size: 1.25rem; font-weight: bold; margin-bottom: 0.5rem; }
@@ -393,6 +394,7 @@
                 <div class="flex space-x-6 text-xs text-gray-500">
                     <button onclick="openLegal('mentions')" class="hover:text-white transition">Mentions légales</button>
                     <button onclick="openLegal('confidentialite')" class="hover:text-white transition">Confidentialité</button>
+                    <button onclick="openContactModal()" class="hover:text-white transition" data-i18n="contact_form">Contact</button>
                     <button onclick="openCookieSettings()" class="hover:text-white transition">Gérer les cookies</button>
                 </div>
             </div>
@@ -491,34 +493,76 @@
         </div>
     </div>
 
-    <!-- MODAL : DEMANDE / CONNEXION COMPTE -->
+    <!-- MODAL : CONTACT -->
+    <div id="contact-modal" class="fixed inset-0 z-[205] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl">
+        <div class="glass-panel w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-[2rem] p-7 md:p-9 shadow-[0_0_50px_rgba(139,92,246,.2)]">
+            <div class="flex justify-between items-center mb-7 border-b border-white/10 pb-4">
+                <div><p class="text-[10px] uppercase tracking-[.2em] text-aerix-purple font-bold mb-1">AERIX</p><h3 class="text-2xl font-black text-white" data-i18n="contact_title">Contact AERIX</h3><p class="text-xs text-gray-500 mt-1" data-i18n="contact_desc">Choisis Discord ou ouvre un ticket directement depuis le site.</p></div>
+                <button onclick="closeContactModal()" class="text-gray-400 hover:text-white bg-white/5 w-9 h-9 rounded-full">✕</button>
+            </div>
+            <div id="contact-choice" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <a href="https://discord.gg/dJcHwYT4HY" target="_blank" rel="noopener noreferrer" class="glass-panel p-6 rounded-2xl hover:border-aerix-purple/60 transition group">
+                    <div class="w-12 h-12 rounded-2xl bg-aerix-purple/15 border border-aerix-purple/30 flex items-center justify-center text-aerix-purple mb-4 text-xl">◈</div>
+                    <div class="text-white font-bold mb-1" data-i18n="contact_discord">Contacter sur Discord</div>
+                    <div class="text-xs text-gray-500">Discord AERIX</div>
+                </a>
+                <button onclick="openContactForm()" class="glass-panel p-6 rounded-2xl text-left hover:border-aerix-purple/60 transition group">
+                    <div class="w-12 h-12 rounded-2xl bg-aerix-purple/15 border border-aerix-purple/30 flex items-center justify-center text-aerix-purple mb-4 text-xl">✉</div>
+                    <div class="text-white font-bold mb-1" data-i18n="contact_form">Formulaire de contact</div>
+                    <div class="text-xs text-gray-500">Partenariat · Question · Autre demande</div>
+                </button>
+            </div>
+            <div id="contact-form" class="hidden space-y-4">
+                <div id="contact-login-warning" class="hidden rounded-xl border border-yellow-500/20 bg-yellow-500/10 p-4 text-xs text-yellow-200" data-i18n="contact_login_required">Tu dois être connecté pour ouvrir un ticket.</div>
+                <input id="contact-username" type="text" readonly class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-gray-400 text-sm outline-none" placeholder="Pseudo">
+                <input id="contact-email" type="email" readonly class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-gray-400 text-sm outline-none" placeholder="Adresse email">
+                <select id="contact-category" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
+                    <option value="Partenariat" data-i18n="contact_category_partnership">Partenariat</option>
+                    <option value="Question" data-i18n="contact_category_question">Question</option>
+                    <option value="Autre demande" data-i18n="contact_category_other">Autre demande</option>
+                </select>
+                <input id="contact-subject" type="text" maxlength="120" placeholder="Sujet" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
+                <textarea id="contact-message" maxlength="4000" placeholder="Message" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm h-36 outline-none focus:border-aerix-purple resize-y"></textarea>
+                <div class="flex gap-3">
+                    <button onclick="backToContactChoice()" class="px-5 py-3 bg-white/5 border border-white/10 text-white rounded-xl text-sm font-bold">Retour</button>
+                    <button id="contact-submit-btn" onclick="submitContactTicket()" class="flex-1 bg-aerix-purple text-white font-bold py-3 rounded-xl hover:bg-purple-500 transition" data-i18n="ticket_send">Envoyer le ticket</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL : TICKETS UTILISATEUR -->
+    <div id="tickets-modal" class="fixed inset-0 z-[215] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl">
+        <div class="glass-panel-no-hover w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-[2rem] p-6 md:p-9">
+            <div class="flex justify-between items-center mb-7 border-b border-white/10 pb-4">
+                <div><p class="text-[10px] uppercase tracking-[.2em] text-aerix-purple font-bold mb-1">AERIX ACCOUNT</p><h3 class="text-2xl font-black text-white" data-i18n="ticket">Tickets</h3></div>
+                <button onclick="closeTicketsModal()" class="text-gray-400 hover:text-white bg-white/5 w-9 h-9 rounded-full">✕</button>
+            </div>
+            <div id="user-tickets-list" class="space-y-4"></div>
+        </div>
+    </div>
+
+    <!-- MODAL : CRÉATION / CONNEXION COMPTE -->
     <div id="account-modal" class="fixed inset-0 z-[210] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl">
         <div class="glass-panel w-full max-w-md rounded-[2rem] p-7 md:p-8 shadow-[0_0_50px_rgba(139,92,246,.2)]">
             <div class="flex justify-between items-center mb-6">
-                <div><p id="account-modal-kicker" class="text-[10px] uppercase tracking-[.2em] text-aerix-purple font-bold mb-1">AERIX Account</p><h3 id="account-modal-title" class="text-2xl font-black text-white" data-i18n="account_modal_title_request">Demande de compte</h3></div>
+                <div><p id="account-modal-kicker" class="text-[10px] uppercase tracking-[.2em] text-aerix-purple font-bold mb-1">AERIX Account</p><h3 id="account-modal-title" class="text-2xl font-black text-white">Créer un compte</h3></div>
                 <button onclick="closeAccountModal()" class="text-gray-400 hover:text-white bg-white/5 w-9 h-9 rounded-full">✕</button>
             </div>
-            <div id="account-request-form" class="space-y-4">
-                <p id="account-request-desc" class="text-xs text-gray-400 leading-relaxed" data-i18n="account_request_desc">Envoie ton pseudo et ton email. Un administrateur AERIX examinera ta demande.</p>
-                <input id="account-request-username" type="text" maxlength="30" placeholder="Pseudo" data-i18n-placeholder="username_placeholder" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
-                <input id="account-request-email" type="email" placeholder="Adresse email" data-i18n-placeholder="email_placeholder" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
-                <button onclick="submitAccountRequest()" class="w-full bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition shadow-[0_0_15px_rgba(139,92,246,.3)]" data-i18n="send_request">Envoyer la demande</button>
-                <button onclick="showAccountLogin()" class="w-full bg-white/5 border border-white/10 text-white font-bold py-3 rounded-xl hover:bg-white/10 transition text-sm" data-i18n="already_approved_signin">Déjà approuvé ? Se connecter</button>
+            <div id="account-register-form" class="space-y-4">
+                <p id="account-register-desc" class="text-xs text-gray-400 leading-relaxed" data-i18n="account_register_desc">Crée directement ton compte AERIX avec ton pseudo, ton email et ton mot de passe.</p>
+                <input id="account-register-username" type="text" maxlength="30" placeholder="Pseudo" data-i18n-placeholder="username_placeholder" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
+                <input id="account-register-email" type="email" placeholder="Adresse email" data-i18n-placeholder="email_placeholder" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
+                <input id="account-register-password" type="password" minlength="8" placeholder="Mot de passe (8 caractères min.)" data-i18n-placeholder="password_min_placeholder" onkeypress="if(event.key==='Enter') createAccount()" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
+                <button onclick="createAccount()" class="w-full bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition shadow-[0_0_15px_rgba(139,92,246,.3)]" data-i18n="create_account">Créer le compte</button>
+                <button onclick="showAccountLogin()" class="w-full bg-white/5 border border-white/10 text-white font-bold py-3 rounded-xl hover:bg-white/10 transition text-sm" data-i18n="already_account_signin">J'ai déjà un compte — Se connecter</button>
             </div>
             <div id="account-login-form" class="space-y-4 hidden">
-                <p id="account-login-desc" class="text-xs text-gray-400 leading-relaxed" data-i18n="account_login_desc">Connecte-toi avec ton compte AERIX approuvé.</p>
+                <p id="account-login-desc" class="text-xs text-gray-400 leading-relaxed" data-i18n="account_login_desc">Connecte-toi avec ton compte AERIX.</p>
                 <input id="account-login-email" type="email" placeholder="Adresse email" data-i18n-placeholder="email_placeholder" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
                 <input id="account-login-password" type="password" placeholder="Mot de passe" data-i18n-placeholder="password_placeholder" onkeypress="if(event.key==='Enter') loginAccount()" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
                 <button onclick="loginAccount()" class="w-full bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition" data-i18n="account_login">Connexion</button>
-                <button onclick="showAccountRegistration()" class="w-full bg-white/5 border border-white/10 text-white font-bold py-3 rounded-xl hover:bg-white/10 transition text-sm" data-i18n="create_approved_account">Créer mon compte approuvé</button>
-            </div>
-            <div id="account-register-form" class="space-y-4 hidden">
-                <p id="account-register-desc" class="text-xs text-gray-400 leading-relaxed" data-i18n="account_register_desc">L'inscription n'est possible qu'une fois ta demande approuvée.</p>
-                <input id="account-register-username" type="text" maxlength="30" placeholder="Pseudo" data-i18n-placeholder="username_placeholder" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
-                <input id="account-register-email" type="email" placeholder="Adresse email" data-i18n-placeholder="email_placeholder" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
-                <input id="account-register-password" type="password" minlength="8" placeholder="Mot de passe (8 caractères min.)" data-i18n-placeholder="password_min_placeholder" onkeypress="if(event.key==='Enter') registerApprovedAccount()" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
-                <button onclick="registerApprovedAccount()" class="w-full bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition" data-i18n="create_account">Créer le compte</button>
-                <button onclick="showAccountLogin()" class="w-full bg-white/5 border border-white/10 text-white font-bold py-3 rounded-xl hover:bg-white/10 transition text-sm" data-i18n="back_to_signin">Retour à la connexion</button>
+                <button onclick="showAccountRegistration()" class="w-full bg-white/5 border border-white/10 text-white font-bold py-3 rounded-xl hover:bg-white/10 transition text-sm" data-i18n="create_account">Créer un compte</button>
             </div>
         </div>
     </div>
@@ -590,18 +634,24 @@
                 <button draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('palmares')" id="tab-btn-palmares" class="admin-tab-btn flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10">Résultats</button>
                 <button draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('annonces')" id="tab-btn-annonces" class="admin-tab-btn flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10">Actualités</button>
                 <button draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('partenaires')" id="tab-btn-partenaires" class="admin-tab-btn flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10">Sponsors</button>
+                <button draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('contact')" id="tab-btn-contact" class="admin-tab-btn flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10" data-i18n="contact_form">Contact</button>
             </div>
 
             <!-- TAB: COMPTES -->
             <div id="admin-tab-comptes" class="admin-tab hidden space-y-8">
                 <div>
-                    <h4 class="text-lg font-bold text-white mb-2" data-i18n="account_requests_title">Demandes de compte</h4>
-                    <p class="text-xs text-gray-500 mb-5" data-i18n="account_requests_desc">Approuve ou refuse les demandes. Les utilisateurs approuvés peuvent créer leur compte Firebase et accéder au panel d'administration (si le rôle admin leur est attribué).</p>
-                    <div id="admin-list-comptes" class="grid grid-cols-1 gap-4"></div>
-                </div>
-                <div>
                     <h4 class="text-lg font-bold text-white mb-2" data-i18n="registered_accounts_title">Comptes enregistrés</h4>
+                    <p class="text-xs text-gray-500 mb-5" data-i18n="registered_accounts_desc">Tous les comptes créés sur le site. Le Owner peut attribuer ou retirer le rôle Admin.</p>
                     <div id="admin-list-users" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                </div>
+            </div>
+
+            <!-- TAB: CONTACT -->
+            <div id="admin-tab-contact" class="admin-tab hidden space-y-6">
+                <div>
+                    <h4 class="text-lg font-bold text-white mb-2" data-i18n="contact_admin_title">Demandes de contact</h4>
+                    <p class="text-xs text-gray-500 mb-5" data-i18n="contact_admin_desc">Consulte et gère les tickets envoyés par les utilisateurs.</p>
+                    <div id="admin-list-contact" class="space-y-4"></div>
                 </div>
             </div>
 
@@ -853,8 +903,9 @@
 // Le mot de passe utilisé pour confirmer l'accès admin est celui du compte Firebase connecté.
         let currentUser = null;
         let currentAccount = null;
-        let globalAccountRequests = [];
         let globalAccounts = [];
+        let globalContactRequests = [];
+        let userTickets = [];
 
         // VARIABLES GLOBALES
         let globalShop = [], globalEffectifs = [], globalPalmares = [], globalAnnonces = [], globalPartners = [];
@@ -875,13 +926,11 @@
                 history_subtitle: "L'Héritage", history_title: "L'Histoire d'AERIX", history_desc: "Née d'une passion commune pour le sport automobile virtuel et l'esport, AERIX n'a cessé d'évoluer.",
                 shop_subtitle: "Shop", shop_title: "Équipement Officiel",
                 partners_subtitle: "Sponsors & Affiliés", partners_title: "Partenaires Techniques",
-                news_subtitle: "Actualités", news_title: "Annonces & Mises à jour", account_request: "Demande de compte", account_profile: "Mon compte", account_login: "Connexion", account_logout: "Déconnexion", admin_access: "Administration",
+                news_subtitle: "Actualités", news_title: "Annonces & Mises à jour", account_create: "Créer un compte", account_profile: "Mon compte", account_login: "Connexion", account_logout: "Déconnexion", admin_access: "Administration",
                 admin_secure_title: "Accès Sécurisé", admin_secure_desc: "Confirme ton mot de passe pour accéder au panel d'administration", admin_secure_placeholder: "Mot de passe...", cancel: "Annuler", confirm: "Confirmer",
-                account_modal_title_request: "Demande de compte", account_request_desc: "Envoie ton pseudo et ton email. Un administrateur AERIX examinera ta demande.",
-                username_placeholder: "Pseudo", email_placeholder: "Adresse email", send_request: "Envoyer la demande", already_approved_signin: "Déjà approuvé ? Se connecter",
-                account_login_desc: "Connecte-toi avec ton compte AERIX approuvé.", password_placeholder: "Mot de passe", create_approved_account: "Créer mon compte approuvé",
-                account_register_desc: "L'inscription n'est possible qu'une fois ta demande approuvée.", password_min_placeholder: "Mot de passe (8 caractères min.)", create_account: "Créer le compte", back_to_signin: "Retour à la connexion",
-                account_requests_title: "Demandes de compte", account_requests_desc: "Approuve ou refuse les demandes. Les utilisateurs approuvés peuvent créer leur compte Firebase et accéder au panel d'administration (si le rôle admin leur est attribué).", registered_accounts_title: "Comptes enregistrés"
+                username_placeholder: "Pseudo", email_placeholder: "Adresse email", already_account_signin: "J'ai déjà un compte — Se connecter",
+                account_login_desc: "Connecte-toi avec ton compte AERIX.", password_placeholder: "Mot de passe",
+                account_register_desc: "Crée directement ton compte AERIX avec ton pseudo, ton email et ton mot de passe.", password_min_placeholder: "Mot de passe (8 caractères min.)", create_account: "Créer le compte", registered_accounts_title: "Comptes enregistrés", registered_accounts_desc: "Tous les comptes créés sur le site. Le Owner peut attribuer ou retirer le rôle Admin.", contact_admin_title: "Demandes de contact", contact_admin_desc: "Consulte et gère les tickets envoyés par les utilisateurs.", contact_title: "Contact AERIX", contact_desc: "Choisis Discord ou ouvre un ticket directement depuis le site.", contact_discord: "Contacter sur Discord", contact_form: "Formulaire de contact", contact_login_required: "Tu dois être connecté pour ouvrir un ticket.", ticket: "Tickets", no_tickets: "Aucun ticket en cours.", ticket_status: "Statut", ticket_category: "Catégorie", ticket_subject: "Sujet", ticket_message: "Message", ticket_send: "Envoyer le ticket", ticket_close: "Fermer", ticket_reply: "Réponse AERIX", ticket_created: "Ticket créé.", ticket_updated: "Ticket mis à jour.", ticket_required: "Sujet et message obligatoires.", contact_category_partnership: "Partenariat", contact_category_question: "Question", contact_category_other: "Autre demande", contact_status_new: "Nouveau", contact_status_progress: "En cours", contact_status_done: "Traité", contact_status_archived: "Archivé", role_user: "Utilisateur", role_admin: "Admin", role_owner: "Owner"
             },
             en: {
                 nav_home: "Home", nav_effectifs: "Rosters", nav_palmares: "Results", nav_histoire: "History", nav_boutique: "Shop", nav_partenaires: "Partners", nav_annonces: "News",
@@ -896,13 +945,11 @@
                 history_subtitle: "The Legacy", history_title: "AERIX History", history_desc: "Born from a shared passion for virtual motorsport and esports, AERIX has continuously evolved.",
                 shop_subtitle: "Shop", shop_title: "Official Merch",
                 partners_subtitle: "Sponsors & Affiliates", partners_title: "Technical Partners",
-                news_subtitle: "News", news_title: "Announcements & Updates", account_request: "Request an account", account_profile: "My account", account_login: "Sign in", account_logout: "Sign out", admin_access: "Admin panel",
+                news_subtitle: "News", news_title: "Announcements & Updates", account_create: "Create account", account_profile: "My account", account_login: "Sign in", account_logout: "Sign out", admin_access: "Admin panel",
                 admin_secure_title: "Secure Access", admin_secure_desc: "Confirm your password to access the administration panel", admin_secure_placeholder: "Password...", cancel: "Cancel", confirm: "Confirm",
-                account_modal_title_request: "Request an account", account_request_desc: "Send your username and email. An AERIX administrator will review your request.",
-                username_placeholder: "Username", email_placeholder: "Email address", send_request: "Send request", already_approved_signin: "Already approved? Sign in",
-                account_login_desc: "Sign in with your approved AERIX account.", password_placeholder: "Password", create_approved_account: "Create my approved account",
-                account_register_desc: "Registration is available only after your request has been approved.", password_min_placeholder: "Password (8+ characters)", create_account: "Create account", back_to_signin: "Back to sign in",
-                account_requests_title: "Account requests", account_requests_desc: "Approve or reject requests. Approved users can create their Firebase account and access the administration panel (if granted the admin role).", registered_accounts_title: "Registered accounts"
+                username_placeholder: "Username", email_placeholder: "Email address", already_account_signin: "Already have an account — Sign in",
+                account_login_desc: "Sign in with your AERIX account.", password_placeholder: "Password",
+                account_register_desc: "Create your AERIX account directly with your username, email and password.", password_min_placeholder: "Password (8+ characters)", create_account: "Create account", registered_accounts_title: "Registered accounts", registered_accounts_desc: "All accounts created on the website. The Owner can grant or revoke the Admin role."
             }
         };
         let currentLang = localStorage.getItem('aerix_lang') || ((navigator.language || '').toLowerCase().startsWith('en') ? 'en' : 'fr');
@@ -1003,6 +1050,7 @@
             if (typeof globalEffectifs !== 'undefined') renderEffectifs();
             if (typeof globalPalmares !== 'undefined') renderPalmares();
             if (typeof globalAnnonces !== 'undefined') renderAnnonces();
+             if (typeof renderUserTickets === 'function' && document.getElementById('tickets-modal') && !document.getElementById('tickets-modal').classList.contains('hidden')) renderUserTickets();
         }
 
         // TOAST NOTIFICATIONS
@@ -1022,8 +1070,8 @@
             db.collection("palmares").onSnapshot((snapshot) => { globalPalmares = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderPalmares(); renderAdminLists(); });
             db.collection("annonces").orderBy("date", "desc").onSnapshot((snapshot) => { globalAnnonces = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderAnnonces(); renderAdminLists(); }, error => { /* Fallback if no index */ globalAnnonces = []; db.collection("annonces").get().then(s => { globalAnnonces = s.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderAnnonces(); renderAdminLists(); }); });
             db.collection("partners").onSnapshot((snapshot) => { globalPartners = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderPartners(); renderAdminLists(); });
-            db.collection("accountRequests").orderBy("createdAt", "desc").onSnapshot((snapshot) => { globalAccountRequests = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderAdminLists(); }, () => { globalAccountRequests = []; renderAdminLists(); });
             db.collection("accounts").onSnapshot((snapshot) => { globalAccounts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderAdminLists(); }, () => { globalAccounts = []; renderAdminLists(); });
+            db.collection("contactRequests").orderBy("createdAt", "desc").onSnapshot((snapshot) => { globalContactRequests = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderAdminLists(); }, () => { globalContactRequests = []; renderAdminLists(); });
             checkCookies();
         }
 
@@ -1374,11 +1422,12 @@
                             </div>
                             <div class="min-w-0"><div class="text-white text-xs font-bold truncate">${escapeHtml(currentAccount.username || '')}</div><div class="text-gray-500 text-[10px] truncate">${escapeHtml(currentAccount.email || currentUser.email || '')}</div></div>
                         </div>
+                        <button onclick="openTicketsModal()" class="w-full text-left px-3 py-2.5 text-xs font-bold text-white hover:bg-white/10 rounded-xl">🎫 ${currentLang === 'en' ? 'Tickets' : 'Tickets'}</button>
                         ${hasAdminAccess() ? `<button onclick="openAdminFromAccount()" class="w-full text-left px-3 py-2.5 text-xs font-bold text-white hover:bg-white/10 rounded-xl">${currentLang === 'en' ? 'Admin panel' : 'Administration'}</button>` : ''}
                         <button onclick="logoutAccount()" class="w-full text-left px-3 py-2.5 text-xs font-bold text-gray-300 hover:bg-white/10 hover:text-white rounded-xl">${currentLang === 'en' ? 'Sign out' : 'Déconnexion'}</button>
                     </div>
                 </div>` : `
-                <button onclick="openAccountRequestModal()" data-i18n="account_request" class="text-xs text-aerix-purple transition px-4 py-1.5 rounded-full border border-aerix-purple/40 bg-aerix-purple/10 hover:bg-aerix-purple/20 font-medium">${currentLang === 'en' ? 'Request an account' : 'Demande de compte'}</button>`;
+                <button onclick="openAccountModal()" data-i18n="account_create" class="text-xs text-aerix-purple transition px-4 py-1.5 rounded-full border border-aerix-purple/40 bg-aerix-purple/10 hover:bg-aerix-purple/20 font-medium">${currentLang === 'en' ? 'Create account' : 'Créer un compte'}</button>`;
             areas.forEach((el, i) => {
                 const menuId = i === 1 ? 'account-menu-mobile' : 'account-menu-desktop';
                 const html = buildHtml(menuId);
@@ -1387,49 +1436,126 @@
         }
         function toggleAccountMenu(event, menuId) { if(event) event.stopPropagation(); document.querySelectorAll('.account-menu').forEach(m => { if(m.id !== menuId) m.classList.add('hidden'); }); document.getElementById(menuId)?.classList.toggle('hidden'); }
         document.addEventListener('click', e => { if(e.target.closest('#account-area') || e.target.closest('#mobile-account-area')) return; document.querySelectorAll('.account-menu').forEach(m => m.classList.add('hidden')); });
-        function openAccountRequestModal() { showAccountRequest(); document.getElementById('account-modal').classList.remove('hidden'); }
+        document.addEventListener('click', e => { if(e.target.closest('.role-menu')) return; document.querySelectorAll('.role-menu').forEach(m => m.classList.add('hidden')); });
+        function openAccountModal() { showAccountRegistration(); document.getElementById('account-modal').classList.remove('hidden'); }
         function closeAccountModal() { document.getElementById('account-modal').classList.add('hidden'); }
-        function showAccountRequest() { ['account-request-form'].forEach(id=>document.getElementById(id).classList.remove('hidden')); ['account-login-form','account-register-form'].forEach(id=>document.getElementById(id).classList.add('hidden')); document.getElementById('account-modal-title').innerText=currentLang==='en'?'Request an account':'Demande de compte'; }
-        function showAccountLogin() { document.getElementById('account-request-form').classList.add('hidden'); document.getElementById('account-register-form').classList.add('hidden'); document.getElementById('account-login-form').classList.remove('hidden'); document.getElementById('account-modal-title').innerText=currentLang==='en'?'Sign in':'Connexion'; }
-        function showAccountRegistration() { document.getElementById('account-request-form').classList.add('hidden'); document.getElementById('account-login-form').classList.add('hidden'); document.getElementById('account-register-form').classList.remove('hidden'); document.getElementById('account-modal-title').innerText=currentLang==='en'?'Create account':'Créer mon compte'; }
-        async function submitAccountRequest() {
-            const username=document.getElementById('account-request-username').value.trim(); const email=document.getElementById('account-request-email').value.trim().toLowerCase();
-            if(!username || !email) return showToast(currentLang==='en'?'Username and email are required.':'Pseudo et email obligatoires.','error');
-            try {
-                const existing=await db.collection('accountRequests').where('email','==',email).get();
-                if(existing.docs.some(d => ['pending','approved'].includes(d.data().status))) return showToast(currentLang==='en'?'A request already exists for this email.':'Une demande existe déjà pour cet email.','error');
-                await db.collection('accountRequests').add({username,email,status:'pending',createdAt:firebase.firestore.FieldValue.serverTimestamp()});
-                showToast(currentLang==='en'?'Request sent.':'Demande envoyée.'); closeAccountModal();
-            } catch(e) { console.error(e); showToast(currentLang==='en'?'Unable to send the request. Check Firestore rules.':'Impossible d’envoyer la demande. Vérifie les règles Firestore.','error'); }
-        }
-        async function approveAccountRequest(id) { try { await db.collection('accountRequests').doc(id).update({status:'approved',approvedAt:firebase.firestore.FieldValue.serverTimestamp()}); showToast(currentLang==='en'?'Account request approved.':'Demande de compte approuvée.'); } catch(e){ console.error(e); showToast(currentLang==='en'?'Approval failed.':'Échec de l’approbation.','error'); } }
-        async function rejectAccountRequest(id) { try { await db.collection('accountRequests').doc(id).update({status:'rejected',rejectedAt:firebase.firestore.FieldValue.serverTimestamp()}); showToast(currentLang==='en'?'Account request rejected.':'Demande refusée.'); } catch(e){ console.error(e); showToast(currentLang==='en'?'Rejection failed.':'Échec du refus.','error'); } }
-        async function deleteAccountRequest(id) {
-            if (!confirm(currentLang==='en'?'Delete this account request permanently?':'Supprimer définitivement cette demande de compte ?')) return;
-            try { await db.collection('accountRequests').doc(id).delete(); showToast(currentLang==='en'?'Request deleted.':'Demande supprimée.'); }
-            catch(e){ console.error(e); showToast(currentLang==='en'?'Deletion failed.':'Échec de la suppression.','error'); }
-        }
-        async function toggleAccountRole(uid, newRole) {
-            if(!isOwner()) return;
-            try {
-                await db.collection('accounts').doc(uid).update({ role: newRole });
-                showToast(currentLang==='en'?'Role updated.':'Rôle mis à jour.');
-            } catch(e) { console.error(e); showToast(currentLang==='en'?'Role update failed.':'Échec de la mise à jour du rôle.','error'); }
-        }
-        async function registerApprovedAccount() {
-            const username=document.getElementById('account-register-username').value.trim(); const email=document.getElementById('account-register-email').value.trim().toLowerCase(); const password=document.getElementById('account-register-password').value;
+        function showAccountLogin() { document.getElementById('account-register-form').classList.add('hidden'); document.getElementById('account-login-form').classList.remove('hidden'); document.getElementById('account-modal-title').innerText=currentLang==='en'?'Sign in':'Connexion'; }
+        function showAccountRegistration() { document.getElementById('account-login-form').classList.add('hidden'); document.getElementById('account-register-form').classList.remove('hidden'); document.getElementById('account-modal-title').innerText=currentLang==='en'?'Create account':'Créer un compte'; }
+        async function createAccount() {
+            const username=document.getElementById('account-register-username').value.trim();
+            const email=document.getElementById('account-register-email').value.trim().toLowerCase();
+            const password=document.getElementById('account-register-password').value;
             if(!username || !email || password.length<8) return showToast(currentLang==='en'?'Enter a username, email and an 8+ character password.':'Renseigne un pseudo, un email et un mot de passe de 8 caractères minimum.','error');
+            if(currentUser) return showToast(currentLang==='en'?'You are already signed in.':'Tu es déjà connecté.','error');
             try {
-                const snap=await db.collection('accountRequests').where('email','==',email).where('status','==','approved').limit(1).get();
-                if(snap.empty) return showToast(currentLang==='en'?'Your request is not approved yet.':'Ta demande n’est pas encore approuvée.','error');
                 const cred=await auth.createUserWithEmailAndPassword(email,password);
-                await db.collection('accounts').doc(cred.user.uid).set({uid:cred.user.uid,username,email,role:'user',avatar:null,createdAt:firebase.firestore.FieldValue.serverTimestamp(),approvedRequestId:snap.docs[0].id});
-                await snap.docs[0].ref.update({status:'registered',uid:cred.user.uid,registeredAt:firebase.firestore.FieldValue.serverTimestamp()});
-                showToast(currentLang==='en'?'Account created.':'Compte créé.'); closeAccountModal();
-            } catch(e) { console.error(e); showToast(currentLang==='en'?(e.code==='auth/email-already-in-use'?'This email is already registered.':'Account creation failed.'):(e.code==='auth/email-already-in-use'?'Cet email est déjà utilisé.':'Échec de création du compte.'),'error'); }
+                try {
+                    await db.collection('accounts').doc(cred.user.uid).set({uid:cred.user.uid,username,email,role:'user',status:'active',avatar:null,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+                } catch(e) {
+                    try { await cred.user.delete(); } catch(cleanupError) { console.error(cleanupError); }
+                    throw e;
+                }
+                showToast(currentLang==='en'?'Account created.':'Compte créé.');
+                closeAccountModal();
+            } catch(e) {
+                console.error(e);
+                let msg = currentLang==='en'?'Account creation failed.':'Échec de création du compte.';
+                if(e.code==='auth/email-already-in-use') msg=currentLang==='en'?'This email is already registered.':'Cet email est déjà utilisé.';
+                else if(e.code==='auth/invalid-email') msg=currentLang==='en'?'Invalid email address.':'Adresse email invalide.';
+                else if(e.code==='auth/weak-password') msg=currentLang==='en'?'Password is too weak.':'Le mot de passe est trop faible.';
+                else if(e.code==='permission-denied') msg=currentLang==='en'?'Account creation is not authorized.':'La création du compte n’est pas autorisée.';
+                showToast(msg,'error');
+            }
         }
         async function loginAccount() { const email=document.getElementById('account-login-email').value.trim(); const password=document.getElementById('account-login-password').value; if(!email||!password) return showToast(currentLang==='en'?'Email and password are required.':'Email et mot de passe obligatoires.','error'); try { await auth.signInWithEmailAndPassword(email,password); closeAccountModal(); showToast(currentLang==='en'?'Signed in.':'Connexion réussie.'); } catch(e){ showToast(currentLang==='en'?'Invalid email or password.':'Email ou mot de passe incorrect.','error'); } }
         async function logoutAccount() { try { await auth.signOut(); document.querySelectorAll('.account-menu').forEach(m => m.classList.add('hidden')); showToast(currentLang==='en'?'Signed out.':'Déconnexion réussie.'); } catch(e){ console.error(e); } }
+        function openContactModal() {
+            document.getElementById('contact-modal')?.classList.remove('hidden');
+            backToContactChoice();
+        }
+        function closeContactModal() { document.getElementById('contact-modal')?.classList.add('hidden'); }
+        function openContactForm() {
+            document.getElementById('contact-choice')?.classList.add('hidden');
+            document.getElementById('contact-form')?.classList.remove('hidden');
+            const warning = document.getElementById('contact-login-warning');
+            const submit = document.getElementById('contact-submit-btn');
+            const logged = !!currentUser && !!currentAccount;
+            warning?.classList.toggle('hidden', logged);
+            if (submit) submit.disabled = !logged;
+            if (logged) {
+                document.getElementById('contact-username').value = currentAccount.username || '';
+                document.getElementById('contact-email').value = currentUser.email || currentAccount.email || '';
+            }
+        }
+        function backToContactChoice() {
+            document.getElementById('contact-choice')?.classList.remove('hidden');
+            document.getElementById('contact-form')?.classList.add('hidden');
+        }
+        async function submitContactTicket() {
+            if (!currentUser || !currentAccount) return showToast(currentLang==='en'?'Sign in to create a ticket.':'Connecte-toi pour créer un ticket.','error');
+            const category = document.getElementById('contact-category').value;
+            const subject = document.getElementById('contact-subject').value.trim();
+            const message = document.getElementById('contact-message').value.trim();
+            if (!subject || !message) return showToast(currentLang==='en'?'Subject and message are required.':'Sujet et message obligatoires.','error');
+            try {
+                await db.collection('contactRequests').add({ uid: currentUser.uid, username: currentAccount.username || '', email: currentUser.email || currentAccount.email || '', category, subject, message, status: 'new', adminReply: '', createdAt: firebase.firestore.FieldValue.serverTimestamp(), updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+                document.getElementById('contact-subject').value = '';
+                document.getElementById('contact-message').value = '';
+                closeContactModal();
+                showToast(currentLang==='en'?'Ticket created.':'Ticket créé.');
+            } catch(e) { console.error(e); showToast(currentLang==='en'?'Unable to create the ticket.':'Impossible de créer le ticket.','error'); }
+        }
+        function openTicketsModal() {
+            document.querySelectorAll('.account-menu').forEach(m => m.classList.add('hidden'));
+            if (!currentUser || !currentAccount) return;
+            document.getElementById('tickets-modal')?.classList.remove('hidden');
+            loadUserTickets();
+        }
+        function closeTicketsModal() { document.getElementById('tickets-modal')?.classList.add('hidden'); }
+        async function loadUserTickets() {
+            const el = document.getElementById('user-tickets-list');
+            if (!el || !currentUser) return;
+            el.innerHTML = '<p class="text-gray-500 text-sm">Chargement...</p>';
+            try {
+                const snap = await db.collection('contactRequests').where('uid','==',currentUser.uid).orderBy('createdAt','desc').get();
+                userTickets = snap.docs.map(d => ({id:d.id,...d.data()}));
+                renderUserTickets();
+            } catch(e) {
+                console.error(e);
+                try {
+                    const snap = await db.collection('contactRequests').where('uid','==',currentUser.uid).get();
+                    userTickets = snap.docs.map(d => ({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
+                    renderUserTickets();
+                } catch(err) { console.error(err); el.innerHTML = `<p class="text-red-300 text-sm">${currentLang==='en'?'Unable to load your tickets.':'Impossible de charger tes tickets.'}</p>`; }
+            }
+        }
+        function renderUserTickets() {
+            const el = document.getElementById('user-tickets-list');
+            if (!el) return;
+            const labels = currentLang === 'en' ? {new:'New',progress:'In progress',done:'Resolved',archived:'Archived'} : {new:'Nouveau',progress:'En cours',done:'Traité',archived:'Archivé'};
+            const active = userTickets.filter(t => (t.status || 'new') !== 'archived');
+            el.innerHTML = active.length ? active.map(t => {
+                const status=t.status||'new'; const cls=status==='done'?'text-green-400 bg-green-500/10':status==='progress'?'text-blue-300 bg-blue-500/10':'text-yellow-300 bg-yellow-500/10';
+                return `<div class="glass-panel p-5 rounded-2xl"><div class="flex flex-col md:flex-row md:items-start md:justify-between gap-3"><div><div class="text-white font-bold text-base">${escapeHtml(t.subject||'—')}</div><div class="text-[10px] uppercase tracking-widest text-aerix-purple mt-2">${escapeHtml(t.category||'Autre demande')}</div></div><span class="self-start px-2.5 py-1 rounded-full text-[10px] font-bold ${cls}">${labels[status]||status}</span></div><div class="mt-4 text-xs text-gray-400 whitespace-pre-wrap break-words">${escapeHtml(t.message||'')}</div>${t.adminReply?`<div class="mt-4 pt-4 border-t border-white/10"><div class="text-[10px] uppercase tracking-widest text-aerix-purple font-bold mb-2">${currentLang==='en'?'AERIX reply':'Réponse AERIX'}</div><div class="text-xs text-gray-300 whitespace-pre-wrap break-words">${escapeHtml(t.adminReply)}</div></div>`:''}</div>`;
+            }).join('') : `<p class="text-gray-500 text-sm italic">${currentLang==='en'?'No active tickets.':'Aucun ticket en cours.'}</p>`;
+        }
+        async function updateTicketStatus(id, status) {
+            if(!hasAdminAccess() || !['new','progress','done','archived'].includes(status)) return;
+            try { await db.collection('contactRequests').doc(id).update({status,updatedAt:firebase.firestore.FieldValue.serverTimestamp()}); showToast(currentLang==='en'?'Ticket updated.':'Ticket mis à jour.'); } catch(e) { console.error(e); showToast(currentLang==='en'?'Update failed.':'Échec de la mise à jour.','error'); }
+        }
+        async function replyToTicket(id) {
+            if(!hasAdminAccess()) return;
+            const t=globalContactRequests.find(x=>x.id===id); if(!t) return;
+            const reply=prompt(currentLang==='en'?'AERIX reply:':'Réponse AERIX :',t.adminReply||'');
+            if(reply===null) return;
+            try { await db.collection('contactRequests').doc(id).update({adminReply:reply.trim(),updatedAt:firebase.firestore.FieldValue.serverTimestamp(),status:reply.trim()?'progress':(t.status||'new')}); showToast(currentLang==='en'?'Reply saved.':'Réponse enregistrée.'); } catch(e) { console.error(e); showToast(currentLang==='en'?'Reply failed.':'Échec de la réponse.','error'); }
+        }
+        async function deleteContactTicket(id) {
+            if(!isOwner()) return showToast(currentLang==='en'?'Only the Owner can delete tickets.':'Seul le Owner peut supprimer les tickets.','error');
+            if(!confirm(currentLang==='en'?'Delete this ticket permanently?':'Supprimer définitivement ce ticket ?')) return;
+            try { await db.collection('contactRequests').doc(id).delete(); showToast(currentLang==='en'?'Ticket deleted.':'Ticket supprimé.'); } catch(e) { console.error(e); showToast(currentLang==='en'?'Deletion failed.':'Échec de la suppression.','error'); }
+        }
+
         function openAdminFromAccount() {
             document.querySelectorAll('.account-menu').forEach(m => m.classList.add('hidden'));
             openAdminLogin();
@@ -1484,20 +1610,18 @@
                 }
             }
             renderAccountArea();
+            applyAdminTabVisibility();
         });
 
         function renderAdminLists() {
-            const requestsEl = document.getElementById('admin-list-comptes');
-            if (requestsEl) {
-                const statusLabels = currentLang === 'en' ? { pending: 'pending', approved: 'approved', rejected: 'rejected', registered: 'registered', revoked: 'revoked' } : { pending: 'en attente', approved: 'approuvée', rejected: 'refusée', registered: 'inscrite', revoked: 'révoquée' };
-                requestsEl.innerHTML = globalAccountRequests.length ? globalAccountRequests.map(r => {
-                    const status = r.status || 'pending';
-                    const statusClass = status === 'approved' ? 'text-green-400 bg-green-500/10' : status === 'rejected' ? 'text-red-400 bg-red-500/10' : 'text-yellow-300 bg-yellow-500/10';
-                    return `<div class="glass-panel p-4 rounded-xl flex flex-col md:flex-row md:items-center md:justify-between gap-4"><div><div class="text-white font-bold text-sm">${escapeHtml(r.username || '—')}</div><div class="text-xs text-gray-500">${escapeHtml(r.email || '—')}</div><span class="inline-flex mt-2 px-2 py-1 rounded-full text-[10px] font-bold uppercase ${statusClass}">${statusLabels[status] || status}</span></div><div class="flex gap-2">${status === 'pending' ? `<button onclick="approveAccountRequest('${r.id}')" class="text-green-300 text-xs bg-green-500/10 hover:bg-green-500/20 px-3 py-1.5 rounded-lg transition">${currentLang==='en'?'Approve':'Approuver'}</button><button onclick="rejectAccountRequest('${r.id}')" class="text-red-300 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">${currentLang==='en'?'Reject':'Refuser'}</button>` : ''}<button onclick="deleteAccountRequest('${r.id}')" class="text-gray-400 text-xs bg-white/5 hover:bg-red-500/20 hover:text-red-300 px-3 py-1.5 rounded-lg transition">${currentLang==='en'?'Delete':'Supprimer'}</button></div></div>`; }).join('') : `<p class="text-gray-500 text-sm italic">${currentLang==='en'?'No account requests.':'Aucune demande de compte.'}</p>`;
-            }
             const usersEl = document.getElementById('admin-list-users');
             if (usersEl) {
-                usersEl.innerHTML = globalAccounts.length ? globalAccounts.map(u => `<div class="glass-panel p-4 rounded-xl flex flex-col md:flex-row md:items-center md:justify-between gap-3"><div><div class="text-white font-bold text-sm">${escapeHtml(u.username || '—')}</div><div class="text-xs text-gray-500 mt-1">${escapeHtml(u.email || '—')}</div><div class="text-xs text-aerix-purple mt-2 uppercase tracking-widest">${escapeHtml(u.role || 'user')}</div></div>${isOwner() && (u.email||'').toLowerCase() !== OWNER_EMAIL.toLowerCase() ? `<button onclick="toggleAccountRole('${u.id}','${u.role==='admin'?'user':'admin'}')" class="text-xs font-bold px-3 py-1.5 rounded-lg transition ${u.role==='admin' ? 'text-red-300 bg-red-500/10 hover:bg-red-500/20' : 'text-green-300 bg-green-500/10 hover:bg-green-500/20'}">${u.role==='admin' ? (currentLang==='en'?'Revoke admin':'Retirer admin') : (currentLang==='en'?'Make admin':'Nommer admin')}</button>` : ''}</div>`).join('') : `<p class="text-gray-500 text-sm italic">${currentLang==='en'?'No registered accounts.':'Aucun compte enregistré.'}</p>`;
+                usersEl.innerHTML = globalAccounts.length ? globalAccounts.map(u => {
+                    const role = u.role || 'user';
+                    const isSelfOwner = (u.email || '').toLowerCase() === OWNER_EMAIL.toLowerCase();
+                    const menu = isOwner() && !isSelfOwner ? `<div class="relative"><button onclick="toggleRoleMenu('${u.id}')" class="w-9 h-9 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-aerix-purple/20 hover:border-aerix-purple/40 transition text-lg" aria-label="Options">⋯</button><div id="role-menu-${u.id}" class="role-menu hidden absolute right-0 top-11 z-50 w-44 glass-panel-no-hover rounded-xl p-1.5 border border-white/10 shadow-2xl"><button onclick="setAccountRole('${u.id}','user')" class="w-full text-left px-3 py-2 text-xs text-white hover:bg-white/10 rounded-lg">${currentLang==='en'?'User':'Utilisateur'}</button><button onclick="setAccountRole('${u.id}','admin')" class="w-full text-left px-3 py-2 text-xs text-white hover:bg-white/10 rounded-lg">Admin</button></div></div>` : '';
+                    return `<div class="glass-panel p-4 rounded-xl flex items-center justify-between gap-3"><div class="min-w-0"><div class="text-white font-bold text-sm truncate">${escapeHtml(u.username || '—')}</div><div class="text-xs text-gray-500 mt-1 truncate">${escapeHtml(u.email || '—')}</div><div class="text-xs text-aerix-purple mt-2 uppercase tracking-widest">${escapeHtml(role)}</div></div>${menu}</div>`;
+                }).join('') : `<p class="text-gray-500 text-sm italic">${currentLang==='en'?'No registered accounts.':'Aucun compte enregistré.'}</p>`;
             }
             document.getElementById('admin-list-boutique').innerHTML = globalShop.map(item => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm">${item.name}</div><div class="text-xs text-gray-500">${item.price} €</div></div><div class="flex gap-2"><button onclick="startEditShop('${item.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('shop', '${item.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
             const sortedAdminEffectifs = [...globalEffectifs].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
@@ -1505,6 +1629,15 @@
             document.getElementById('admin-list-palmares').innerHTML = globalPalmares.map(p => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm truncate max-w-[150px]">${p.title}</div><div class="text-xs text-gray-500">${p.game || 'Général'}</div></div><div class="flex gap-2"><button onclick="startEditPalmares('${p.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('palmares', '${p.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
             document.getElementById('admin-list-partenaires').innerHTML = globalPartners.map(p => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm">${p.name}</div><div class="text-xs text-gray-500">${p.category || 'Partenaire'}</div></div><div class="flex gap-2"><button onclick="startEditPartner('${p.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('partners', '${p.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
             document.getElementById('admin-list-annonces').innerHTML = globalAnnonces.map(a => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm truncate max-w-[200px]">${a.title}</div><div class="text-xs text-gray-500">${a.date}</div></div><div class="flex gap-2"><button onclick="startEditAnnouncement('${a.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('annonces', '${a.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
+            const contactEl = document.getElementById('admin-list-contact');
+            if (contactEl) {
+                const statusLabels = currentLang === 'en' ? { new: 'New', progress: 'In progress', done: 'Resolved', archived: 'Archived' } : { new: 'Nouveau', progress: 'En cours', done: 'Traité', archived: 'Archivé' };
+                contactEl.innerHTML = globalContactRequests.length ? globalContactRequests.map(t => {
+                    const status = t.status || 'new';
+                    const statusClass = status === 'done' ? 'text-green-400 bg-green-500/10' : status === 'archived' ? 'text-gray-400 bg-white/5' : status === 'progress' ? 'text-blue-300 bg-blue-500/10' : 'text-yellow-300 bg-yellow-500/10';
+                    return `<div class="glass-panel p-5 rounded-2xl"><div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4"><div class="min-w-0"><div class="flex flex-wrap items-center gap-2 mb-2"><span class="text-white font-bold text-sm">${escapeHtml(t.subject || '—')}</span><span class="px-2 py-1 rounded-full text-[10px] font-bold ${statusClass}">${statusLabels[status] || status}</span></div><div class="text-xs text-gray-500">${escapeHtml(t.username || '—')} · ${escapeHtml(t.email || '—')}</div><div class="text-[10px] uppercase tracking-widest text-aerix-purple mt-2">${escapeHtml(t.category || 'Autre demande')}</div></div><select onchange="updateTicketStatus('${t.id}', this.value)" class="bg-black/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none"><option value="new" ${status==='new'?'selected':''}>${statusLabels.new}</option><option value="progress" ${status==='progress'?'selected':''}>${statusLabels.progress}</option><option value="done" ${status==='done'?'selected':''}>${statusLabels.done}</option><option value="archived" ${status==='archived'?'selected':''}>${statusLabels.archived}</option></select></div><div class="mt-4 bg-black/35 border border-white/5 rounded-xl p-4"><div class="text-xs text-gray-300 whitespace-pre-wrap break-words">${escapeHtml(t.message || '')}</div>${t.adminReply ? `<div class="mt-4 pt-4 border-t border-white/10"><div class="text-[10px] uppercase tracking-widest text-aerix-purple font-bold mb-2">${currentLang==='en'?'AERIX reply':'Réponse AERIX'}</div><div class="text-xs text-gray-300 whitespace-pre-wrap break-words">${escapeHtml(t.adminReply)}</div></div>` : ''}</div><div class="flex gap-2 mt-3"><button onclick="replyToTicket('${t.id}')" class="text-xs font-bold px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-aerix-purple/20">${currentLang==='en'?'Reply':'Répondre'}</button><button onclick="deleteContactTicket('${t.id}')" class="text-xs font-bold px-3 py-2 rounded-xl bg-red-500/10 text-red-300 hover:bg-red-500/20">${currentLang==='en'?'Delete':'Supprimer'}</button></div></div>`;
+                }).join('') : `<p class="text-gray-500 text-sm italic">${currentLang==='en'?'No contact requests.':'Aucun ticket.'}</p>`;
+            }
         }
 
         async function deleteItem(collectionName, docId) {
@@ -1939,11 +2072,13 @@
         // Un admin classique ne doit pas voir ni les demandes de compte ni la liste des comptes.
         function applyAdminTabVisibility() {
             const comptesBtn = document.getElementById('tab-btn-comptes');
-            if (!comptesBtn) return;
-            comptesBtn.classList.toggle('hidden', !isOwner());
+            const contactBtn = document.getElementById('tab-btn-contact');
+            if (comptesBtn) comptesBtn.classList.toggle('hidden', !isOwner());
+            if (contactBtn) contactBtn.classList.toggle('hidden', !hasAdminAccess());
         }
         function switchAdminTab(tab) {
             if (tab === 'comptes' && !isOwner()) tab = 'boutique';
+            if (tab === 'contact' && !hasAdminAccess()) tab = 'boutique';
             const target = document.getElementById('admin-tab-' + tab);
             if(!target) return;
             document.querySelectorAll('.admin-tab').forEach(t => {
@@ -1953,7 +2088,7 @@
             target.classList.remove('hidden');
             void target.offsetWidth;
             target.classList.add('animate-tab-change');
-            ['comptes', 'boutique', 'effectifs', 'palmares', 'partenaires', 'annonces'].forEach(t => {
+            ['comptes', 'boutique', 'effectifs', 'palmares', 'partenaires', 'annonces', 'contact'].forEach(t => {
                 const btn = document.getElementById('tab-btn-' + t);
                 if(btn) {
                     btn.classList.remove('active', 'text-white');
@@ -1982,11 +2117,11 @@
         const legalTexts = {
             fr: {
                 mentions: `<p class="text-xs text-gray-500 mb-6">Dernière mise à jour : septembre 2026</p><h4 class="font-bold text-white mb-2 text-lg">1. Éditeur du site</h4><p class="mb-5">AERIX Esports — structure esport indépendante.</p><h4 class="font-bold text-white mb-2 text-lg">2. Hébergement</h4><p class="mb-6">Le site est publié via GitHub Pages. Les informations d’hébergement et de contact doivent être vérifiées et complétées avant la mise en ligne définitive.</p><h4 class="font-bold text-white mb-2 text-lg">3. Propriété intellectuelle</h4><p class="mb-6">Les éléments graphiques, textes, logos et contenus propres à AERIX Esports ne peuvent être réutilisés, reproduits ou redistribués sans autorisation préalable, sauf exceptions prévues par la loi.</p><h4 class="font-bold text-white mb-2 text-lg">4. Responsabilité</h4><p>Les contenus sont fournis à titre informatif. AERIX peut modifier, corriger ou retirer un contenu à tout moment.</p>`,
-                confidentialite: `<p class="text-xs text-gray-500 mb-6">Dernière mise à jour : septembre 2026</p><h4 class="font-bold text-white mb-2 text-lg">Données traitées</h4><p class="mb-6">Selon les fonctionnalités utilisées, le site peut traiter les informations saisies dans les formulaires de demande de compte ainsi que les données nécessaires au fonctionnement des fonctionnalités d’administration. Les données collectées doivent rester limitées à ce qui est nécessaire.</p><h4 class="font-bold text-white mb-2 text-lg">Finalités</h4><p class="mb-6">Les informations sont utilisées pour traiter les demandes envoyées via le site, gérer les contenus AERIX et assurer le fonctionnement des services proposés.</p><h4 class="font-bold text-white mb-2 text-lg">Conservation et droits</h4><p class="mb-6">Les durées de conservation doivent être définies selon chaque finalité. Pour demander l’accès, la rectification ou la suppression de données, utilisez le moyen de contact officiel indiqué par AERIX.</p><h4 class="font-bold text-white mb-2 text-lg">Services tiers</h4><p>Le site peut charger des ressources externes, notamment Google Fonts, FlagCDN et les services Firebase utilisés par l’application.</p>`
+                confidentialite: `<p class="text-xs text-gray-500 mb-6">Dernière mise à jour : septembre 2026</p><h4 class="font-bold text-white mb-2 text-lg">Données traitées</h4><p class="mb-6">Selon les fonctionnalités utilisées, le site peut traiter les informations saisies dans les formulaires de création de compte ainsi que les données nécessaires au fonctionnement des fonctionnalités d’administration. Les données collectées doivent rester limitées à ce qui est nécessaire.</p><h4 class="font-bold text-white mb-2 text-lg">Finalités</h4><p class="mb-6">Les informations sont utilisées pour traiter les demandes envoyées via le site, gérer les contenus AERIX et assurer le fonctionnement des services proposés.</p><h4 class="font-bold text-white mb-2 text-lg">Conservation et droits</h4><p class="mb-6">Les durées de conservation doivent être définies selon chaque finalité. Pour demander l’accès, la rectification ou la suppression de données, utilisez le moyen de contact officiel indiqué par AERIX.</p><h4 class="font-bold text-white mb-2 text-lg">Services tiers</h4><p>Le site peut charger des ressources externes, notamment Google Fonts, FlagCDN et les services Firebase utilisés par l’application.</p>`
             },
             en: {
                 mentions: `<p class="text-xs text-gray-500 mb-6">Last updated: September 2026</p><h4 class="font-bold text-white mb-2 text-lg">1. Website publisher</h4><p class="mb-5">AERIX Esports — independent esports organization.</p><h4 class="font-bold text-white mb-2 text-lg">2. Hosting</h4><p class="mb-6">The website is published through GitHub Pages. Hosting and contact information should be verified before final publication.</p><h4 class="font-bold text-white mb-2 text-lg">3. Intellectual property</h4><p class="mb-6">AERIX Esports graphics, texts, logos and original content may not be reused, reproduced or redistributed without prior authorization, except where permitted by law.</p><h4 class="font-bold text-white mb-2 text-lg">4. Liability</h4><p>Content is provided for information purposes. AERIX may modify, correct or remove content at any time.</p>`,
-                confidentialite: `<p class="text-xs text-gray-500 mb-6">Last updated: September 2026</p><h4 class="font-bold text-white mb-2 text-lg">Data processed</h4><p class="mb-6">Depending on the features used, the website may process information submitted through account-request forms and data required for administration features. Data collection should remain limited to what is necessary.</p><h4 class="font-bold text-white mb-2 text-lg">Purposes</h4><p class="mb-6">Information is used to process requests submitted through the website, manage AERIX content and operate the services provided.</p><h4 class="font-bold text-white mb-2 text-lg">Retention and rights</h4><p class="mb-6">Retention periods should be defined for each purpose. To request access, correction or deletion of data, use AERIX's official contact method.</p><h4 class="font-bold text-white mb-2 text-lg">Third-party services</h4><p>The website may load external resources, including Google Fonts, FlagCDN and Firebase services used by the application.</p>`
+                confidentialite: `<p class="text-xs text-gray-500 mb-6">Last updated: September 2026</p><h4 class="font-bold text-white mb-2 text-lg">Data processed</h4><p class="mb-6">Depending on the features used, the website may process information submitted through account-creation forms and data required for administration features. Data collection should remain limited to what is necessary.</p><h4 class="font-bold text-white mb-2 text-lg">Purposes</h4><p class="mb-6">Information is used to process requests submitted through the website, manage AERIX content and operate the services provided.</p><h4 class="font-bold text-white mb-2 text-lg">Retention and rights</h4><p class="mb-6">Retention periods should be defined for each purpose. To request access, correction or deletion of data, use AERIX's official contact method.</p><h4 class="font-bold text-white mb-2 text-lg">Third-party services</h4><p>The website may load external resources, including Google Fonts, FlagCDN and Firebase services used by the application.</p>`
             }
         };
 
