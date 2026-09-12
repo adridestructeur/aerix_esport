@@ -1342,7 +1342,57 @@
             document.querySelectorAll('.account-menu').forEach(m => m.classList.add('hidden'));
             openAdminLogin();
         }
-        auth.onAuthStateChanged(async user => { currentUser=user; currentAccount=null; if(user) { try { const snap=await db.collection('accounts').doc(user.uid).get(); currentAccount=snap.exists?snap.data():{uid:user.uid,email:user.email,username:user.email?.split('@')[0]||'Account',role:isOwner()?'owner':'user'}; if(isOwner()) currentAccount.role='owner'; } catch(e){ console.error(e); } } renderAccountArea(); });
+        // Bootstrap réel du compte Owner dans Firestore.
+        // Si l'utilisateur connecté correspond à OWNER_EMAIL mais que son document
+        // accounts/{uid} n'existe pas encore, on le crée ici (pas un simple objet local).
+        // Les Firestore Rules autorisent explicitement le Owner à créer ce document
+        // (voir la fonction owner() côté rules) : ce n'est donc pas un backdoor client,
+        // le serveur applique la même vérification d'email.
+        async function ensureOwnerAccountDoc(user) {
+            const ref = db.collection('accounts').doc(user.uid);
+            const snap = await ref.get();
+            if (snap.exists) {
+                // Le document existe déjà : on s'assure simplement que le rôle owner
+                // n'a pas été altéré (les rules empêchent de toute façon quiconque
+                // d'autre que le Owner de le modifier).
+                if (snap.data().role !== 'owner' || snap.data().status !== 'active') {
+                    await ref.set({ role: 'owner', status: 'active' }, { merge: true });
+                    return (await ref.get()).data();
+                }
+                return snap.data();
+            }
+            const ownerDoc = {
+                uid: user.uid,
+                email: user.email,
+                username: user.email?.split('@')[0] || 'Owner',
+                role: 'owner',
+                status: 'active',
+                avatar: null,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+            await ref.set(ownerDoc);
+            const created = await ref.get();
+            return created.data();
+        }
+
+        auth.onAuthStateChanged(async user => {
+            currentUser = user;
+            currentAccount = null;
+            if (user) {
+                try {
+                    if (isOwner()) {
+                        currentAccount = await ensureOwnerAccountDoc(user);
+                    } else {
+                        const snap = await db.collection('accounts').doc(user.uid).get();
+                        currentAccount = snap.exists ? snap.data() : null;
+                    }
+                } catch (e) {
+                    console.error(e);
+                    showToast(currentLang === 'en' ? 'Unable to load your account.' : 'Impossible de charger ton compte.', 'error');
+                }
+            }
+            renderAccountArea();
+        });
 
         function renderAdminLists() {
             const requestsEl = document.getElementById('admin-list-comptes');
