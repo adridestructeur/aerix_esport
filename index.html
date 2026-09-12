@@ -1301,7 +1301,7 @@
         function renderAdminLists() {
             const requestsEl = document.getElementById('admin-list-comptes');
             if (requestsEl) {
-                const statusLabels = currentLang === 'en' ? { pending: 'pending', approved: 'approved', rejected: 'rejected' } : { pending: 'en attente', approved: 'approuvée', rejected: 'refusée' };
+                const statusLabels = currentLang === 'en' ? { pending: 'pending', approved: 'approved', rejected: 'rejected', registered: 'registered', revoked: 'revoked' } : { pending: 'en attente', approved: 'approuvée', rejected: 'refusée', registered: 'inscrite', revoked: 'révoquée' };
                 requestsEl.innerHTML = globalAccountRequests.length ? globalAccountRequests.map(r => {
                     const status = r.status || 'pending';
                     const statusClass = status === 'approved' ? 'text-green-400 bg-green-500/10' : status === 'rejected' ? 'text-red-400 bg-red-500/10' : 'text-yellow-300 bg-yellow-500/10';
