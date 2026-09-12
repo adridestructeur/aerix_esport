@@ -1549,6 +1549,22 @@
         navigate('home');
         requestAnimationFrame(() => updateNavPill(document.getElementById('nav-home')));
         togglePalmaresFields();
+
+// Bloquer le clic droit (menu contextuel)
+document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+});
+
+// Bloquer les raccourcis clavier d'inspection (F12, Ctrl+Shift+I, Ctrl+U...)
+document.addEventListener('keydown', function(e) {
+    if (
+        e.key === 'F12' || 
+        (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'C' || e.key === 'J' || e.key === 'i' || e.key === 'c' || e.key === 'j')) || 
+        (e.ctrlKey && (e.key === 'U' || e.key === 'u'))
+    ) {
+        e.preventDefault();
+    }
+});
     </script>
 </body>
 </html>
