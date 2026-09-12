@@ -147,6 +147,12 @@
     .partner-card::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at center, rgba(139, 92, 246, 0.15) 0%, transparent 70%); opacity: 0; transition: opacity 0.4s ease; pointer-events: none; }
     .partner-card:hover::after { opacity: 1; }
 
+    /* Cartes logos partenaires (page Partenaires) : effet de zoom net au survol,
+       en plus du léger lift déjà présent sur .glass-panel. */
+    .partner-card-tile { transition: transform .35s cubic-bezier(.16,1,.3,1), border-color .35s ease, box-shadow .35s ease; }
+    .partner-card-tile:hover { transform: translateY(-6px) scale(1.04); }
+    .partner-card-tile img, .partner-card-tile span { transition: transform .4s cubic-bezier(.16,1,.3,1), filter .4s ease; }
+
     /* ÉDITEUR RICHE & TOASTS */
     .rich-editor[contenteditable="true"]:empty:before { content: attr(placeholder); color: #6b7280; pointer-events: none; display: block; }
     .rich-editor h1 { font-size: 1.5rem; font-weight: bold; margin-bottom: 0.5rem; }
@@ -1010,7 +1016,7 @@
             db.collection("annonces").orderBy("date", "desc").onSnapshot((snapshot) => { globalAnnonces = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderAnnonces(); renderAdminLists(); }, error => { /* Fallback if no index */ globalAnnonces = []; db.collection("annonces").get().then(s => { globalAnnonces = s.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderAnnonces(); renderAdminLists(); }); });
             db.collection("partners").onSnapshot((snapshot) => { globalPartners = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderPartners(); renderAdminLists(); });
             db.collection("accountRequests").orderBy("createdAt", "desc").onSnapshot((snapshot) => { globalAccountRequests = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderAdminLists(); }, () => { globalAccountRequests = []; renderAdminLists(); });
-            db.collection("accounts").onSnapshot((snapshot) => { globalAccounts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderAdminLists(); });
+            db.collection("accounts").onSnapshot((snapshot) => { globalAccounts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderAdminLists(); }, () => { globalAccounts = []; renderAdminLists(); });
             checkCookies();
         }
 
@@ -1253,8 +1259,8 @@
                 let sectionHTML = `<div class="mb-14"><h4 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-6 border-b border-white/5 pb-3 text-left">${cat}</h4><div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6 items-center">`;
                 
                 categories[cat].forEach((p, index) => {
-                    const contentHTML = p.image ? `<img src="${p.image}" alt="${p.name}" class="max-h-16 max-w-full object-contain filter drop-shadow-[0_0_10px_rgba(255,255,255,0.1)] group-hover:drop-shadow-[0_0_20px_rgba(139,92,246,0.6)] transition duration-500">` : `<span class="text-xl font-bold text-white tracking-tighter">${p.name}</span>`;
-                    const wrapperHTML = p.url ? `<a href="${p.url}" target="_blank" class="glass-panel p-6 rounded-2xl flex items-center justify-center min-h-[120px] group reveal delay-${(index%5)*100} hover:border-aerix-purple/50 bg-[#050505]/50">${contentHTML}</a>` : `<div class="glass-panel p-6 rounded-2xl flex items-center justify-center min-h-[120px] group reveal delay-${(index%5)*100} bg-[#050505]/50">${contentHTML}</div>`;
+                    const contentHTML = p.image ? `<img src="${p.image}" alt="${p.name}" class="max-h-16 max-w-full object-contain filter drop-shadow-[0_0_10px_rgba(255,255,255,0.1)] group-hover:drop-shadow-[0_0_20px_rgba(139,92,246,0.6)] transition-all duration-500 group-hover:scale-110">` : `<span class="text-xl font-bold text-white tracking-tighter transition-all duration-500 group-hover:scale-110 inline-block">${p.name}</span>`;
+                    const wrapperHTML = p.url ? `<a href="${p.url}" target="_blank" class="partner-card-tile glass-panel p-6 rounded-2xl flex items-center justify-center min-h-[120px] group reveal delay-${(index%5)*100} hover:border-aerix-purple/50 bg-[#050505]/50">${contentHTML}</a>` : `<div class="partner-card-tile glass-panel p-6 rounded-2xl flex items-center justify-center min-h-[120px] group reveal delay-${(index%5)*100} bg-[#050505]/50">${contentHTML}</div>`;
                     sectionHTML += wrapperHTML;
                 });
                 sectionHTML += `</div></div>`;
@@ -1311,7 +1317,8 @@
 
                 document.getElementById('admin-login-modal').classList.add('hidden');
                 document.getElementById('admin-modal').classList.remove('hidden');
-                switchAdminTab('comptes');
+                applyAdminTabVisibility();
+                switchAdminTab(isOwner() ? 'comptes' : 'boutique');
                 showToast(currentLang==='en'?'Admin access confirmed.':'Accès administrateur confirmé.', 'success');
             } catch (e) {
                 console.error(e);
@@ -1902,6 +1909,7 @@
                 openAdminLogin();
                 return;
             }
+            applyAdminTabVisibility();
             document.getElementById('admin-modal').classList.toggle('hidden');
         }
         function updateAdminTabPill(activeBtn) {
@@ -1920,7 +1928,15 @@
             if(!active) return;
             requestAnimationFrame(() => requestAnimationFrame(() => updateAdminTabPill(active)));
         }
+        // L'onglet "Comptes" (demandes de compte + gestion des rôles) est réservé au Owner.
+        // Un admin classique ne doit pas voir ni les demandes de compte ni la liste des comptes.
+        function applyAdminTabVisibility() {
+            const comptesBtn = document.getElementById('tab-btn-comptes');
+            if (!comptesBtn) return;
+            comptesBtn.classList.toggle('hidden', !isOwner());
+        }
         function switchAdminTab(tab) {
+            if (tab === 'comptes' && !isOwner()) tab = 'boutique';
             const target = document.getElementById('admin-tab-' + tab);
             if(!target) return;
             document.querySelectorAll('.admin-tab').forEach(t => {
