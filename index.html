@@ -652,7 +652,10 @@
                                     <input type="number" id="temp-player-number" placeholder="Numéro (ex: 7)" class="bg-black/50 border border-white/10 rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-aerix-purple">
                                 </div>
                             </div>
-                            <button type="button" onclick="addTempPlayer()" class="mt-4 w-full bg-white/10 hover:bg-white/20 text-white font-bold text-xs px-4 py-2.5 rounded-lg transition border border-white/10">Ajouter ce joueur au roster</button>
+                            <div class="flex gap-2 mt-4">
+                                <button id="temp-player-cancel-btn" type="button" onclick="resetTempPlayerForm()" class="hidden px-4 py-2.5 bg-white/5 border border-white/10 hover:bg-white/10 text-white rounded-lg text-xs font-bold transition">Annuler</button>
+                                <button id="temp-player-submit-btn" type="button" onclick="addTempPlayer()" class="flex-1 bg-white/10 hover:bg-white/20 text-white font-bold text-xs px-4 py-2.5 rounded-lg transition border border-white/10">Ajouter ce joueur au roster</button>
+                            </div>
                         </div>
                     </div>
                     <div class="flex gap-3">
@@ -974,6 +977,11 @@
             translateStaticUI();
             renderAccountArea();
             refreshNavPill();
+            // Ré-affiche le contenu dynamique (annonces, rosters, palmarès) pour déclencher
+            // la traduction automatique vers la langue sélectionnée.
+            if (typeof globalEffectifs !== 'undefined') renderEffectifs();
+            if (typeof globalPalmares !== 'undefined') renderPalmares();
+            if (typeof globalAnnonces !== 'undefined') renderAnnonces();
         }
 
         // TOAST NOTIFICATIONS
@@ -1028,6 +1036,60 @@
         }
 
         // EFFECTIFS (CARTES JOUEURS)
+        // -------------------------
+        // TRADUCTION AUTOMATIQUE DU CONTENU DYNAMIQUE (annonces, descriptions...)
+        // -------------------------
+        // Le contenu saisi dans l'admin (annonces, descriptions de roster/palmarès) est
+        // stocké en une seule langue (FR). Quand le site est affiché en EN, ce texte est
+        // traduit à la volée via un service de traduction public, puis mis en cache
+        // (mémoire + localStorage) pour éviter de re-traduire à chaque changement de langue.
+        const translationCache = (() => {
+            try { return JSON.parse(localStorage.getItem('aerix_translation_cache') || '{}'); }
+            catch(e) { return {}; }
+        })();
+        function persistTranslationCache() {
+            try { localStorage.setItem('aerix_translation_cache', JSON.stringify(translationCache)); } catch(e) { /* quota, ignore */ }
+        }
+        function cacheKey(text, targetLang) { return targetLang + '::' + text; }
+
+        async function translateText(text, targetLang) {
+            if (!text || !text.trim() || targetLang === 'fr') return text;
+            const key = cacheKey(text, targetLang);
+            if (translationCache[key]) return translationCache[key];
+            try {
+                const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=fr&tl=${targetLang}&dt=t&format=html&q=${encodeURIComponent(text)}`);
+                if (!res.ok) throw new Error('translate http ' + res.status);
+                const data = await res.json();
+                const translated = (data[0] || []).map(chunk => chunk[0]).join('');
+                if (translated) {
+                    translationCache[key] = translated;
+                    persistTranslationCache();
+                    return translated;
+                }
+                return text;
+            } catch (e) {
+                console.error('Translation failed:', e);
+                return text; // Repli silencieux sur le texte original si le service est indisponible.
+            }
+        }
+
+        // Traduit tous les éléments marqués data-translate-src="<texte original>" présents
+        // dans le DOM au moment de l'appel, puis remplace leur contenu une fois la
+        // traduction reçue (le FR reste affiché entre-temps, pas de flash de contenu vide).
+        function translateDynamicContent() {
+            if (currentLang === 'fr') return;
+            document.querySelectorAll('[data-translate-src]').forEach(async el => {
+                const original = el.getAttribute('data-translate-src');
+                if (!original) return;
+                const targetLang = currentLang;
+                const translated = await translateText(original, targetLang);
+                // Vérifie qu'on est toujours sur la même langue et que l'élément est encore affiché.
+                if (currentLang === targetLang && document.body.contains(el)) {
+                    el.innerHTML = translated;
+                }
+            });
+        }
+
         function renderEffectifs() {
             const sortedEffectifs = [...globalEffectifs].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
             let filtered = currentFilters.effectifs === 'Tous' ? sortedEffectifs : sortedEffectifs.filter(e => (e.game || 'Tous') === currentFilters.effectifs);
@@ -1067,7 +1129,7 @@
                                 <div class="mb-2">${getGameBadge(r.game)}</div>
                                 <h4 class="text-3xl font-black text-white">${r.name}</h4>
                             </div>
-                            ${r.desc ? `<p class="text-gray-400 text-sm md:max-w-md text-left md:text-right leading-relaxed">${r.desc}</p>` : ''}
+                            ${r.desc ? `<p class="text-gray-400 text-sm md:max-w-md text-left md:text-right leading-relaxed" data-translate-src="${escapeHtml(r.desc)}">${r.desc}</p>` : ''}
                         </div>
                         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
                             ${playersHTML}
@@ -1110,7 +1172,7 @@
                             <span class="text-xs font-bold px-2 py-1 rounded-md border ${badgeClass}">${p.result || 'Résultat'}</span>
                         </div>
                         ${imgHTML}
-                        <h4 class="text-xl font-bold text-white mb-1 tracking-tight leading-tight">${p.title}</h4>
+                        <h4 class="text-xl font-bold text-white mb-1 tracking-tight leading-tight" data-translate-src="${escapeHtml(p.title || '')}">${p.title}</h4>
                         <span class="text-xs text-gray-500 font-medium mb-4 block flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg> ${p.date || 'Non daté'}</span>
                         
                         <div class="bg-black/50 rounded-xl p-4 mb-4 border border-white/5 flex items-center justify-between">
@@ -1126,7 +1188,7 @@
                             <span class="text-xs font-bold px-2 py-1 rounded-md border bg-aerix-lmu/20 text-aerix-lmu border-aerix-lmu/30">${p.position || 'Classé'}</span>
                         </div>
                         ${imgHTML}
-                        <h4 class="text-xl font-bold text-white mb-1 tracking-tight leading-tight">${p.title}</h4>
+                        <h4 class="text-xl font-bold text-white mb-1 tracking-tight leading-tight" data-translate-src="${escapeHtml(p.title || '')}">${p.title}</h4>
                         <span class="text-xs text-gray-500 font-medium mb-4 block flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg> ${p.date || 'Non daté'}</span>
                         
                         <div class="bg-black/50 rounded-xl p-4 border border-white/5 space-y-2">
@@ -1141,6 +1203,8 @@
                     </div>`;
             });
             setTimeout(revealActiveElements, 20);
+            translateDynamicContent();
+            translateDynamicContent();
         }
 
         // ACTUALITÉS (TEXTE RICHE + ANIMATION)
@@ -1159,12 +1223,13 @@
                                 ${getGameBadge(a.game)}
                                 <span class="text-xs font-bold text-gray-500 flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> ${a.date}</span>
                             </div>
-                            <h4 class="text-2xl font-black text-white mb-4 leading-tight tracking-tight group-hover:text-amber-400 transition-colors">${a.title}</h4>
-                            <div class="text-sm text-gray-400 leading-relaxed rich-editor-content">${a.desc}</div>
+                            <h4 class="text-2xl font-black text-white mb-4 leading-tight tracking-tight group-hover:text-amber-400 transition-colors" data-translate-src="${escapeHtml(a.title || '')}">${a.title}</h4>
+                            <div class="text-sm text-gray-400 leading-relaxed rich-editor-content" data-translate-src="${escapeHtml(a.desc || '')}">${a.desc}</div>
                         </div>
                     </div>`;
             });
             setTimeout(revealActiveElements, 20);
+            translateDynamicContent();
         }
 
         // PARTENAIRES
@@ -1317,6 +1382,11 @@
         }
         async function approveAccountRequest(id) { try { await db.collection('accountRequests').doc(id).update({status:'approved',approvedAt:firebase.firestore.FieldValue.serverTimestamp()}); showToast(currentLang==='en'?'Account request approved.':'Demande de compte approuvée.'); } catch(e){ console.error(e); showToast(currentLang==='en'?'Approval failed.':'Échec de l’approbation.','error'); } }
         async function rejectAccountRequest(id) { try { await db.collection('accountRequests').doc(id).update({status:'rejected',rejectedAt:firebase.firestore.FieldValue.serverTimestamp()}); showToast(currentLang==='en'?'Account request rejected.':'Demande refusée.'); } catch(e){ console.error(e); showToast(currentLang==='en'?'Rejection failed.':'Échec du refus.','error'); } }
+        async function deleteAccountRequest(id) {
+            if (!confirm(currentLang==='en'?'Delete this account request permanently?':'Supprimer définitivement cette demande de compte ?')) return;
+            try { await db.collection('accountRequests').doc(id).delete(); showToast(currentLang==='en'?'Request deleted.':'Demande supprimée.'); }
+            catch(e){ console.error(e); showToast(currentLang==='en'?'Deletion failed.':'Échec de la suppression.','error'); }
+        }
         async function toggleAccountRole(uid, newRole) {
             if(!isOwner()) return;
             try {
@@ -1401,7 +1471,7 @@
                 requestsEl.innerHTML = globalAccountRequests.length ? globalAccountRequests.map(r => {
                     const status = r.status || 'pending';
                     const statusClass = status === 'approved' ? 'text-green-400 bg-green-500/10' : status === 'rejected' ? 'text-red-400 bg-red-500/10' : 'text-yellow-300 bg-yellow-500/10';
-                    return `<div class="glass-panel p-4 rounded-xl flex flex-col md:flex-row md:items-center md:justify-between gap-4"><div><div class="text-white font-bold text-sm">${escapeHtml(r.username || '—')}</div><div class="text-xs text-gray-500">${escapeHtml(r.email || '—')}</div><span class="inline-flex mt-2 px-2 py-1 rounded-full text-[10px] font-bold uppercase ${statusClass}">${statusLabels[status] || status}</span></div><div class="flex gap-2">${status === 'pending' ? `<button onclick="approveAccountRequest('${r.id}')" class="text-green-300 text-xs bg-green-500/10 hover:bg-green-500/20 px-3 py-1.5 rounded-lg transition">${currentLang==='en'?'Approve':'Approuver'}</button><button onclick="rejectAccountRequest('${r.id}')" class="text-red-300 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">${currentLang==='en'?'Reject':'Refuser'}</button>` : ''}</div></div>`; }).join('') : `<p class="text-gray-500 text-sm italic">${currentLang==='en'?'No account requests.':'Aucune demande de compte.'}</p>`;
+                    return `<div class="glass-panel p-4 rounded-xl flex flex-col md:flex-row md:items-center md:justify-between gap-4"><div><div class="text-white font-bold text-sm">${escapeHtml(r.username || '—')}</div><div class="text-xs text-gray-500">${escapeHtml(r.email || '—')}</div><span class="inline-flex mt-2 px-2 py-1 rounded-full text-[10px] font-bold uppercase ${statusClass}">${statusLabels[status] || status}</span></div><div class="flex gap-2">${status === 'pending' ? `<button onclick="approveAccountRequest('${r.id}')" class="text-green-300 text-xs bg-green-500/10 hover:bg-green-500/20 px-3 py-1.5 rounded-lg transition">${currentLang==='en'?'Approve':'Approuver'}</button><button onclick="rejectAccountRequest('${r.id}')" class="text-red-300 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">${currentLang==='en'?'Reject':'Refuser'}</button>` : ''}<button onclick="deleteAccountRequest('${r.id}')" class="text-gray-400 text-xs bg-white/5 hover:bg-red-500/20 hover:text-red-300 px-3 py-1.5 rounded-lg transition">${currentLang==='en'?'Delete':'Supprimer'}</button></div></div>`; }).join('') : `<p class="text-gray-500 text-sm italic">${currentLang==='en'?'No account requests.':'Aucune demande de compte.'}</p>`;
             }
             const usersEl = document.getElementById('admin-list-users');
             if (usersEl) {
@@ -1458,12 +1528,13 @@
             document.getElementById('add-roster-game').value = item.game || 'Tous';
             document.getElementById('add-roster-desc').value = item.desc || '';
             tempPlayers = item.players ? [...item.players] : [];
-            renderTempPlayersAdmin();
+            resetTempPlayerForm();
             document.getElementById('effectif-form-title').innerText = "Modifier le Roster"; document.getElementById('effectif-cancel-btn').classList.remove('hidden');
         }
         function resetEffectifForm() {
             document.getElementById('edit-effectif-id').value = ''; document.getElementById('add-roster-name').value = ''; document.getElementById('add-roster-game').value = 'Tous'; document.getElementById('add-roster-desc').value = '';
-            tempPlayers = []; renderTempPlayersAdmin();
+            tempPlayers = [];
+            resetTempPlayerForm();
             document.getElementById('effectif-form-title').innerText = "Créer un Roster"; document.getElementById('effectif-cancel-btn').classList.add('hidden');
         }
         async function saveEffectif() {
@@ -1767,6 +1838,7 @@
                 showToast(currentLang==='en'?'Profile photo updated.':'Photo de profil mise à jour.');
             } catch(e) { console.error(e); showToast(currentLang==='en'?'Failed to update photo.':'Échec de la mise à jour de la photo.','error'); }
         }
+        let editingPlayerIndex = null;
         function addTempPlayer() { 
             const pseudo = document.getElementById('temp-player-pseudo').value;
             const name = document.getElementById('temp-player-name').value; 
@@ -1774,12 +1846,44 @@
             const country = document.getElementById('temp-player-country').value; 
             const number = document.getElementById('temp-player-number').value; 
             if(!pseudo && !name) return showToast("Pseudo ou Nom requis.", "error"); 
-            tempPlayers.push({ pseudo, name, age, country, number, avatar: tempPlayerAvatar || defaultAvatar }); 
-            
-            document.getElementById('temp-player-pseudo').value = ''; document.getElementById('temp-player-name').value = ''; document.getElementById('temp-player-age').value = ''; document.getElementById('temp-player-country').value = '🇫🇷'; document.getElementById('temp-player-number').value = '';
-            document.getElementById('player-avatar-preview').src = defaultAvatar; tempPlayerAvatar = null; renderTempPlayersAdmin(); showToast("Joueur ajouté au brouillon.");
+            const playerData = { pseudo, name, age, country, number, avatar: tempPlayerAvatar || (editingPlayerIndex !== null ? tempPlayers[editingPlayerIndex].avatar : defaultAvatar) };
+
+            if (editingPlayerIndex !== null) {
+                tempPlayers[editingPlayerIndex] = playerData;
+                showToast(currentLang==='en'?'Player updated.':'Joueur modifié.');
+            } else {
+                tempPlayers.push(playerData);
+                showToast(currentLang==='en'?'Player added to draft.':'Joueur ajouté au brouillon.');
+            }
+            resetTempPlayerForm();
         }
-        function renderTempPlayersAdmin() { document.getElementById('temp-players-list').innerHTML = tempPlayers.map((p, i) => `<div class="flex items-center justify-between glass-panel p-3 rounded-xl border border-white/10"><div class="flex items-center gap-3"><img src="${p.avatar}" class="w-10 h-12 rounded bg-black object-cover object-top-custom border border-white/10"><div><div class="text-white font-bold text-sm uppercase">${p.pseudo||p.name}</div><div class="text-gray-400 text-xs">${p.country||'🌍'} | #${p.number||'-'}</div></div></div><button type="button" onclick="tempPlayers.splice(${i}, 1); renderTempPlayersAdmin()" class="text-red-400 bg-red-500/10 px-2 py-1 rounded text-xs hover:bg-red-500/20 transition">Retirer</button></div>`).join(''); }
+        function resetTempPlayerForm() {
+            editingPlayerIndex = null;
+            document.getElementById('temp-player-pseudo').value = ''; document.getElementById('temp-player-name').value = ''; document.getElementById('temp-player-age').value = ''; document.getElementById('temp-player-country').value = '🇫🇷'; document.getElementById('temp-player-number').value = '';
+            document.getElementById('player-avatar-preview').src = defaultAvatar; tempPlayerAvatar = null;
+            const btn = document.getElementById('temp-player-submit-btn');
+            if (btn) btn.innerText = currentLang==='en'?'Add this player to the roster':'Ajouter ce joueur au roster';
+            const cancelBtn = document.getElementById('temp-player-cancel-btn');
+            if (cancelBtn) cancelBtn.classList.add('hidden');
+            renderTempPlayersAdmin();
+        }
+        function startEditTempPlayer(i) {
+            const p = tempPlayers[i]; if (!p) return;
+            editingPlayerIndex = i;
+            document.getElementById('temp-player-pseudo').value = p.pseudo || '';
+            document.getElementById('temp-player-name').value = p.name || '';
+            document.getElementById('temp-player-age').value = p.age || '';
+            document.getElementById('temp-player-country').value = p.country || '🇫🇷';
+            document.getElementById('temp-player-number').value = p.number || '';
+            document.getElementById('player-avatar-preview').src = p.avatar || defaultAvatar;
+            tempPlayerAvatar = null;
+            const btn = document.getElementById('temp-player-submit-btn');
+            if (btn) btn.innerText = currentLang==='en'?'Save changes':'Enregistrer les modifications';
+            const cancelBtn = document.getElementById('temp-player-cancel-btn');
+            if (cancelBtn) cancelBtn.classList.remove('hidden');
+            document.getElementById('temp-player-pseudo').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        function renderTempPlayersAdmin() { document.getElementById('temp-players-list').innerHTML = tempPlayers.map((p, i) => `<div class="flex items-center justify-between glass-panel p-3 rounded-xl border border-white/10 ${editingPlayerIndex === i ? 'border-aerix-purple/60' : ''}"><div class="flex items-center gap-3 cursor-pointer" onclick="startEditTempPlayer(${i})"><img src="${p.avatar}" class="w-10 h-12 rounded bg-black object-cover object-top-custom border border-white/10"><div><div class="text-white font-bold text-sm uppercase">${p.pseudo||p.name}</div><div class="text-gray-400 text-xs">${p.country||'🌍'} | #${p.number||'-'}</div></div></div><div class="flex gap-2"><button type="button" onclick="startEditTempPlayer(${i})" class="text-white bg-white/10 px-2 py-1 rounded text-xs hover:bg-aerix-purple transition">${currentLang==='en'?'Edit':'Éditer'}</button><button type="button" onclick="if(editingPlayerIndex===${i}) resetTempPlayerForm(); tempPlayers.splice(${i}, 1); renderTempPlayersAdmin()" class="text-red-400 bg-red-500/10 px-2 py-1 rounded text-xs hover:bg-red-500/20 transition">Retirer</button></div></div>`).join(''); }
         
         document.getElementById('palm-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 16/9, b => { tempPalmImage = b; document.getElementById('palm-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('palm-img-preview').classList.remove('hidden'); }); e.target.value=''; });
         document.getElementById('partner-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], NaN, b => { tempPartnerImage = b; document.getElementById('partner-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('partner-img-preview').classList.remove('hidden'); }); e.target.value=''; });
