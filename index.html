@@ -825,7 +825,8 @@
         // Replace OWNER_EMAIL with the email of the AERIX owner account.
         // Firebase Authentication + Firestore rules are required for real security.
         const OWNER_EMAIL = "adrien.utzinger@gmail.com";
-        const ADMIN_PWD = "aerixadmin";
+        // Aucun mot de passe administrateur n'est stocké dans le code source.
+// Le mot de passe utilisé pour confirmer l'accès admin est celui du compte Firebase connecté.
         let currentUser = null;
         let currentAccount = null;
         let globalAccountRequests = [];
@@ -1193,20 +1194,59 @@
         // ADMIN & SÉCURITÉ
         // -------------------------
         
-        window.addEventListener('keydown', (e) => { if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'x') { openAdminLogin(); } });
-        let logoClicks = 0;
+        // Accès administration :
+        // - aucun raccourci caché
+        // - aucun mot de passe admin en clair dans le HTML
+        // - confirmation par le mot de passe du compte Firebase actuellement connecté
         function handleLogoClick() {
-            logoClicks++;
-            if(logoClicks >= 5) { logoClicks = 0; openAdminLogin(); } 
-            else { navigate('home'); }
-            setTimeout(() => { logoClicks = 0; }, 2000);
+            navigate('home');
         }
 
-        function openAdminLogin() { document.getElementById('admin-login-modal').classList.remove('hidden'); document.getElementById('admin-pwd-input').value = ''; document.getElementById('admin-pwd-input').focus(); }
-        function checkAdminPwd() {
-            const val = document.getElementById('admin-pwd-input').value;
-            if(val === ADMIN_PWD) { document.getElementById('admin-login-modal').classList.add('hidden'); sessionStorage.setItem('aerix_legacy_admin','true'); document.getElementById('admin-modal').classList.remove('hidden'); switchAdminTab('comptes'); showToast(currentLang==='en'?'Admin login successful':'Connexion Admin réussie', "success"); }
-            else { showToast(currentLang==='en'?'Incorrect password':'Mot de passe incorrect', "error"); }
+        function openAdminLogin() {
+            if (!currentUser) {
+                showToast(currentLang==='en'?'Sign in to access the administration panel.':'Connecte-toi pour accéder au panel d’administration.', 'error');
+                return;
+            }
+            if (!hasAdminAccess()) {
+                showToast(currentLang==='en'?'Administration access denied.':'Accès à l’administration refusé.', 'error');
+                return;
+            }
+            const modal = document.getElementById('admin-login-modal');
+            const input = document.getElementById('admin-pwd-input');
+            if (!modal || !input) return;
+            input.value = '';
+            modal.classList.remove('hidden');
+            setTimeout(() => input.focus(), 50);
+        }
+
+        async function checkAdminPwd() {
+            if (!currentUser || !hasAdminAccess()) {
+                document.getElementById('admin-login-modal')?.classList.add('hidden');
+                showToast(currentLang==='en'?'Administration access denied.':'Accès à l’administration refusé.', 'error');
+                return;
+            }
+
+            const password = document.getElementById('admin-pwd-input')?.value || '';
+            if (!password) {
+                showToast(currentLang==='en'?'Enter your Firebase account password.':'Entre le mot de passe de ton compte Firebase.', 'error');
+                return;
+            }
+
+            try {
+                const credential = firebase.auth.EmailAuthProvider.credential(currentUser.email, password);
+                await currentUser.reauthenticateWithCredential(credential);
+
+                document.getElementById('admin-login-modal').classList.add('hidden');
+                document.getElementById('admin-modal').classList.remove('hidden');
+                switchAdminTab('comptes');
+                showToast(currentLang==='en'?'Admin access confirmed.':'Accès administrateur confirmé.', 'success');
+            } catch (e) {
+                console.error(e);
+                const message = e && (e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential')
+                    ? (currentLang==='en'?'Incorrect password.':'Mot de passe incorrect.')
+                    : (currentLang==='en'?'Unable to confirm your identity.':'Impossible de confirmer ton identité.');
+                showToast(message, 'error');
+            }
         }
 
         function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('hidden'); }
@@ -1219,7 +1259,10 @@
             return !!currentUser && OWNER_EMAIL !== 'OWNER_EMAIL_HERE' && (currentUser.email || '').toLowerCase() === OWNER_EMAIL.toLowerCase();
         }
         function hasAdminAccess() {
-            return isOwner() || !!(currentAccount && ['owner','admin'].includes(currentAccount.role));
+            return isOwner()
+                || !!(currentAccount
+                    && currentAccount.status !== 'revoked'
+                    && ['owner','admin'].includes(currentAccount.role));
         }
         function renderAccountArea() {
             const areas = [document.getElementById('account-area'), document.getElementById('mobile-account-area')].filter(Boolean);
@@ -1295,7 +1338,10 @@
         }
         async function loginAccount() { const email=document.getElementById('account-login-email').value.trim(); const password=document.getElementById('account-login-password').value; if(!email||!password) return showToast(currentLang==='en'?'Email and password are required.':'Email et mot de passe obligatoires.','error'); try { await auth.signInWithEmailAndPassword(email,password); closeAccountModal(); showToast(currentLang==='en'?'Signed in.':'Connexion réussie.'); } catch(e){ showToast(currentLang==='en'?'Invalid email or password.':'Email ou mot de passe incorrect.','error'); } }
         async function logoutAccount() { try { await auth.signOut(); document.querySelectorAll('.account-menu').forEach(m => m.classList.add('hidden')); showToast(currentLang==='en'?'Signed out.':'Déconnexion réussie.'); } catch(e){ console.error(e); } }
-        function openAdminFromAccount() { document.querySelectorAll('.account-menu').forEach(m => m.classList.add('hidden')); if(hasAdminAccess()) { document.getElementById('admin-modal').classList.remove('hidden'); switchAdminTab('comptes'); } }
+        function openAdminFromAccount() {
+            document.querySelectorAll('.account-menu').forEach(m => m.classList.add('hidden'));
+            openAdminLogin();
+        }
         auth.onAuthStateChanged(async user => { currentUser=user; currentAccount=null; if(user) { try { const snap=await db.collection('accounts').doc(user.uid).get(); currentAccount=snap.exists?snap.data():{uid:user.uid,email:user.email,username:user.email?.split('@')[0]||'Account',role:isOwner()?'owner':'user'}; if(isOwner()) currentAccount.role='owner'; } catch(e){ console.error(e); } } renderAccountArea(); });
 
         function renderAdminLists() {
@@ -1689,7 +1735,13 @@
         document.getElementById('partner-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], NaN, b => { tempPartnerImage = b; document.getElementById('partner-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('partner-img-preview').classList.remove('hidden'); }); e.target.value=''; });
         document.getElementById('announcement-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 16/9, b => { tempAnnouncementImage = b; document.getElementById('announcement-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('announcement-img-preview').classList.remove('hidden'); }); e.target.value=''; });
 
-        function toggleAdmin() { if(!hasAdminAccess() && !sessionStorage.getItem('aerix_legacy_admin')) { openAdminLogin(); return; } document.getElementById('admin-modal').classList.toggle('hidden'); }
+        function toggleAdmin() {
+            if (!hasAdminAccess()) {
+                openAdminLogin();
+                return;
+            }
+            document.getElementById('admin-modal').classList.toggle('hidden');
+        }
         function switchAdminTab(tab) { document.querySelectorAll('.admin-tab').forEach(t => t.classList.add('hidden')); const target=document.getElementById('admin-tab-' + tab); if(!target) return; target.classList.remove('hidden'); ['comptes', 'boutique', 'effectifs', 'palmares', 'partenaires', 'annonces'].forEach(t => { const btn = document.getElementById('tab-btn-' + t); if(btn) btn.className = "flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition cursor-move"; }); const activeTabBtn = document.getElementById('tab-btn-' + tab); if(activeTabBtn) activeTabBtn.className = "flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl bg-aerix-purple text-white transition shadow-[0_0_15px_rgba(139,92,246,0.3)] cursor-move"; }
 
         // SLIDER PRODUIT
