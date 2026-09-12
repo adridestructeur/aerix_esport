@@ -180,7 +180,7 @@
             <!-- Menu Desktop -->
             <div class="hidden md:flex space-x-1 text-xs font-medium text-gray-400 uppercase tracking-widest items-center relative bg-[#0c0c0c]/80 p-1 rounded-full border border-white/10 overflow-hidden shadow-inner" id="nav-container">
                 <div id="nav-pill" class="absolute h-8 rounded-full bg-aerix-purple/20 transition-all duration-300 ease-out z-0 pointer-events-none backdrop-blur-md border border-aerix-purple/60 shadow-[0_0_25px_rgba(139,92,246,0.7)]"></div>
-                <button id="nav-home" onclick="navigate('home')" class="nav-btn hover:text-white active">Accueil</button>
+                <button id="nav-home" onclick="navigate('home')" class="nav-btn hover:text-white active" data-i18n="nav_home">Accueil</button>
                 <button id="nav-histoire" onclick="navigate('histoire')" class="nav-btn hover:text-white" data-i18n="nav_histoire">Histoire</button>
                 <button id="nav-effectifs" onclick="navigate('effectifs')" class="nav-btn hover:text-white" data-i18n="nav_effectifs">Effectifs</button>
                 <button id="nav-palmares" onclick="navigate('palmares')" class="nav-btn hover:text-white" data-i18n="nav_palmares">Palmarès</button>
@@ -214,7 +214,7 @@
 
         <!-- Menu Déroulant Mobile -->
         <div id="mobile-menu" class="hidden md:hidden bg-[#080808]/98 backdrop-blur-2xl border-b border-white/10 px-6 py-6 flex flex-col gap-3 shadow-2xl">
-            <button onclick="navigate('home'); toggleMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-white bg-white/5 border border-white/5">Accueil</button>
+            <button onclick="navigate('home'); toggleMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-white bg-white/5 border border-white/5" data-i18n="nav_home">Accueil</button>
             <button onclick="navigate('histoire'); toggleMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_histoire">Histoire</button>
             <button onclick="navigate('effectifs'); toggleMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_effectifs">Effectifs</button>
             <button onclick="navigate('palmares'); toggleMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_palmares">Palmarès</button>
@@ -475,33 +475,35 @@
     <div id="account-modal" class="fixed inset-0 z-[210] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl">
         <div class="glass-panel w-full max-w-md rounded-[2rem] p-7 md:p-8 shadow-[0_0_50px_rgba(139,92,246,.2)]">
             <div class="flex justify-between items-center mb-6">
-                <div><p id="account-modal-kicker" class="text-[10px] uppercase tracking-[.2em] text-aerix-purple font-bold mb-1">AERIX Account</p><h3 id="account-modal-title" class="text-2xl font-black text-white">Request an account</h3></div>
+                <div><p id="account-modal-kicker" class="text-[10px] uppercase tracking-[.2em] text-aerix-purple font-bold mb-1">AERIX Account</p><h3 id="account-modal-title" class="text-2xl font-black text-white" data-i18n="account_modal_title_request">Demande de compte</h3></div>
                 <button onclick="closeAccountModal()" class="text-gray-400 hover:text-white bg-white/5 w-9 h-9 rounded-full">✕</button>
             </div>
             <div id="account-request-form" class="space-y-4">
-                <p id="account-request-desc" class="text-xs text-gray-400 leading-relaxed">Send your username and email. An AERIX administrator will review your request.</p>
-                <input id="account-request-username" type="text" maxlength="30" placeholder="Username" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
-                <input id="account-request-email" type="email" placeholder="Email address" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
-                <button onclick="submitAccountRequest()" class="w-full bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition shadow-[0_0_15px_rgba(139,92,246,.3)]">Send request</button>
-                <button onclick="showAccountLogin()" class="w-full bg-white/5 border border-white/10 text-white font-bold py-3 rounded-xl hover:bg-white/10 transition text-sm">Already approved? Sign in</button>
+                <p id="account-request-desc" class="text-xs text-gray-400 leading-relaxed" data-i18n="account_request_desc">Envoie ton pseudo et ton email. Un administrateur AERIX examinera ta demande.</p>
+                <input id="account-request-username" type="text" maxlength="30" placeholder="Pseudo" data-i18n-placeholder="username_placeholder" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
+                <input id="account-request-email" type="email" placeholder="Adresse email" data-i18n-placeholder="email_placeholder" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
+                <button onclick="submitAccountRequest()" class="w-full bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition shadow-[0_0_15px_rgba(139,92,246,.3)]" data-i18n="send_request">Envoyer la demande</button>
+                <button onclick="showAccountLogin()" class="w-full bg-white/5 border border-white/10 text-white font-bold py-3 rounded-xl hover:bg-white/10 transition text-sm" data-i18n="already_approved_signin">Déjà approuvé ? Se connecter</button>
             </div>
             <div id="account-login-form" class="space-y-4 hidden">
-                <p id="account-login-desc" class="text-xs text-gray-400 leading-relaxed">Sign in with your approved AERIX account.</p>
-                <input id="account-login-email" type="email" placeholder="Email address" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
-                <input id="account-login-password" type="password" placeholder="Password" onkeypress="if(event.key==='Enter') loginAccount()" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
-                <button onclick="loginAccount()" class="w-full bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition">Sign in</button>
-                <button onclick="showAccountRegistration()" class="w-full bg-white/5 border border-white/10 text-white font-bold py-3 rounded-xl hover:bg-white/10 transition text-sm">Create my approved account</button>
+                <p id="account-login-desc" class="text-xs text-gray-400 leading-relaxed" data-i18n="account_login_desc">Connecte-toi avec ton compte AERIX approuvé.</p>
+                <input id="account-login-email" type="email" placeholder="Adresse email" data-i18n-placeholder="email_placeholder" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
+                <input id="account-login-password" type="password" placeholder="Mot de passe" data-i18n-placeholder="password_placeholder" onkeypress="if(event.key==='Enter') loginAccount()" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
+                <button onclick="loginAccount()" class="w-full bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition" data-i18n="account_login">Connexion</button>
+                <button onclick="showAccountRegistration()" class="w-full bg-white/5 border border-white/10 text-white font-bold py-3 rounded-xl hover:bg-white/10 transition text-sm" data-i18n="create_approved_account">Créer mon compte approuvé</button>
             </div>
             <div id="account-register-form" class="space-y-4 hidden">
-                <p id="account-register-desc" class="text-xs text-gray-400 leading-relaxed">Registration is available only after your request has been approved.</p>
-                <input id="account-register-username" type="text" maxlength="30" placeholder="Username" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
-                <input id="account-register-email" type="email" placeholder="Email address" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
-                <input id="account-register-password" type="password" minlength="8" placeholder="Password (8+ characters)" onkeypress="if(event.key==='Enter') registerApprovedAccount()" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
-                <button onclick="registerApprovedAccount()" class="w-full bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition">Create account</button>
-                <button onclick="showAccountLogin()" class="w-full bg-white/5 border border-white/10 text-white font-bold py-3 rounded-xl hover:bg-white/10 transition text-sm">Back to sign in</button>
+                <p id="account-register-desc" class="text-xs text-gray-400 leading-relaxed" data-i18n="account_register_desc">L'inscription n'est possible qu'une fois ta demande approuvée.</p>
+                <input id="account-register-username" type="text" maxlength="30" placeholder="Pseudo" data-i18n-placeholder="username_placeholder" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
+                <input id="account-register-email" type="email" placeholder="Adresse email" data-i18n-placeholder="email_placeholder" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
+                <input id="account-register-password" type="password" minlength="8" placeholder="Mot de passe (8 caractères min.)" data-i18n-placeholder="password_min_placeholder" onkeypress="if(event.key==='Enter') registerApprovedAccount()" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
+                <button onclick="registerApprovedAccount()" class="w-full bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition" data-i18n="create_account">Créer le compte</button>
+                <button onclick="showAccountLogin()" class="w-full bg-white/5 border border-white/10 text-white font-bold py-3 rounded-xl hover:bg-white/10 transition text-sm" data-i18n="back_to_signin">Retour à la connexion</button>
             </div>
         </div>
     </div>
+
+    <input type="file" id="profile-avatar-input" accept="image/*" class="hidden">
 
     <!-- MODAL : SÉCURITÉ ADMIN -->
     <div id="admin-login-modal" class="fixed inset-0 z-[200] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl">
@@ -509,12 +511,12 @@
             <div class="w-16 h-16 bg-aerix-purple/20 border border-aerix-purple/50 rounded-2xl mx-auto flex items-center justify-center mb-6 shadow-[inset_0_0_15px_rgba(139,92,246,0.5)]">
                 <svg class="w-8 h-8 text-aerix-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
             </div>
-            <h3 class="text-2xl font-black text-white mb-2">Accès Sécurisé</h3>
-            <p class="text-xs text-gray-400 mb-6">Panel d'administration AERIX</p>
-            <input type="password" id="admin-pwd-input" placeholder="Mot de passe..." class="w-full bg-black/50 border border-white/20 text-center focus:border-aerix-purple transition rounded-xl px-4 py-3 text-white text-lg tracking-widest outline-none mb-4" onkeypress="if(event.key === 'Enter') checkAdminPwd()">
+            <h3 class="text-2xl font-black text-white mb-2" data-i18n="admin_secure_title">Accès Sécurisé</h3>
+            <p class="text-xs text-gray-400 mb-6" data-i18n="admin_secure_desc">Panel d'administration AERIX</p>
+            <input type="password" id="admin-pwd-input" data-i18n-placeholder="admin_secure_placeholder" placeholder="Mot de passe..." class="w-full bg-black/50 border border-white/20 text-center focus:border-aerix-purple transition rounded-xl px-4 py-3 text-white text-lg tracking-widest outline-none mb-4" onkeypress="if(event.key === 'Enter') checkAdminPwd()">
             <div class="flex gap-3">
-                <button onclick="document.getElementById('admin-login-modal').classList.add('hidden')" class="w-1/3 bg-white/5 text-white font-bold py-3 rounded-xl hover:bg-white/10 transition text-sm">Annuler</button>
-                <button onclick="checkAdminPwd()" class="w-2/3 bg-aerix-purple text-white font-bold py-3 rounded-xl hover:bg-purple-500 transition shadow-[0_0_15px_rgba(139,92,246,0.4)]">Connexion</button>
+                <button onclick="document.getElementById('admin-login-modal').classList.add('hidden')" class="w-1/3 bg-white/5 text-white font-bold py-3 rounded-xl hover:bg-white/10 transition text-sm" data-i18n="cancel">Annuler</button>
+                <button onclick="checkAdminPwd()" class="w-2/3 bg-aerix-purple text-white font-bold py-3 rounded-xl hover:bg-purple-500 transition shadow-[0_0_15px_rgba(139,92,246,0.4)]" data-i18n="confirm">Connexion</button>
             </div>
         </div>
     </div>
@@ -572,12 +574,12 @@
             <!-- TAB: COMPTES -->
             <div id="admin-tab-comptes" class="admin-tab hidden space-y-8">
                 <div>
-                    <h4 class="text-lg font-bold text-white mb-2">Account requests</h4>
-                    <p class="text-xs text-gray-500 mb-5">Approve or reject requests. Approved users can create their Firebase account and access the administration panel.</p>
+                    <h4 class="text-lg font-bold text-white mb-2" data-i18n="account_requests_title">Demandes de compte</h4>
+                    <p class="text-xs text-gray-500 mb-5" data-i18n="account_requests_desc">Approuve ou refuse les demandes. Les utilisateurs approuvés peuvent créer leur compte Firebase et accéder au panel d'administration (si le rôle admin leur est attribué).</p>
                     <div id="admin-list-comptes" class="grid grid-cols-1 gap-4"></div>
                 </div>
                 <div>
-                    <h4 class="text-lg font-bold text-white mb-2">Registered accounts</h4>
+                    <h4 class="text-lg font-bold text-white mb-2" data-i18n="registered_accounts_title">Comptes enregistrés</h4>
                     <div id="admin-list-users" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
                 </div>
             </div>
@@ -823,6 +825,7 @@
         // Replace OWNER_EMAIL with the email of the AERIX owner account.
         // Firebase Authentication + Firestore rules are required for real security.
         const OWNER_EMAIL = "adrien.utzinger@gmail.com";
+        const ADMIN_PWD = "aerixadmin";
         let currentUser = null;
         let currentAccount = null;
         let globalAccountRequests = [];
@@ -847,7 +850,13 @@
                 history_subtitle: "L'Héritage", history_title: "L'Histoire d'AERIX", history_desc: "Née d'une passion commune pour le sport automobile virtuel et l'esport, AERIX n'a cessé d'évoluer.",
                 shop_subtitle: "Shop", shop_title: "Équipement Officiel",
                 partners_subtitle: "Sponsors & Affiliés", partners_title: "Partenaires Techniques",
-                news_subtitle: "Actualités", news_title: "Annonces & Mises à jour", account_request: "Demande de compte", account_profile: "Mon compte", account_login: "Connexion", account_logout: "Déconnexion", admin_access: "Administration"
+                news_subtitle: "Actualités", news_title: "Annonces & Mises à jour", account_request: "Demande de compte", account_profile: "Mon compte", account_login: "Connexion", account_logout: "Déconnexion", admin_access: "Administration",
+                admin_secure_title: "Accès Sécurisé", admin_secure_desc: "Confirme ton mot de passe pour accéder au panel d'administration", admin_secure_placeholder: "Mot de passe...", cancel: "Annuler", confirm: "Confirmer",
+                account_modal_title_request: "Demande de compte", account_request_desc: "Envoie ton pseudo et ton email. Un administrateur AERIX examinera ta demande.",
+                username_placeholder: "Pseudo", email_placeholder: "Adresse email", send_request: "Envoyer la demande", already_approved_signin: "Déjà approuvé ? Se connecter",
+                account_login_desc: "Connecte-toi avec ton compte AERIX approuvé.", password_placeholder: "Mot de passe", create_approved_account: "Créer mon compte approuvé",
+                account_register_desc: "L'inscription n'est possible qu'une fois ta demande approuvée.", password_min_placeholder: "Mot de passe (8 caractères min.)", create_account: "Créer le compte", back_to_signin: "Retour à la connexion",
+                account_requests_title: "Demandes de compte", account_requests_desc: "Approuve ou refuse les demandes. Les utilisateurs approuvés peuvent créer leur compte Firebase et accéder au panel d'administration (si le rôle admin leur est attribué).", registered_accounts_title: "Comptes enregistrés"
             },
             en: {
                 nav_home: "Home", nav_effectifs: "Rosters", nav_palmares: "Results", nav_histoire: "History", nav_boutique: "Shop", nav_partenaires: "Partners", nav_annonces: "News",
@@ -862,7 +871,13 @@
                 history_subtitle: "The Legacy", history_title: "AERIX History", history_desc: "Born from a shared passion for virtual motorsport and esports, AERIX has continuously evolved.",
                 shop_subtitle: "Shop", shop_title: "Official Merch",
                 partners_subtitle: "Sponsors & Affiliates", partners_title: "Technical Partners",
-                news_subtitle: "News", news_title: "Announcements & Updates", account_request: "Request an account", account_profile: "My account", account_login: "Sign in", account_logout: "Sign out", admin_access: "Admin panel"
+                news_subtitle: "News", news_title: "Announcements & Updates", account_request: "Request an account", account_profile: "My account", account_login: "Sign in", account_logout: "Sign out", admin_access: "Admin panel",
+                admin_secure_title: "Secure Access", admin_secure_desc: "Confirm your password to access the administration panel", admin_secure_placeholder: "Password...", cancel: "Cancel", confirm: "Confirm",
+                account_modal_title_request: "Request an account", account_request_desc: "Send your username and email. An AERIX administrator will review your request.",
+                username_placeholder: "Username", email_placeholder: "Email address", send_request: "Send request", already_approved_signin: "Already approved? Sign in",
+                account_login_desc: "Sign in with your approved AERIX account.", password_placeholder: "Password", create_approved_account: "Create my approved account",
+                account_register_desc: "Registration is available only after your request has been approved.", password_min_placeholder: "Password (8+ characters)", create_account: "Create account", back_to_signin: "Back to sign in",
+                account_requests_title: "Account requests", account_requests_desc: "Approve or reject requests. Approved users can create their Firebase account and access the administration panel (if granted the admin role).", registered_accounts_title: "Registered accounts"
             }
         };
         let currentLang = localStorage.getItem('aerix_lang') || ((navigator.language || '').toLowerCase().startsWith('en') ? 'en' : 'fr');
@@ -920,7 +935,11 @@
                 'Joueur ajouté au brouillon.':'Player added to draft.','Retirer':'Remove','Déclarer un Résultat':'Add a result','Modifier le Résultat':'Edit result','Titre/Compétition obligatoire.':'Title/competition required.',
                 'Résultat sauvegardé !':'Result saved!','Ajouter un Partenaire':'Add a partner',"Nom de l'entreprise":'Company name','Lien vers leur site web (https://...)':'Website link (https://...)','Enregistrer':'Save',
                 "Publier l'article":'Publish article','Rédigez votre article ici...':'Write your article here...','+ Miniature (16:9)':'+ Thumbnail (16:9)','Général':'General','Équipementier':'Equipment partner','Setup & Simracing':'Setup & Simracing','Partenaire Officiel':'Official Partner','Affilié':'Affiliate',
-                '+ Logo (fond transparent de préférence)':'+ Logo (transparent background preferred)','Résultats':'Results','Actualités':'News','Comptes':'Accounts','Sponsors':'Sponsors','Effectifs':'Rosters','Boutique':'Shop','Réessayer':'Retry','❌ Défaite':'❌ Loss','Enregistrer le Résultat':'Save result',"Rédiger un Article":'Write an article','Tous':'All','🇩🇿 Algérie':'🇩🇿 Algeria'
+                '+ Logo (fond transparent de préférence)':'+ Logo (transparent background preferred)','Résultats':'Results','Actualités':'News','Comptes':'Accounts','Sponsors':'Sponsors','Effectifs':'Rosters','Boutique':'Shop','Réessayer':'Retry','❌ Défaite':'❌ Loss','Enregistrer le Résultat':'Save result',"Rédiger un Article":'Write an article','Tous':'All','🇩🇿 Algérie':'🇩🇿 Algeria','Rejoindre le Discord':'Join our Discord','Refuser':'Decline','Personnaliser':'Customize','Accepter':'Accept','AERIX utilise un stockage nécessaire au fonctionnement du site et peut utiliser des mesures d’audience uniquement avec votre accord. Vous pouvez modifier votre choix à tout moment.':'AERIX uses storage required for the site to function and may use analytics only with your consent. You can change your choice at any time.',
+                'Aucun résultat pour cette catégorie.':'No results for this category.','Résultat':'Result','Non daté':'Undated','Adversaire':'Opponent','Classé':'Ranked','Catégorie':'Category','Voiture':'Car',
+                'Aucune annonce.':'No announcements.','Aucun partenaire renseigné.':'No partners listed.','Partenaires & Affiliés':'Partners & Affiliates',
+                'Aucun effectif pour cette catégorie.':'No roster for this category.','Aucun joueur dans ce roster.':'No player in this roster.',
+                'Boutique vide.':'Shop empty.','Sans image':'No image','Détails':'Details'
             };
             const reverse = {}; Object.entries(pairs).forEach(([frText,enText]) => reverse[enText]=frText);
             const map = en ? pairs : reverse;
@@ -945,6 +964,10 @@
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 if(i18n[lang][key]) el.textContent = i18n[lang][key];
+            });
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if(i18n[lang][key]) el.setAttribute('placeholder', i18n[lang][key]);
             });
                    closeLanguageMenu();
             translateStaticUI();
@@ -1005,7 +1028,8 @@
 
         // EFFECTIFS (CARTES JOUEURS)
         function renderEffectifs() {
-            let filtered = currentFilters.effectifs === 'Tous' ? globalEffectifs : globalEffectifs.filter(e => (e.game || 'Tous') === currentFilters.effectifs);
+            const sortedEffectifs = [...globalEffectifs].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+            let filtered = currentFilters.effectifs === 'Tous' ? sortedEffectifs : sortedEffectifs.filter(e => (e.game || 'Tous') === currentFilters.effectifs);
             const container = document.getElementById('effectifs-container');
             container.innerHTML = filtered.length ? '' : '<p class="text-gray-500 text-sm italic text-center">Aucun effectif pour cette catégorie.</p>';
             
@@ -1027,7 +1051,7 @@
                             <h5 class="text-2xl font-black text-white uppercase tracking-tighter w-full text-left truncate">${p.pseudo || p.name}</h5>
                             <p class="text-xs font-medium text-gray-500 w-full text-left truncate flex items-center gap-2">
                                 <span>${p.name}</span>
-                                ${p.age ? `<span class="w-1 h-1 rounded-full bg-gray-600"></span> <span>${p.age} ans</span>` : ''}
+                                ${p.age ? `<span class="w-1 h-1 rounded-full bg-gray-600"></span> <span>${p.age} ${currentLang==='en'?'y.o.':'ans'}</span>` : ''}
                             </p>
                         </div>`;
                     });
@@ -1058,8 +1082,8 @@
             document.getElementById('pm-flag').innerText = p.country || '🌍';
             document.getElementById('pm-number').innerText = p.number ? `#${p.number}` : '';
             document.getElementById('pm-pseudo').innerText = p.pseudo || p.name;
-            document.getElementById('pm-name').innerText = p.name || 'Non renseigné';
-            document.getElementById('pm-age').innerText = p.age ? `${p.age} ans` : 'N/A';
+            document.getElementById('pm-name').innerText = p.name || (currentLang==='en'?'Not provided':'Non renseigné');
+            document.getElementById('pm-age').innerText = p.age ? `${p.age} ${currentLang==='en'?'y.o.':'ans'}` : 'N/A';
             document.getElementById('pm-country').innerText = p.country || 'N/A';
             document.getElementById('pm-game-badge').innerHTML = getGameBadge(p.game);
             
@@ -1168,7 +1192,6 @@
         // -------------------------
         // ADMIN & SÉCURITÉ
         // -------------------------
-        const ADMIN_PWD = "aerixadmin";
         
         window.addEventListener('keydown', (e) => { if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'x') { openAdminLogin(); } });
         let logoClicks = 0;
@@ -1182,7 +1205,7 @@
         function openAdminLogin() { document.getElementById('admin-login-modal').classList.remove('hidden'); document.getElementById('admin-pwd-input').value = ''; document.getElementById('admin-pwd-input').focus(); }
         function checkAdminPwd() {
             const val = document.getElementById('admin-pwd-input').value;
-            if(val === ADMIN_PWD) { document.getElementById('admin-login-modal').classList.add('hidden'); sessionStorage.setItem('aerix_legacy_admin','true'); document.getElementById('admin-modal').classList.remove('hidden'); showToast(currentLang==='en'?'Admin login successful':'Connexion Admin réussie', "success"); }
+            if(val === ADMIN_PWD) { document.getElementById('admin-login-modal').classList.add('hidden'); sessionStorage.setItem('aerix_legacy_admin','true'); document.getElementById('admin-modal').classList.remove('hidden'); switchAdminTab('comptes'); showToast(currentLang==='en'?'Admin login successful':'Connexion Admin réussie', "success"); }
             else { showToast(currentLang==='en'?'Incorrect password':'Mot de passe incorrect', "error"); }
         }
 
@@ -1200,23 +1223,40 @@
         }
         function renderAccountArea() {
             const areas = [document.getElementById('account-area'), document.getElementById('mobile-account-area')].filter(Boolean);
-            const html = currentUser && currentAccount ? `
+            const avatarHtml = currentAccount && currentAccount.avatar
+                ? `<img src="${currentAccount.avatar}" class="w-6 h-6 rounded-full object-cover border border-aerix-purple/50">`
+                : `<span class="w-6 h-6 rounded-full bg-aerix-purple/25 border border-aerix-purple/50 flex items-center justify-center text-[10px] font-black">${escapeHtml((currentAccount?.username || 'A').charAt(0).toUpperCase())}</span>`;
+            const menuAvatarHtml = currentAccount && currentAccount.avatar
+                ? `<img src="${currentAccount.avatar}" class="w-12 h-12 rounded-full object-cover border border-aerix-purple/50">`
+                : `<span class="w-12 h-12 rounded-full bg-aerix-purple/25 border border-aerix-purple/50 flex items-center justify-center text-base font-black">${escapeHtml((currentAccount?.username || 'A').charAt(0).toUpperCase())}</span>`;
+            const buildHtml = (menuId) => currentUser && currentAccount ? `
                 <div class="relative group">
-                    <button onclick="toggleAccountMenu(event)" class="text-xs text-white transition px-4 py-1.5 rounded-full border border-aerix-purple/40 bg-aerix-purple/10 hover:bg-aerix-purple/20 font-medium flex items-center gap-2">
-                        <span class="w-6 h-6 rounded-full bg-aerix-purple/25 border border-aerix-purple/50 flex items-center justify-center text-[10px] font-black">${escapeHtml((currentAccount.username || 'A').charAt(0).toUpperCase())}</span>
+                    <button onclick="toggleAccountMenu(event, '${menuId}')" class="text-xs text-white transition px-4 py-1.5 rounded-full border border-aerix-purple/40 bg-aerix-purple/10 hover:bg-aerix-purple/20 font-medium flex items-center gap-2">
+                        ${avatarHtml}
                         <span>${escapeHtml(currentAccount.username || currentUser.email || 'Account')}</span>
                         <span>▾</span>
                     </button>
-                    <div id="account-menu" class="hidden absolute right-0 top-11 w-48 glass-panel-no-hover rounded-2xl p-2 z-[250] border border-white/10 shadow-2xl">
+                    <div id="${menuId}" class="account-menu hidden absolute right-0 top-11 w-56 glass-panel-no-hover rounded-2xl p-2 z-[250] border border-white/10 shadow-2xl">
+                        <div class="flex items-center gap-3 px-2 py-2 mb-1 border-b border-white/10">
+                            <div class="relative group/avatar cursor-pointer shrink-0" onclick="document.getElementById('profile-avatar-input').click()">
+                                ${menuAvatarHtml}
+                                <div class="absolute inset-0 bg-black/60 rounded-full flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition text-[9px] font-bold text-white">${currentLang === 'en' ? 'Edit' : 'Modifier'}</div>
+                            </div>
+                            <div class="min-w-0"><div class="text-white text-xs font-bold truncate">${escapeHtml(currentAccount.username || '')}</div><div class="text-gray-500 text-[10px] truncate">${escapeHtml(currentAccount.email || currentUser.email || '')}</div></div>
+                        </div>
                         ${hasAdminAccess() ? `<button onclick="openAdminFromAccount()" class="w-full text-left px-3 py-2.5 text-xs font-bold text-white hover:bg-white/10 rounded-xl">${currentLang === 'en' ? 'Admin panel' : 'Administration'}</button>` : ''}
                         <button onclick="logoutAccount()" class="w-full text-left px-3 py-2.5 text-xs font-bold text-gray-300 hover:bg-white/10 hover:text-white rounded-xl">${currentLang === 'en' ? 'Sign out' : 'Déconnexion'}</button>
                     </div>
                 </div>` : `
                 <button onclick="openAccountRequestModal()" data-i18n="account_request" class="text-xs text-aerix-purple transition px-4 py-1.5 rounded-full border border-aerix-purple/40 bg-aerix-purple/10 hover:bg-aerix-purple/20 font-medium">${currentLang === 'en' ? 'Request an account' : 'Demande de compte'}</button>`;
-            areas.forEach((el,i) => el.innerHTML = i === 1 && !currentUser ? html.replace('px-4 py-1.5','py-3.5 px-4') : html);
+            areas.forEach((el, i) => {
+                const menuId = i === 1 ? 'account-menu-mobile' : 'account-menu-desktop';
+                const html = buildHtml(menuId);
+                el.innerHTML = i === 1 && !currentUser ? html.replace('px-4 py-1.5', 'py-3.5 px-4') : html;
+            });
         }
-        function toggleAccountMenu(event) { if(event) event.stopPropagation(); document.getElementById('account-menu')?.classList.toggle('hidden'); }
-        document.addEventListener('click', e => { const m=document.getElementById('account-menu'); if(m && !e.target.closest('#account-area') && !e.target.closest('#mobile-account-area')) m.classList.add('hidden'); });
+        function toggleAccountMenu(event, menuId) { if(event) event.stopPropagation(); document.querySelectorAll('.account-menu').forEach(m => { if(m.id !== menuId) m.classList.add('hidden'); }); document.getElementById(menuId)?.classList.toggle('hidden'); }
+        document.addEventListener('click', e => { if(e.target.closest('#account-area') || e.target.closest('#mobile-account-area')) return; document.querySelectorAll('.account-menu').forEach(m => m.classList.add('hidden')); });
         function openAccountRequestModal() { showAccountRequest(); document.getElementById('account-modal').classList.remove('hidden'); }
         function closeAccountModal() { document.getElementById('account-modal').classList.add('hidden'); }
         function showAccountRequest() { ['account-request-form'].forEach(id=>document.getElementById(id).classList.remove('hidden')); ['account-login-form','account-register-form'].forEach(id=>document.getElementById(id).classList.add('hidden')); document.getElementById('account-modal-title').innerText=currentLang==='en'?'Request an account':'Demande de compte'; }
@@ -1234,6 +1274,13 @@
         }
         async function approveAccountRequest(id) { try { await db.collection('accountRequests').doc(id).update({status:'approved',approvedAt:firebase.firestore.FieldValue.serverTimestamp()}); showToast(currentLang==='en'?'Account request approved.':'Demande de compte approuvée.'); } catch(e){ console.error(e); showToast(currentLang==='en'?'Approval failed.':'Échec de l’approbation.','error'); } }
         async function rejectAccountRequest(id) { try { await db.collection('accountRequests').doc(id).update({status:'rejected',rejectedAt:firebase.firestore.FieldValue.serverTimestamp()}); showToast(currentLang==='en'?'Account request rejected.':'Demande refusée.'); } catch(e){ console.error(e); showToast(currentLang==='en'?'Rejection failed.':'Échec du refus.','error'); } }
+        async function toggleAccountRole(uid, newRole) {
+            if(!isOwner()) return;
+            try {
+                await db.collection('accounts').doc(uid).update({ role: newRole });
+                showToast(currentLang==='en'?'Role updated.':'Rôle mis à jour.');
+            } catch(e) { console.error(e); showToast(currentLang==='en'?'Role update failed.':'Échec de la mise à jour du rôle.','error'); }
+        }
         async function registerApprovedAccount() {
             const username=document.getElementById('account-register-username').value.trim(); const email=document.getElementById('account-register-email').value.trim().toLowerCase(); const password=document.getElementById('account-register-password').value;
             if(!username || !email || password.length<8) return showToast(currentLang==='en'?'Enter a username, email and an 8+ character password.':'Renseigne un pseudo, un email et un mot de passe de 8 caractères minimum.','error');
@@ -1241,30 +1288,32 @@
                 const snap=await db.collection('accountRequests').where('email','==',email).where('status','==','approved').limit(1).get();
                 if(snap.empty) return showToast(currentLang==='en'?'Your request is not approved yet.':'Ta demande n’est pas encore approuvée.','error');
                 const cred=await auth.createUserWithEmailAndPassword(email,password);
-                await db.collection('accounts').doc(cred.user.uid).set({uid:cred.user.uid,username,email,role:'admin',createdAt:firebase.firestore.FieldValue.serverTimestamp(),approvedRequestId:snap.docs[0].id});
+                await db.collection('accounts').doc(cred.user.uid).set({uid:cred.user.uid,username,email,role:'user',avatar:null,createdAt:firebase.firestore.FieldValue.serverTimestamp(),approvedRequestId:snap.docs[0].id});
                 await snap.docs[0].ref.update({status:'registered',uid:cred.user.uid,registeredAt:firebase.firestore.FieldValue.serverTimestamp()});
                 showToast(currentLang==='en'?'Account created.':'Compte créé.'); closeAccountModal();
             } catch(e) { console.error(e); showToast(currentLang==='en'?(e.code==='auth/email-already-in-use'?'This email is already registered.':'Account creation failed.'):(e.code==='auth/email-already-in-use'?'Cet email est déjà utilisé.':'Échec de création du compte.'),'error'); }
         }
         async function loginAccount() { const email=document.getElementById('account-login-email').value.trim(); const password=document.getElementById('account-login-password').value; if(!email||!password) return showToast(currentLang==='en'?'Email and password are required.':'Email et mot de passe obligatoires.','error'); try { await auth.signInWithEmailAndPassword(email,password); closeAccountModal(); showToast(currentLang==='en'?'Signed in.':'Connexion réussie.'); } catch(e){ showToast(currentLang==='en'?'Invalid email or password.':'Email ou mot de passe incorrect.','error'); } }
-        async function logoutAccount() { try { await auth.signOut(); document.getElementById('account-menu')?.classList.add('hidden'); showToast(currentLang==='en'?'Signed out.':'Déconnexion réussie.'); } catch(e){ console.error(e); } }
-        function openAdminFromAccount() { document.getElementById('account-menu')?.classList.add('hidden'); if(hasAdminAccess()) { document.getElementById('admin-modal').classList.remove('hidden'); switchAdminTab('comptes'); } }
+        async function logoutAccount() { try { await auth.signOut(); document.querySelectorAll('.account-menu').forEach(m => m.classList.add('hidden')); showToast(currentLang==='en'?'Signed out.':'Déconnexion réussie.'); } catch(e){ console.error(e); } }
+        function openAdminFromAccount() { document.querySelectorAll('.account-menu').forEach(m => m.classList.add('hidden')); if(hasAdminAccess()) { document.getElementById('admin-modal').classList.remove('hidden'); switchAdminTab('comptes'); } }
         auth.onAuthStateChanged(async user => { currentUser=user; currentAccount=null; if(user) { try { const snap=await db.collection('accounts').doc(user.uid).get(); currentAccount=snap.exists?snap.data():{uid:user.uid,email:user.email,username:user.email?.split('@')[0]||'Account',role:isOwner()?'owner':'user'}; if(isOwner()) currentAccount.role='owner'; } catch(e){ console.error(e); } } renderAccountArea(); });
 
         function renderAdminLists() {
             const requestsEl = document.getElementById('admin-list-comptes');
             if (requestsEl) {
+                const statusLabels = currentLang === 'en' ? { pending: 'pending', approved: 'approved', rejected: 'rejected' } : { pending: 'en attente', approved: 'approuvée', rejected: 'refusée' };
                 requestsEl.innerHTML = globalAccountRequests.length ? globalAccountRequests.map(r => {
                     const status = r.status || 'pending';
                     const statusClass = status === 'approved' ? 'text-green-400 bg-green-500/10' : status === 'rejected' ? 'text-red-400 bg-red-500/10' : 'text-yellow-300 bg-yellow-500/10';
-                    return `<div class="glass-panel p-4 rounded-xl flex flex-col md:flex-row md:items-center md:justify-between gap-4"><div><div class="text-white font-bold text-sm">${escapeHtml(r.username || '—')}</div><div class="text-xs text-gray-500">${escapeHtml(r.email || '—')}</div><span class="inline-flex mt-2 px-2 py-1 rounded-full text-[10px] font-bold uppercase ${statusClass}">${status}</span></div><div class="flex gap-2">${status === 'pending' ? `<button onclick="approveAccountRequest('${r.id}')" class="text-green-300 text-xs bg-green-500/10 hover:bg-green-500/20 px-3 py-1.5 rounded-lg transition">Approve</button><button onclick="rejectAccountRequest('${r.id}')" class="text-red-300 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Reject</button>` : ''}</div></div>`; }).join('') : `<p class="text-gray-500 text-sm italic">No account requests.</p>`;
+                    return `<div class="glass-panel p-4 rounded-xl flex flex-col md:flex-row md:items-center md:justify-between gap-4"><div><div class="text-white font-bold text-sm">${escapeHtml(r.username || '—')}</div><div class="text-xs text-gray-500">${escapeHtml(r.email || '—')}</div><span class="inline-flex mt-2 px-2 py-1 rounded-full text-[10px] font-bold uppercase ${statusClass}">${statusLabels[status] || status}</span></div><div class="flex gap-2">${status === 'pending' ? `<button onclick="approveAccountRequest('${r.id}')" class="text-green-300 text-xs bg-green-500/10 hover:bg-green-500/20 px-3 py-1.5 rounded-lg transition">${currentLang==='en'?'Approve':'Approuver'}</button><button onclick="rejectAccountRequest('${r.id}')" class="text-red-300 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">${currentLang==='en'?'Reject':'Refuser'}</button>` : ''}</div></div>`; }).join('') : `<p class="text-gray-500 text-sm italic">${currentLang==='en'?'No account requests.':'Aucune demande de compte.'}</p>`;
             }
             const usersEl = document.getElementById('admin-list-users');
             if (usersEl) {
-                usersEl.innerHTML = globalAccounts.length ? globalAccounts.map(u => `<div class="glass-panel p-4 rounded-xl"><div class="text-white font-bold text-sm">${escapeHtml(u.username || '—')}</div><div class="text-xs text-gray-500 mt-1">${escapeHtml(u.email || '—')}</div><div class="text-xs text-aerix-purple mt-2 uppercase tracking-widest">${escapeHtml(u.role || 'user')}</div></div>`).join('') : `<p class="text-gray-500 text-sm italic">No registered accounts.</p>`;
+                usersEl.innerHTML = globalAccounts.length ? globalAccounts.map(u => `<div class="glass-panel p-4 rounded-xl flex flex-col md:flex-row md:items-center md:justify-between gap-3"><div><div class="text-white font-bold text-sm">${escapeHtml(u.username || '—')}</div><div class="text-xs text-gray-500 mt-1">${escapeHtml(u.email || '—')}</div><div class="text-xs text-aerix-purple mt-2 uppercase tracking-widest">${escapeHtml(u.role || 'user')}</div></div>${isOwner() && (u.email||'').toLowerCase() !== OWNER_EMAIL.toLowerCase() ? `<button onclick="toggleAccountRole('${u.id}','${u.role==='admin'?'user':'admin'}')" class="text-xs font-bold px-3 py-1.5 rounded-lg transition ${u.role==='admin' ? 'text-red-300 bg-red-500/10 hover:bg-red-500/20' : 'text-green-300 bg-green-500/10 hover:bg-green-500/20'}">${u.role==='admin' ? (currentLang==='en'?'Revoke admin':'Retirer admin') : (currentLang==='en'?'Make admin':'Nommer admin')}</button>` : ''}</div>`).join('') : `<p class="text-gray-500 text-sm italic">${currentLang==='en'?'No registered accounts.':'Aucun compte enregistré.'}</p>`;
             }
             document.getElementById('admin-list-boutique').innerHTML = globalShop.map(item => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm">${item.name}</div><div class="text-xs text-gray-500">${item.price} €</div></div><div class="flex gap-2"><button onclick="startEditShop('${item.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('shop', '${item.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
-            document.getElementById('admin-list-effectifs').innerHTML = globalEffectifs.map(r => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm flex items-center gap-2">${r.name} <span class="bg-white/10 text-[9px] px-2 py-0.5 rounded-full">${r.players?.length||0} j.</span></div><div class="text-xs text-gray-500">${r.game || 'Général'}</div></div><div class="flex gap-2"><button onclick="startEditEffectif('${r.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('effectifs', '${r.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
+            const sortedAdminEffectifs = [...globalEffectifs].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+            document.getElementById('admin-list-effectifs').innerHTML = sortedAdminEffectifs.map((r, idx) => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div class="flex items-center gap-2"><div class="flex flex-col gap-1"><button onclick="moveEffectif('${r.id}', -1)" ${idx === 0 ? 'disabled' : ''} class="w-6 h-6 flex items-center justify-center rounded-md bg-white/10 hover:bg-aerix-purple text-white text-xs transition disabled:opacity-20 disabled:cursor-not-allowed" title="Monter">▲</button><button onclick="moveEffectif('${r.id}', 1)" ${idx === sortedAdminEffectifs.length - 1 ? 'disabled' : ''} class="w-6 h-6 flex items-center justify-center rounded-md bg-white/10 hover:bg-aerix-purple text-white text-xs transition disabled:opacity-20 disabled:cursor-not-allowed" title="Descendre">▼</button></div><div><div class="text-white font-bold text-sm flex items-center gap-2">${r.name} <span class="bg-white/10 text-[9px] px-2 py-0.5 rounded-full">${r.players?.length||0} j.</span></div><div class="text-xs text-gray-500">${r.game || 'Général'}</div></div></div><div class="flex gap-2"><button onclick="startEditEffectif('${r.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('effectifs', '${r.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
             document.getElementById('admin-list-palmares').innerHTML = globalPalmares.map(p => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm truncate max-w-[150px]">${p.title}</div><div class="text-xs text-gray-500">${p.game || 'Général'}</div></div><div class="flex gap-2"><button onclick="startEditPalmares('${p.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('palmares', '${p.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
             document.getElementById('admin-list-partenaires').innerHTML = globalPartners.map(p => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm">${p.name}</div><div class="text-xs text-gray-500">${p.category || 'Partenaire'}</div></div><div class="flex gap-2"><button onclick="startEditPartner('${p.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('partners', '${p.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
             document.getElementById('admin-list-annonces').innerHTML = globalAnnonces.map(a => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm truncate max-w-[200px]">${a.title}</div><div class="text-xs text-gray-500">${a.date}</div></div><div class="flex gap-2"><button onclick="startEditAnnouncement('${a.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('annonces', '${a.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
@@ -1326,10 +1375,30 @@
             if(!name) return showToast("Nom du roster obligatoire.", "error");
             try {
                 const data = { name, game, desc, players: tempPlayers };
-                if(id) await db.collection("effectifs").doc(id).update(data);
-                else await db.collection("effectifs").add(data);
+                if(id) {
+                    await db.collection("effectifs").doc(id).update(data);
+                } else {
+                    const maxOrder = globalEffectifs.reduce((max, r) => Math.max(max, r.order ?? 0), -1);
+                    data.order = maxOrder + 1;
+                    await db.collection("effectifs").add(data);
+                }
                 showToast("Roster sauvegardé !"); resetEffectifForm();
             } catch(e) { showToast("Erreur de sauvegarde", "error"); }
+        }
+        async function moveEffectif(id, direction) {
+            const sorted = [...globalEffectifs].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+            const idx = sorted.findIndex(r => r.id === id);
+            const targetIdx = idx + direction;
+            if(idx === -1 || targetIdx < 0 || targetIdx >= sorted.length) return;
+            const current = sorted[idx], target = sorted[targetIdx];
+            const currentOrder = current.order ?? idx;
+            const targetOrder = target.order ?? targetIdx;
+            try {
+                await Promise.all([
+                    db.collection("effectifs").doc(current.id).update({ order: targetOrder }),
+                    db.collection("effectifs").doc(target.id).update({ order: currentOrder })
+                ]);
+            } catch(e) { showToast("Erreur lors du réordonnancement", "error"); }
         }
 
         // --- EDITION PALMARÈS (DYNAMIQUE RL / SIMRACING) ---
@@ -1592,6 +1661,16 @@
         function renderShopPreviews() { document.getElementById('shop-img-previews').innerHTML = tempShopImages.map((src, i) => `<div class="relative w-16 h-20 rounded-lg overflow-hidden border border-white/20"><img src="${src}" class="w-full h-full object-cover"><button type="button" onclick="tempShopImages.splice(${i}, 1); renderShopPreviews()" class="absolute top-0 right-0 bg-red-500/90 text-white text-[10px] w-5 h-5">✕</button></div>`).join(''); }
         
         document.getElementById('player-avatar-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 3/4, b => { tempPlayerAvatar = b; document.getElementById('player-avatar-preview').src = b; }); e.target.value=''; });
+        document.getElementById('profile-avatar-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 1/1, b => updateProfileAvatar(b)); e.target.value=''; });
+        async function updateProfileAvatar(dataUrl) {
+            if(!currentUser) return;
+            try {
+                await db.collection('accounts').doc(currentUser.uid).set({ avatar: dataUrl }, { merge: true });
+                currentAccount = { ...(currentAccount || {}), avatar: dataUrl };
+                renderAccountArea();
+                showToast(currentLang==='en'?'Profile photo updated.':'Photo de profil mise à jour.');
+            } catch(e) { console.error(e); showToast(currentLang==='en'?'Failed to update photo.':'Échec de la mise à jour de la photo.','error'); }
+        }
         function addTempPlayer() { 
             const pseudo = document.getElementById('temp-player-pseudo').value;
             const name = document.getElementById('temp-player-name').value; 
