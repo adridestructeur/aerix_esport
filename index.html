@@ -16,6 +16,7 @@
     <!-- Firebase Compat SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
 
     <script>
         tailwind.config = {
@@ -189,9 +190,7 @@
             </div>
 
             <div class="hidden md:flex items-center gap-3">
-                <button onclick="openAccountRequestModal()" class="text-xs text-aerix-purple transition px-4 py-1.5 rounded-full border border-aerix-purple/40 bg-aerix-purple/10 hover:bg-aerix-purple/20 font-medium flex items-center gap-2">
-                    Demande de compte
-                </button>
+                <div id="account-area" class="flex items-center gap-2"></div>
                 <a href="https://discord.gg/dJcHwYT4HY" target="_blank" rel="noopener noreferrer" class="text-xs text-white transition px-4 py-1.5 rounded-full border border-aerix-purple/40 bg-aerix-purple/10 hover:bg-aerix-purple/20 flex items-center gap-2 font-medium">
                     <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.927 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
                     Discord
@@ -222,7 +221,7 @@
             <button onclick="navigate('annonces'); toggleMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_annonces">Annonces</button>
             <button onclick="navigate('boutique'); toggleMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_boutique">Boutique</button>
             <button onclick="navigate('partenaires'); toggleMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_partenaires">Partenaires</button>
-            <button onclick="openAccountRequestModal(); toggleMobileMenu();" class="text-center text-xs text-aerix-purple py-3.5 rounded-xl border border-aerix-purple/40 bg-aerix-purple/20 font-bold">Demande de compte</button>
+            <div id="mobile-account-area"></div>
             <a href="https://discord.gg/dJcHwYT4HY" target="_blank" rel="noopener noreferrer" class="text-center text-xs text-white py-3.5 rounded-xl border border-aerix-purple/40 bg-aerix-purple/20 font-bold flex items-center justify-center gap-2">
                 <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.927 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
                 Rejoindre le Discord
@@ -472,6 +471,38 @@
         </div>
     </div>
 
+    <!-- MODAL : DEMANDE / CONNEXION COMPTE -->
+    <div id="account-modal" class="fixed inset-0 z-[210] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl">
+        <div class="glass-panel w-full max-w-md rounded-[2rem] p-7 md:p-8 shadow-[0_0_50px_rgba(139,92,246,.2)]">
+            <div class="flex justify-between items-center mb-6">
+                <div><p id="account-modal-kicker" class="text-[10px] uppercase tracking-[.2em] text-aerix-purple font-bold mb-1">AERIX Account</p><h3 id="account-modal-title" class="text-2xl font-black text-white">Request an account</h3></div>
+                <button onclick="closeAccountModal()" class="text-gray-400 hover:text-white bg-white/5 w-9 h-9 rounded-full">✕</button>
+            </div>
+            <div id="account-request-form" class="space-y-4">
+                <p id="account-request-desc" class="text-xs text-gray-400 leading-relaxed">Send your username and email. An AERIX administrator will review your request.</p>
+                <input id="account-request-username" type="text" maxlength="30" placeholder="Username" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
+                <input id="account-request-email" type="email" placeholder="Email address" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
+                <button onclick="submitAccountRequest()" class="w-full bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition shadow-[0_0_15px_rgba(139,92,246,.3)]">Send request</button>
+                <button onclick="showAccountLogin()" class="w-full bg-white/5 border border-white/10 text-white font-bold py-3 rounded-xl hover:bg-white/10 transition text-sm">Already approved? Sign in</button>
+            </div>
+            <div id="account-login-form" class="space-y-4 hidden">
+                <p id="account-login-desc" class="text-xs text-gray-400 leading-relaxed">Sign in with your approved AERIX account.</p>
+                <input id="account-login-email" type="email" placeholder="Email address" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
+                <input id="account-login-password" type="password" placeholder="Password" onkeypress="if(event.key==='Enter') loginAccount()" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
+                <button onclick="loginAccount()" class="w-full bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition">Sign in</button>
+                <button onclick="showAccountRegistration()" class="w-full bg-white/5 border border-white/10 text-white font-bold py-3 rounded-xl hover:bg-white/10 transition text-sm">Create my approved account</button>
+            </div>
+            <div id="account-register-form" class="space-y-4 hidden">
+                <p id="account-register-desc" class="text-xs text-gray-400 leading-relaxed">Registration is available only after your request has been approved.</p>
+                <input id="account-register-username" type="text" maxlength="30" placeholder="Username" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
+                <input id="account-register-email" type="email" placeholder="Email address" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
+                <input id="account-register-password" type="password" minlength="8" placeholder="Password (8+ characters)" onkeypress="if(event.key==='Enter') registerApprovedAccount()" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
+                <button onclick="registerApprovedAccount()" class="w-full bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition">Create account</button>
+                <button onclick="showAccountLogin()" class="w-full bg-white/5 border border-white/10 text-white font-bold py-3 rounded-xl hover:bg-white/10 transition text-sm">Back to sign in</button>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL : SÉCURITÉ ADMIN -->
     <div id="admin-login-modal" class="fixed inset-0 z-[200] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl">
         <div class="glass-panel w-full max-w-sm rounded-[2rem] p-8 text-center shadow-[0_0_50px_rgba(139,92,246,0.2)]">
@@ -530,11 +561,25 @@
             </div>
             
             <div id="admin-tabs-container" class="flex gap-2 mb-8 bg-black/60 p-2 rounded-2xl border border-white/5 flex-wrap overflow-x-auto custom-scrollbar">
+                <button draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('comptes')" id="tab-btn-comptes" class="flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition cursor-move">Comptes</button>
                 <button draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('boutique')" id="tab-btn-boutique" class="flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl bg-aerix-purple text-white transition shadow-[0_0_15px_rgba(139,92,246,0.3)] cursor-move">Boutique</button>
                 <button draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('effectifs')" id="tab-btn-effectifs" class="flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition cursor-move">Effectifs</button>
                 <button draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('palmares')" id="tab-btn-palmares" class="flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition cursor-move">Résultats</button>
                 <button draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('annonces')" id="tab-btn-annonces" class="flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition cursor-move">Actualités</button>
                 <button draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('partenaires')" id="tab-btn-partenaires" class="flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition cursor-move">Sponsors</button>
+            </div>
+
+            <!-- TAB: COMPTES -->
+            <div id="admin-tab-comptes" class="admin-tab hidden space-y-8">
+                <div>
+                    <h4 class="text-lg font-bold text-white mb-2">Account requests</h4>
+                    <p class="text-xs text-gray-500 mb-5">Approve or reject requests. Approved users can create their Firebase account and access the administration panel.</p>
+                    <div id="admin-list-comptes" class="grid grid-cols-1 gap-4"></div>
+                </div>
+                <div>
+                    <h4 class="text-lg font-bold text-white mb-2">Registered accounts</h4>
+                    <div id="admin-list-users" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                </div>
             </div>
 
             <!-- TAB: BOUTIQUE -->
@@ -772,6 +817,16 @@
         
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        // ACCOUNT CONFIGURATION
+        // Replace OWNER_EMAIL with the email of the AERIX owner account.
+        // Firebase Authentication + Firestore rules are required for real security.
+        const OWNER_EMAIL = "adrien.utzinger@gmail.com";
+        let currentUser = null;
+        let currentAccount = null;
+        let globalAccountRequests = [];
+        let globalAccounts = [];
 
         // VARIABLES GLOBALES
         let globalShop = [], globalEffectifs = [], globalPalmares = [], globalAnnonces = [], globalPartners = [];
@@ -792,7 +847,7 @@
                 history_subtitle: "L'Héritage", history_title: "L'Histoire d'AERIX", history_desc: "Née d'une passion commune pour le sport automobile virtuel et l'esport, AERIX n'a cessé d'évoluer.",
                 shop_subtitle: "Shop", shop_title: "Équipement Officiel",
                 partners_subtitle: "Sponsors & Affiliés", partners_title: "Partenaires Techniques",
-                news_subtitle: "Actualités", news_title: "Annonces & Mises à jour"
+                news_subtitle: "Actualités", news_title: "Annonces & Mises à jour", account_request: "Demande de compte", account_profile: "Mon compte", account_login: "Connexion", account_logout: "Déconnexion", admin_access: "Administration"
             },
             en: {
                 nav_home: "Home", nav_effectifs: "Rosters", nav_palmares: "Results", nav_histoire: "History", nav_boutique: "Shop", nav_partenaires: "Partners", nav_annonces: "News",
@@ -807,7 +862,7 @@
                 history_subtitle: "The Legacy", history_title: "AERIX History", history_desc: "Born from a shared passion for virtual motorsport and esports, AERIX has continuously evolved.",
                 shop_subtitle: "Shop", shop_title: "Official Merch",
                 partners_subtitle: "Sponsors & Affiliates", partners_title: "Technical Partners",
-                news_subtitle: "News", news_title: "Announcements & Updates"
+                news_subtitle: "News", news_title: "Announcements & Updates", account_request: "Request an account", account_profile: "My account", account_login: "Sign in", account_logout: "Sign out", admin_access: "Admin panel"
             }
         };
         let currentLang = localStorage.getItem('aerix_lang') || ((navigator.language || '').toLowerCase().startsWith('en') ? 'en' : 'fr');
@@ -839,6 +894,45 @@
             if (event.key === 'Escape') closeLanguageMenu();
         });
 
+        function translateStaticUI() {
+            const en = currentLang === 'en';
+            const pairs = {
+                'Accueil':'Home','Effectifs':'Rosters','Palmarès':'Results','Histoire':'History','Boutique':'Shop','Partenaires':'Partners','Annonces':'News',
+                'Découvrir les équipes':'Discover Rosters','Notre Palmarès':'Our Achievements','Performance & Élite':'Elite Performance',"Esprit d'équipe":'Team Spirit',
+                "Cohésion, communication stratégique et la force d'un collectif uni pour surmonter tous les défis.":'Cohesion, strategic communication, and the strength of a united team to overcome every challenge.',
+                'Nos équipes professionnelles':'Our Professional Rosters','Compétitions':'Competitions','Résultats & Palmarès':'Results & Achievements',"L'Héritage":'The Legacy',
+                "Née d'une passion commune pour le sport automobile virtuel et l'esport, AERIX n'a cessé d'évoluer.":'Born from a shared passion for virtual motorsport and esports, AERIX has continuously evolved.',
+                'Décembre 2025':'December 2025','La Genèse sur les circuits':'The Genesis on the circuits','Février 2026':'February 2026',"L'ère de l'Endurance":'The Endurance Era','Mai 2026':'May 2026','L’expansion Esport':'Esports Expansion',"L'expansion Esport":'Esports Expansion',
+                "Lancement officiel d'un championnat sur Assetto Corsa Competizione (ACC).":'Official launch of a championship on Assetto Corsa Competizione (ACC).',
+                'Débuts remarqués sur Le Mans Ultimate . La stratégie devient le cœur de notre pôle Motorsport.':'Strong first appearances on Le Mans Ultimate. Strategy becomes the core of our Motorsport division.',
+                'Entrée officielle sur Rocket League avec des joueurs de rang Grand Champion.':'Official entry into Rocket League with Grand Champion-level players.',
+                'Équipement Officiel':'Official Merch','Sponsors & Affiliés':'Sponsors & Affiliates','Actualités':'News','Annonces & Mises à jour':'Announcements & Updates',
+                '© 2026 AERIX Esports. Tous droits réservés.':'© 2026 AERIX Esports. All rights reserved.','Mentions légales':'Legal notice','Confidentialité':'Privacy','Gérer les cookies':'Manage cookies',
+                'Votre confidentialité':'Your privacy','Voir les détails et préférences':'View details and preferences','Préférences de cookies':'Cookie preferences','Nécessaires':'Necessary',
+                'Indispensables pour les préférences, la navigation et le fonctionnement du site. Toujours actifs.':'Required for preferences, navigation and site operation. Always active.',
+                'Mesure d’audience':'Analytics','Autorise les outils d’analyse d’audience lorsqu’ils sont activés par AERIX.':'Allows analytics tools when enabled by AERIX.',
+                'Votre choix est enregistré localement. Aucun outil d’analyse facultatif ne doit être chargé avant votre consentement.':'Your choice is stored locally. No optional analytics tool should load before your consent.',
+                'Enregistrer mes choix':'Save my choices','Accès Sécurisé':'Secure access',"Panel d'administration AERIX":'AERIX administration panel','Mot de passe...':'Password...','Annuler':'Cancel','Connexion':'Sign in',
+                'Studio de recadrage':'Crop studio',"Valider l'image":'Confirm image','Boutique AERIX':'AERIX Shop','Tailles Disponibles':'Available sizes','Nom Complet':'Full name','Âge':'Age','Nationalité':'Nationality',
+                'Éditer':'Edit','Suppr':'Delete','Ajouter un produit':'Add a product','Nom du produit':'Product name','Prix (€)':'Price (€)','Description du produit...':'Product description...',
+                'Uploader des images (4:5)':'Upload images (4:5)','Publier le produit':'Publish product','Créer un Roster':'Create a roster','Nom du Roster (ex: GC2, Endurance...)':'Roster name (e.g. GC2, Endurance...)',
+                'Jeu / Catégorie Générale':'Game / General category','Description du roster...':'Roster description...','Création de Cartes Joueurs':'Player card creation','Photo':'Photo','Prénom Nom':'First name Last name',
+                'Joueur ajouté au brouillon.':'Player added to draft.','Retirer':'Remove','Déclarer un Résultat':'Add a result','Modifier le Résultat':'Edit result','Titre/Compétition obligatoire.':'Title/competition required.',
+                'Résultat sauvegardé !':'Result saved!','Ajouter un Partenaire':'Add a partner',"Nom de l'entreprise":'Company name','Lien vers leur site web (https://...)':'Website link (https://...)','Enregistrer':'Save',
+                "Publier l'article":'Publish article','Rédigez votre article ici...':'Write your article here...','+ Miniature (16:9)':'+ Thumbnail (16:9)','Général':'General','Équipementier':'Equipment partner','Setup & Simracing':'Setup & Simracing','Partenaire Officiel':'Official Partner','Affilié':'Affiliate',
+                '+ Logo (fond transparent de préférence)':'+ Logo (transparent background preferred)','Résultats':'Results','Actualités':'News','Comptes':'Accounts','Sponsors':'Sponsors','Effectifs':'Rosters','Boutique':'Shop','Réessayer':'Retry','❌ Défaite':'❌ Loss','Enregistrer le Résultat':'Save result',"Rédiger un Article":'Write an article','Tous':'All','🇩🇿 Algérie':'🇩🇿 Algeria'
+            };
+            const reverse = {}; Object.entries(pairs).forEach(([frText,enText]) => reverse[enText]=frText);
+            const map = en ? pairs : reverse;
+            document.querySelectorAll('body *').forEach(el => {
+                if(el.children.length===0 && !['INPUT','TEXTAREA','SELECT','OPTION'].includes(el.tagName)) {
+                    const t=el.textContent.trim(); if(map[t]) el.textContent=map[t];
+                }
+            });
+            document.querySelectorAll('input[placeholder], textarea[placeholder], [contenteditable][placeholder]').forEach(el => { const t=el.getAttribute('placeholder'); if(map[t]) el.setAttribute('placeholder',map[t]); });
+            document.querySelectorAll('option').forEach(el => { const t=el.textContent.trim(); if(map[t]) el.textContent=map[t]; });
+        }
+
         function setLang(lang) {
             if(!i18n[lang]) lang = 'fr';
             currentLang = lang;
@@ -853,6 +947,9 @@
                 if(i18n[lang][key]) el.textContent = i18n[lang][key];
             });
                    closeLanguageMenu();
+            translateStaticUI();
+            renderAccountArea();
+            refreshNavPill();
         }
 
         // TOAST NOTIFICATIONS
@@ -872,6 +969,8 @@
             db.collection("palmares").onSnapshot((snapshot) => { globalPalmares = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderPalmares(); renderAdminLists(); });
             db.collection("annonces").orderBy("date", "desc").onSnapshot((snapshot) => { globalAnnonces = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderAnnonces(); renderAdminLists(); }, error => { /* Fallback if no index */ globalAnnonces = []; db.collection("annonces").get().then(s => { globalAnnonces = s.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderAnnonces(); renderAdminLists(); }); });
             db.collection("partners").onSnapshot((snapshot) => { globalPartners = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderPartners(); renderAdminLists(); });
+            db.collection("accountRequests").orderBy("createdAt", "desc").onSnapshot((snapshot) => { globalAccountRequests = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderAdminLists(); }, () => { globalAccountRequests = []; renderAdminLists(); });
+            db.collection("accounts").onSnapshot((snapshot) => { globalAccounts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderAdminLists(); });
             checkCookies();
         }
 
@@ -1083,13 +1182,87 @@
         function openAdminLogin() { document.getElementById('admin-login-modal').classList.remove('hidden'); document.getElementById('admin-pwd-input').value = ''; document.getElementById('admin-pwd-input').focus(); }
         function checkAdminPwd() {
             const val = document.getElementById('admin-pwd-input').value;
-            if(val === ADMIN_PWD) { document.getElementById('admin-login-modal').classList.add('hidden'); toggleAdmin(); showToast("Connexion Admin réussie", "success"); }
-            else { showToast("Mot de passe incorrect", "error"); }
+            if(val === ADMIN_PWD) { document.getElementById('admin-login-modal').classList.add('hidden'); sessionStorage.setItem('aerix_legacy_admin','true'); document.getElementById('admin-modal').classList.remove('hidden'); showToast(currentLang==='en'?'Admin login successful':'Connexion Admin réussie', "success"); }
+            else { showToast(currentLang==='en'?'Incorrect password':'Mot de passe incorrect', "error"); }
         }
 
         function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('hidden'); }
 
+        function escapeHtml(value) {
+            return String(value ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+        }
+
+        function isOwner() {
+            return !!currentUser && OWNER_EMAIL !== 'OWNER_EMAIL_HERE' && (currentUser.email || '').toLowerCase() === OWNER_EMAIL.toLowerCase();
+        }
+        function hasAdminAccess() {
+            return isOwner() || !!(currentAccount && ['owner','admin'].includes(currentAccount.role));
+        }
+        function renderAccountArea() {
+            const areas = [document.getElementById('account-area'), document.getElementById('mobile-account-area')].filter(Boolean);
+            const html = currentUser && currentAccount ? `
+                <div class="relative group">
+                    <button onclick="toggleAccountMenu(event)" class="text-xs text-white transition px-4 py-1.5 rounded-full border border-aerix-purple/40 bg-aerix-purple/10 hover:bg-aerix-purple/20 font-medium flex items-center gap-2">
+                        <span class="w-6 h-6 rounded-full bg-aerix-purple/25 border border-aerix-purple/50 flex items-center justify-center text-[10px] font-black">${escapeHtml((currentAccount.username || 'A').charAt(0).toUpperCase())}</span>
+                        <span>${escapeHtml(currentAccount.username || currentUser.email || 'Account')}</span>
+                        <span>▾</span>
+                    </button>
+                    <div id="account-menu" class="hidden absolute right-0 top-11 w-48 glass-panel-no-hover rounded-2xl p-2 z-[250] border border-white/10 shadow-2xl">
+                        ${hasAdminAccess() ? `<button onclick="openAdminFromAccount()" class="w-full text-left px-3 py-2.5 text-xs font-bold text-white hover:bg-white/10 rounded-xl">${currentLang === 'en' ? 'Admin panel' : 'Administration'}</button>` : ''}
+                        <button onclick="logoutAccount()" class="w-full text-left px-3 py-2.5 text-xs font-bold text-gray-300 hover:bg-white/10 hover:text-white rounded-xl">${currentLang === 'en' ? 'Sign out' : 'Déconnexion'}</button>
+                    </div>
+                </div>` : `
+                <button onclick="openAccountRequestModal()" data-i18n="account_request" class="text-xs text-aerix-purple transition px-4 py-1.5 rounded-full border border-aerix-purple/40 bg-aerix-purple/10 hover:bg-aerix-purple/20 font-medium">${currentLang === 'en' ? 'Request an account' : 'Demande de compte'}</button>`;
+            areas.forEach((el,i) => el.innerHTML = i === 1 && !currentUser ? html.replace('px-4 py-1.5','py-3.5 px-4') : html);
+        }
+        function toggleAccountMenu(event) { if(event) event.stopPropagation(); document.getElementById('account-menu')?.classList.toggle('hidden'); }
+        document.addEventListener('click', e => { const m=document.getElementById('account-menu'); if(m && !e.target.closest('#account-area') && !e.target.closest('#mobile-account-area')) m.classList.add('hidden'); });
+        function openAccountRequestModal() { showAccountRequest(); document.getElementById('account-modal').classList.remove('hidden'); }
+        function closeAccountModal() { document.getElementById('account-modal').classList.add('hidden'); }
+        function showAccountRequest() { ['account-request-form'].forEach(id=>document.getElementById(id).classList.remove('hidden')); ['account-login-form','account-register-form'].forEach(id=>document.getElementById(id).classList.add('hidden')); document.getElementById('account-modal-title').innerText=currentLang==='en'?'Request an account':'Demande de compte'; }
+        function showAccountLogin() { document.getElementById('account-request-form').classList.add('hidden'); document.getElementById('account-register-form').classList.add('hidden'); document.getElementById('account-login-form').classList.remove('hidden'); document.getElementById('account-modal-title').innerText=currentLang==='en'?'Sign in':'Connexion'; }
+        function showAccountRegistration() { document.getElementById('account-request-form').classList.add('hidden'); document.getElementById('account-login-form').classList.add('hidden'); document.getElementById('account-register-form').classList.remove('hidden'); document.getElementById('account-modal-title').innerText=currentLang==='en'?'Create account':'Créer mon compte'; }
+        async function submitAccountRequest() {
+            const username=document.getElementById('account-request-username').value.trim(); const email=document.getElementById('account-request-email').value.trim().toLowerCase();
+            if(!username || !email) return showToast(currentLang==='en'?'Username and email are required.':'Pseudo et email obligatoires.','error');
+            try {
+                const existing=await db.collection('accountRequests').where('email','==',email).get();
+                if(existing.docs.some(d => ['pending','approved'].includes(d.data().status))) return showToast(currentLang==='en'?'A request already exists for this email.':'Une demande existe déjà pour cet email.','error');
+                await db.collection('accountRequests').add({username,email,status:'pending',createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+                showToast(currentLang==='en'?'Request sent.':'Demande envoyée.'); closeAccountModal();
+            } catch(e) { console.error(e); showToast(currentLang==='en'?'Unable to send the request. Check Firestore rules.':'Impossible d’envoyer la demande. Vérifie les règles Firestore.','error'); }
+        }
+        async function approveAccountRequest(id) { try { await db.collection('accountRequests').doc(id).update({status:'approved',approvedAt:firebase.firestore.FieldValue.serverTimestamp()}); showToast(currentLang==='en'?'Account request approved.':'Demande de compte approuvée.'); } catch(e){ console.error(e); showToast(currentLang==='en'?'Approval failed.':'Échec de l’approbation.','error'); } }
+        async function rejectAccountRequest(id) { try { await db.collection('accountRequests').doc(id).update({status:'rejected',rejectedAt:firebase.firestore.FieldValue.serverTimestamp()}); showToast(currentLang==='en'?'Account request rejected.':'Demande refusée.'); } catch(e){ console.error(e); showToast(currentLang==='en'?'Rejection failed.':'Échec du refus.','error'); } }
+        async function registerApprovedAccount() {
+            const username=document.getElementById('account-register-username').value.trim(); const email=document.getElementById('account-register-email').value.trim().toLowerCase(); const password=document.getElementById('account-register-password').value;
+            if(!username || !email || password.length<8) return showToast(currentLang==='en'?'Enter a username, email and an 8+ character password.':'Renseigne un pseudo, un email et un mot de passe de 8 caractères minimum.','error');
+            try {
+                const snap=await db.collection('accountRequests').where('email','==',email).where('status','==','approved').limit(1).get();
+                if(snap.empty) return showToast(currentLang==='en'?'Your request is not approved yet.':'Ta demande n’est pas encore approuvée.','error');
+                const cred=await auth.createUserWithEmailAndPassword(email,password);
+                await db.collection('accounts').doc(cred.user.uid).set({uid:cred.user.uid,username,email,role:'admin',createdAt:firebase.firestore.FieldValue.serverTimestamp(),approvedRequestId:snap.docs[0].id});
+                await snap.docs[0].ref.update({status:'registered',uid:cred.user.uid,registeredAt:firebase.firestore.FieldValue.serverTimestamp()});
+                showToast(currentLang==='en'?'Account created.':'Compte créé.'); closeAccountModal();
+            } catch(e) { console.error(e); showToast(currentLang==='en'?(e.code==='auth/email-already-in-use'?'This email is already registered.':'Account creation failed.'):(e.code==='auth/email-already-in-use'?'Cet email est déjà utilisé.':'Échec de création du compte.'),'error'); }
+        }
+        async function loginAccount() { const email=document.getElementById('account-login-email').value.trim(); const password=document.getElementById('account-login-password').value; if(!email||!password) return showToast(currentLang==='en'?'Email and password are required.':'Email et mot de passe obligatoires.','error'); try { await auth.signInWithEmailAndPassword(email,password); closeAccountModal(); showToast(currentLang==='en'?'Signed in.':'Connexion réussie.'); } catch(e){ showToast(currentLang==='en'?'Invalid email or password.':'Email ou mot de passe incorrect.','error'); } }
+        async function logoutAccount() { try { await auth.signOut(); document.getElementById('account-menu')?.classList.add('hidden'); showToast(currentLang==='en'?'Signed out.':'Déconnexion réussie.'); } catch(e){ console.error(e); } }
+        function openAdminFromAccount() { document.getElementById('account-menu')?.classList.add('hidden'); if(hasAdminAccess()) { document.getElementById('admin-modal').classList.remove('hidden'); switchAdminTab('comptes'); } }
+        auth.onAuthStateChanged(async user => { currentUser=user; currentAccount=null; if(user) { try { const snap=await db.collection('accounts').doc(user.uid).get(); currentAccount=snap.exists?snap.data():{uid:user.uid,email:user.email,username:user.email?.split('@')[0]||'Account',role:isOwner()?'owner':'user'}; if(isOwner()) currentAccount.role='owner'; } catch(e){ console.error(e); } } renderAccountArea(); });
+
         function renderAdminLists() {
+            const requestsEl = document.getElementById('admin-list-comptes');
+            if (requestsEl) {
+                requestsEl.innerHTML = globalAccountRequests.length ? globalAccountRequests.map(r => {
+                    const status = r.status || 'pending';
+                    const statusClass = status === 'approved' ? 'text-green-400 bg-green-500/10' : status === 'rejected' ? 'text-red-400 bg-red-500/10' : 'text-yellow-300 bg-yellow-500/10';
+                    return `<div class="glass-panel p-4 rounded-xl flex flex-col md:flex-row md:items-center md:justify-between gap-4"><div><div class="text-white font-bold text-sm">${escapeHtml(r.username || '—')}</div><div class="text-xs text-gray-500">${escapeHtml(r.email || '—')}</div><span class="inline-flex mt-2 px-2 py-1 rounded-full text-[10px] font-bold uppercase ${statusClass}">${status}</span></div><div class="flex gap-2">${status === 'pending' ? `<button onclick="approveAccountRequest('${r.id}')" class="text-green-300 text-xs bg-green-500/10 hover:bg-green-500/20 px-3 py-1.5 rounded-lg transition">Approve</button><button onclick="rejectAccountRequest('${r.id}')" class="text-red-300 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Reject</button>` : ''}</div></div>`; }).join('') : `<p class="text-gray-500 text-sm italic">No account requests.</p>`;
+            }
+            const usersEl = document.getElementById('admin-list-users');
+            if (usersEl) {
+                usersEl.innerHTML = globalAccounts.length ? globalAccounts.map(u => `<div class="glass-panel p-4 rounded-xl"><div class="text-white font-bold text-sm">${escapeHtml(u.username || '—')}</div><div class="text-xs text-gray-500 mt-1">${escapeHtml(u.email || '—')}</div><div class="text-xs text-aerix-purple mt-2 uppercase tracking-widest">${escapeHtml(u.role || 'user')}</div></div>`).join('') : `<p class="text-gray-500 text-sm italic">No registered accounts.</p>`;
+            }
             document.getElementById('admin-list-boutique').innerHTML = globalShop.map(item => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm">${item.name}</div><div class="text-xs text-gray-500">${item.price} €</div></div><div class="flex gap-2"><button onclick="startEditShop('${item.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('shop', '${item.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
             document.getElementById('admin-list-effectifs').innerHTML = globalEffectifs.map(r => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm flex items-center gap-2">${r.name} <span class="bg-white/10 text-[9px] px-2 py-0.5 rounded-full">${r.players?.length||0} j.</span></div><div class="text-xs text-gray-500">${r.game || 'Général'}</div></div><div class="flex gap-2"><button onclick="startEditEffectif('${r.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('effectifs', '${r.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
             document.getElementById('admin-list-palmares').innerHTML = globalPalmares.map(p => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm truncate max-w-[150px]">${p.title}</div><div class="text-xs text-gray-500">${p.game || 'Général'}</div></div><div class="flex gap-2"><button onclick="startEditPalmares('${p.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('palmares', '${p.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
@@ -1339,12 +1512,14 @@
             const pill = document.getElementById('nav-pill');
             const container = document.getElementById('nav-container');
             if(!activeBtn || !pill || !container || window.innerWidth < 768) return;
-            const left = activeBtn.offsetLeft;
-            pill.style.left = `${left}px`;
-            pill.style.top = `${activeBtn.offsetTop}px`;
-            pill.style.width = `${activeBtn.offsetWidth}px`;
-            pill.style.height = `${activeBtn.offsetHeight}px`;
+            const rect = activeBtn.getBoundingClientRect();
+            const parentRect = container.getBoundingClientRect();
+            pill.style.left = `${rect.left - parentRect.left}px`;
+            pill.style.top = `${rect.top - parentRect.top}px`;
+            pill.style.width = `${rect.width}px`;
+            pill.style.height = `${rect.height}px`;
         }
+        function refreshNavPill() { const active=document.querySelector('#nav-container .nav-btn.active'); if(!active) return; requestAnimationFrame(()=>requestAnimationFrame(()=>updateNavPill(active))); }
 
         function renderNavbar() {
             const activePage = document.querySelector('.page-view.active');
@@ -1374,6 +1549,7 @@
             });
 
             updateNavPill(document.getElementById('nav-' + pageId));
+            refreshNavPill();
 
             document.querySelectorAll('.animate-fade-up').forEach(el => {
                 el.style.animation = 'none';
@@ -1400,7 +1576,8 @@
             });
         }, { passive: true });
 
-        window.addEventListener('resize', () => updateNavPill(document.querySelector('#nav-container .nav-btn.active')), { passive: true });
+        window.addEventListener('resize', refreshNavPill, { passive: true });
+        if (window.ResizeObserver) { const navResizeObserver = new ResizeObserver(() => refreshNavPill()); const navContainer = document.getElementById('nav-container'); if(navContainer) navResizeObserver.observe(navContainer); }
 
         // CROP STUDIO
         let cropper = null, cropCallback = null;
@@ -1433,8 +1610,8 @@
         document.getElementById('partner-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], NaN, b => { tempPartnerImage = b; document.getElementById('partner-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('partner-img-preview').classList.remove('hidden'); }); e.target.value=''; });
         document.getElementById('announcement-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 16/9, b => { tempAnnouncementImage = b; document.getElementById('announcement-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('announcement-img-preview').classList.remove('hidden'); }); e.target.value=''; });
 
-        function toggleAdmin() { document.getElementById('admin-modal').classList.toggle('hidden'); }
-        function switchAdminTab(tab) { document.querySelectorAll('.admin-tab').forEach(t => t.classList.add('hidden')); document.getElementById('admin-tab-' + tab).classList.remove('hidden'); ['boutique', 'effectifs', 'palmares', 'partenaires', 'annonces'].forEach(t => { const btn = document.getElementById('tab-btn-' + t); if(btn) btn.className = "flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition cursor-move"; }); const activeTabBtn = document.getElementById('tab-btn-' + tab); if(activeTabBtn) activeTabBtn.className = "flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl bg-aerix-purple text-white transition shadow-[0_0_15px_rgba(139,92,246,0.3)] cursor-move"; }
+        function toggleAdmin() { if(!hasAdminAccess() && !sessionStorage.getItem('aerix_legacy_admin')) { openAdminLogin(); return; } document.getElementById('admin-modal').classList.toggle('hidden'); }
+        function switchAdminTab(tab) { document.querySelectorAll('.admin-tab').forEach(t => t.classList.add('hidden')); const target=document.getElementById('admin-tab-' + tab); if(!target) return; target.classList.remove('hidden'); ['comptes', 'boutique', 'effectifs', 'palmares', 'partenaires', 'annonces'].forEach(t => { const btn = document.getElementById('tab-btn-' + t); if(btn) btn.className = "flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition cursor-move"; }); const activeTabBtn = document.getElementById('tab-btn-' + tab); if(activeTabBtn) activeTabBtn.className = "flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl bg-aerix-purple text-white transition shadow-[0_0_15px_rgba(139,92,246,0.3)] cursor-move"; }
 
         // SLIDER PRODUIT
         let currentModalImages = [], currentModalImgIndex = 0;
@@ -1446,33 +1623,20 @@
 
         // MODAL LEGAL & COOKIES
         const legalTexts = {
-            mentions: `
-                <p class="text-xs text-gray-500 mb-6">Dernière mise à jour : septembre 2026</p>
-                <h4 class="font-bold text-white mb-2 text-lg">1. Éditeur du site</h4>
-                <p class="mb-5">AERIX Esports — structure esport indépendante.</p>
-                <p class="mb-6 text-amber-300/90 text-xs bg-amber-400/5 border border-amber-400/15 rounded-xl p-4"><strong>À compléter avant publication définitive :</strong> identité ou dénomination de l’éditeur, adresse de contact et autres mentions obligatoires applicables à l’exploitant du site.</p>
-                <h4 class="font-bold text-white mb-2 text-lg">2. Hébergement</h4>
-                <p class="mb-6">Le site est publié via GitHub Pages. Les informations d’hébergement et de contact doivent être vérifiées et complétées avant la mise en ligne définitive.</p>
-                <h4 class="font-bold text-white mb-2 text-lg">3. Propriété intellectuelle</h4>
-                <p class="mb-6">Les éléments graphiques, textes, logos et contenus propres à AERIX Esports ne peuvent être réutilisés, reproduits ou redistribués sans autorisation préalable, sauf exceptions prévues par la loi.</p>
-                <h4 class="font-bold text-white mb-2 text-lg">4. Responsabilité</h4>
-                <p>Les contenus sont fournis à titre informatif. AERIX peut modifier, corriger ou retirer un contenu à tout moment.</p>`,
-            confidentialite: `
-                <p class="text-xs text-gray-500 mb-6">Dernière mise à jour : septembre 2026</p>
-                <h4 class="font-bold text-white mb-2 text-lg">Données traitées</h4>
-                <p class="mb-6">Selon les fonctionnalités utilisées, le site peut traiter les informations saisies dans les formulaires de demande de compte ainsi que les données nécessaires au fonctionnement des fonctionnalités d’administration. Les données collectées doivent rester limitées à ce qui est nécessaire.</p>
-                <h4 class="font-bold text-white mb-2 text-lg">Finalités</h4>
-                <p class="mb-6">Les informations sont utilisées pour traiter les demandes envoyées via le site, gérer les contenus AERIX et assurer le fonctionnement des services proposés.</p>
-                <h4 class="font-bold text-white mb-2 text-lg">Conservation et droits</h4>
-                <p class="mb-6">Les durées de conservation doivent être définies selon chaque finalité. Pour demander l’accès, la rectification ou la suppression de données, utilisez le moyen de contact officiel indiqué par AERIX.</p>
-                <h4 class="font-bold text-white mb-2 text-lg">Services tiers</h4>
-                <p>Le site peut charger des ressources externes, notamment Google Fonts, FlagCDN et les services Firebase utilisés par l’application. Les services réellement conservés en production doivent être listés précisément dans cette politique.</p>`
+            fr: {
+                mentions: `<p class="text-xs text-gray-500 mb-6">Dernière mise à jour : septembre 2026</p><h4 class="font-bold text-white mb-2 text-lg">1. Éditeur du site</h4><p class="mb-5">AERIX Esports — structure esport indépendante.</p><h4 class="font-bold text-white mb-2 text-lg">2. Hébergement</h4><p class="mb-6">Le site est publié via GitHub Pages. Les informations d’hébergement et de contact doivent être vérifiées et complétées avant la mise en ligne définitive.</p><h4 class="font-bold text-white mb-2 text-lg">3. Propriété intellectuelle</h4><p class="mb-6">Les éléments graphiques, textes, logos et contenus propres à AERIX Esports ne peuvent être réutilisés, reproduits ou redistribués sans autorisation préalable, sauf exceptions prévues par la loi.</p><h4 class="font-bold text-white mb-2 text-lg">4. Responsabilité</h4><p>Les contenus sont fournis à titre informatif. AERIX peut modifier, corriger ou retirer un contenu à tout moment.</p>`,
+                confidentialite: `<p class="text-xs text-gray-500 mb-6">Dernière mise à jour : septembre 2026</p><h4 class="font-bold text-white mb-2 text-lg">Données traitées</h4><p class="mb-6">Selon les fonctionnalités utilisées, le site peut traiter les informations saisies dans les formulaires de demande de compte ainsi que les données nécessaires au fonctionnement des fonctionnalités d’administration. Les données collectées doivent rester limitées à ce qui est nécessaire.</p><h4 class="font-bold text-white mb-2 text-lg">Finalités</h4><p class="mb-6">Les informations sont utilisées pour traiter les demandes envoyées via le site, gérer les contenus AERIX et assurer le fonctionnement des services proposés.</p><h4 class="font-bold text-white mb-2 text-lg">Conservation et droits</h4><p class="mb-6">Les durées de conservation doivent être définies selon chaque finalité. Pour demander l’accès, la rectification ou la suppression de données, utilisez le moyen de contact officiel indiqué par AERIX.</p><h4 class="font-bold text-white mb-2 text-lg">Services tiers</h4><p>Le site peut charger des ressources externes, notamment Google Fonts, FlagCDN et les services Firebase utilisés par l’application.</p>`
+            },
+            en: {
+                mentions: `<p class="text-xs text-gray-500 mb-6">Last updated: September 2026</p><h4 class="font-bold text-white mb-2 text-lg">1. Website publisher</h4><p class="mb-5">AERIX Esports — independent esports organization.</p><h4 class="font-bold text-white mb-2 text-lg">2. Hosting</h4><p class="mb-6">The website is published through GitHub Pages. Hosting and contact information should be verified before final publication.</p><h4 class="font-bold text-white mb-2 text-lg">3. Intellectual property</h4><p class="mb-6">AERIX Esports graphics, texts, logos and original content may not be reused, reproduced or redistributed without prior authorization, except where permitted by law.</p><h4 class="font-bold text-white mb-2 text-lg">4. Liability</h4><p>Content is provided for information purposes. AERIX may modify, correct or remove content at any time.</p>`,
+                confidentialite: `<p class="text-xs text-gray-500 mb-6">Last updated: September 2026</p><h4 class="font-bold text-white mb-2 text-lg">Data processed</h4><p class="mb-6">Depending on the features used, the website may process information submitted through account-request forms and data required for administration features. Data collection should remain limited to what is necessary.</p><h4 class="font-bold text-white mb-2 text-lg">Purposes</h4><p class="mb-6">Information is used to process requests submitted through the website, manage AERIX content and operate the services provided.</p><h4 class="font-bold text-white mb-2 text-lg">Retention and rights</h4><p class="mb-6">Retention periods should be defined for each purpose. To request access, correction or deletion of data, use AERIX's official contact method.</p><h4 class="font-bold text-white mb-2 text-lg">Third-party services</h4><p>The website may load external resources, including Google Fonts, FlagCDN and Firebase services used by the application.</p>`
+            }
         };
 
         function openLegal(type) {
-            const titleMap = { mentions: "Mentions légales", confidentialite: "Confidentialité" };
-            document.getElementById('legal-title').innerText = titleMap[type] || "Document";
-            document.getElementById('legal-content').innerHTML = legalTexts[type] || "<p>Document indisponible.</p>";
+            const titleMap = { fr: {mentions:"Mentions légales",confidentialite:"Confidentialité"}, en: {mentions:"Legal notice",confidentialite:"Privacy"} };
+            document.getElementById('legal-title').innerText = titleMap[currentLang][type] || "Document";
+            document.getElementById('legal-content').innerHTML = legalTexts[currentLang][type] || "<p>Document unavailable.</p>";
             document.getElementById('legal-modal').classList.remove('hidden');
         }
         function closeLegal() { document.getElementById('legal-modal').classList.add('hidden'); }
@@ -1500,7 +1664,7 @@
             applyCookieConsent(!!all);
             localStorage.setItem('aerix_cookie_consent_v2', 'true');
             hideCookieBanner();
-            showToast("Préférences enregistrées");
+            showToast(currentLang==='en'?'Preferences saved':'Préférences enregistrées');
         }
         function openCookieSettings() {
             document.getElementById('cookie-settings-modal').classList.remove('hidden');
@@ -1513,7 +1677,7 @@
             localStorage.setItem('aerix_cookie_consent_v2', 'true');
             closeCookieSettings();
             hideCookieBanner();
-            showToast("Préférences enregistrées");
+            showToast(currentLang==='en'?'Preferences saved':'Préférences enregistrées');
         }
 
         // DRAG AND DROP ADMIN TABS
@@ -1545,6 +1709,7 @@
         }
 
         setLang(currentLang);
+        renderAccountArea();
         startSync();
         navigate('home');
         requestAnimationFrame(() => updateNavPill(document.getElementById('nav-home')));
