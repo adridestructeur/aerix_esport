@@ -1350,22 +1350,40 @@
         }
 
         function openAdminLogin() {
-            if (!currentUser) {
-                showToast(currentLang==='en'?'Sign in to access the administration panel.':'Connecte-toi pour accéder au panel d’administration.', 'error');
-                return;
-            }
-            if (!hasAdminAccess()) {
-                showToast(currentLang==='en'?'Administration access denied.':'Accès à l’administration refusé.', 'error');
-                return;
-            }
-            const modal = document.getElementById('admin-login-modal');
-            const input = document.getElementById('admin-pwd-input');
-            if (!modal || !input) return;
-            stopAdminSession();
-            input.value = '';
-            modal.classList.remove('hidden');
-            setTimeout(() => input.focus(), 50);
+    if (!currentUser) {
+        showToast(currentLang==='en'?'Sign in to access the administration panel.':'Connecte-toi pour accéder au panel d’administration.', 'error');
+        return;
+    }
+    if (!hasAdminAccess()) {
+        showToast(currentLang==='en'?'Administration access denied.':'Accès à l’administration refusé.', 'error');
+        return;
+    }
+
+    // NOUVEAU : Vérification de la session active (moins de 30 min)
+    if (adminSessionStartTime > 0 && (Date.now() - adminSessionStartTime < ADMIN_SESSION_TIMEOUT)) {
+        document.getElementById('admin-modal').classList.remove('hidden');
+        applyAdminTabVisibility();
+        switchAdminTab(isOwner() ? 'comptes' : 'boutique');
+        
+        // On relance le minuteur s'il était arrêté
+        if (!adminSessionTimer) {
+            adminSessionTimer = setInterval(checkAdminSessionTimeout, 60 * 1000);
         }
+        return; // On arrête ici, on n'affiche pas la modale du mot de passe
+    }
+
+    const modal = document.getElementById('admin-login-modal');
+    const input = document.getElementById('admin-pwd-input');
+    if (!modal || !input) return;
+    
+    // Si la session n'existe pas ou a expiré, on remet tout à zéro et on demande le mot de passe
+    adminSessionStartTime = 0; 
+    stopAdminSession(); 
+    
+    input.value = '';
+    modal.classList.remove('hidden');
+    setTimeout(() => input.focus(), 50);
+}
 
         function startAdminSession() {
     adminSessionStartTime = Date.now();
@@ -1378,12 +1396,13 @@ function stopAdminSession() {
         clearInterval(adminSessionTimer);
         adminSessionTimer = null;
     }
-    adminSessionStartTime = 0;
+    // On ne met PLUS adminSessionStartTime = 0 ici, pour garder l'heure en mémoire
 }
 
 function expireAdminSession() {
     const adminModal = document.getElementById('admin-modal');
     const loginModal = document.getElementById('admin-login-modal');
+    
     if (adminModal) adminModal.classList.add('hidden'); // Ferme l'admin
     if (loginModal && currentUser && hasAdminAccess()) {
         loginModal.classList.remove('hidden'); // Redemande le mot de passe
@@ -1393,7 +1412,14 @@ function expireAdminSession() {
             setTimeout(() => input.focus(), 50);
         }
     }
-    stopAdminSession();
+    
+    // NOUVEAU : C'est seulement à l'expiration qu'on réinitialise l'heure
+    adminSessionStartTime = 0; 
+    
+    if (adminSessionTimer) {
+        clearInterval(adminSessionTimer);
+        adminSessionTimer = null;
+    }
     showToast(currentLang==='en'
         ? 'Admin session expired. Please enter your password again.'
         : 'La session administrateur a expiré. Entre à nouveau ton mot de passe.', 'error');
