@@ -80,6 +80,10 @@
     
     .glass-panel-no-hover { background: rgba(10, 10, 10, 0.85); backdrop-filter: blur(35px); -webkit-backdrop-filter: blur(35px); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 8px 32px 0 rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.05); }
 
+    /* MENU COMPTE : effet néon au survol (Tickets / Administration / Déconnexion) */
+    .account-menu-item { border: 1px solid transparent; transition: background .25s ease, border-color .25s ease, box-shadow .25s ease, color .25s ease; }
+    .account-menu-item:hover { background: rgba(139,92,246,0.12); border-color: rgba(139,92,246,0.55); box-shadow: 0 0 10px rgba(139,92,246,0.55), 0 0 22px rgba(139,92,246,0.35), inset 0 0 10px rgba(139,92,246,0.15); color: #fff; }
+
     /* Variante d'un .glass-panel pour les formulaires dont la hauteur varie (ex: création de roster) :
        le overflow:hidden du .glass-panel standard sert aux effets de glow décoratifs, mais il
        rogne aussi le contenu réel du formulaire quand celui-ci dépasse. Ce modificateur restaure
@@ -1422,9 +1426,9 @@
                             </div>
                             <div class="min-w-0"><div class="text-white text-xs font-bold truncate">${escapeHtml(currentAccount.username || '')}</div><div class="text-gray-500 text-[10px] truncate">${escapeHtml(currentAccount.email || currentUser.email || '')}</div></div>
                         </div>
-                        <button onclick="openTicketsModal()" class="w-full text-left px-3 py-2.5 text-xs font-bold text-white hover:bg-white/10 rounded-xl">🎫 ${currentLang === 'en' ? 'Tickets' : 'Tickets'}</button>
-                        ${hasAdminAccess() ? `<button onclick="openAdminFromAccount()" class="w-full text-left px-3 py-2.5 text-xs font-bold text-white hover:bg-white/10 rounded-xl">${currentLang === 'en' ? 'Admin panel' : 'Administration'}</button>` : ''}
-                        <button onclick="logoutAccount()" class="w-full text-left px-3 py-2.5 text-xs font-bold text-gray-300 hover:bg-white/10 hover:text-white rounded-xl">${currentLang === 'en' ? 'Sign out' : 'Déconnexion'}</button>
+                        <button onclick="openTicketsModal()" class="account-menu-item w-full text-left px-3 py-2.5 text-xs font-bold text-white rounded-xl">🎫 ${currentLang === 'en' ? 'Tickets' : 'Tickets'}</button>
+                        ${hasAdminAccess() ? `<button onclick="openAdminFromAccount()" class="account-menu-item w-full text-left px-3 py-2.5 text-xs font-bold text-white rounded-xl">${currentLang === 'en' ? 'Admin panel' : 'Administration'}</button>` : ''}
+                        <button onclick="logoutAccount()" class="account-menu-item w-full text-left px-3 py-2.5 text-xs font-bold text-gray-300 rounded-xl">${currentLang === 'en' ? 'Sign out' : 'Déconnexion'}</button>
                     </div>
                 </div>` : `
                 <button onclick="openAccountModal()" data-i18n="account_create" class="text-xs text-aerix-purple transition px-4 py-1.5 rounded-full border border-aerix-purple/40 bg-aerix-purple/10 hover:bg-aerix-purple/20 font-medium">${currentLang === 'en' ? 'Create account' : 'Créer un compte'}</button>`;
