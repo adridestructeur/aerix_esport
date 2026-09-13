@@ -1623,7 +1623,7 @@
                 usersEl.innerHTML = globalAccounts.length ? globalAccounts.map(u => {
                     const role = u.role || 'user';
                     const isSelfOwner = (u.email || '').toLowerCase() === OWNER_EMAIL.toLowerCase();
-                    const menu = isOwner() && !isSelfOwner ? `<div class="relative"><button onclick="toggleRoleMenu('${u.id}')" class="w-9 h-9 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-aerix-purple/20 hover:border-aerix-purple/40 transition text-lg" aria-label="Options">⋯</button><div id="role-menu-${u.id}" class="role-menu hidden absolute right-0 top-11 z-50 w-44 glass-panel-no-hover rounded-xl p-1.5 border border-white/10 shadow-2xl"><button onclick="setAccountRole('${u.id}','user')" class="w-full text-left px-3 py-2 text-xs text-white hover:bg-white/10 rounded-lg">${currentLang==='en'?'User':'Utilisateur'}</button><button onclick="setAccountRole('${u.id}','admin')" class="w-full text-left px-3 py-2 text-xs text-white hover:bg-white/10 rounded-lg">Admin</button></div></div>` : '';
+                    const menu = isOwner() && !isSelfOwner ? `<div class="relative"><button onclick="toggleRoleMenu('${u.id}', event)" class="w-9 h-9 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-aerix-purple/20 hover:border-aerix-purple/40 transition text-lg" aria-label="Options">⋯</button><div id="role-menu-${u.id}" class="role-menu hidden absolute right-0 top-11 z-50 w-44 glass-panel-no-hover rounded-xl p-1.5 border border-white/10 shadow-2xl"><button onclick="setAccountRole('${u.id}','user')" class="w-full text-left px-3 py-2 text-xs text-white hover:bg-white/10 rounded-lg">${currentLang==='en'?'User':'Utilisateur'}</button><button onclick="setAccountRole('${u.id}','admin')" class="w-full text-left px-3 py-2 text-xs text-white hover:bg-white/10 rounded-lg">Admin</button></div></div>` : '';
                     return `<div class="glass-panel p-4 rounded-xl flex items-center justify-between gap-3"><div class="min-w-0"><div class="text-white font-bold text-sm truncate">${escapeHtml(u.username || '—')}</div><div class="text-xs text-gray-500 mt-1 truncate">${escapeHtml(u.email || '—')}</div><div class="text-xs text-aerix-purple mt-2 uppercase tracking-widest">${escapeHtml(role)}</div></div>${menu}</div>`;
                 }).join('') : `<p class="text-gray-500 text-sm italic">${currentLang==='en'?'No registered accounts.':'Aucun compte enregistré.'}</p>`;
             }
@@ -1646,7 +1646,14 @@
 
         // Menu "⋯" (rôle) sur chaque compte dans l'admin : ces deux fonctions étaient
         // appelées en onclick mais n'existaient nulle part, d'où le clic sans aucun effet.
-        function toggleRoleMenu(uid) {
+        //
+        // stopPropagation() est indispensable ici : le bouton "⋯" est en dehors du
+        // conteneur .role-menu (il est juste à côté, pour l'ouvrir), donc sans ça le
+        // listener global "document.addEventListener('click', ...)" qui ferme tous les
+        // .role-menu se déclenche juste après avoir ouvert celui-ci et le referme aussitôt
+        // dans la même frame — d'où l'impression que le clic ne fait rien.
+        function toggleRoleMenu(uid, event) {
+            if (event) event.stopPropagation();
             document.querySelectorAll('.role-menu').forEach(m => { if (m.id !== `role-menu-${uid}`) m.classList.add('hidden'); });
             document.getElementById(`role-menu-${uid}`)?.classList.toggle('hidden');
         }
