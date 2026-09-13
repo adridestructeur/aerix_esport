@@ -1644,6 +1644,25 @@
             }
         }
 
+        // Menu "⋯" (rôle) sur chaque compte dans l'admin : ces deux fonctions étaient
+        // appelées en onclick mais n'existaient nulle part, d'où le clic sans aucun effet.
+        function toggleRoleMenu(uid) {
+            document.querySelectorAll('.role-menu').forEach(m => { if (m.id !== `role-menu-${uid}`) m.classList.add('hidden'); });
+            document.getElementById(`role-menu-${uid}`)?.classList.toggle('hidden');
+        }
+        async function setAccountRole(uid, role) {
+            if (!isOwner()) return;
+            if (!['user', 'admin'].includes(role)) return;
+            try {
+                await db.collection('accounts').doc(uid).update({ role });
+                document.getElementById(`role-menu-${uid}`)?.classList.add('hidden');
+                showToast(currentLang === 'en' ? 'Role updated.' : 'Rôle mis à jour.', 'success');
+            } catch (e) {
+                console.error(e);
+                showToast(currentLang === 'en' ? 'Failed to update role.' : 'Échec de la mise à jour du rôle.', 'error');
+            }
+        }
+
         async function deleteItem(collectionName, docId) {
             if(confirm("Êtes-vous sûr de vouloir supprimer cet élément définitivement ?")) {
                 try { await db.collection(collectionName).doc(docId).delete(); showToast("Élément supprimé", "success"); } 
