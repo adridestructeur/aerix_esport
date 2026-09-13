@@ -365,6 +365,8 @@
                     <button onclick="setFilter('palmares', 'Tous')" data-filter="Tous" class="filter-btn active">Tous</button>
                     <button onclick="setFilter('palmares', 'Rocket League')" data-filter="Rocket League" class="filter-btn">Rocket League</button>
                     <button onclick="setFilter('palmares', 'Le Mans Ultimate')" data-filter="Le Mans Ultimate" class="filter-btn">Le Mans Ultimate</button>
+                    <button onclick="setFilter('palmares', 'RBR')" data-filter="RBR" class="filter-btn">RBR</button>
+                    <button onclick="setFilter('palmares', 'iRacing')" data-filter="iRacing" class="filter-btn">iRacing</button>
                 </div>
             </div>
             <div id="palmares-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
@@ -426,6 +428,8 @@
                     <button onclick="setFilter('annonces', 'Tous')" data-filter="Tous" class="filter-btn active">Tous</button>
                     <button onclick="setFilter('annonces', 'Rocket League')" data-filter="Rocket League" class="filter-btn">Rocket League</button>
                     <button onclick="setFilter('annonces', 'Le Mans Ultimate')" data-filter="Le Mans Ultimate" class="filter-btn">Le Mans Ultimate</button>
+                    <button onclick="setFilter('annonces', 'RBR')" data-filter="RBR" class="filter-btn">RBR</button>
+                    <button onclick="setFilter('annonces', 'iRacing')" data-filter="iRacing" class="filter-btn">iRacing</button>
                 </div>
             </div>
             <div id="announcements-container" class="space-y-10"></div>
@@ -905,6 +909,8 @@
                         <select id="add-palm-game" onchange="togglePalmaresFields()" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple transition">
                             <option value="Rocket League">Rocket League</option>
                             <option value="Le Mans Ultimate">Le Mans Ultimate (Simracing)</option>
+                            <option value="RBR">RBR (Richard Burns Rally)</option>
+                            <option value="iRacing">iRacing</option>
                         </select>
                     </div>
 
@@ -956,6 +962,8 @@
                                 <option value="Tous">Général</option>
                                 <option value="Rocket League">Rocket League</option>
                                 <option value="Le Mans Ultimate">Le Mans Ultimate</option>
+                                <option value="RBR">RBR (Richard Burns Rally)</option>
+                                <option value="iRacing">iRacing</option>
                             </select>
                         </div>
                     </div>
@@ -1310,6 +1318,8 @@
             if(!game || game === 'Tous') return `<span class="bg-white/10 text-gray-300 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-white/10 inline-flex items-center gap-1">🌐 AERIX</span>`;
             if(game === 'Rocket League') return `<span class="bg-aerix-rl/20 text-aerix-rl text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-aerix-rl/30 inline-flex items-center gap-1">🚀 Rocket League</span>`;
             if(game === 'Le Mans Ultimate') return `<span class="bg-aerix-lmu/20 text-aerix-lmu text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-aerix-lmu/30 inline-flex items-center gap-1">🏎️ Simracing</span>`;
+            if(game === 'RBR') return `<span class="bg-aerix-lmu/20 text-aerix-lmu text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-aerix-lmu/30 inline-flex items-center gap-1">🏁 RBR</span>`;
+            if(game === 'iRacing') return `<span class="bg-aerix-purple/20 text-aerix-purple text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-aerix-purple/30 inline-flex items-center gap-1">🏎️ iRacing</span>`;
             return `<span class="bg-aerix-purple/20 text-aerix-purple text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-aerix-purple/30">${game}</span>`;
         }
 
