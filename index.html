@@ -1288,9 +1288,7 @@
             db.collection("shop").onSnapshot((snapshot) => { globalShop = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderShop(); renderAdminLists(); });
             db.collection("effectifs").onSnapshot((snapshot) => { globalEffectifs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderEffectifs(); renderAdminLists(); });
             db.collection("palmares").onSnapshot((snapshot) => { globalPalmares = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderPalmares(); renderAdminLists(); });
-            // Les dates sont affichées en texte (ex. "12 Mars 2026") : le tri Firestore
-            // sur ce champ serait alphabétique et donc incorrect. On récupère puis on trie côté client.
-            db.collection("annonces").onSnapshot((snapshot) => { globalAnnonces = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderAnnonces(); renderAdminLists(); }, () => { globalAnnonces = []; db.collection("annonces").get().then(s => { globalAnnonces = s.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderAnnonces(); renderAdminLists(); }); });
+            db.collection("annonces").onSnapshot((snapshot) => { globalAnnonces = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); globalAnnonces = sortByDateDesc(globalAnnonces); renderAnnonces(); renderAdminLists(); }, error => { globalAnnonces = []; db.collection("annonces").get().then(s => { globalAnnonces = s.docs.map(doc => ({ id: doc.id, ...doc.data() })); globalAnnonces = sortByDateDesc(globalAnnonces); renderAnnonces(); renderAdminLists(); }); });
             db.collection("partners").onSnapshot((snapshot) => { globalPartners = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderPartners(); renderAdminLists(); });
             db.collection("accounts").onSnapshot((snapshot) => { globalAccounts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderAdminLists(); }, () => { globalAccounts = []; renderAdminLists(); });
             db.collection("contactRequests").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
@@ -1456,62 +1454,117 @@
         }
         function closePlayerModal() { document.getElementById('player-modal').classList.add('hidden'); }
 
-        // TRI CHRONOLOGIQUE AERIX : accepte les dates ISO, JJ/MM/AAAA et les dates françaises
-        // écrites comme "12 Mars 2026". Les éléments non datables restent à la fin.
+
+        // ===============================
+        // TRI CHRONOLOGIQUE AERIX
+        // ===============================
         function parseAERIXDate(value) {
             if (!value) return 0;
+
             if (value && typeof value.toDate === 'function') {
                 const d = value.toDate();
                 return Number.isNaN(d.getTime()) ? 0 : d.getTime();
             }
-            if (value instanceof Date) return Number.isNaN(value.getTime()) ? 0 : value.getTime();
+
+            if (value instanceof Date) {
+                return Number.isNaN(value.getTime()) ? 0 : value.getTime();
+            }
 
             const raw = String(value).trim();
             if (!raw) return 0;
 
-            const iso = Date.parse(raw);
-            if (!Number.isNaN(iso)) return iso;
+            // Formats natifs : ISO, yyyy-mm-dd, etc.
+            const parsed = Date.parse(raw);
+            if (!Number.isNaN(parsed)) return parsed;
 
-            const normalized = raw.toLowerCase()
-                .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+            // Normalisation des accents pour les mois français.
+            const normalized = raw
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
                 .replace(/\s+/g, ' ');
 
             const months = {
-                janvier: 0, fevrier: 1, mars: 2, avril: 3, mai: 4, juin: 5,
-                juillet: 6, aout: 7, septembre: 8, octobre: 9, novembre: 10, decembre: 11
+                janvier: 0,
+                fevrier: 1,
+                mars: 2,
+                avril: 3,
+                mai: 4,
+                juin: 5,
+                juillet: 6,
+                aout: 7,
+                septembre: 8,
+                octobre: 9,
+                novembre: 10,
+                decembre: 11
             };
 
-            let m = normalized.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})$/);
-            if (m) return new Date(Number(m[3]), Number(m[2]) - 1, Number(m[1])).getTime();
-
-            m = normalized.match(/^(\d{1,2})\s+([a-z]+)\s+(\d{4})$/);
-            if (m && months[m[2]] !== undefined) {
-                return new Date(Number(m[3]), months[m[2]], Number(m[1])).getTime();
+            // 05/06/2026, 05-06-2026, 05.06.2026
+            let match = normalized.match(/^(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{4})$/);
+            if (match) {
+                return new Date(
+                    Number(match[3]),
+                    Number(match[2]) - 1,
+                    Number(match[1])
+                ).getTime();
             }
 
-            m = normalized.match(/^([a-z]+)\s+(\d{4})$/);
-            if (m && months[m[1]] !== undefined) {
-                return new Date(Number(m[2]), months[m[1]], 1).getTime();
+            // 5 juin 2026 / 5 Juin 2026
+            match = normalized.match(/^(\d{1,2})\s+([a-z]+)\s+(\d{4})$/);
+            if (match && months[match[2]] !== undefined) {
+                return new Date(
+                    Number(match[3]),
+                    months[match[2]],
+                    Number(match[1])
+                ).getTime();
+            }
+
+            // juin 2026 / Juillet 2026
+            match = normalized.match(/^([a-z]+)\s+(\d{4})$/);
+            if (match && months[match[1]] !== undefined) {
+                return new Date(
+                    Number(match[2]),
+                    months[match[1]],
+                    1
+                ).getTime();
             }
 
             return 0;
         }
 
-        function sortByDateDesc(items, field = 'date') {
+        function sortByDateDesc(items) {
             return [...items].sort((a, b) => {
-                const dateDiff = parseAERIXDate(b?.[field]) - parseAERIXDate(a?.[field]);
-                if (dateDiff !== 0) return dateDiff;
-                // Si deux éléments ont la même date, garder un ordre stable autant que possible.
-                return String(b?.id || '').localeCompare(String(a?.id || ''));
+                const dateA = parseAERIXDate(a?.date);
+                const dateB = parseAERIXDate(b?.date);
+
+                // Plus récent en premier.
+                if (dateA !== dateB) return dateB - dateA;
+
+                // Les éléments sans date restent à la fin.
+                if (dateA === 0 && dateB === 0) {
+                    return String(b?.id || '').localeCompare(String(a?.id || ''));
+                }
+
+                return 0;
             });
         }
 
         function normalizeSimracingPosition(value) {
             const raw = String(value ?? '').trim();
             if (!raw) return 'Classé';
-            if (/^p\\s*\\d+$/i.test(raw)) return raw.replace(/\\s+/g, '').toUpperCase();
-            if (/^\\d+$/.test(raw)) return `P${raw}`;
-            if (/^(\\d+)(?:er|e|ème|eme)$/i.test(raw)) return `P${raw.match(/^\\d+/)[0]}`;
+
+            // Déjà sous forme P1, P2...
+            if (/^p\s*\d+$/i.test(raw)) {
+                return raw.replace(/\s+/g, '').toUpperCase();
+            }
+
+            // 1, 2, 3...
+            if (/^\d+$/.test(raw)) return `P${raw}`;
+
+            // 1er, 2e, 3ème...
+            const match = raw.match(/^(\d+)(?:er|e|ème|eme)$/i);
+            if (match) return `P${match[1]}`;
+
             return raw;
         }
 
@@ -2216,9 +2269,9 @@ function checkAdminSessionTimeout() {
             document.getElementById('admin-list-boutique').innerHTML = globalShop.map(item => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm">${item.name}</div><div class="text-xs text-gray-500">${item.price} €</div></div><div class="flex gap-2"><button onclick="startEditShop('${item.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('shop', '${item.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
             const sortedAdminEffectifs = [...globalEffectifs].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
             document.getElementById('admin-list-effectifs').innerHTML = sortedAdminEffectifs.map((r, idx) => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div class="flex items-center gap-2"><div class="flex flex-col gap-1"><button onclick="moveEffectif('${r.id}', -1)" ${idx === 0 ? 'disabled' : ''} class="w-6 h-6 flex items-center justify-center rounded-md bg-white/10 hover:bg-aerix-purple text-white text-xs transition disabled:opacity-20 disabled:cursor-not-allowed" title="Monter">▲</button><button onclick="moveEffectif('${r.id}', 1)" ${idx === sortedAdminEffectifs.length - 1 ? 'disabled' : ''} class="w-6 h-6 flex items-center justify-center rounded-md bg-white/10 hover:bg-aerix-purple text-white text-xs transition disabled:opacity-20 disabled:cursor-not-allowed" title="Descendre">▼</button></div><div><div class="text-white font-bold text-sm flex items-center gap-2">${r.name} <span class="bg-white/10 text-[9px] px-2 py-0.5 rounded-full">${r.players?.length||0} j.</span></div><div class="text-xs text-gray-500">${r.game || 'Général'}</div></div></div><div class="flex gap-2"><button onclick="startEditEffectif('${r.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('effectifs', '${r.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
-            document.getElementById('admin-list-palmares').innerHTML = sortByDateDesc(globalPalmares).map(p => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm truncate max-w-[150px]">${p.title}</div><div class="text-xs text-gray-500">${p.date || 'Non daté'} · ${p.game || 'Général'}</div></div><div class="flex gap-2"><button onclick="startEditPalmares('${p.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('palmares', '${p.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
+            document.getElementById('admin-list-palmares').innerHTML = sortByDateDesc(globalPalmares).map(p => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm truncate max-w-[150px]">${p.title}</div><div class="text-xs text-gray-500">${p.game || 'Général'}</div></div><div class="flex gap-2"><button onclick="startEditPalmares('${p.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('palmares', '${p.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
             document.getElementById('admin-list-partenaires').innerHTML = globalPartners.map(p => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm">${p.name}</div><div class="text-xs text-gray-500">${p.category || 'Partenaire'}</div></div><div class="flex gap-2"><button onclick="startEditPartner('${p.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('partners', '${p.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
-            document.getElementById('admin-list-annonces').innerHTML = sortByDateDesc(globalAnnonces).map(a => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm truncate max-w-[200px]">${a.title}</div><div class="text-xs text-gray-500">${a.date || 'Non daté'} · ${a.game || 'Général'}</div></div><div class="flex gap-2"><button onclick="startEditAnnouncement('${a.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('annonces', '${a.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 rounded-lg transition">Suppr</button></div></div>`).join('');
+            document.getElementById('admin-list-annonces').innerHTML = sortByDateDesc(globalAnnonces).map(a => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm truncate max-w-[200px]">${a.title}</div><div class="text-xs text-gray-500">${a.date}</div></div><div class="flex gap-2"><button onclick="startEditAnnouncement('${a.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('annonces', '${a.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
             const contactEl = document.getElementById('admin-list-contact');
             if (contactEl) {
                 const contactOnly = globalContactRequests.filter(t => t.type !== 'coaching');
@@ -2388,7 +2441,7 @@ function checkAdminSessionTimeout() {
             document.getElementById('add-palm-score').value = item.score || '';
             document.getElementById('add-palm-result').value = item.result || 'Victoire';
             // Simracing Fields
-            document.getElementById('add-palm-position').value = item.position ? normalizeSimracingPosition(item.position) : '';
+            document.getElementById('add-palm-position').value = normalizeSimracingPosition(item.position);
             document.getElementById('add-palm-split').value = item.split || '';
             document.getElementById('add-palm-car').value = item.car || '';
             
