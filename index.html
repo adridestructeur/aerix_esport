@@ -212,6 +212,7 @@
                 <button id="nav-annonces" onclick="navigate('annonces')" class="nav-btn hover:text-white" data-i18n="nav_annonces">Annonces</button>
                 <button id="nav-boutique" onclick="navigate('boutique')" class="nav-btn hover:text-white" data-i18n="nav_boutique">Boutique</button>
                 <button id="nav-partenaires" onclick="navigate('partenaires')" class="nav-btn hover:text-white" data-i18n="nav_partenaires">Partenaires</button>
+                <button id="nav-coaching" onclick="openCoachingModal()" class="nav-btn hover:text-white" data-i18n="nav_coaching">Coaching</button>
             </div>
 
             <div class="hidden md:flex items-center gap-3">
@@ -246,6 +247,7 @@
             <button onclick="navigate('annonces'); toggleMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_annonces">Annonces</button>
             <button onclick="navigate('boutique'); toggleMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_boutique">Boutique</button>
             <button onclick="navigate('partenaires'); toggleMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_partenaires">Partenaires</button>
+            <button onclick="openCoachingModal(); toggleMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_coaching">Coaching</button>
             <div id="mobile-account-area"></div>
             <a href="https://discord.gg/dJcHwYT4HY" target="_blank" rel="noopener noreferrer" class="text-center text-xs text-white py-3.5 rounded-xl border border-aerix-purple/40 bg-aerix-purple/20 font-bold flex items-center justify-center gap-2">
                 <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.927 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
@@ -546,6 +548,91 @@
         </div>
     </div>
 
+    <!-- MODAL : COACHING (CÔTÉ PILOTE) -->
+    <div id="coaching-modal" class="fixed inset-0 z-[212] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl">
+        <div class="glass-panel-no-hover w-full max-w-3xl max-h-[92vh] overflow-y-auto rounded-[2rem] p-6 md:p-9">
+            <div class="flex justify-between items-center mb-7 border-b border-white/10 pb-4">
+                <div>
+                    <p class="text-[10px] uppercase tracking-[.2em] text-aerix-purple font-bold mb-1">AERIX COACHING</p>
+                    <h3 class="text-2xl font-black text-white" data-i18n="coaching_title">Réserver un coaching</h3>
+                    <p class="text-xs text-gray-500 mt-1" data-i18n="coaching_subtitle">Le Mans Ultimate & iRacing — coaching individuel ou en groupe.</p>
+                </div>
+                <button onclick="closeCoachingModal()" class="text-gray-400 hover:text-white bg-white/5 w-9 h-9 rounded-full shrink-0">✕</button>
+            </div>
+
+            <div id="coaching-login-warning" class="hidden rounded-xl border border-yellow-500/20 bg-yellow-500/10 p-4 text-xs text-yellow-200 mb-6" data-i18n="contact_login_required">Tu dois être connecté pour ouvrir un ticket.</div>
+
+            <div id="coaching-form" class="space-y-8">
+
+                <!-- 1. INFORMATIONS -->
+                <div>
+                    <h4 class="text-xs font-bold text-aerix-purple uppercase tracking-widest mb-3" data-i18n="coaching_step_infos">1. Informations</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <input id="coaching-username" type="text" readonly class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-gray-400 text-sm outline-none" placeholder="Pseudo">
+                        <input id="coaching-email" type="email" readonly class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-gray-400 text-sm outline-none" placeholder="Adresse email">
+                        <input id="coaching-discord" type="text" maxlength="60" data-i18n-placeholder="coaching_discord_placeholder" placeholder="Pseudo Discord" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
+                    </div>
+                </div>
+
+                <!-- 2. PROFIL SIMRACING -->
+                <div>
+                    <h4 class="text-xs font-bold text-aerix-purple uppercase tracking-widest mb-3" data-i18n="coaching_step_profile">2. Profil Simracing</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <select id="coaching-game" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
+                            <option value="Le Mans Ultimate">Le Mans Ultimate</option>
+                            <option value="iRacing">iRacing</option>
+                        </select>
+                        <select id="coaching-level" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
+                            <option value="Débutant" data-i18n="coaching_level_beginner">Débutant</option>
+                            <option value="Intermédiaire" data-i18n="coaching_level_intermediate">Intermédiaire</option>
+                            <option value="Confirmé" data-i18n="coaching_level_advanced">Confirmé</option>
+                            <option value="Compétition" data-i18n="coaching_level_competition">Compétition</option>
+                        </select>
+                        <select id="coaching-duration" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
+                            <option value="1h">1h</option>
+                            <option value="2h">2h</option>
+                            <option value="3h">3h</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 3. FORMAT & TARIFS -->
+                <div>
+                    <h4 class="text-xs font-bold text-aerix-purple uppercase tracking-widest mb-3" data-i18n="coaching_step_format">3. Format & Tarifs</h4>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <button type="button" id="coaching-format-solo" onclick="setCoachingFormat('Solo')" class="filter-btn active !w-full !py-3" data-i18n="coaching_format_solo">Solo</button>
+                        <button type="button" id="coaching-format-groupe" onclick="setCoachingFormat('Groupe')" class="filter-btn !w-full !py-3" data-i18n="coaching_format_group">Groupe</button>
+                    </div>
+                    <div class="rounded-xl border border-aerix-purple/25 bg-aerix-purple/10 p-4 text-xs text-gray-300 leading-relaxed flex items-start gap-3">
+                        <span class="text-aerix-purple text-base leading-none mt-0.5">ⓘ</span>
+                        <span data-i18n="coaching_pricing_notice">Le coaching AERIX est un service payant. Les tarifs varient selon le format choisi (Solo / Groupe), la durée et le niveau demandé. Un devis personnalisé te sera communiqué directement dans ton ticket après validation de ta demande.</span>
+                    </div>
+                </div>
+
+                <!-- 4. CALENDRIER -->
+                <div>
+                    <h4 class="text-xs font-bold text-aerix-purple uppercase tracking-widest mb-3" data-i18n="coaching_step_calendar">4. Choisis une date</h4>
+                    <div class="glass-panel-no-hover rounded-2xl p-5 border border-white/10">
+                        <div class="flex items-center justify-between mb-4">
+                            <button type="button" onclick="shiftCoachingMonth(-1)" class="w-9 h-9 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-aerix-purple/20 hover:border-aerix-purple/40 transition">‹</button>
+                            <div id="coaching-calendar-label" class="text-sm font-bold text-white uppercase tracking-widest"></div>
+                            <button type="button" onclick="shiftCoachingMonth(1)" class="w-9 h-9 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-aerix-purple/20 hover:border-aerix-purple/40 transition">›</button>
+                        </div>
+                        <div class="grid grid-cols-7 gap-1.5 mb-2 text-center text-[10px] font-bold text-gray-500 uppercase tracking-widest" id="coaching-calendar-weekdays"></div>
+                        <div id="coaching-calendar-grid" class="grid grid-cols-7 gap-1.5"></div>
+                        <div class="flex items-center gap-4 mt-4 pt-4 border-t border-white/5 text-[10px] text-gray-500">
+                            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full" style="background:#8B5CF6;box-shadow:0 0 8px #8B5CF6;"></span><span data-i18n="coaching_legend_available">Disponible</span></span>
+                            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-white/10"></span><span data-i18n="coaching_legend_unavailable">Indisponible</span></span>
+                        </div>
+                    </div>
+                    <div id="coaching-selected-date" class="mt-3 text-xs text-gray-400"></div>
+                </div>
+
+                <button id="coaching-submit-btn" onclick="submitCoachingTicket()" class="w-full bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition shadow-[0_0_18px_rgba(139,92,246,.25)]" data-i18n="coaching_submit">Envoyer ma demande</button>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL : CRÉATION / CONNEXION COMPTE -->
     <div id="account-modal" class="fixed inset-0 z-[210] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl">
         <div class="glass-panel w-full max-w-md rounded-[2rem] p-7 md:p-8 shadow-[0_0_50px_rgba(139,92,246,.2)]">
@@ -640,6 +727,7 @@
                 <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('annonces')" id="tab-btn-annonces" class="admin-tab-btn flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10">Actualités</button>
                 <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('partenaires')" id="tab-btn-partenaires" class="admin-tab-btn flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10">Sponsors</button>
                 <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('contact')" id="tab-btn-contact" class="admin-tab-btn flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10" data-i18n="contact_form">Contact</button>
+                <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('coaching')" id="tab-btn-coaching" class="admin-tab-btn flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10" data-i18n="nav_coaching">Coaching</button>
             </div>
 
             <!-- TAB: COMPTES -->
@@ -657,6 +745,29 @@
                     <h4 class="text-lg font-bold text-white mb-2" data-i18n="contact_admin_title">Demandes de contact</h4>
                     <p class="text-xs text-gray-500 mb-5" data-i18n="contact_admin_desc">Consulte et gère les tickets envoyés par les utilisateurs.</p>
                     <div id="admin-list-contact" class="space-y-4"></div>
+                </div>
+            </div>
+
+            <!-- TAB: COACHING -->
+            <div id="admin-tab-coaching" class="admin-tab hidden space-y-10">
+                <div>
+                    <h4 class="text-lg font-bold text-white mb-2" data-i18n="coaching_admin_availability_title">Disponibilités coach</h4>
+                    <p class="text-xs text-gray-500 mb-5" data-i18n="coaching_admin_availability_desc">Ouvre ou ferme tes jours de coaching. Le calendrier public se met à jour en temps réel.</p>
+                    <div class="glass-panel-no-hover rounded-2xl p-5 border border-white/10 max-w-md">
+                        <div class="flex items-center justify-between mb-4">
+                            <button type="button" onclick="shiftAdminCoachingMonth(-1)" class="w-9 h-9 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-aerix-purple/20 hover:border-aerix-purple/40 transition">‹</button>
+                            <div id="admin-coaching-calendar-label" class="text-sm font-bold text-white uppercase tracking-widest"></div>
+                            <button type="button" onclick="shiftAdminCoachingMonth(1)" class="w-9 h-9 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-aerix-purple/20 hover:border-aerix-purple/40 transition">›</button>
+                        </div>
+                        <div class="grid grid-cols-7 gap-1.5 mb-2 text-center text-[10px] font-bold text-gray-500 uppercase tracking-widest" id="admin-coaching-calendar-weekdays"></div>
+                        <div id="admin-coaching-calendar-grid" class="grid grid-cols-7 gap-1.5"></div>
+                        <p class="text-[10px] text-gray-500 mt-4 pt-4 border-t border-white/5" data-i18n="coaching_admin_availability_hint">Clique sur une date pour ouvrir ou fermer ce créneau.</p>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-lg font-bold text-white mb-2" data-i18n="coaching_admin_requests_title">Demandes de coaching</h4>
+                    <p class="text-xs text-gray-500 mb-5" data-i18n="coaching_admin_requests_desc">Centralisées avec les autres tickets — réponds pour envoyer un devis personnalisé.</p>
+                    <div id="admin-list-coaching" class="space-y-4"></div>
                 </div>
             </div>
 
@@ -919,6 +1030,15 @@
         let globalAccounts = [];
         let globalContactRequests = [];
         let userTickets = [];
+        let globalCoachAvailability = {}; // { 'YYYY-MM-DD': true }
+
+        // Calendrier coaching (côté pilote)
+        let coachingCalendarDate = new Date();
+        let coachingSelectedDate = null;
+        let coachingFormat = 'Solo';
+
+        // Calendrier coaching (côté admin)
+        let adminCoachingCalendarDate = new Date();
 
         // VARIABLES GLOBALES
         let globalShop = [], globalEffectifs = [], globalPalmares = [], globalAnnonces = [], globalPartners = [];
@@ -943,7 +1063,15 @@
                 admin_secure_title: "Accès Sécurisé", admin_secure_desc: "Confirme ton mot de passe pour accéder au panel d'administration", admin_secure_placeholder: "Mot de passe...", cancel: "Annuler", confirm: "Confirmer",
                 username_placeholder: "Pseudo", email_placeholder: "Adresse email", already_account_signin: "J'ai déjà un compte — Se connecter",
                 account_login_desc: "Connecte-toi avec ton compte AERIX.", password_placeholder: "Mot de passe", forgot_password: "Mot de passe oublié ?",
-                account_register_desc: "Crée directement ton compte AERIX avec ton pseudo, ton email et ton mot de passe.", password_min_placeholder: "Mot de passe (8 caractères min.)", create_account: "Créer le compte", registered_accounts_title: "Comptes enregistrés", registered_accounts_desc: "Tous les comptes créés sur le site. Le Owner peut attribuer ou retirer le rôle Admin.", contact_admin_title: "Demandes de contact", contact_admin_desc: "Consulte et gère les tickets envoyés par les utilisateurs.", contact_title: "Contact AERIX", contact_desc: "Choisis Discord ou ouvre un ticket directement depuis le site.", contact_discord: "Contacter sur Discord", contact_form: "Formulaire de contact", contact_login_required: "Tu dois être connecté pour ouvrir un ticket.", ticket: "Tickets", no_tickets: "Aucun ticket en cours.", ticket_status: "Statut", ticket_category: "Catégorie", ticket_subject: "Sujet", ticket_message: "Message", ticket_send: "Envoyer le ticket", ticket_close: "Fermer", ticket_reply: "Réponse AERIX", ticket_created: "Ticket créé.", ticket_updated: "Ticket mis à jour.", ticket_required: "Sujet et message obligatoires.", contact_category_partnership: "Partenariat", contact_category_question: "Question", contact_category_other: "Autre demande", contact_status_new: "Nouveau", contact_status_progress: "En cours", contact_status_done: "Traité", contact_status_archived: "Archivé", role_user: "Utilisateur", role_admin: "Admin", role_owner: "Owner"
+                account_register_desc: "Crée directement ton compte AERIX avec ton pseudo, ton email et ton mot de passe.", password_min_placeholder: "Mot de passe (8 caractères min.)", create_account: "Créer le compte", registered_accounts_title: "Comptes enregistrés", registered_accounts_desc: "Tous les comptes créés sur le site. Le Owner peut attribuer ou retirer le rôle Admin.", contact_admin_title: "Demandes de contact", contact_admin_desc: "Consulte et gère les tickets envoyés par les utilisateurs.", contact_title: "Contact AERIX", contact_desc: "Choisis Discord ou ouvre un ticket directement depuis le site.", contact_discord: "Contacter sur Discord", contact_form: "Formulaire de contact", contact_login_required: "Tu dois être connecté pour ouvrir un ticket.", ticket: "Tickets", no_tickets: "Aucun ticket en cours.", ticket_status: "Statut", ticket_category: "Catégorie", ticket_subject: "Sujet", ticket_message: "Message", ticket_send: "Envoyer le ticket", ticket_close: "Fermer", ticket_reply: "Réponse AERIX", ticket_created: "Ticket créé.", ticket_updated: "Ticket mis à jour.", ticket_required: "Sujet et message obligatoires.", contact_category_partnership: "Partenariat", contact_category_question: "Question", contact_category_other: "Autre demande", contact_status_new: "Nouveau", contact_status_progress: "En cours", contact_status_done: "Traité", contact_status_archived: "Archivé", role_user: "Utilisateur", role_admin: "Admin", role_owner: "Owner",
+                nav_coaching: "Coaching", coaching_title: "Réserver un coaching", coaching_subtitle: "Le Mans Ultimate & iRacing — coaching individuel ou en groupe.",
+                coaching_step_infos: "1. Informations", coaching_step_profile: "2. Profil Simracing", coaching_step_format: "3. Format & Tarifs", coaching_step_calendar: "4. Choisis une date",
+                coaching_discord_placeholder: "Pseudo Discord", coaching_level_beginner: "Débutant", coaching_level_intermediate: "Intermédiaire", coaching_level_advanced: "Confirmé", coaching_level_competition: "Compétition",
+                coaching_format_solo: "Solo", coaching_format_group: "Groupe",
+                coaching_pricing_notice: "Le coaching AERIX est un service payant. Les tarifs varient selon le format choisi (Solo / Groupe), la durée et le niveau demandé. Un devis personnalisé te sera communiqué directement dans ton ticket après validation de ta demande.",
+                coaching_legend_available: "Disponible", coaching_legend_unavailable: "Indisponible", coaching_submit: "Envoyer ma demande",
+                coaching_admin_availability_title: "Disponibilités coach", coaching_admin_availability_desc: "Ouvre ou ferme tes jours de coaching. Le calendrier public se met à jour en temps réel.", coaching_admin_availability_hint: "Clique sur une date pour ouvrir ou fermer ce créneau.",
+                coaching_admin_requests_title: "Demandes de coaching", coaching_admin_requests_desc: "Centralisées avec les autres tickets — réponds pour envoyer un devis personnalisé."
             },
             en: {
                 nav_home: "Home", nav_effectifs: "Rosters", nav_palmares: "Results", nav_histoire: "History", nav_boutique: "Shop", nav_partenaires: "Partners", nav_annonces: "News",
@@ -962,7 +1090,16 @@
                 admin_secure_title: "Secure Access", admin_secure_desc: "Confirm your password to access the administration panel", admin_secure_placeholder: "Password...", cancel: "Cancel", confirm: "Confirm",
                 username_placeholder: "Username", email_placeholder: "Email address", already_account_signin: "Already have an account — Sign in",
                 account_login_desc: "Sign in with your AERIX account.", password_placeholder: "Password", forgot_password: "Forgot your password?",
-                account_register_desc: "Create your AERIX account directly with your username, email and password.", password_min_placeholder: "Password (8+ characters)", create_account: "Create account", registered_accounts_title: "Registered accounts", registered_accounts_desc: "All accounts created on the website. The Owner can grant or revoke the Admin role."
+                account_register_desc: "Create your AERIX account directly with your username, email and password.", password_min_placeholder: "Password (8+ characters)", create_account: "Create account", registered_accounts_title: "Registered accounts", registered_accounts_desc: "All accounts created on the website. The Owner can grant or revoke the Admin role.",
+                contact_admin_title: "Contact requests", contact_admin_desc: "Review and manage tickets sent by users.", contact_title: "Contact AERIX", contact_desc: "Choose Discord or open a ticket directly from the website.", contact_discord: "Contact on Discord", contact_form: "Contact form", contact_login_required: "Sign in to open a ticket.", ticket: "Tickets", no_tickets: "No active tickets.", ticket_status: "Status", ticket_category: "Category", ticket_subject: "Subject", ticket_message: "Message", ticket_send: "Send the ticket", ticket_close: "Close", ticket_reply: "AERIX reply", ticket_created: "Ticket created.", ticket_updated: "Ticket updated.", ticket_required: "Subject and message are required.", contact_category_partnership: "Partnership", contact_category_question: "Question", contact_category_other: "Other request", contact_status_new: "New", contact_status_progress: "In progress", contact_status_done: "Resolved", contact_status_archived: "Archived", role_user: "User", role_admin: "Admin", role_owner: "Owner",
+                nav_coaching: "Coaching", coaching_title: "Book a coaching session", coaching_subtitle: "Le Mans Ultimate & iRacing — solo or group coaching.",
+                coaching_step_infos: "1. Information", coaching_step_profile: "2. Simracing profile", coaching_step_format: "3. Format & pricing", coaching_step_calendar: "4. Pick a date",
+                coaching_discord_placeholder: "Discord username", coaching_level_beginner: "Beginner", coaching_level_intermediate: "Intermediate", coaching_level_advanced: "Advanced", coaching_level_competition: "Competition",
+                coaching_format_solo: "Solo", coaching_format_group: "Group",
+                coaching_pricing_notice: "AERIX coaching is a paid service. Pricing varies depending on the chosen format (Solo / Group), duration and requested level. A personalized quote will be sent directly in your ticket once your request is validated.",
+                coaching_legend_available: "Available", coaching_legend_unavailable: "Unavailable", coaching_submit: "Send my request",
+                coaching_admin_availability_title: "Coach availability", coaching_admin_availability_desc: "Open or close your coaching days. The public calendar updates in real time.", coaching_admin_availability_hint: "Click a date to open or close that slot.",
+                coaching_admin_requests_title: "Coaching requests", coaching_admin_requests_desc: "Centralized with the other tickets — reply to send a personalized quote."
             }
         };
         let currentLang = localStorage.getItem('aerix_lang') || ((navigator.language || '').toLowerCase().startsWith('en') ? 'en' : 'fr');
@@ -1084,7 +1221,17 @@
             db.collection("annonces").orderBy("date", "desc").onSnapshot((snapshot) => { globalAnnonces = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderAnnonces(); renderAdminLists(); }, error => { /* Fallback if no index */ globalAnnonces = []; db.collection("annonces").get().then(s => { globalAnnonces = s.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderAnnonces(); renderAdminLists(); }); });
             db.collection("partners").onSnapshot((snapshot) => { globalPartners = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderPartners(); renderAdminLists(); });
             db.collection("accounts").onSnapshot((snapshot) => { globalAccounts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderAdminLists(); }, () => { globalAccounts = []; renderAdminLists(); });
-            db.collection("contactRequests").orderBy("createdAt", "desc").onSnapshot((snapshot) => { globalContactRequests = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderAdminLists(); }, () => { globalContactRequests = []; renderAdminLists(); });
+            db.collection("contactRequests").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
+                globalContactRequests = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderAdminLists();
+                if (currentUser) { userTickets = globalContactRequests.filter(t => t.uid === currentUser.uid); if (!document.getElementById('tickets-modal').classList.contains('hidden')) renderUserTickets(); updateTicketsBadge(); }
+            }, () => { globalContactRequests = []; renderAdminLists(); updateTicketsBadge(); });
+            db.collection("coachAvailability").onSnapshot((snapshot) => {
+                globalCoachAvailability = {};
+                snapshot.docs.forEach(doc => { if (doc.data().open) globalCoachAvailability[doc.id] = true; });
+                if (document.getElementById('coaching-modal') && !document.getElementById('coaching-modal').classList.contains('hidden')) renderCoachingCalendar();
+                if (document.getElementById('admin-tab-coaching') && !document.getElementById('admin-tab-coaching').classList.contains('hidden')) renderAdminCoachingCalendar();
+            }, () => { globalCoachAvailability = {}; });
             checkCookies();
         }
 
@@ -1497,10 +1644,11 @@ function checkAdminSessionTimeout() {
                 : `<span class="w-12 h-12 rounded-full bg-aerix-purple/25 border border-aerix-purple/50 flex items-center justify-center text-base font-black">${escapeHtml((currentAccount?.username || 'A').charAt(0).toUpperCase())}</span>`;
             const buildHtml = (menuId) => currentUser && currentAccount ? `
                 <div class="relative group">
-                    <button onclick="toggleAccountMenu(event, '${menuId}')" class="text-xs text-white transition px-4 py-1.5 rounded-full border border-aerix-purple/40 bg-aerix-purple/10 hover:bg-aerix-purple/20 font-medium flex items-center gap-2">
+                    <button onclick="toggleAccountMenu(event, '${menuId}')" class="relative text-xs text-white transition px-4 py-1.5 rounded-full border border-aerix-purple/40 bg-aerix-purple/10 hover:bg-aerix-purple/20 font-medium flex items-center gap-2">
                         ${avatarHtml}
                         <span>${escapeHtml(currentAccount.username || currentUser.email || 'Account')}</span>
                         <span>▾</span>
+                        <span class="tickets-notif-badge hidden absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-aerix-purple text-white text-[10px] font-black flex items-center justify-center shadow-[0_0_10px_rgba(139,92,246,0.8)] border border-black/40">1</span>
                     </button>
                     <div id="${menuId}" class="account-menu hidden absolute right-0 top-11 w-56 glass-panel-no-hover rounded-2xl p-2 z-[250] border border-white/10 shadow-2xl">
                         <div class="flex items-center gap-3 px-2 py-2 mb-1 border-b border-white/10">
@@ -1510,7 +1658,7 @@ function checkAdminSessionTimeout() {
                             </div>
                             <div class="min-w-0"><div class="text-white text-xs font-bold truncate">${escapeHtml(currentAccount.username || '')}</div><div class="text-gray-500 text-[10px] truncate">${escapeHtml(currentAccount.email || currentUser.email || '')}</div></div>
                         </div>
-                        <button onclick="openTicketsModal()" class="account-menu-item w-full text-left px-3 py-2.5 text-xs font-bold text-white rounded-xl">🎫 ${currentLang === 'en' ? 'Tickets' : 'Tickets'}</button>
+                        <button onclick="openTicketsModal()" class="account-menu-item w-full text-left px-3 py-2.5 text-xs font-bold text-white rounded-xl flex items-center justify-between">🎫 ${currentLang === 'en' ? 'Tickets' : 'Tickets'}<span class="tickets-notif-badge hidden min-w-[18px] h-[18px] px-1 rounded-full bg-aerix-purple text-white text-[10px] font-black flex items-center justify-center">1</span></button>
                         ${hasAdminAccess() ? `<button onclick="openAdminFromAccount()" class="account-menu-item w-full text-left px-3 py-2.5 text-xs font-bold text-white rounded-xl">${currentLang === 'en' ? 'Admin panel' : 'Administration'}</button>` : ''}
                         <button onclick="logoutAccount()" class="account-menu-item w-full text-left px-3 py-2.5 text-xs font-bold text-gray-300 rounded-xl">${currentLang === 'en' ? 'Sign out' : 'Déconnexion'}</button>
                     </div>
@@ -1521,6 +1669,7 @@ function checkAdminSessionTimeout() {
                 const html = buildHtml(menuId);
                 el.innerHTML = i === 1 && !currentUser ? html.replace('px-4 py-1.5', 'py-3.5 px-4') : html;
             });
+            updateTicketsBadge();
         }
         function toggleAccountMenu(event, menuId) { if(event) event.stopPropagation(); document.querySelectorAll('.account-menu').forEach(m => { if(m.id !== menuId) m.classList.add('hidden'); }); document.getElementById(menuId)?.classList.toggle('hidden'); }
         document.addEventListener('click', e => { if(e.target.closest('#account-area') || e.target.closest('#mobile-account-area')) return; document.querySelectorAll('.account-menu').forEach(m => m.classList.add('hidden')); });
@@ -1639,14 +1788,34 @@ function checkAdminSessionTimeout() {
                 const snap = await db.collection('contactRequests').where('uid','==',currentUser.uid).orderBy('createdAt','desc').get();
                 userTickets = snap.docs.map(d => ({id:d.id,...d.data()}));
                 renderUserTickets();
+                markTicketsAsRead();
             } catch(e) {
                 console.error(e);
                 try {
                     const snap = await db.collection('contactRequests').where('uid','==',currentUser.uid).get();
                     userTickets = snap.docs.map(d => ({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
                     renderUserTickets();
+                    markTicketsAsRead();
                 } catch(err) { console.error(err); el.innerHTML = `<p class="text-red-300 text-sm">${currentLang==='en'?'Unable to load your tickets.':'Impossible de charger tes tickets.'}</p>`; }
             }
+        }
+        // Dès que le pilote ouvre sa modale de tickets, la réponse admin est considérée comme lue :
+        // le badge de notification s'efface (unreadByUser passe à false pour tous les tickets répondus).
+        async function markTicketsAsRead() {
+            if (!currentUser) return;
+            const toClear = userTickets.filter(t => t.unreadByUser);
+            updateTicketsBadge();
+            if (!toClear.length) return;
+            try {
+                await Promise.all(toClear.map(t => db.collection('contactRequests').doc(t.id).update({ unreadByUser: false })));
+            } catch(e) { console.error(e); }
+        }
+        function updateTicketsBadge() {
+            const count = currentUser ? userTickets.filter(t => t.unreadByUser).length : 0;
+            document.querySelectorAll('.tickets-notif-badge').forEach(b => {
+                if (count > 0) { b.textContent = count > 9 ? '9+' : String(count); b.classList.remove('hidden'); }
+                else b.classList.add('hidden');
+            });
         }
         function renderUserTickets() {
             const el = document.getElementById('user-tickets-list');
@@ -1655,7 +1824,9 @@ function checkAdminSessionTimeout() {
             const active = userTickets.filter(t => (t.status || 'new') !== 'archived');
             el.innerHTML = active.length ? active.map(t => {
                 const status=t.status||'new'; const cls=status==='done'?'text-green-400 bg-green-500/10':status==='progress'?'text-blue-300 bg-blue-500/10':'text-yellow-300 bg-yellow-500/10';
-                return `<div class="glass-panel p-5 rounded-2xl"><div class="flex flex-col md:flex-row md:items-start md:justify-between gap-3"><div><div class="text-white font-bold text-base">${escapeHtml(t.subject||'—')}</div><div class="text-[10px] uppercase tracking-widest text-aerix-purple mt-2">${escapeHtml(t.category||'Autre demande')}</div></div><span class="self-start px-2.5 py-1 rounded-full text-[10px] font-bold ${cls}">${labels[status]||status}</span></div><div class="mt-4 text-xs text-gray-400 whitespace-pre-wrap break-words">${escapeHtml(t.message||'')}</div>${t.adminReply?`<div class="mt-4 pt-4 border-t border-white/10"><div class="text-[10px] uppercase tracking-widest text-aerix-purple font-bold mb-2">${currentLang==='en'?'AERIX reply':'Réponse AERIX'}</div><div class="text-xs text-gray-300 whitespace-pre-wrap break-words">${escapeHtml(t.adminReply)}</div></div>`:''}</div>`;
+                const isCoaching = t.type === 'coaching';
+                const coachingInfo = isCoaching ? `<div class="mt-3 grid grid-cols-2 gap-2 text-[11px] text-gray-400"><div><span class="text-gray-600">${currentLang==='en'?'Game':'Jeu'} :</span> ${escapeHtml(t.coachGame||'—')}</div><div><span class="text-gray-600">${currentLang==='en'?'Format':'Format'} :</span> ${escapeHtml(t.coachFormat||'—')}</div><div><span class="text-gray-600">${currentLang==='en'?'Duration':'Durée'} :</span> ${escapeHtml(t.coachDuration||'—')}</div><div><span class="text-gray-600">${currentLang==='en'?'Date':'Date'} :</span> ${escapeHtml(t.coachDate||'—')}</div></div>` : '';
+                return `<div class="glass-panel p-5 rounded-2xl"><div class="flex flex-col md:flex-row md:items-start md:justify-between gap-3"><div><div class="text-white font-bold text-base">${escapeHtml(t.subject||'—')}</div><div class="text-[10px] uppercase tracking-widest text-aerix-purple mt-2">${escapeHtml(t.category||'Autre demande')}</div></div><span class="self-start px-2.5 py-1 rounded-full text-[10px] font-bold ${cls}">${labels[status]||status}</span></div><div class="mt-4 text-xs text-gray-400 whitespace-pre-wrap break-words">${escapeHtml(t.message||'')}</div>${coachingInfo}${t.adminReply?`<div class="mt-4 pt-4 border-t border-white/10"><div class="text-[10px] uppercase tracking-widest text-aerix-purple font-bold mb-2">${currentLang==='en'?'AERIX reply':'Réponse AERIX'}</div><div class="text-xs text-gray-300 whitespace-pre-wrap break-words">${escapeHtml(t.adminReply)}</div></div>`:''}</div>`;
             }).join('') : `<p class="text-gray-500 text-sm italic">${currentLang==='en'?'No active tickets.':'Aucun ticket en cours.'}</p>`;
         }
         async function updateTicketStatus(id, status) {
@@ -1667,12 +1838,158 @@ function checkAdminSessionTimeout() {
             const t=globalContactRequests.find(x=>x.id===id); if(!t) return;
             const reply=prompt(currentLang==='en'?'AERIX reply:':'Réponse AERIX :',t.adminReply||'');
             if(reply===null) return;
-            try { await db.collection('contactRequests').doc(id).update({adminReply:reply.trim(),updatedAt:firebase.firestore.FieldValue.serverTimestamp(),status:reply.trim()?'progress':(t.status||'new')}); showToast(currentLang==='en'?'Reply saved.':'Réponse enregistrée.'); } catch(e) { console.error(e); showToast(currentLang==='en'?'Reply failed.':'Échec de la réponse.','error'); }
+            try { await db.collection('contactRequests').doc(id).update({adminReply:reply.trim(),updatedAt:firebase.firestore.FieldValue.serverTimestamp(),status:reply.trim()?'progress':(t.status||'new'),unreadByUser:!!reply.trim()}); showToast(currentLang==='en'?'Reply saved.':'Réponse enregistrée.'); } catch(e) { console.error(e); showToast(currentLang==='en'?'Reply failed.':'Échec de la réponse.','error'); }
         }
         async function deleteContactTicket(id) {
             if(!isOwner()) return showToast(currentLang==='en'?'Only the Owner can delete tickets.':'Seul le Owner peut supprimer les tickets.','error');
             if(!confirm(currentLang==='en'?'Delete this ticket permanently?':'Supprimer définitivement ce ticket ?')) return;
             try { await db.collection('contactRequests').doc(id).delete(); showToast(currentLang==='en'?'Ticket deleted.':'Ticket supprimé.'); } catch(e) { console.error(e); showToast(currentLang==='en'?'Deletion failed.':'Échec de la suppression.','error'); }
+        }
+
+        // ============ COACHING (CÔTÉ PILOTE) ============
+        function openCoachingModal() {
+            document.querySelectorAll('.account-menu, #mobile-menu').forEach(m => m.classList.add('hidden'));
+            document.getElementById('coaching-modal')?.classList.remove('hidden');
+            const warning = document.getElementById('coaching-login-warning');
+            const form = document.getElementById('coaching-form');
+            const logged = !!currentUser && !!currentAccount;
+            warning?.classList.toggle('hidden', logged);
+            form?.classList.toggle('hidden', !logged);
+            if (logged) {
+                document.getElementById('coaching-username').value = currentAccount.username || '';
+                document.getElementById('coaching-email').value = currentUser.email || currentAccount.email || '';
+            }
+            coachingSelectedDate = null;
+            coachingCalendarDate = new Date();
+            setCoachingFormat('Solo');
+            renderCoachingCalendar();
+        }
+        function closeCoachingModal() { document.getElementById('coaching-modal')?.classList.add('hidden'); }
+        function setCoachingFormat(format) {
+            coachingFormat = format;
+            document.getElementById('coaching-format-solo')?.classList.toggle('active', format === 'Solo');
+            document.getElementById('coaching-format-groupe')?.classList.toggle('active', format === 'Groupe');
+        }
+        function pad2(n) { return String(n).padStart(2, '0'); }
+        function dateKey(y, m, d) { return `${y}-${pad2(m + 1)}-${pad2(d)}`; }
+        function shiftCoachingMonth(delta) {
+            coachingCalendarDate = new Date(coachingCalendarDate.getFullYear(), coachingCalendarDate.getMonth() + delta, 1);
+            renderCoachingCalendar();
+        }
+        // Calendrier "Liquid Glass" : seules les dates présentes (et ouvertes) dans
+        // globalCoachAvailability sont cliquables et s'illuminent en violet néon.
+        function renderCoachingCalendar() {
+            const label = document.getElementById('coaching-calendar-label');
+            const weekdaysEl = document.getElementById('coaching-calendar-weekdays');
+            const grid = document.getElementById('coaching-calendar-grid');
+            if (!label || !grid) return;
+            const y = coachingCalendarDate.getFullYear(), m = coachingCalendarDate.getMonth();
+            const monthNamesFr = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+            const monthNamesEn = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+            label.textContent = `${currentLang==='en'?monthNamesEn[m]:monthNamesFr[m]} ${y}`;
+            const weekdaysFr = ['L','M','M','J','V','S','D'], weekdaysEn = ['M','T','W','T','F','S','S'];
+            weekdaysEl.innerHTML = (currentLang==='en'?weekdaysEn:weekdaysFr).map(w => `<div>${w}</div>`).join('');
+            const firstDay = new Date(y, m, 1);
+            const startOffset = (firstDay.getDay() + 6) % 7; // lundi = 0
+            const daysInMonth = new Date(y, m + 1, 0).getDate();
+            const todayKey = dateKey(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+            let cells = '';
+            for (let i = 0; i < startOffset; i++) cells += `<div></div>`;
+            for (let d = 1; d <= daysInMonth; d++) {
+                const key = dateKey(y, m, d);
+                const isAvailable = !!globalCoachAvailability[key] && key >= todayKey;
+                const isSelected = coachingSelectedDate === key;
+                if (isAvailable) {
+                    cells += `<button type="button" onclick="selectCoachingDate('${key}')" class="aspect-square rounded-xl text-xs font-bold flex items-center justify-center transition-all duration-300 ${isSelected ? 'bg-aerix-purple text-white shadow-[0_0_18px_rgba(139,92,246,0.9)] scale-105' : 'bg-aerix-purple/15 text-white border border-aerix-purple/50 hover:bg-aerix-purple/30 hover:shadow-[0_0_14px_rgba(139,92,246,0.6)]'}">${d}</button>`;
+                } else {
+                    cells += `<div class="aspect-square rounded-xl text-xs flex items-center justify-center text-gray-600 bg-white/[0.02] border border-white/5">${d}</div>`;
+                }
+            }
+            grid.innerHTML = cells;
+            const selectedLabel = document.getElementById('coaching-selected-date');
+            if (selectedLabel) {
+                selectedLabel.textContent = coachingSelectedDate
+                    ? (currentLang==='en' ? `Selected date: ${coachingSelectedDate}` : `Date sélectionnée : ${coachingSelectedDate}`)
+                    : (currentLang==='en' ? 'Pick a highlighted date above.' : 'Choisis une date en violet ci-dessus.');
+            }
+        }
+        function selectCoachingDate(key) {
+            coachingSelectedDate = key;
+            renderCoachingCalendar();
+        }
+        async function submitCoachingTicket() {
+            if (!currentUser || !currentAccount) return showToast(currentLang==='en'?'Sign in to create a ticket.':'Connecte-toi pour créer un ticket.','error');
+            if (!coachingSelectedDate) return showToast(currentLang==='en'?'Pick an available date.':'Choisis une date disponible.','error');
+            const discord = document.getElementById('coaching-discord').value.trim();
+            const game = document.getElementById('coaching-game').value;
+            const level = document.getElementById('coaching-level').value;
+            const duration = document.getElementById('coaching-duration').value;
+            const subject = currentLang === 'en' ? `Coaching request — ${game}` : `Demande de coaching — ${game}`;
+            const message = currentLang === 'en'
+                ? `Coaching request.\nGame: ${game}\nLevel: ${level}\nFormat: ${coachingFormat}\nDuration: ${duration}\nRequested date: ${coachingSelectedDate}\nDiscord: ${discord || '—'}`
+                : `Demande de coaching.\nJeu : ${game}\nNiveau : ${level}\nFormat : ${coachingFormat}\nDurée : ${duration}\nDate souhaitée : ${coachingSelectedDate}\nDiscord : ${discord || '—'}`;
+            try {
+                await db.collection('contactRequests').add({
+                    uid: currentUser.uid,
+                    username: currentAccount.username || '',
+                    email: currentUser.email || currentAccount.email || '',
+                    category: 'Coaching',
+                    subject, message,
+                    status: 'new', adminReply: '', unreadByUser: false,
+                    type: 'coaching',
+                    coachDiscord: discord,
+                    coachGame: game,
+                    coachLevel: level,
+                    coachFormat: coachingFormat,
+                    coachDuration: duration,
+                    coachDate: coachingSelectedDate,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                closeCoachingModal();
+                showToast(currentLang==='en'?'Coaching request sent.':'Demande de coaching envoyée.');
+            } catch(e) { console.error(e); showToast(currentLang==='en'?'Unable to send the request.':'Impossible d’envoyer la demande.','error'); }
+        }
+
+        // ============ COACHING (CÔTÉ ADMINISTRATION) ============
+        function shiftAdminCoachingMonth(delta) {
+            adminCoachingCalendarDate = new Date(adminCoachingCalendarDate.getFullYear(), adminCoachingCalendarDate.getMonth() + delta, 1);
+            renderAdminCoachingCalendar();
+        }
+        // Calendrier admin : un clic ouvre/ferme le jour en un clic (écrit directement
+        // dans coachAvailability). Le calendrier public (côté pilote) reflète le
+        // changement en temps réel grâce au onSnapshot dans startSync().
+        function renderAdminCoachingCalendar() {
+            const label = document.getElementById('admin-coaching-calendar-label');
+            const weekdaysEl = document.getElementById('admin-coaching-calendar-weekdays');
+            const grid = document.getElementById('admin-coaching-calendar-grid');
+            if (!label || !grid) return;
+            const y = adminCoachingCalendarDate.getFullYear(), m = adminCoachingCalendarDate.getMonth();
+            const monthNamesFr = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+            const monthNamesEn = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+            label.textContent = `${currentLang==='en'?monthNamesEn[m]:monthNamesFr[m]} ${y}`;
+            const weekdaysFr = ['L','M','M','J','V','S','D'], weekdaysEn = ['M','T','W','T','F','S','S'];
+            weekdaysEl.innerHTML = (currentLang==='en'?weekdaysEn:weekdaysFr).map(w => `<div>${w}</div>`).join('');
+            const firstDay = new Date(y, m, 1);
+            const startOffset = (firstDay.getDay() + 6) % 7;
+            const daysInMonth = new Date(y, m + 1, 0).getDate();
+            const todayKey = dateKey(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+            let cells = '';
+            for (let i = 0; i < startOffset; i++) cells += `<div></div>`;
+            for (let d = 1; d <= daysInMonth; d++) {
+                const key = dateKey(y, m, d);
+                const isOpen = !!globalCoachAvailability[key];
+                const isPast = key < todayKey;
+                cells += `<button type="button" ${isPast ? 'disabled' : `onclick="toggleCoachAvailability('${key}')"`} class="aspect-square rounded-xl text-xs font-bold flex items-center justify-center transition-all duration-300 ${isPast ? 'text-gray-700 bg-white/[0.02] border border-white/5 cursor-not-allowed' : isOpen ? 'bg-aerix-purple text-white shadow-[0_0_14px_rgba(139,92,246,0.8)] hover:opacity-80' : 'bg-white/5 text-gray-400 border border-white/10 hover:border-aerix-purple/40 hover:text-white'}">${d}</button>`;
+            }
+            grid.innerHTML = cells;
+        }
+        async function toggleCoachAvailability(key) {
+            if (!hasAdminAccess()) return;
+            const isOpen = !!globalCoachAvailability[key];
+            try {
+                await db.collection('coachAvailability').doc(key).set({ open: !isOpen, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+            } catch(e) { console.error(e); showToast(currentLang==='en'?'Update failed.':'Échec de la mise à jour.','error'); }
         }
 
         function openAdminFromAccount() {
@@ -1728,6 +2045,7 @@ function checkAdminSessionTimeout() {
                     showToast(currentLang === 'en' ? 'Unable to load your account.' : 'Impossible de charger ton compte.', 'error');
                 }
             }
+            userTickets = user ? globalContactRequests.filter(t => t.uid === user.uid) : [];
             renderAccountArea();
             applyAdminTabVisibility();
         });
@@ -1750,13 +2068,25 @@ function checkAdminSessionTimeout() {
             document.getElementById('admin-list-annonces').innerHTML = globalAnnonces.map(a => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm truncate max-w-[200px]">${a.title}</div><div class="text-xs text-gray-500">${a.date}</div></div><div class="flex gap-2"><button onclick="startEditAnnouncement('${a.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('annonces', '${a.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
             const contactEl = document.getElementById('admin-list-contact');
             if (contactEl) {
-                const statusLabels = currentLang === 'en' ? { new: 'New', progress: 'In progress', done: 'Resolved', archived: 'Archived' } : { new: 'Nouveau', progress: 'En cours', done: 'Traité', archived: 'Archivé' };
-                contactEl.innerHTML = globalContactRequests.length ? globalContactRequests.map(t => {
-                    const status = t.status || 'new';
-                    const statusClass = status === 'done' ? 'text-green-400 bg-green-500/10' : status === 'archived' ? 'text-gray-400 bg-white/5' : status === 'progress' ? 'text-blue-300 bg-blue-500/10' : 'text-yellow-300 bg-yellow-500/10';
-                    return `<div class="glass-panel p-5 rounded-2xl"><div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4"><div class="min-w-0"><div class="flex flex-wrap items-center gap-2 mb-2"><span class="text-white font-bold text-sm">${escapeHtml(t.subject || '—')}</span><span class="px-2 py-1 rounded-full text-[10px] font-bold ${statusClass}">${statusLabels[status] || status}</span></div><div class="text-xs text-gray-500">${escapeHtml(t.username || '—')} · ${escapeHtml(t.email || '—')}</div><div class="text-[10px] uppercase tracking-widest text-aerix-purple mt-2">${escapeHtml(t.category || 'Autre demande')}</div></div><select onchange="updateTicketStatus('${t.id}', this.value)" class="bg-black/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none"><option value="new" ${status==='new'?'selected':''}>${statusLabels.new}</option><option value="progress" ${status==='progress'?'selected':''}>${statusLabels.progress}</option><option value="done" ${status==='done'?'selected':''}>${statusLabels.done}</option><option value="archived" ${status==='archived'?'selected':''}>${statusLabels.archived}</option></select></div><div class="mt-4 bg-black/35 border border-white/5 rounded-xl p-4"><div class="text-xs text-gray-300 whitespace-pre-wrap break-words">${escapeHtml(t.message || '')}</div>${t.adminReply ? `<div class="mt-4 pt-4 border-t border-white/10"><div class="text-[10px] uppercase tracking-widest text-aerix-purple font-bold mb-2">${currentLang==='en'?'AERIX reply':'Réponse AERIX'}</div><div class="text-xs text-gray-300 whitespace-pre-wrap break-words">${escapeHtml(t.adminReply)}</div></div>` : ''}</div><div class="flex gap-2 mt-3"><button onclick="replyToTicket('${t.id}')" class="text-xs font-bold px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-aerix-purple/20">${currentLang==='en'?'Reply':'Répondre'}</button><button onclick="deleteContactTicket('${t.id}')" class="text-xs font-bold px-3 py-2 rounded-xl bg-red-500/10 text-red-300 hover:bg-red-500/20">${currentLang==='en'?'Delete':'Supprimer'}</button></div></div>`;
-                }).join('') : `<p class="text-gray-500 text-sm italic">${currentLang==='en'?'No contact requests.':'Aucun ticket.'}</p>`;
+                const contactOnly = globalContactRequests.filter(t => t.type !== 'coaching');
+                contactEl.innerHTML = contactOnly.length ? contactOnly.map(t => renderAdminTicketCard(t)).join('') : `<p class="text-gray-500 text-sm italic">${currentLang==='en'?'No contact requests.':'Aucun ticket.'}</p>`;
             }
+            const coachingEl = document.getElementById('admin-list-coaching');
+            if (coachingEl) {
+                const coachingOnly = globalContactRequests.filter(t => t.type === 'coaching');
+                coachingEl.innerHTML = coachingOnly.length ? coachingOnly.map(t => renderAdminTicketCard(t)).join('') : `<p class="text-gray-500 text-sm italic">${currentLang==='en'?'No coaching requests.':'Aucune demande de coaching.'}</p>`;
+            }
+        }
+        // Carte de ticket réutilisée pour les onglets admin "Contact" et "Coaching" :
+        // les demandes de coaching arrivent dans la même base (contactRequests) et affichent
+        // en plus le récapitulatif jeu / format / durée / date choisie par le pilote.
+        function renderAdminTicketCard(t) {
+            const statusLabels = currentLang === 'en' ? { new: 'New', progress: 'In progress', done: 'Resolved', archived: 'Archived' } : { new: 'Nouveau', progress: 'En cours', done: 'Traité', archived: 'Archivé' };
+            const status = t.status || 'new';
+            const statusClass = status === 'done' ? 'text-green-400 bg-green-500/10' : status === 'archived' ? 'text-gray-400 bg-white/5' : status === 'progress' ? 'text-blue-300 bg-blue-500/10' : 'text-yellow-300 bg-yellow-500/10';
+            const isCoaching = t.type === 'coaching';
+            const coachingInfo = isCoaching ? `<div class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3 text-[11px] text-gray-400 bg-black/25 border border-white/5 rounded-xl p-3"><div><span class="text-gray-600 block">${currentLang==='en'?'Game':'Jeu'}</span>${escapeHtml(t.coachGame||'—')}</div><div><span class="text-gray-600 block">${currentLang==='en'?'Level':'Niveau'}</span>${escapeHtml(t.coachLevel||'—')}</div><div><span class="text-gray-600 block">${currentLang==='en'?'Format':'Format'}</span>${escapeHtml(t.coachFormat||'—')} · ${escapeHtml(t.coachDuration||'—')}</div><div><span class="text-gray-600 block">${currentLang==='en'?'Date':'Date'}</span>${escapeHtml(t.coachDate||'—')}</div>${t.coachDiscord ? `<div class="col-span-2 md:col-span-4"><span class="text-gray-600 block">Discord</span>${escapeHtml(t.coachDiscord)}</div>` : ''}</div>` : '';
+            return `<div class="glass-panel p-5 rounded-2xl"><div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4"><div class="min-w-0"><div class="flex flex-wrap items-center gap-2 mb-2">${isCoaching ? `<span class="text-aerix-purple text-xs">🎮</span>` : ''}<span class="text-white font-bold text-sm">${escapeHtml(t.subject || '—')}</span><span class="px-2 py-1 rounded-full text-[10px] font-bold ${statusClass}">${statusLabels[status] || status}</span></div><div class="text-xs text-gray-500">${escapeHtml(t.username || '—')} · ${escapeHtml(t.email || '—')}</div><div class="text-[10px] uppercase tracking-widest text-aerix-purple mt-2">${escapeHtml(t.category || 'Autre demande')}</div></div><select onchange="updateTicketStatus('${t.id}', this.value)" class="bg-black/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none"><option value="new" ${status==='new'?'selected':''}>${statusLabels.new}</option><option value="progress" ${status==='progress'?'selected':''}>${statusLabels.progress}</option><option value="done" ${status==='done'?'selected':''}>${statusLabels.done}</option><option value="archived" ${status==='archived'?'selected':''}>${statusLabels.archived}</option></select></div><div class="mt-4 bg-black/35 border border-white/5 rounded-xl p-4"><div class="text-xs text-gray-300 whitespace-pre-wrap break-words">${escapeHtml(t.message || '')}</div>${t.adminReply ? `<div class="mt-4 pt-4 border-t border-white/10"><div class="text-[10px] uppercase tracking-widest text-aerix-purple font-bold mb-2">${currentLang==='en'?'AERIX reply':'Réponse AERIX'}</div><div class="text-xs text-gray-300 whitespace-pre-wrap break-words">${escapeHtml(t.adminReply)}</div></div>` : ''}</div>${coachingInfo}<div class="flex gap-2 mt-3"><button onclick="replyToTicket('${t.id}')" class="text-xs font-bold px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-aerix-purple/20">${currentLang==='en'?'Reply':'Répondre'}</button><button onclick="deleteContactTicket('${t.id}')" class="text-xs font-bold px-3 py-2 rounded-xl bg-red-500/10 text-red-300 hover:bg-red-500/20">${currentLang==='en'?'Delete':'Supprimer'}</button></div></div>`;
         }
 
         // Menu "⋯" (rôle) sur chaque compte dans l'admin : ces deux fonctions étaient
@@ -2226,12 +2556,14 @@ function checkAdminSessionTimeout() {
         function applyAdminTabVisibility() {
             const comptesBtn = document.getElementById('tab-btn-comptes');
             const contactBtn = document.getElementById('tab-btn-contact');
+            const coachingBtn = document.getElementById('tab-btn-coaching');
             if (comptesBtn) comptesBtn.classList.toggle('hidden', !isOwner());
             if (contactBtn) contactBtn.classList.toggle('hidden', !hasAdminAccess());
+            if (coachingBtn) coachingBtn.classList.toggle('hidden', !hasAdminAccess());
         }
         function switchAdminTab(tab) {
             if (tab === 'comptes' && !isOwner()) tab = 'boutique';
-            if (tab === 'contact' && !hasAdminAccess()) tab = 'boutique';
+            if ((tab === 'contact' || tab === 'coaching') && !hasAdminAccess()) tab = 'boutique';
             const target = document.getElementById('admin-tab-' + tab);
             if(!target) return;
             document.querySelectorAll('.admin-tab').forEach(t => {
@@ -2241,7 +2573,8 @@ function checkAdminSessionTimeout() {
             target.classList.remove('hidden');
             void target.offsetWidth;
             target.classList.add('animate-tab-change');
-            ['comptes', 'boutique', 'effectifs', 'palmares', 'partenaires', 'annonces', 'contact'].forEach(t => {
+            if (tab === 'coaching') renderAdminCoachingCalendar();
+            ['comptes', 'boutique', 'effectifs', 'palmares', 'partenaires', 'annonces', 'contact', 'coaching'].forEach(t => {
                 const btn = document.getElementById('tab-btn-' + t);
                 if(btn) {
                     btn.classList.remove('active', 'text-white');
