@@ -303,7 +303,7 @@
         <main id="page-effectifs" class="page-view px-6 max-w-7xl mx-auto">
             <div class="mb-14 text-center animate-fade-up opacity-0">
                 <h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2" data-i18n="roster_subtitle">Divisions</h2>
-                <h3 class="text-4xl font-black text-white mb-8" data-i18n="roster_title">Nos équipes professionnelles</h3>
+                <h3 class="text-4xl font-black text-white mb-8" data-i18n="roster_title">Nos équipes</h3>
                 <div class="flex flex-wrap justify-center gap-3" id="filters-effectifs">
                     <button onclick="setFilter('effectifs', 'Tous')" data-filter="Tous" class="filter-btn active">Tous</button>
                     <button onclick="setFilter('effectifs', 'Rocket League')" data-filter="Rocket League" class="filter-btn">Rocket League</button>
@@ -566,6 +566,7 @@
                 <input id="account-login-email" type="email" placeholder="Adresse email" data-i18n-placeholder="email_placeholder" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
                 <input id="account-login-password" type="password" placeholder="Mot de passe" data-i18n-placeholder="password_placeholder" onkeypress="if(event.key==='Enter') loginAccount()" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
                 <button onclick="loginAccount()" class="w-full bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition" data-i18n="account_login">Connexion</button>
+                <button type="button" onclick="resetAccountPassword()" class="w-full text-xs font-bold text-aerix-purple hover:text-white transition py-1" data-i18n="forgot_password">Mot de passe oublié ?</button>
                 <button onclick="showAccountRegistration()" class="w-full bg-white/5 border border-white/10 text-white font-bold py-3 rounded-xl hover:bg-white/10 transition text-sm" data-i18n="create_account">Créer un compte</button>
             </div>
         </div>
@@ -632,13 +633,13 @@
             
             <div id="admin-tabs-container" class="flex gap-2 mb-8 bg-black/60 p-2 rounded-2xl border border-white/5 flex-wrap overflow-x-auto custom-scrollbar relative">
                 <div id="admin-tab-pill" class="absolute rounded-xl bg-aerix-purple/20 transition-all duration-300 ease-out z-0 pointer-events-none backdrop-blur-md border border-aerix-purple/60 shadow-[0_0_25px_rgba(139,92,246,0.7)]"></div>
-                <button draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('comptes')" id="tab-btn-comptes" class="admin-tab-btn flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10">Comptes</button>
-                <button draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('boutique')" id="tab-btn-boutique" class="admin-tab-btn active flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-white transition cursor-pointer relative z-10">Boutique</button>
-                <button draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('effectifs')" id="tab-btn-effectifs" class="admin-tab-btn flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10">Effectifs</button>
-                <button draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('palmares')" id="tab-btn-palmares" class="admin-tab-btn flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10">Résultats</button>
-                <button draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('annonces')" id="tab-btn-annonces" class="admin-tab-btn flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10">Actualités</button>
-                <button draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('partenaires')" id="tab-btn-partenaires" class="admin-tab-btn flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10">Sponsors</button>
-                <button draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('contact')" id="tab-btn-contact" class="admin-tab-btn flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10" data-i18n="contact_form">Contact</button>
+                <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('comptes')" id="tab-btn-comptes" class="admin-tab-btn flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10">Comptes</button>
+                <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('boutique')" id="tab-btn-boutique" class="admin-tab-btn active flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-white transition cursor-pointer relative z-10">Boutique</button>
+                <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('effectifs')" id="tab-btn-effectifs" class="admin-tab-btn flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10">Effectifs</button>
+                <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('palmares')" id="tab-btn-palmares" class="admin-tab-btn flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10">Résultats</button>
+                <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('annonces')" id="tab-btn-annonces" class="admin-tab-btn flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10">Actualités</button>
+                <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('partenaires')" id="tab-btn-partenaires" class="admin-tab-btn flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10">Sponsors</button>
+                <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('contact')" id="tab-btn-contact" class="admin-tab-btn flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10" data-i18n="contact_form">Contact</button>
             </div>
 
             <!-- TAB: COMPTES -->
@@ -907,6 +908,14 @@
 // Le mot de passe utilisé pour confirmer l'accès admin est celui du compte Firebase connecté.
         let currentUser = null;
         let currentAccount = null;
+
+        // Session console d'administration :
+        // l'authentification Firebase reste active, mais l'accès à la console
+        // exige une nouvelle confirmation du mot de passe après 30 min d'inactivité.
+        const ADMIN_SESSION_TIMEOUT = 30 * 60 * 1000;
+        let adminSessionStartTime = 0;
+        let adminSessionTimer = null;
+
         let globalAccounts = [];
         let globalContactRequests = [];
         let userTickets = [];
@@ -933,7 +942,7 @@
                 news_subtitle: "Actualités", news_title: "Annonces & Mises à jour", account_create: "Créer un compte", account_profile: "Mon compte", account_login: "Connexion", account_logout: "Déconnexion", admin_access: "Administration",
                 admin_secure_title: "Accès Sécurisé", admin_secure_desc: "Confirme ton mot de passe pour accéder au panel d'administration", admin_secure_placeholder: "Mot de passe...", cancel: "Annuler", confirm: "Confirmer",
                 username_placeholder: "Pseudo", email_placeholder: "Adresse email", already_account_signin: "J'ai déjà un compte — Se connecter",
-                account_login_desc: "Connecte-toi avec ton compte AERIX.", password_placeholder: "Mot de passe",
+                account_login_desc: "Connecte-toi avec ton compte AERIX.", password_placeholder: "Mot de passe", forgot_password: "Mot de passe oublié ?",
                 account_register_desc: "Crée directement ton compte AERIX avec ton pseudo, ton email et ton mot de passe.", password_min_placeholder: "Mot de passe (8 caractères min.)", create_account: "Créer le compte", registered_accounts_title: "Comptes enregistrés", registered_accounts_desc: "Tous les comptes créés sur le site. Le Owner peut attribuer ou retirer le rôle Admin.", contact_admin_title: "Demandes de contact", contact_admin_desc: "Consulte et gère les tickets envoyés par les utilisateurs.", contact_title: "Contact AERIX", contact_desc: "Choisis Discord ou ouvre un ticket directement depuis le site.", contact_discord: "Contacter sur Discord", contact_form: "Formulaire de contact", contact_login_required: "Tu dois être connecté pour ouvrir un ticket.", ticket: "Tickets", no_tickets: "Aucun ticket en cours.", ticket_status: "Statut", ticket_category: "Catégorie", ticket_subject: "Sujet", ticket_message: "Message", ticket_send: "Envoyer le ticket", ticket_close: "Fermer", ticket_reply: "Réponse AERIX", ticket_created: "Ticket créé.", ticket_updated: "Ticket mis à jour.", ticket_required: "Sujet et message obligatoires.", contact_category_partnership: "Partenariat", contact_category_question: "Question", contact_category_other: "Autre demande", contact_status_new: "Nouveau", contact_status_progress: "En cours", contact_status_done: "Traité", contact_status_archived: "Archivé", role_user: "Utilisateur", role_admin: "Admin", role_owner: "Owner"
             },
             en: {
@@ -952,7 +961,7 @@
                 news_subtitle: "News", news_title: "Announcements & Updates", account_create: "Create account", account_profile: "My account", account_login: "Sign in", account_logout: "Sign out", admin_access: "Admin panel",
                 admin_secure_title: "Secure Access", admin_secure_desc: "Confirm your password to access the administration panel", admin_secure_placeholder: "Password...", cancel: "Cancel", confirm: "Confirm",
                 username_placeholder: "Username", email_placeholder: "Email address", already_account_signin: "Already have an account — Sign in",
-                account_login_desc: "Sign in with your AERIX account.", password_placeholder: "Password",
+                account_login_desc: "Sign in with your AERIX account.", password_placeholder: "Password", forgot_password: "Forgot your password?",
                 account_register_desc: "Create your AERIX account directly with your username, email and password.", password_min_placeholder: "Password (8+ characters)", create_account: "Create account", registered_accounts_title: "Registered accounts", registered_accounts_desc: "All accounts created on the website. The Owner can grant or revoke the Admin role."
             }
         };
@@ -1352,10 +1361,54 @@
             const modal = document.getElementById('admin-login-modal');
             const input = document.getElementById('admin-pwd-input');
             if (!modal || !input) return;
+            stopAdminSession();
             input.value = '';
             modal.classList.remove('hidden');
             setTimeout(() => input.focus(), 50);
         }
+
+        function startAdminSession() {
+    adminSessionStartTime = Date.now();
+    if (adminSessionTimer) clearInterval(adminSessionTimer);
+    adminSessionTimer = setInterval(checkAdminSessionTimeout, 60 * 1000);
+}
+
+function stopAdminSession() {
+    if (adminSessionTimer) {
+        clearInterval(adminSessionTimer);
+        adminSessionTimer = null;
+    }
+    adminSessionStartTime = 0;
+}
+
+function expireAdminSession() {
+    const adminModal = document.getElementById('admin-modal');
+    const loginModal = document.getElementById('admin-login-modal');
+    if (adminModal) adminModal.classList.add('hidden'); // Ferme l'admin
+    if (loginModal && currentUser && hasAdminAccess()) {
+        loginModal.classList.remove('hidden'); // Redemande le mot de passe
+        const input = document.getElementById('admin-pwd-input');
+        if (input) {
+            input.value = '';
+            setTimeout(() => input.focus(), 50);
+        }
+    }
+    stopAdminSession();
+    showToast(currentLang==='en'
+        ? 'Admin session expired. Please enter your password again.'
+        : 'La session administrateur a expiré. Entre à nouveau ton mot de passe.', 'error');
+}
+
+function checkAdminSessionTimeout() {
+    const adminModal = document.getElementById('admin-modal');
+    if (!adminModal || adminModal.classList.contains('hidden')) {
+        stopAdminSession();
+        return;
+    }
+    if (!adminSessionStartTime || Date.now() - adminSessionStartTime >= ADMIN_SESSION_TIMEOUT) {
+        expireAdminSession();
+    }
+}
 
         async function checkAdminPwd() {
             if (!currentUser || !hasAdminAccess()) {
@@ -1378,6 +1431,7 @@
                 document.getElementById('admin-modal').classList.remove('hidden');
                 applyAdminTabVisibility();
                 switchAdminTab(isOwner() ? 'comptes' : 'boutique');
+                startAdminSession();
                 showToast(currentLang==='en'?'Admin access confirmed.':'Accès administrateur confirmé.', 'success');
             } catch (e) {
                 console.error(e);
@@ -1388,6 +1442,10 @@
             }
         }
 
+        
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) checkAdminSessionTimeout();
+        });
         function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('hidden'); }
 
         function escapeHtml(value) {
@@ -1472,6 +1530,37 @@
             }
         }
         async function loginAccount() { const email=document.getElementById('account-login-email').value.trim(); const password=document.getElementById('account-login-password').value; if(!email||!password) return showToast(currentLang==='en'?'Email and password are required.':'Email et mot de passe obligatoires.','error'); try { await auth.signInWithEmailAndPassword(email,password); closeAccountModal(); showToast(currentLang==='en'?'Signed in.':'Connexion réussie.'); } catch(e){ showToast(currentLang==='en'?'Invalid email or password.':'Email ou mot de passe incorrect.','error'); } }
+
+        async function resetAccountPassword() {
+            const email = document.getElementById('account-login-email')?.value.trim().toLowerCase();
+            if (!email) {
+                return showToast(
+                    currentLang === 'en'
+                        ? 'Enter the email address used when creating your account.'
+                        : 'Entre l’adresse email utilisée lors de la création de ton compte.',
+                    'error'
+                );
+            }
+            try {
+                await auth.sendPasswordResetEmail(email);
+                showToast(
+                    currentLang === 'en'
+                        ? 'Password reset email sent. Check your inbox.'
+                        : 'E-mail de réinitialisation envoyé. Vérifie ta boîte mail.',
+                    'success'
+                );
+            } catch (e) {
+                console.error(e);
+                let message = currentLang === 'en'
+                    ? 'Unable to send the reset email.'
+                    : 'Impossible d’envoyer l’e-mail de réinitialisation.';
+                if (e.code === 'auth/invalid-email') {
+                    message = currentLang === 'en' ? 'Invalid email address.' : 'Adresse email invalide.';
+                }
+                showToast(message, 'error');
+            }
+        }
+
         async function logoutAccount() { try { await auth.signOut(); document.querySelectorAll('.account-menu').forEach(m => m.classList.add('hidden')); showToast(currentLang==='en'?'Signed out.':'Déconnexion réussie.'); } catch(e){ console.error(e); } }
         function openContactModal() {
             document.getElementById('contact-modal')?.classList.remove('hidden');
@@ -1623,7 +1712,7 @@
                 usersEl.innerHTML = globalAccounts.length ? globalAccounts.map(u => {
                     const role = u.role || 'user';
                     const isSelfOwner = (u.email || '').toLowerCase() === OWNER_EMAIL.toLowerCase();
-                    const menu = isOwner() && !isSelfOwner ? `<div class="relative"><button onclick="toggleRoleMenu('${u.id}', event)" class="w-9 h-9 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-aerix-purple/20 hover:border-aerix-purple/40 transition text-lg" aria-label="Options">⋯</button><div id="role-menu-${u.id}" class="role-menu hidden absolute right-0 top-11 z-50 w-44 glass-panel-no-hover rounded-xl p-1.5 border border-white/10 shadow-2xl"><button onclick="setAccountRole('${u.id}','user')" class="w-full text-left px-3 py-2 text-xs text-white hover:bg-white/10 rounded-lg">${currentLang==='en'?'User':'Utilisateur'}</button><button onclick="setAccountRole('${u.id}','admin')" class="w-full text-left px-3 py-2 text-xs text-white hover:bg-white/10 rounded-lg">Admin</button></div></div>` : '';
+                    const menu = isOwner() && !isSelfOwner ? `<div class="relative"><button onclick="toggleRoleMenu('${u.id}', event)" class="w-9 h-9 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-aerix-purple/20 hover:border-aerix-purple/40 transition text-lg" aria-label="Options">⋯</button><div id="role-menu-${u.id}" class="role-menu hidden absolute right-0 top-11 z-[500] w-44 glass-panel-no-hover rounded-xl p-1.5 border border-white/10 shadow-2xl pointer-events-auto"><button type="button" onclick="event.stopPropagation(); setAccountRole('${u.id}','user')" class="w-full text-left px-3 py-2 text-xs text-white hover:bg-white/10 rounded-lg pointer-events-auto">${currentLang==='en'?'User':'Utilisateur'}</button><button type="button" onclick="event.stopPropagation(); setAccountRole('${u.id}','admin')" class="w-full text-left px-3 py-2 text-xs text-white hover:bg-white/10 rounded-lg pointer-events-auto">Admin</button></div></div>` : '';
                     return `<div class="glass-panel glass-panel-form p-4 rounded-xl flex items-center justify-between gap-3"><div class="min-w-0"><div class="text-white font-bold text-sm truncate">${escapeHtml(u.username || '—')}</div><div class="text-xs text-gray-500 mt-1 truncate">${escapeHtml(u.email || '—')}</div><div class="text-xs text-aerix-purple mt-2 uppercase tracking-widest">${escapeHtml(role)}</div></div>${menu}</div>`;
                 }).join('') : `<p class="text-gray-500 text-sm italic">${currentLang==='en'?'No registered accounts.':'Aucun compte enregistré.'}</p>`;
             }
@@ -2080,7 +2169,15 @@
                 return;
             }
             applyAdminTabVisibility();
-            document.getElementById('admin-modal').classList.toggle('hidden');
+            const modal = document.getElementById('admin-modal');
+            if (!modal) return;
+            const willOpen = modal.classList.contains('hidden');
+            modal.classList.toggle('hidden');
+            if (willOpen) {
+                startAdminSession();
+            } else {
+                stopAdminSession();
+            }
         }
         function updateAdminTabPill(activeBtn) {
             const pill = document.getElementById('admin-tab-pill');
