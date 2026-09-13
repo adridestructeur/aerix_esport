@@ -84,12 +84,45 @@
     .account-menu-item { border: 1px solid transparent; transition: background .25s ease, border-color .25s ease, box-shadow .25s ease, color .25s ease; }
     .account-menu-item:hover { background: rgba(139,92,246,0.12); border-color: rgba(139,92,246,0.55); box-shadow: 0 0 10px rgba(139,92,246,0.55), 0 0 22px rgba(139,92,246,0.35), inset 0 0 10px rgba(139,92,246,0.15); color: #fff; }
 
-    /* COMPTE MOBILE */
+    /* COMPTE MOBILE : le menu reste entièrement accessible et défile avec le menu burger */
     @media (max-width: 767px) {
-        #mobile-account-area { width: 100%; }
-        #mobile-account-area > .relative { width: 100%; }
-        #mobile-account-area .account-trigger-mobile { width: 100%; justify-content: space-between; padding-top: .875rem; padding-bottom: .875rem; }
-        #mobile-account-area .account-menu-mobile { position: static !important; width: 100% !important; margin-top: .5rem !important; right: auto !important; top: auto !important; z-index: 1 !important; }
+        #mobile-menu {
+            max-height: calc(100dvh - 88px);
+            overflow-y: auto;
+            overflow-x: hidden;
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+        }
+
+        #mobile-account-area,
+        #mobile-account-area > .relative {
+            width: 100%;
+            min-width: 0;
+        }
+
+        #mobile-account-area .account-trigger-mobile {
+            width: 100%;
+            min-height: 48px;
+            justify-content: space-between;
+        }
+
+        #mobile-account-area .account-menu-mobile {
+            position: static !important;
+            top: auto !important;
+            right: auto !important;
+            width: 100% !important;
+            max-width: none !important;
+            margin-top: .5rem !important;
+            z-index: auto !important;
+            box-sizing: border-box;
+        }
+
+        #mobile-account-area .account-menu-mobile .account-menu-item {
+            min-height: 46px;
+            touch-action: manipulation;
+        }
     }
 
     /* Variante d'un .glass-panel pour les formulaires dont la hauteur varie (ex: création de roster) :
@@ -1211,26 +1244,6 @@
             document.querySelectorAll('option').forEach(el => { const t=el.textContent.trim(); if(map[t]) el.textContent=map[t]; });
         }
 
-        // TRADUCTION AUTOMATIQUE DES TEXTES D'INTERFACE NON ENCORE RÉFÉRENCÉS
-        const autoTranslationOriginals = new WeakMap();
-        async function translateUnmappedInterfaceText() {
-            if (currentLang === 'fr') {
-                document.querySelectorAll('[data-auto-i18n="true"]').forEach(el => { const original = autoTranslationOriginals.get(el); if (original != null) el.textContent = original; });
-                return;
-            }
-            const candidates = Array.from(document.body.querySelectorAll('body *')).filter(el =>
-                el.children.length === 0 && !['SCRIPT','STYLE','INPUT','TEXTAREA','OPTION'].includes(el.tagName) &&
-                !el.closest('[data-no-translate]') && !el.hasAttribute('data-i18n') && !el.hasAttribute('data-translate-src') &&
-                el.textContent.trim() && !/^https?:\/\//i.test(el.textContent.trim())
-            );
-            for (const el of candidates) {
-                const original = autoTranslationOriginals.get(el) ?? el.textContent.trim();
-                if (!autoTranslationOriginals.has(el)) autoTranslationOriginals.set(el, original);
-                const translated = await translateText(original, currentLang);
-                if (currentLang === 'en' && document.body.contains(el) && translated) { el.textContent = translated; el.setAttribute('data-auto-i18n','true'); }
-            }
-        }
-
         function setLang(lang) {
             if(!i18n[lang]) lang = 'fr';
             currentLang = lang;
@@ -1250,7 +1263,6 @@
             });
                    closeLanguageMenu();
             translateStaticUI();
-            translateUnmappedInterfaceText();
             renderAccountArea();
             refreshNavPill();
             // Ré-affiche le contenu dynamique (annonces, rosters, palmarès) pour déclencher
@@ -1399,9 +1411,9 @@
                                     ${p.number ? `<span class="bg-aerix-purple text-white text-xs font-black px-2 py-1 rounded-lg border border-purple-400 shadow-[0_0_10px_rgba(139,92,246,0.5)] flex items-center">#${p.number}</span>` : ''}
                                 </div>
                             </div>
-                            <h5 data-no-translate class="text-2xl font-black text-white uppercase tracking-tighter w-full text-left truncate">${p.pseudo || p.name}</h5>
+                            <h5 class="text-2xl font-black text-white uppercase tracking-tighter w-full text-left truncate">${p.pseudo || p.name}</h5>
                             <p class="text-xs font-medium text-gray-500 w-full text-left truncate flex items-center gap-2">
-                                <span data-no-translate>${p.name}</span>
+                                <span>${p.name}</span>
                                 ${p.age ? `<span class="w-1 h-1 rounded-full bg-gray-600"></span> <span>${p.age} ${currentLang==='en'?'y.o.':'ans'}</span>` : ''}
                             </p>
                         </div>`;
@@ -1491,6 +1503,7 @@
                     </div>`;
             });
             setTimeout(revealActiveElements, 20);
+            translateDynamicContent();
             translateDynamicContent();
         }
 
@@ -1681,8 +1694,8 @@ function checkAdminSessionTimeout() {
             const menu = document.getElementById('mobile-menu');
             if (!menu) return;
             const willOpen = menu.classList.contains('hidden');
-            menu.classList.toggle('hidden');
             if (!willOpen) document.querySelectorAll('.account-menu').forEach(m => m.classList.add('hidden'));
+            menu.classList.toggle('hidden');
         }
 
         function escapeHtml(value) {
@@ -1699,47 +1712,55 @@ function checkAdminSessionTimeout() {
                     && ['owner','admin'].includes(currentAccount.role));
         }
         function renderAccountArea() {
-            const desktop = document.getElementById('account-area');
-            const mobile = document.getElementById('mobile-account-area');
-            const areas = [desktop, mobile].filter(Boolean);
+            const areas = [document.getElementById('account-area'), document.getElementById('mobile-account-area')].filter(Boolean);
             const avatarHtml = currentAccount && currentAccount.avatar
                 ? `<img src="${currentAccount.avatar}" class="w-6 h-6 rounded-full object-cover border border-aerix-purple/50">`
                 : `<span class="w-6 h-6 rounded-full bg-aerix-purple/25 border border-aerix-purple/50 flex items-center justify-center text-[10px] font-black">${escapeHtml((currentAccount?.username || 'A').charAt(0).toUpperCase())}</span>`;
             const menuAvatarHtml = currentAccount && currentAccount.avatar
                 ? `<img src="${currentAccount.avatar}" class="w-12 h-12 rounded-full object-cover border border-aerix-purple/50">`
                 : `<span class="w-12 h-12 rounded-full bg-aerix-purple/25 border border-aerix-purple/50 flex items-center justify-center text-base font-black">${escapeHtml((currentAccount?.username || 'A').charAt(0).toUpperCase())}</span>`;
-            const buildHtml = (menuId, isMobile) => currentUser && currentAccount ? `
-                <div class="relative ${isMobile ? 'w-full' : ''}">
-                    <button type="button" onclick="toggleAccountMenu(event, '${menuId}')" class="account-trigger-${isMobile ? 'mobile' : 'desktop'} relative text-xs text-white transition px-4 py-1.5 rounded-full border border-aerix-purple/40 bg-aerix-purple/10 hover:bg-aerix-purple/20 font-medium flex items-center gap-2">
-                        ${avatarHtml}<span class="truncate max-w-[12rem]">${escapeHtml(currentAccount.username || currentUser.email || (currentLang==='en' ? 'Account' : 'Compte'))}</span><span class="shrink-0">▾</span>
+            const buildHtml = (menuId, isMobile = false) => currentUser && currentAccount ? `
+                <div class="relative group ${isMobile ? 'w-full' : ''}">
+                    <button onclick="toggleAccountMenu(event, '${menuId}')" class="account-trigger${isMobile ? '-mobile' : ''} relative text-xs text-white transition px-4 py-1.5 rounded-full border border-aerix-purple/40 bg-aerix-purple/10 hover:bg-aerix-purple/20 font-medium flex items-center gap-2">
+                        ${avatarHtml}
+                        <span>${escapeHtml(currentAccount.username || currentUser.email || 'Account')}</span>
+                        <span>▾</span>
                         <span class="tickets-notif-badge hidden absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-aerix-purple text-white text-[10px] font-black flex items-center justify-center shadow-[0_0_10px_rgba(139,92,246,0.8)] border border-black/40">1</span>
                     </button>
                     <div id="${menuId}" class="account-menu ${isMobile ? 'account-menu-mobile' : ''} hidden absolute right-0 top-11 w-56 glass-panel-no-hover rounded-2xl p-2 z-[250] border border-white/10 shadow-2xl">
                         <div class="flex items-center gap-3 px-2 py-2 mb-1 border-b border-white/10">
-                            <div class="relative group/avatar cursor-pointer shrink-0" onclick="document.getElementById('profile-avatar-input').click()">${menuAvatarHtml}<div class="absolute inset-0 bg-black/60 rounded-full flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition text-[9px] font-bold text-white">${currentLang === 'en' ? 'Edit' : 'Modifier'}</div></div>
+                            <div class="relative group/avatar cursor-pointer shrink-0" onclick="document.getElementById('profile-avatar-input').click()">
+                                ${menuAvatarHtml}
+                                <div class="absolute inset-0 bg-black/60 rounded-full flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition text-[9px] font-bold text-white">${currentLang === 'en' ? 'Edit' : 'Modifier'}</div>
+                            </div>
                             <div class="min-w-0"><div class="text-white text-xs font-bold truncate">${escapeHtml(currentAccount.username || '')}</div><div class="text-gray-500 text-[10px] truncate">${escapeHtml(currentAccount.email || currentUser.email || '')}</div></div>
                         </div>
-                        <button type="button" onclick="openTicketsModal(); closeMobileMenuAfterAccountAction();" class="account-menu-item w-full text-left px-3 py-2.5 text-xs font-bold text-white rounded-xl flex items-center justify-between">🎫 <span>Tickets</span><span class="tickets-notif-badge hidden min-w-[18px] h-[18px] px-1 rounded-full bg-aerix-purple text-white text-[10px] font-black flex items-center justify-center">1</span></button>
-                        ${hasAdminAccess() ? `<button type="button" onclick="openAdminFromAccount(); closeMobileMenuAfterAccountAction();" class="account-menu-item w-full text-left px-3 py-2.5 text-xs font-bold text-white rounded-xl">${currentLang === 'en' ? 'Admin panel' : 'Administration'}</button>` : ''}
-                        <button type="button" onclick="logoutAccount(); closeMobileMenuAfterAccountAction();" class="account-menu-item w-full text-left px-3 py-2.5 text-xs font-bold text-gray-300 rounded-xl">${currentLang === 'en' ? 'Sign out' : 'Déconnexion'}</button>
+                        <button onclick="openTicketsModal()" class="account-menu-item w-full text-left px-3 py-2.5 text-xs font-bold text-white rounded-xl flex items-center justify-between">🎫 ${currentLang === 'en' ? 'Tickets' : 'Tickets'}<span class="tickets-notif-badge hidden min-w-[18px] h-[18px] px-1 rounded-full bg-aerix-purple text-white text-[10px] font-black flex items-center justify-center">1</span></button>
+                        ${hasAdminAccess() ? `<button onclick="openAdminFromAccount()" class="account-menu-item w-full text-left px-3 py-2.5 text-xs font-bold text-white rounded-xl">${currentLang === 'en' ? 'Admin panel' : 'Administration'}</button>` : ''}
+                        <button onclick="logoutAccount()" class="account-menu-item w-full text-left px-3 py-2.5 text-xs font-bold text-gray-300 rounded-xl">${currentLang === 'en' ? 'Sign out' : 'Déconnexion'}</button>
                     </div>
                 </div>` : `
-                <button type="button" onclick="openAccountModal(); closeMobileMenuAfterAccountAction();" data-i18n="account_create" class="${isMobile ? 'w-full ' : ''}text-xs text-aerix-purple transition px-4 py-1.5 rounded-full border border-aerix-purple/40 bg-aerix-purple/10 hover:bg-aerix-purple/20 font-medium">${currentLang === 'en' ? 'Create account' : 'Créer un compte'}</button>`;
-            areas.forEach(el => { const isMobile = el === mobile; el.innerHTML = buildHtml(isMobile ? 'account-menu-mobile' : 'account-menu-desktop', isMobile); });
+                <button onclick="openAccountModal()" data-i18n="account_create" class="text-xs text-aerix-purple transition px-4 py-1.5 rounded-full border border-aerix-purple/40 bg-aerix-purple/10 hover:bg-aerix-purple/20 font-medium">${currentLang === 'en' ? 'Create account' : 'Créer un compte'}</button>`;
+            areas.forEach((el, i) => {
+                const menuId = i === 1 ? 'account-menu-mobile' : 'account-menu-desktop';
+                const html = buildHtml(menuId, i === 1);
+                el.innerHTML = i === 1 && !currentUser ? html.replace('px-4 py-1.5', 'py-3.5 px-4') : html;
+            });
             updateTicketsBadge();
-        }
-
-        function closeMobileMenuAfterAccountAction() {
-            const menu = document.getElementById('mobile-menu');
-            if (menu) menu.classList.add('hidden');
-            document.querySelectorAll('.account-menu').forEach(m => m.classList.add('hidden'));
         }
         function toggleAccountMenu(event, menuId) {
             if (event) { event.preventDefault(); event.stopPropagation(); }
             const target = document.getElementById(menuId);
             if (!target) return;
-            document.querySelectorAll('.account-menu').forEach(m => { if (m !== target) m.classList.add('hidden'); });
+            document.querySelectorAll('.account-menu').forEach(m => {
+                if (m !== target) m.classList.add('hidden');
+            });
             target.classList.toggle('hidden');
+            if (menuId === 'account-menu-mobile') {
+                requestAnimationFrame(() => {
+                    if (!target.classList.contains('hidden')) target.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+                });
+            }
         }
         document.addEventListener('click', e => { if(e.target.closest('#account-area') || e.target.closest('#mobile-account-area')) return; document.querySelectorAll('.account-menu').forEach(m => m.classList.add('hidden')); });
         document.addEventListener('click', e => { if(e.target.closest('.role-menu')) return; document.querySelectorAll('.role-menu').forEach(m => { m.classList.add('hidden'); m.closest('.glass-panel')?.classList.remove('z-[60]'); }); });
