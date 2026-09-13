@@ -1673,7 +1673,7 @@ function checkAdminSessionTimeout() {
         }
         function toggleAccountMenu(event, menuId) { if(event) event.stopPropagation(); document.querySelectorAll('.account-menu').forEach(m => { if(m.id !== menuId) m.classList.add('hidden'); }); document.getElementById(menuId)?.classList.toggle('hidden'); }
         document.addEventListener('click', e => { if(e.target.closest('#account-area') || e.target.closest('#mobile-account-area')) return; document.querySelectorAll('.account-menu').forEach(m => m.classList.add('hidden')); });
-        document.addEventListener('click', e => { if(e.target.closest('.role-menu')) return; document.querySelectorAll('.role-menu').forEach(m => m.classList.add('hidden')); });
+        document.addEventListener('click', e => { if(e.target.closest('.role-menu')) return; document.querySelectorAll('.role-menu').forEach(m => { m.classList.add('hidden'); m.closest('.glass-panel')?.classList.remove('z-[60]'); }); });
         function openAccountModal() { showAccountRegistration(); document.getElementById('account-modal').classList.remove('hidden'); }
         function closeAccountModal() { document.getElementById('account-modal').classList.add('hidden'); }
         function showAccountLogin() { document.getElementById('account-register-form').classList.add('hidden'); document.getElementById('account-login-form').classList.remove('hidden'); document.getElementById('account-modal-title').innerText=currentLang==='en'?'Sign in':'Connexion'; }
@@ -2097,17 +2097,28 @@ function checkAdminSessionTimeout() {
         // listener global "document.addEventListener('click', ...)" qui ferme tous les
         // .role-menu se déclenche juste après avoir ouvert celui-ci et le referme aussitôt
         // dans la même frame — d'où l'impression que le clic ne fait rien.
+        // Élève temporairement le z-index de la carte contenant le menu ouvert :
+        // toutes les cartes .glass-panel partagent le même z-index (10), donc sans ça
+        // le menu déroulant d'une carte peut se retrouver visuellement sous la carte
+        // suivante dans la grille, qui intercepte alors les clics sur "Utilisateur"/"Admin".
         function toggleRoleMenu(uid, event) {
             if (event) event.stopPropagation();
-            document.querySelectorAll('.role-menu').forEach(m => { if (m.id !== `role-menu-${uid}`) m.classList.add('hidden'); });
-            document.getElementById(`role-menu-${uid}`)?.classList.toggle('hidden');
+            document.querySelectorAll('.role-menu').forEach(m => {
+                if (m.id !== `role-menu-${uid}`) { m.classList.add('hidden'); m.closest('.glass-panel')?.classList.remove('z-[60]'); }
+            });
+            const menu = document.getElementById(`role-menu-${uid}`);
+            const willOpen = menu?.classList.contains('hidden');
+            menu?.classList.toggle('hidden');
+            menu?.closest('.glass-panel')?.classList.toggle('z-[60]', !!willOpen);
         }
         async function setAccountRole(uid, role) {
             if (!isOwner()) return;
             if (!['user', 'admin'].includes(role)) return;
             try {
                 await db.collection('accounts').doc(uid).update({ role });
-                document.getElementById(`role-menu-${uid}`)?.classList.add('hidden');
+                const menuEl = document.getElementById(`role-menu-${uid}`);
+                menuEl?.classList.add('hidden');
+                menuEl?.closest('.glass-panel')?.classList.remove('z-[60]');
                 showToast(currentLang === 'en' ? 'Role updated.' : 'Rôle mis à jour.', 'success');
             } catch (e) {
                 console.error(e);
