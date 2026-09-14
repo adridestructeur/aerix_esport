@@ -138,6 +138,12 @@
         to { opacity: 1; transform: translateY(0) scale(1); }
     }
     .animate-tab-change { animation: tabFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+    /* TRANSITION FONDU DES MODALES (Coaching, Avis, etc.) */
+    .modal-fade-target { opacity: 0; transition: opacity 0.32s cubic-bezier(0.16, 1, 0.3, 1); }
+    .modal-fade-target .modal-fade-panel { opacity: 0; transform: translateY(14px) scale(0.97); transition: opacity 0.36s cubic-bezier(0.16, 1, 0.3, 1), transform 0.36s cubic-bezier(0.16, 1, 0.3, 1); }
+    .modal-fade-target.modal-fade-in { opacity: 1; }
+    .modal-fade-target.modal-fade-in .modal-fade-panel { opacity: 1; transform: translateY(0) scale(1); }
     
     .news-card-animated { transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease, border-color 0.3s ease; }
     .news-card-animated:hover { transform: translateY(-6px) scale(1.01); box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.5), 0 0 20px rgba(139, 92, 246, 0.15); }
@@ -149,6 +155,15 @@
     .nav-btn.active { color: #fff; text-shadow: 0 0 10px rgba(255,255,255,.55); }
     .nav-btn:hover { color: #fff; }
     
+    /* SYSTÈME D'ÉTOILES — AVIS */
+    .review-star { background: transparent; border: none; cursor: pointer; font-size: 2.4rem; line-height: 1; color: rgba(255,255,255,0.15); padding: 0; transition: color 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), text-shadow 0.25s ease; transform: scale(1); }
+    .review-star:hover { transform: scale(1.2); }
+    .review-star.filled { color: #8B5CF6; text-shadow: 0 0 14px rgba(139,92,246,.7); }
+    .review-star.pop { animation: reviewStarPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    @keyframes reviewStarPop { 0% { transform: scale(1); } 45% { transform: scale(1.4); } 100% { transform: scale(1); } }
+    .review-star-display { color: #8B5CF6; text-shadow: 0 0 8px rgba(139,92,246,.6); }
+    .review-star-display.empty { color: rgba(255,255,255,0.15); text-shadow: none; }
+
     .filter-btn { padding: 0.5rem 1.2rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: #9ca3af; cursor: pointer; }
     .filter-btn.active { background: #8B5CF6; color: white; border-color: #8B5CF6; box-shadow: 0 0 20px rgba(139,92,246,0.6); transform: scale(1.05); }
     .filter-btn:hover:not(.active) { background: rgba(255,255,255,0.1); color: white; transform: translateY(-2px); }
@@ -254,6 +269,7 @@
                 <button id="nav-boutique" onclick="navigate('boutique')" class="nav-btn hover:text-white" data-i18n="nav_boutique">Boutique</button>
                 <button id="nav-partenaires" onclick="navigate('partenaires')" class="nav-btn hover:text-white" data-i18n="nav_partenaires">Partenaires</button>
                 <button id="nav-coaching" onclick="openCoachingModal()" class="nav-btn hover:text-white" data-i18n="nav_coaching">Coaching</button>
+                <button id="nav-review" onclick="openReviewModal()" class="nav-btn hover:text-white" data-i18n="nav_review">Laisser un avis</button>
             </div>
 
             <div class="hidden md:flex items-center gap-3">
@@ -289,6 +305,7 @@
             <button onclick="navigate('boutique'); toggleMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_boutique">Boutique</button>
             <button onclick="navigate('partenaires'); toggleMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_partenaires">Partenaires</button>
             <button onclick="openCoachingModal(); toggleMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_coaching">Coaching</button>
+            <button onclick="openReviewModal(); toggleMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_review">Laisser un avis</button>
             <div id="mobile-account-area"></div>
             <a href="https://discord.gg/dJcHwYT4HY" target="_blank" rel="noopener noreferrer" class="text-center text-xs text-white py-3.5 rounded-xl border border-aerix-purple/40 bg-aerix-purple/20 font-bold flex items-center justify-center gap-2">
                 <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.927 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
@@ -436,6 +453,10 @@
             <div class="mb-14 text-center animate-fade-up opacity-0">
                 <h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2" data-i18n="news_subtitle">Actualités</h2>
                 <h3 class="text-4xl font-black text-white mb-8" data-i18n="news_title">Annonces & Mises à jour</h3>
+                <div class="flex flex-wrap justify-center gap-3 mb-4" id="annonces-view-toggle">
+                    <button onclick="setAnnoncesView('liste')" data-view="liste" class="filter-btn active">Actualités</button>
+                    <button onclick="setAnnoncesView('galerie')" data-view="galerie" class="filter-btn" data-i18n="filter_gallery">Galerie</button>
+                </div>
                 <div class="flex flex-wrap justify-center gap-3 mb-8" id="filters-annonces">
                     <button onclick="setFilter('annonces', 'Tous')" data-filter="Tous" class="filter-btn active">Tous</button>
                     <button onclick="setFilter('annonces', 'Rocket League')" data-filter="Rocket League" class="filter-btn">Rocket League</button>
@@ -445,6 +466,7 @@
                 </div>
             </div>
             <div id="announcements-container" class="space-y-10"></div>
+            <div id="announcements-gallery" class="hidden grid grid-cols-2 md:grid-cols-3 gap-4"></div>
         </main>
 
     </div>
@@ -606,8 +628,8 @@
     </div>
 
     <!-- MODAL : COACHING (CÔTÉ PILOTE) -->
-    <div id="coaching-modal" class="fixed inset-0 z-[212] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl">
-        <div class="glass-panel-no-hover w-full max-w-3xl max-h-[92vh] overflow-y-auto rounded-[2rem] p-6 md:p-9">
+    <div id="coaching-modal" class="fixed inset-0 z-[212] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl modal-fade-target">
+        <div class="glass-panel-no-hover w-full max-w-3xl max-h-[92vh] overflow-y-auto rounded-[2rem] p-6 md:p-9 modal-fade-panel">
             <div class="flex justify-between items-center mb-7 border-b border-white/10 pb-4">
                 <div>
                     <p class="text-[10px] uppercase tracking-[.2em] text-aerix-purple font-bold mb-1">AERIX COACHING</p>
@@ -686,6 +708,37 @@
                 </div>
 
                 <button id="coaching-submit-btn" onclick="submitCoachingTicket()" class="w-full bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition shadow-[0_0_18px_rgba(139,92,246,.25)]" data-i18n="coaching_submit">Envoyer ma demande</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL : LAISSER UN AVIS -->
+    <div id="review-modal" class="fixed inset-0 z-[213] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl modal-fade-target">
+        <div class="glass-panel-no-hover w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-[2rem] p-6 md:p-9 modal-fade-panel">
+            <div class="flex justify-between items-center mb-7 border-b border-white/10 pb-4">
+                <div>
+                    <p class="text-[10px] uppercase tracking-[.2em] text-aerix-purple font-bold mb-1">AERIX</p>
+                    <h3 class="text-2xl font-black text-white" data-i18n="review_title">Laisser un avis</h3>
+                    <p class="text-xs text-gray-500 mt-1" data-i18n="review_subtitle">Partage ton expérience avec la communauté AERIX.</p>
+                </div>
+                <button onclick="closeReviewModal()" class="text-gray-400 hover:text-white bg-white/5 w-9 h-9 rounded-full shrink-0">✕</button>
+            </div>
+
+            <div id="review-login-warning" class="hidden rounded-xl border border-yellow-500/20 bg-yellow-500/10 p-4 text-xs text-yellow-200 mb-6" data-i18n="contact_login_required">Tu dois être connecté pour ouvrir un ticket.</div>
+
+            <div id="review-form" class="space-y-6">
+                <div class="text-center">
+                    <div id="review-stars" class="flex items-center justify-center gap-2" role="radiogroup" aria-label="Note sur 5 étoiles">
+                        <button type="button" class="review-star" data-value="1" onclick="setReviewRating(1)" onmouseenter="previewReviewRating(1)" aria-label="1 étoile">★</button>
+                        <button type="button" class="review-star" data-value="2" onclick="setReviewRating(2)" onmouseenter="previewReviewRating(2)" aria-label="2 étoiles">★</button>
+                        <button type="button" class="review-star" data-value="3" onclick="setReviewRating(3)" onmouseenter="previewReviewRating(3)" aria-label="3 étoiles">★</button>
+                        <button type="button" class="review-star" data-value="4" onclick="setReviewRating(4)" onmouseenter="previewReviewRating(4)" aria-label="4 étoiles">★</button>
+                        <button type="button" class="review-star" data-value="5" onclick="setReviewRating(5)" onmouseenter="previewReviewRating(5)" aria-label="5 étoiles">★</button>
+                    </div>
+                    <p id="review-rating-label" class="text-xs text-gray-500 mt-3" data-i18n="review_select_rating">Sélectionne une note</p>
+                </div>
+                <textarea id="review-comment" maxlength="1000" data-i18n-placeholder="review_comment_placeholder" placeholder="Ton commentaire..." class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm h-32 outline-none focus:border-aerix-purple transition resize-y"></textarea>
+                <button id="review-submit-btn" onclick="submitReview()" class="w-full bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition shadow-[0_0_18px_rgba(139,92,246,.25)]" data-i18n="review_submit">Publier mon avis</button>
             </div>
         </div>
     </div>
@@ -785,6 +838,7 @@
                 <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('partenaires')" id="tab-btn-partenaires" class="admin-tab-btn flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10">Sponsors</button>
                 <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('contact')" id="tab-btn-contact" class="admin-tab-btn flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10" data-i18n="contact_form">Contact</button>
                 <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('coaching')" id="tab-btn-coaching" class="admin-tab-btn flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10" data-i18n="nav_coaching">Coaching</button>
+                <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('avis')" id="tab-btn-avis" class="admin-tab-btn flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10" data-i18n="nav_review">Avis</button>
             </div>
 
             <!-- TAB: COMPTES -->
@@ -825,6 +879,15 @@
                     <h4 class="text-lg font-bold text-white mb-2" data-i18n="coaching_admin_requests_title">Demandes de coaching</h4>
                     <p class="text-xs text-gray-500 mb-5" data-i18n="coaching_admin_requests_desc">Centralisées avec les autres tickets — réponds pour envoyer un devis personnalisé.</p>
                     <div id="admin-list-coaching" class="space-y-4"></div>
+                </div>
+            </div>
+
+            <!-- TAB: AVIS -->
+            <div id="admin-tab-avis" class="admin-tab hidden space-y-6">
+                <div>
+                    <h4 class="text-lg font-bold text-white mb-2" data-i18n="review_admin_title">Avis publiés</h4>
+                    <p class="text-xs text-gray-500 mb-5" data-i18n="review_admin_desc">Tous les avis laissés par les membres. Supprime les avis abusifs ou hors sujet.</p>
+                    <div id="admin-list-avis" class="space-y-4"></div>
                 </div>
             </div>
 
@@ -1119,6 +1182,7 @@
 
         let globalAccounts = [];
         let globalContactRequests = [];
+        let globalReviews = [];
         let userTickets = [];
         let globalCoachAvailability = {}; // { 'YYYY-MM-DD': true }
 
@@ -1144,7 +1208,7 @@
                 card_1_title: "Former nos joueurs", card_1_desc: "Offrir un cadre d'entraînement rigoureux et un encadrement technique de pointe pour révéler les talents de demain.",
                 card_2_title: "Performance & Élite", card_2_desc: "Viser les sommets dans les compétitions majeures sur Rocket League et les circuits d'endurance virtuels.",
                 card_3_title: "Esprit d'équipe", card_3_desc: "Cohésion, communication stratégique et la force d'un collectif uni pour surmonter tous les défis.",
-                roster_subtitle: "Divisions", roster_title: "Nos équipes professionnelles",
+                roster_subtitle: "Divisions", roster_title: "Nos équipes",
                 results_subtitle: "Compétitions", results_title: "Résultats & Palmarès",
                 history_subtitle: "L'Héritage", history_title: "L'Histoire d'AERIX", history_desc: "Née d'une passion commune pour le sport automobile virtuel et l'esport, AERIX n'a cessé d'évoluer.",
                 shop_subtitle: "Shop", shop_title: "Équipement Officiel",
@@ -1161,7 +1225,10 @@
                 coaching_pricing_notice: "Le coaching AERIX est un service payant. Les tarifs varient selon le format choisi (Solo / Groupe), la durée et le niveau demandé. Un devis personnalisé te sera communiqué directement dans ton ticket après validation de ta demande.",
                 coaching_legend_available: "Disponible", coaching_legend_unavailable: "Indisponible", coaching_submit: "Envoyer ma demande",
                 coaching_admin_availability_title: "Disponibilités coach", coaching_admin_availability_desc: "Ouvre ou ferme tes jours de coaching. Le calendrier public se met à jour en temps réel.", coaching_admin_availability_hint: "Clique sur une date pour ouvrir ou fermer ce créneau.",
-                coaching_admin_requests_title: "Demandes de coaching", coaching_admin_requests_desc: "Centralisées avec les autres tickets — réponds pour envoyer un devis personnalisé."
+                coaching_admin_requests_title: "Demandes de coaching", coaching_admin_requests_desc: "Centralisées avec les autres tickets — réponds pour envoyer un devis personnalisé.",
+                nav_review: "Laisser un avis", review_title: "Laisser un avis", review_subtitle: "Partage ton expérience avec la communauté AERIX.", review_select_rating: "Sélectionne une note", review_comment_placeholder: "Ton commentaire...", review_submit: "Publier mon avis",
+                review_admin_title: "Avis publiés", review_admin_desc: "Tous les avis laissés par les membres. Supprime les avis abusifs ou hors sujet.", no_reviews: "Aucun avis pour le moment.",
+                filter_gallery: "Galerie"
             },
             en: {
                 nav_home: "Home", nav_effectifs: "Rosters", nav_palmares: "Results", nav_histoire: "History", nav_boutique: "Shop", nav_partenaires: "Partners", nav_annonces: "News",
@@ -1171,7 +1238,7 @@
                 card_1_title: "Train our players", card_1_desc: "Provide rigorous training and cutting-edge coaching to reveal tomorrow's talents.",
                 card_2_title: "Elite Performance", card_2_desc: "Aim for the top in major Rocket League competitions and virtual endurance circuits.",
                 card_3_title: "Team Spirit", card_3_desc: "Cohesion, strategic communication, and the strength of a united collective.",
-                roster_subtitle: "Divisions", roster_title: "Our Professional Rosters",
+                roster_subtitle: "Divisions", roster_title: "Our Rosters",
                 results_subtitle: "Competitions", results_title: "Results & Achievements",
                 history_subtitle: "The Legacy", history_title: "AERIX History", history_desc: "Born from a shared passion for virtual motorsport and esports, AERIX has continuously evolved.",
                 shop_subtitle: "Shop", shop_title: "Official Merch",
@@ -1189,7 +1256,10 @@
                 coaching_pricing_notice: "AERIX coaching is a paid service. Pricing varies depending on the chosen format (Solo / Group), duration and requested level. A personalized quote will be sent directly in your ticket once your request is validated.",
                 coaching_legend_available: "Available", coaching_legend_unavailable: "Unavailable", coaching_submit: "Send my request",
                 coaching_admin_availability_title: "Coach availability", coaching_admin_availability_desc: "Open or close your coaching days. The public calendar updates in real time.", coaching_admin_availability_hint: "Click a date to open or close that slot.",
-                coaching_admin_requests_title: "Coaching requests", coaching_admin_requests_desc: "Centralized with the other tickets — reply to send a personalized quote."
+                coaching_admin_requests_title: "Coaching requests", coaching_admin_requests_desc: "Centralized with the other tickets — reply to send a personalized quote.",
+                nav_review: "Leave a review", review_title: "Leave a review", review_subtitle: "Share your experience with the AERIX community.", review_select_rating: "Select a rating", review_comment_placeholder: "Your comment...", review_submit: "Publish my review",
+                review_admin_title: "Published reviews", review_admin_desc: "All reviews left by members. Delete abusive or off-topic reviews.", no_reviews: "No reviews yet.",
+                filter_gallery: "Gallery"
             }
         };
         let currentLang = localStorage.getItem('aerix_lang') || ((navigator.language || '').toLowerCase().startsWith('en') ? 'en' : 'fr');
@@ -1227,11 +1297,11 @@
                 'Accueil':'Home','Effectifs':'Rosters','Palmarès':'Results','Histoire':'History','Boutique':'Shop','Partenaires':'Partners','Annonces':'News',
                 'Découvrir les équipes':'Discover Rosters','Notre Palmarès':'Our Achievements','Performance & Élite':'Elite Performance',"Esprit d'équipe":'Team Spirit',
                 "Cohésion, communication stratégique et la force d'un collectif uni pour surmonter tous les défis.":'Cohesion, strategic communication, and the strength of a united team to overcome every challenge.',
-                'Nos équipes professionnelles':'Our Professional Rosters','Compétitions':'Competitions','Résultats & Palmarès':'Results & Achievements',"L'Héritage":'The Legacy',
+                'Nos équipes':'Our Rosters','Compétitions':'Competitions','Résultats & Palmarès':'Results & Achievements',"L'Héritage":'The Legacy',
                 "Née d'une passion commune pour le sport automobile virtuel et l'esport, AERIX n'a cessé d'évoluer.":'Born from a shared passion for virtual motorsport and esports, AERIX has continuously evolved.',
                 'Décembre 2025':'December 2025','La Genèse sur les circuits':'The Genesis on the circuits','Février 2026':'February 2026',"L'ère de l'Endurance":'The Endurance Era','Mai 2026':'May 2026','L’expansion Esport':'Esports Expansion',"L'expansion Esport":'Esports Expansion','Juin 2026':'June 2026',"L'arrivée d'iRacing":'The arrival of iRacing','Août 2026':'August 2026',"L'arrivée de RBR":'The arrival of RBR',
                 "Lancement officiel d'un championnat sur Assetto Corsa Competizione (ACC).":'Official launch of a championship on Assetto Corsa Competizione (ACC).',
-                'Débuts remarqués sur Le Mans Ultimate . La stratégie devient le cœur de notre pôle Motorsport.':'Strong first appearances on Le Mans Ultimate. Strategy becomes the core of our Motorsport division.',
+                'Débuts remarqués sur Le Mans Ultimate qui marque notre arrivée dans le monde de l'esport.':'Strong first appearances on Le Mans Ultimate. Strategy becomes the core of our Motorsport division.',
                 'Entrée officielle sur Rocket League avec des joueurs de rang Grand Champion.':'Official entry into Rocket League with Grand Champion-level players.',
                 'Équipement Officiel':'Official Merch','Sponsors & Affiliés':'Sponsors & Affiliates','Actualités':'News','Annonces & Mises à jour':'Announcements & Updates',
                 '© 2026 AERIX Esports. Tous droits réservés.':'© 2026 AERIX Esports. All rights reserved.','Mentions légales':'Legal notice','Confidentialité':'Privacy','Gérer les cookies':'Manage cookies',
@@ -1322,6 +1392,10 @@
                 if (document.getElementById('coaching-modal') && !document.getElementById('coaching-modal').classList.contains('hidden')) renderCoachingCalendar();
                 if (document.getElementById('admin-tab-coaching') && !document.getElementById('admin-tab-coaching').classList.contains('hidden')) renderAdminCoachingCalendar();
             }, () => { globalCoachAvailability = {}; });
+            db.collection("reviews").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
+                globalReviews = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderAdminLists();
+            }, () => { globalReviews = []; renderAdminLists(); });
             checkCookies();
             loadAnalyticsIfConsented();
         }
@@ -1645,9 +1719,23 @@
         }
 
         // ACTUALITÉS (TEXTE RICHE + ANIMATION)
+        let annoncesView = 'liste';
+        function setAnnoncesView(view) {
+            annoncesView = view;
+            document.querySelectorAll('#annonces-view-toggle .filter-btn').forEach(btn => btn.classList.toggle('active', btn.getAttribute('data-view') === view));
+            document.getElementById('announcements-container').classList.toggle('hidden', view !== 'liste');
+            document.getElementById('announcements-gallery').classList.toggle('hidden', view !== 'galerie');
+            renderAnnonces();
+        }
         function renderAnnonces() {
             let filtered = currentFilters.annonces === 'Tous' ? globalAnnonces : globalAnnonces.filter(a => (a.game || 'Tous') === currentFilters.annonces);
             filtered = sortByDateDesc(filtered);
+
+            if (annoncesView === 'galerie') {
+                renderAnnoncesGallery(filtered.filter(a => a.image));
+                return;
+            }
+
             const container = document.getElementById('announcements-container');
             container.innerHTML = filtered.length ? '' : '<p class="text-gray-500 text-sm italic text-center">Aucune annonce.</p>';
             
@@ -1663,6 +1751,25 @@
                             </div>
                             <h4 class="text-2xl font-black text-white mb-4 leading-tight tracking-tight group-hover:text-amber-400 transition-colors" data-translate-src="${escapeHtml(a.title || '')}">${a.title}</h4>
                             <div class="text-sm text-gray-400 leading-relaxed rich-editor-content" data-translate-src="${escapeHtml(a.desc || '')}">${a.desc}</div>
+                        </div>
+                    </div>`;
+            });
+            setTimeout(revealActiveElements, 20);
+            translateDynamicContent();
+        }
+        // Galerie : grille d'images tirées des annonces, filtrable par tag de jeu via
+        // les mêmes boutons que la vue Actualités (currentFilters.annonces).
+        function renderAnnoncesGallery(items) {
+            const gallery = document.getElementById('announcements-gallery');
+            if (!gallery) return;
+            gallery.innerHTML = items.length ? '' : '<p class="text-gray-500 text-sm italic text-center col-span-full">Aucune image.</p>';
+            items.forEach((a, index) => {
+                gallery.innerHTML += `
+                    <div class="news-card-animated group cursor-pointer glass-panel rounded-2xl overflow-hidden reveal delay-${(index%6)*80} aspect-square relative">
+                        <img src="${a.image}" class="news-img w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3">
+                            <div class="mb-1">${getGameBadge(a.game)}</div>
+                            <p class="text-white text-xs font-bold truncate" data-translate-src="${escapeHtml(a.title || '')}">${a.title}</p>
                         </div>
                     </div>`;
             });
@@ -1719,7 +1826,7 @@
     if (adminSessionStartTime > 0 && (Date.now() - adminSessionStartTime < ADMIN_SESSION_TIMEOUT)) {
         document.getElementById('admin-modal').classList.remove('hidden');
         applyAdminTabVisibility();
-        switchAdminTab(isOwner() ? 'comptes' : 'boutique');
+        switchAdminTab(isOwner() ? 'comptes' : 'effectifs');
         
         // On relance le minuteur s'il était arrêté
         if (!adminSessionTimer) {
@@ -1812,7 +1919,7 @@ function checkAdminSessionTimeout() {
                 document.getElementById('admin-login-modal').classList.add('hidden');
                 document.getElementById('admin-modal').classList.remove('hidden');
                 applyAdminTabVisibility();
-                switchAdminTab(isOwner() ? 'comptes' : 'boutique');
+                switchAdminTab(isOwner() ? 'comptes' : 'effectifs');
                 startAdminSession();
                 showToast(currentLang==='en'?'Admin access confirmed.':'Accès administrateur confirmé.', 'success');
             } catch (e) {
@@ -2075,9 +2182,26 @@ function checkAdminSessionTimeout() {
         }
 
         // ============ COACHING (CÔTÉ PILOTE) ============
+        // Ouverture/fermeture en fondu douce pour les modales marquées .modal-fade-target :
+        // on retire "hidden" puis on ajoute "modal-fade-in" dans la frame suivante pour
+        // laisser la transition CSS s'exécuter (au lieu d'un affichage instantané et brutal).
+        function openModalSmooth(id) {
+            const modal = document.getElementById(id);
+            if (!modal) return;
+            modal.classList.remove('hidden');
+            void modal.offsetWidth;
+            requestAnimationFrame(() => modal.classList.add('modal-fade-in'));
+        }
+        function closeModalSmooth(id) {
+            const modal = document.getElementById(id);
+            if (!modal) return;
+            modal.classList.remove('modal-fade-in');
+            setTimeout(() => modal.classList.add('hidden'), 320);
+        }
+
         function openCoachingModal() {
             document.querySelectorAll('.account-menu, #mobile-menu').forEach(m => m.classList.add('hidden'));
-            document.getElementById('coaching-modal')?.classList.remove('hidden');
+            openModalSmooth('coaching-modal');
             const warning = document.getElementById('coaching-login-warning');
             const form = document.getElementById('coaching-form');
             const logged = !!currentUser && !!currentAccount;
@@ -2092,7 +2216,86 @@ function checkAdminSessionTimeout() {
             setCoachingFormat('Solo');
             renderCoachingCalendar();
         }
-        function closeCoachingModal() { document.getElementById('coaching-modal')?.classList.add('hidden'); }
+        function closeCoachingModal() { closeModalSmooth('coaching-modal'); }
+
+        // -------------------------
+        // AVIS (SYSTÈME DE NOTATION)
+        // -------------------------
+        let reviewRating = 0;
+        const REVIEW_RATING_LABELS = { fr: ['Sélectionne une note', 'Décevant', 'Moyen', 'Correct', 'Très bien', 'Excellent'], en: ['Select a rating', 'Poor', 'Average', 'Good', 'Very good', 'Excellent'] };
+
+        function openReviewModal() {
+            document.querySelectorAll('.account-menu, #mobile-menu').forEach(m => m.classList.add('hidden'));
+            openModalSmooth('review-modal');
+            const warning = document.getElementById('review-login-warning');
+            const form = document.getElementById('review-form');
+            const logged = !!currentUser && !!currentAccount;
+            warning?.classList.toggle('hidden', logged);
+            form?.classList.toggle('hidden', !logged);
+            reviewRating = 0;
+            document.getElementById('review-comment').value = '';
+            renderReviewStars(0);
+            updateReviewRatingLabel(0);
+        }
+        function closeReviewModal() { closeModalSmooth('review-modal'); }
+
+        // Survol : aperçu temporaire de la note (sans la valider).
+        function previewReviewRating(value) { renderReviewStars(value); updateReviewRatingLabel(value); }
+        // Sortie de la zone d'étoiles : on revient à la note réellement sélectionnée.
+        document.addEventListener('DOMContentLoaded', () => {
+            const starsWrap = document.getElementById('review-stars');
+            starsWrap?.addEventListener('mouseleave', () => { renderReviewStars(reviewRating); updateReviewRatingLabel(reviewRating); });
+        });
+
+        function setReviewRating(value) {
+            reviewRating = value;
+            renderReviewStars(value);
+            updateReviewRatingLabel(value);
+            const starBtn = document.querySelector(`.review-star[data-value="${value}"]`);
+            if (starBtn) { starBtn.classList.remove('pop'); void starBtn.offsetWidth; starBtn.classList.add('pop'); }
+        }
+        function renderReviewStars(value) {
+            document.querySelectorAll('.review-star').forEach(btn => {
+                btn.classList.toggle('filled', Number(btn.getAttribute('data-value')) <= value);
+            });
+        }
+        function updateReviewRatingLabel(value) {
+            const label = document.getElementById('review-rating-label');
+            if (!label) return;
+            const labels = currentLang === 'en' ? REVIEW_RATING_LABELS.en : REVIEW_RATING_LABELS.fr;
+            label.innerText = labels[value] || labels[0];
+        }
+
+        async function submitReview() {
+            if (!currentUser || !currentAccount) {
+                showToast(currentLang === 'en' ? 'Sign in to publish a review.' : 'Connecte-toi pour publier un avis.', 'error');
+                return;
+            }
+            if (!reviewRating) {
+                showToast(currentLang === 'en' ? 'Please select a rating.' : 'Sélectionne une note.', 'error');
+                return;
+            }
+            const comment = document.getElementById('review-comment').value.trim();
+            const btn = document.getElementById('review-submit-btn');
+            try {
+                if (btn) btn.disabled = true;
+                await db.collection('reviews').add({
+                    uid: currentUser.uid,
+                    username: currentAccount.username || '',
+                    rating: reviewRating,
+                    comment: comment,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                showToast(currentLang === 'en' ? 'Review published!' : 'Avis publié !');
+                closeReviewModal();
+            } catch (e) {
+                console.error(e);
+                showToast(currentLang === 'en' ? 'Error while publishing.' : 'Erreur lors de la publication.', 'error');
+            } finally {
+                if (btn) btn.disabled = false;
+            }
+        }
+
         function setCoachingFormat(format) {
             coachingFormat = format;
             document.getElementById('coaching-format-solo')?.classList.toggle('active', format === 'Solo');
@@ -2304,6 +2507,17 @@ function checkAdminSessionTimeout() {
                 const coachingOnly = globalContactRequests.filter(t => t.type === 'coaching');
                 coachingEl.innerHTML = coachingOnly.length ? coachingOnly.map(t => renderAdminTicketCard(t)).join('') : `<p class="text-gray-500 text-sm italic">${currentLang==='en'?'No coaching requests.':'Aucune demande de coaching.'}</p>`;
             }
+            const avisEl = document.getElementById('admin-list-avis');
+            if (avisEl) {
+                avisEl.innerHTML = globalReviews.length ? globalReviews.map(r => renderAdminReviewCard(r)).join('') : `<p class="text-gray-500 text-sm italic">${currentLang==='en'?'No reviews yet.':'Aucun avis pour le moment.'}</p>`;
+            }
+        }
+        // Carte d'avis affichée dans l'onglet admin "Avis" : note en étoiles, auteur,
+        // commentaire, et bouton de suppression pour modérer les avis abusifs/hors sujet.
+        function renderAdminReviewCard(r) {
+            const rating = Number(r.rating) || 0;
+            const starsHTML = [1,2,3,4,5].map(v => `<span class="review-star-display${v > rating ? ' empty' : ''}" style="font-size:1.1rem;">★</span>`).join('');
+            return `<div class="glass-panel p-5 rounded-2xl"><div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4"><div class="min-w-0"><div class="flex items-center gap-2 mb-2">${starsHTML}</div><div class="text-white font-bold text-sm">${escapeHtml(r.username || '—')}</div>${r.comment ? `<div class="text-xs text-gray-400 mt-2 whitespace-pre-wrap break-words">${escapeHtml(r.comment)}</div>` : ''}</div><button onclick="deleteItem('reviews', '${r.id}')" class="text-xs font-bold px-3 py-2 rounded-xl bg-red-500/10 text-red-300 hover:bg-red-500/20 shrink-0">${currentLang==='en'?'Delete':'Supprimer'}</button></div></div>`;
         }
         // Carte de ticket réutilisée pour les onglets admin "Contact" et "Coaching" :
         // les demandes de coaching arrivent dans la même base (contactRequests) et affichent
@@ -2699,7 +2913,7 @@ function checkAdminSessionTimeout() {
         // CROP STUDIO
         let cropper = null, cropCallback = null;
         function openCropper(file, ratio, callback) { const reader = new FileReader(); reader.onload = (e) => { const image = document.getElementById('crop-image'); image.src = e.target.result; document.getElementById('crop-modal').classList.remove('hidden'); if (cropper) cropper.destroy(); cropper = new Cropper(image, { aspectRatio: ratio, viewMode: 1, background: false, autoCropArea: 1 }); cropCallback = callback; }; reader.readAsDataURL(file); }
-        function confirmCrop() { if (!cropper) return; const canvas = cropper.getCroppedCanvas({ maxWidth: 1200, maxHeight: 1200, fillColor: 'transparent' }); document.getElementById('crop-modal').classList.add('hidden'); cropper.destroy(); cropper = null; if (cropCallback) cropCallback(canvas.toDataURL('image/webp', 0.8)); }
+        function confirmCrop() { if (!cropper) return; const canvas = cropper.getCroppedCanvas({ maxWidth: 2400, maxHeight: 2400, imageSmoothingEnabled: true, imageSmoothingQuality: 'high', fillColor: 'transparent' }); document.getElementById('crop-modal').classList.add('hidden'); cropper.destroy(); cropper = null; if (cropCallback) cropCallback(canvas.toDataURL('image/webp', 0.95)); }
         function cancelCrop() { document.getElementById('crop-modal').classList.add('hidden'); if (cropper) cropper.destroy(); cropper = null; }
 
         let tempShopImages = [], tempPlayerAvatar = null, tempPlayers = [], tempPartnerImage = null, tempAnnouncementImage = null, tempPalmImage = null;
@@ -2808,13 +3022,21 @@ function checkAdminSessionTimeout() {
             const comptesBtn = document.getElementById('tab-btn-comptes');
             const contactBtn = document.getElementById('tab-btn-contact');
             const coachingBtn = document.getElementById('tab-btn-coaching');
+            const avisBtn = document.getElementById('tab-btn-avis');
+            const boutiqueBtn = document.getElementById('tab-btn-boutique');
+            const partenairesBtn = document.getElementById('tab-btn-partenaires');
             if (comptesBtn) comptesBtn.classList.toggle('hidden', !isOwner());
             if (contactBtn) contactBtn.classList.toggle('hidden', !hasAdminAccess());
             if (coachingBtn) coachingBtn.classList.toggle('hidden', !hasAdminAccess());
+            if (avisBtn) avisBtn.classList.toggle('hidden', !hasAdminAccess());
+            // Boutique & Sponsors : réservés au rôle Owner, masqués pour les Admin.
+            if (boutiqueBtn) boutiqueBtn.classList.toggle('hidden', !isOwner());
+            if (partenairesBtn) partenairesBtn.classList.toggle('hidden', !isOwner());
         }
         function switchAdminTab(tab) {
-            if (tab === 'comptes' && !isOwner()) tab = 'boutique';
-            if ((tab === 'contact' || tab === 'coaching') && !hasAdminAccess()) tab = 'boutique';
+            if (tab === 'comptes' && !isOwner()) tab = 'effectifs';
+            if ((tab === 'boutique' || tab === 'partenaires') && !isOwner()) tab = 'effectifs';
+            if ((tab === 'contact' || tab === 'coaching' || tab === 'avis') && !hasAdminAccess()) tab = 'effectifs';
             const target = document.getElementById('admin-tab-' + tab);
             if(!target) return;
             document.querySelectorAll('.admin-tab').forEach(t => {
@@ -2825,7 +3047,7 @@ function checkAdminSessionTimeout() {
             void target.offsetWidth;
             target.classList.add('animate-tab-change');
             if (tab === 'coaching') renderAdminCoachingCalendar();
-            ['comptes', 'boutique', 'effectifs', 'palmares', 'partenaires', 'annonces', 'contact', 'coaching'].forEach(t => {
+            ['comptes', 'boutique', 'effectifs', 'palmares', 'partenaires', 'annonces', 'contact', 'coaching', 'avis'].forEach(t => {
                 const btn = document.getElementById('tab-btn-' + t);
                 if(btn) {
                     btn.classList.remove('active', 'text-white');
