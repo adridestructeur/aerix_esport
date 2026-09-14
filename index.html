@@ -269,7 +269,7 @@
                 <button id="nav-boutique" onclick="navigate('boutique')" class="nav-btn hover:text-white" data-i18n="nav_boutique">Boutique</button>
                 <button id="nav-partenaires" onclick="navigate('partenaires')" class="nav-btn hover:text-white" data-i18n="nav_partenaires">Partenaires</button>
                 <button id="nav-coaching" onclick="openCoachingModal()" class="nav-btn hover:text-white" data-i18n="nav_coaching">Coaching</button>
-                <button id="nav-review" onclick="openReviewModal()" class="nav-btn hover:text-white" data-i18n="nav_review">Laisser un avis</button>
+                <button id="nav-review" onclick="openReviewModal()" class="nav-btn hover:text-white" data-i18n="nav_review">Avis</button>
             </div>
 
             <div class="hidden md:flex items-center gap-3">
@@ -1088,6 +1088,29 @@
                         <button onclick="saveAnnouncement()" class="flex-1 bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition shadow-[0_0_15px_rgba(139,92,246,0.3)]">Publier l'article</button>
                     </div>
                 </div>
+
+                <!-- GALERIE : ajout rapide de photos (sans rédiger d'article) -->
+                <div class="glass-panel glass-panel-form p-6 rounded-2xl border border-white/5">
+                    <h4 class="text-lg font-bold text-white mb-2 border-b border-white/10 pb-2" data-i18n="filter_gallery">Galerie</h4>
+                    <p class="text-xs text-gray-500 mb-5">Ajoute une photo à la galerie publique, avec un tag jeu pour le tri.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <input type="text" id="add-gallery-caption" placeholder="Légende (optionnel)" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple transition">
+                        <select id="add-gallery-game" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple transition">
+                            <option value="Tous">Général</option>
+                            <option value="Rocket League">Rocket League</option>
+                            <option value="Le Mans Ultimate">Le Mans Ultimate</option>
+                            <option value="RBR">RBR (Richard Burns Rally)</option>
+                            <option value="iRacing">iRacing</option>
+                        </select>
+                    </div>
+                    <div id="gallery-img-preview" class="w-full h-40 bg-white/5 rounded-xl mb-4 hidden bg-cover bg-center border border-white/10 relative">
+                        <button type="button" onclick="tempGalleryImage=null; this.parentElement.classList.add('hidden')" class="absolute top-2 right-2 bg-red-500 text-white text-[10px] w-6 h-6 rounded-full font-bold">✕</button>
+                    </div>
+                    <button type="button" onclick="document.getElementById('gallery-img-input').click()" class="bg-white/5 border border-dashed border-white/20 text-gray-400 hover:text-white hover:border-white/40 text-xs font-bold px-4 py-4 rounded-xl w-full mb-6 transition">+ Ajouter une photo</button>
+                    <input type="file" id="gallery-img-input" accept="image/*" class="hidden">
+                    <button onclick="saveGalleryPhoto()" class="w-full bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition shadow-[0_0_15px_rgba(139,92,246,0.3)]">Ajouter à la galerie</button>
+                    <div id="admin-list-gallery" class="grid grid-cols-3 md:grid-cols-4 gap-3 mt-6"></div>
+                </div>
             </div>
 
             <!-- TAB: PARTENAIRES -->
@@ -1183,6 +1206,7 @@
         let globalAccounts = [];
         let globalContactRequests = [];
         let globalReviews = [];
+        let globalGallery = [];
         let userTickets = [];
         let globalCoachAvailability = {}; // { 'YYYY-MM-DD': true }
 
@@ -1226,7 +1250,7 @@
                 coaching_legend_available: "Disponible", coaching_legend_unavailable: "Indisponible", coaching_submit: "Envoyer ma demande",
                 coaching_admin_availability_title: "Disponibilités coach", coaching_admin_availability_desc: "Ouvre ou ferme tes jours de coaching. Le calendrier public se met à jour en temps réel.", coaching_admin_availability_hint: "Clique sur une date pour ouvrir ou fermer ce créneau.",
                 coaching_admin_requests_title: "Demandes de coaching", coaching_admin_requests_desc: "Centralisées avec les autres tickets — réponds pour envoyer un devis personnalisé.",
-                nav_review: "Laisser un avis", review_title: "Laisser un avis", review_subtitle: "Partage ton expérience avec la communauté AERIX.", review_select_rating: "Sélectionne une note", review_comment_placeholder: "Ton commentaire...", review_submit: "Publier mon avis",
+                nav_review: "Avis", review_title: "Laisser un avis", review_subtitle: "Partage ton expérience avec la communauté AERIX.", review_select_rating: "Sélectionne une note", review_comment_placeholder: "Ton commentaire...", review_submit: "Publier mon avis",
                 review_admin_title: "Avis publiés", review_admin_desc: "Tous les avis laissés par les membres. Supprime les avis abusifs ou hors sujet.", no_reviews: "Aucun avis pour le moment.",
                 filter_gallery: "Galerie"
             },
@@ -1257,7 +1281,7 @@
                 coaching_legend_available: "Available", coaching_legend_unavailable: "Unavailable", coaching_submit: "Send my request",
                 coaching_admin_availability_title: "Coach availability", coaching_admin_availability_desc: "Open or close your coaching days. The public calendar updates in real time.", coaching_admin_availability_hint: "Click a date to open or close that slot.",
                 coaching_admin_requests_title: "Coaching requests", coaching_admin_requests_desc: "Centralized with the other tickets — reply to send a personalized quote.",
-                nav_review: "Leave a review", review_title: "Leave a review", review_subtitle: "Share your experience with the AERIX community.", review_select_rating: "Select a rating", review_comment_placeholder: "Your comment...", review_submit: "Publish my review",
+                nav_review: "Reviews", review_title: "Leave a review", review_subtitle: "Share your experience with the AERIX community.", review_select_rating: "Select a rating", review_comment_placeholder: "Your comment...", review_submit: "Publish my review",
                 review_admin_title: "Published reviews", review_admin_desc: "All reviews left by members. Delete abusive or off-topic reviews.", no_reviews: "No reviews yet.",
                 filter_gallery: "Gallery"
             }
@@ -1396,6 +1420,11 @@
                 globalReviews = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 renderAdminLists();
             }, () => { globalReviews = []; renderAdminLists(); });
+            db.collection("gallery").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
+                globalGallery = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderAdminLists();
+                if (annoncesView === 'galerie') renderAnnonces();
+            }, () => { globalGallery = []; renderAdminLists(); });
             checkCookies();
             loadAnalyticsIfConsented();
         }
@@ -1732,7 +1761,10 @@
             filtered = sortByDateDesc(filtered);
 
             if (annoncesView === 'galerie') {
-                renderAnnoncesGallery(filtered.filter(a => a.image));
+                const galleryFromAnnonces = filtered.filter(a => a.image).map(a => ({ image: a.image, game: a.game, caption: a.title }));
+                const galleryFromCollection = currentFilters.annonces === 'Tous' ? globalGallery : globalGallery.filter(g => (g.game || 'Tous') === currentFilters.annonces);
+                const galleryPhotos = [...galleryFromCollection.map(g => ({ image: g.image, game: g.game, caption: g.caption })), ...galleryFromAnnonces];
+                renderAnnoncesGallery(galleryPhotos);
                 return;
             }
 
@@ -1757,8 +1789,9 @@
             setTimeout(revealActiveElements, 20);
             translateDynamicContent();
         }
-        // Galerie : grille d'images tirées des annonces, filtrable par tag de jeu via
-        // les mêmes boutons que la vue Actualités (currentFilters.annonces).
+        // Galerie : grille d'images tirées de la collection "gallery" (ajout rapide côté
+        // admin) et des annonces illustrées, filtrable par tag de jeu via les mêmes
+        // boutons que la vue Actualités (currentFilters.annonces).
         function renderAnnoncesGallery(items) {
             const gallery = document.getElementById('announcements-gallery');
             if (!gallery) return;
@@ -1769,7 +1802,7 @@
                         <img src="${a.image}" class="news-img w-full h-full object-cover">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3">
                             <div class="mb-1">${getGameBadge(a.game)}</div>
-                            <p class="text-white text-xs font-bold truncate" data-translate-src="${escapeHtml(a.title || '')}">${a.title}</p>
+                            ${a.caption ? `<p class="text-white text-xs font-bold truncate" data-translate-src="${escapeHtml(a.caption || '')}">${a.caption}</p>` : ''}
                         </div>
                     </div>`;
             });
@@ -2511,6 +2544,10 @@ function checkAdminSessionTimeout() {
             if (avisEl) {
                 avisEl.innerHTML = globalReviews.length ? globalReviews.map(r => renderAdminReviewCard(r)).join('') : `<p class="text-gray-500 text-sm italic">${currentLang==='en'?'No reviews yet.':'Aucun avis pour le moment.'}</p>`;
             }
+            const galleryEl = document.getElementById('admin-list-gallery');
+            if (galleryEl) {
+                galleryEl.innerHTML = globalGallery.length ? globalGallery.map(g => `<div class="relative group rounded-xl overflow-hidden aspect-square border border-white/10"><img src="${g.image}" class="w-full h-full object-cover"><button onclick="deleteItem('gallery', '${g.id}')" class="absolute top-1.5 right-1.5 bg-red-500 text-white text-[10px] w-6 h-6 rounded-full font-bold opacity-0 group-hover:opacity-100 transition">✕</button></div>`).join('') : `<p class="text-gray-500 text-sm italic col-span-full">Aucune photo dans la galerie.</p>`;
+            }
         }
         // Carte d'avis affichée dans l'onglet admin "Avis" : note en étoiles, auteur,
         // commentaire, et bouton de suppression pour modérer les avis abusifs/hors sujet.
@@ -2777,6 +2814,21 @@ function checkAdminSessionTimeout() {
             } catch(e) { showToast("Erreur", "error"); }
         }
 
+        // GALERIE (AJOUT RAPIDE DE PHOTOS, SANS ARTICLE)
+        function resetGalleryForm() {
+            document.getElementById('add-gallery-caption').value = ''; document.getElementById('add-gallery-game').value = 'Tous';
+            tempGalleryImage = null; document.getElementById('gallery-img-preview').classList.add('hidden');
+        }
+        async function saveGalleryPhoto() {
+            if (!tempGalleryImage) return showToast("Ajoute une photo.", "error");
+            const caption = document.getElementById('add-gallery-caption').value;
+            const game = document.getElementById('add-gallery-game').value;
+            try {
+                await db.collection("gallery").add({ caption, game, image: tempGalleryImage, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                showToast("Photo ajoutée à la galerie !"); resetGalleryForm();
+            } catch(e) { console.error(e); showToast("Erreur", "error"); }
+        }
+
         // NAVIGATION & FILTRES
         function setFilter(section, filterValue) {
             currentFilters[section] = filterValue;
@@ -2916,7 +2968,7 @@ function checkAdminSessionTimeout() {
         function confirmCrop() { if (!cropper) return; const canvas = cropper.getCroppedCanvas({ maxWidth: 2400, maxHeight: 2400, imageSmoothingEnabled: true, imageSmoothingQuality: 'high', fillColor: 'transparent' }); document.getElementById('crop-modal').classList.add('hidden'); cropper.destroy(); cropper = null; if (cropCallback) cropCallback(canvas.toDataURL('image/webp', 0.95)); }
         function cancelCrop() { document.getElementById('crop-modal').classList.add('hidden'); if (cropper) cropper.destroy(); cropper = null; }
 
-        let tempShopImages = [], tempPlayerAvatar = null, tempPlayers = [], tempPartnerImage = null, tempAnnouncementImage = null, tempPalmImage = null;
+        let tempShopImages = [], tempPlayerAvatar = null, tempPlayers = [], tempPartnerImage = null, tempAnnouncementImage = null, tempPalmImage = null, tempGalleryImage = null;
         const defaultAvatar = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E";
         
         document.getElementById('shop-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 4/5, b => { tempShopImages.push(b); renderShopPreviews(); }); e.target.value=''; });
@@ -2983,6 +3035,7 @@ function checkAdminSessionTimeout() {
         document.getElementById('palm-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 16/9, b => { tempPalmImage = b; document.getElementById('palm-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('palm-img-preview').classList.remove('hidden'); }); e.target.value=''; });
         document.getElementById('partner-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], NaN, b => { tempPartnerImage = b; document.getElementById('partner-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('partner-img-preview').classList.remove('hidden'); }); e.target.value=''; });
         document.getElementById('announcement-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 16/9, b => { tempAnnouncementImage = b; document.getElementById('announcement-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('announcement-img-preview').classList.remove('hidden'); }); e.target.value=''; });
+        document.getElementById('gallery-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 1/1, b => { tempGalleryImage = b; document.getElementById('gallery-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('gallery-img-preview').classList.remove('hidden'); }); e.target.value=''; });
 
         function toggleAdmin() {
             if (!hasAdminAccess()) {
