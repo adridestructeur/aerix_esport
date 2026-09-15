@@ -245,7 +245,7 @@
 
 
     /* ASSISTANT AERIX */
-    #aerix-assistant { position: fixed; right: 18px; bottom: 38px; z-index: 180; }
+    #aerix-assistant { position: fixed; right: 8px; bottom: 38px; z-index: 180; }
     #aerix-assistant-panel { width: min(370px, calc(100vw - 32px)); height: min(560px, calc(100dvh - 110px)); transform-origin: bottom right; opacity: 0; transform: translateY(14px) scale(.96); pointer-events: none; transition: opacity .28s ease, transform .32s cubic-bezier(.16,1,.3,1); }
     #aerix-assistant-panel.open { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
     #aerix-assistant-launcher { width: 58px; height: 58px; border-radius: 9999px; border: 1px solid rgba(139,92,246,.55); background: linear-gradient(145deg, rgba(139,92,246,.28), rgba(15,15,15,.92)); box-shadow: 0 10px 35px rgba(0,0,0,.5), 0 0 28px rgba(139,92,246,.28), inset 0 1px 0 rgba(255,255,255,.18); color:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer; backdrop-filter:blur(18px); transition:transform .25s ease, box-shadow .25s ease; }
@@ -260,7 +260,7 @@
     .assistant-user { background:rgba(139,92,246,.18); border:1px solid rgba(139,92,246,.28); color:#fff; align-self:flex-end; }
     .assistant-quick { padding:8px 10px; border-radius:9999px; border:1px solid rgba(255,255,255,.1); background:rgba(255,255,255,.04); color:#d1d5db; font-size:11px; transition:.2s ease; }
     .assistant-quick:hover { border-color:rgba(139,92,246,.55); background:rgba(139,92,246,.12); color:#fff; }
-    @media(max-width:640px){ #aerix-assistant{right:14px;bottom:24px;} #aerix-assistant-panel{width:calc(100vw - 28px);height:min(600px,calc(100dvh - 88px));} #aerix-assistant-launcher{width:54px;height:54px;} }
+    @media(max-width:640px){ #aerix-assistant{right:6px;bottom:24px;} #aerix-assistant-panel{width:calc(100vw - 20px);height:min(600px,calc(100dvh - 88px));} #aerix-assistant-launcher{width:54px;height:54px;} }
 
     /* MENU LANGUE */
     #language-menu { opacity: 0; visibility: hidden; transform: translateY(-6px) scale(.98); pointer-events: none; transition: opacity .32s ease, transform .32s cubic-bezier(.16,1,.3,1), visibility .32s ease; }
@@ -594,6 +594,26 @@
                 <div class="flex items-center justify-between mt-auto pt-6 border-t border-white/10">
                     <span id="modal-product-price" class="text-4xl font-black text-white">0 €</span>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL : ARTICLE RÉSULTAT (PALMARÈS) -->
+    <div id="palmares-article-modal" class="fixed inset-0 z-[120] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl">
+        <div class="glass-panel-no-hover w-full max-w-3xl max-h-[92vh] overflow-y-auto rounded-[2rem] shadow-2xl relative">
+            <button onclick="closePalmaresArticle()" class="absolute top-6 right-6 text-white hover:text-aerix-purple z-50 bg-black/50 w-10 h-10 rounded-full flex items-center justify-center border border-white/20 backdrop-blur-md transition">✕</button>
+            <div id="palmares-article-img-wrap" class="w-full aspect-video bg-[#050505] overflow-hidden border-b border-white/10 hidden">
+                <img id="palmares-article-img" src="" class="w-full h-full object-cover">
+            </div>
+            <div class="p-6 md:p-10">
+                <div class="flex flex-wrap gap-3 items-center mb-4" id="palmares-article-badges"></div>
+                <h3 id="palmares-article-title" class="text-2xl md:text-4xl font-black text-white mb-6 leading-tight tracking-tight"></h3>
+                <div id="palmares-article-meta" class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8"></div>
+                <div class="flex items-center gap-2 text-xs text-gray-500 font-medium mb-6">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    <span id="palmares-article-date"></span>
+                </div>
+                <div id="palmares-article-desc" class="text-sm text-gray-300 leading-relaxed rich-editor-content"></div>
             </div>
         </div>
     </div>
@@ -1065,7 +1085,41 @@
                     <div class="grid grid-cols-1 gap-4 mb-4">
                         <input type="text" id="add-palm-date" placeholder="Date (ex: 12 Mars 2026)" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple transition">
                     </div>
-                    
+
+                    <!-- ÉDITEUR RICHE (article détaillé du résultat) -->
+                    <div class="mb-6">
+                        <div class="flex gap-1 bg-[#1a1a1a] p-2 rounded-t-xl border border-white/10 border-b-0 overflow-x-auto">
+                            <button type="button" onclick="formatText('bold', null, 'add-palm-desc')" class="w-8 h-8 flex items-center justify-center text-white hover:bg-white/10 rounded font-bold transition">B</button>
+                            <button type="button" onclick="formatText('italic', null, 'add-palm-desc')" class="w-8 h-8 flex items-center justify-center text-white hover:bg-white/10 rounded italic transition">I</button>
+                            <button type="button" onclick="formatText('underline', null, 'add-palm-desc')" class="w-8 h-8 flex items-center justify-center text-white hover:bg-white/10 rounded underline transition">U</button>
+                            <div class="w-px h-6 bg-white/10 mx-1 my-auto"></div>
+                            <button type="button" onclick="formatText('formatBlock', 'H1', 'add-palm-desc')" class="px-2 h-8 flex items-center justify-center text-white hover:bg-white/10 rounded font-bold text-xs transition">Titre 1</button>
+                            <button type="button" onclick="formatText('formatBlock', 'H2', 'add-palm-desc')" class="px-2 h-8 flex items-center justify-center text-white hover:bg-white/10 rounded font-bold text-xs transition">Titre 2</button>
+                            <div class="w-px h-6 bg-white/10 mx-1 my-auto"></div>
+                            <button type="button" onclick="formatText('insertUnorderedList', null, 'add-palm-desc')" class="w-8 h-8 flex items-center justify-center text-white hover:bg-white/10 rounded transition">•</button>
+                            <button type="button" onclick="formatText('insertOrderedList', null, 'add-palm-desc')" class="w-8 h-8 flex items-center justify-center text-white hover:bg-white/10 rounded transition text-xs">1.</button>
+                            <button type="button" onclick="formatText('formatBlock', 'BLOCKQUOTE', 'add-palm-desc')" class="w-8 h-8 flex items-center justify-center text-white hover:bg-white/10 rounded transition text-xs">""</button>
+                            <div class="w-px h-6 bg-white/10 mx-1 my-auto"></div>
+                            <button type="button" onclick="formatText('foreColor', '#8B5CF6', 'add-palm-desc')" class="w-8 h-8 flex items-center justify-center text-aerix-purple hover:bg-white/10 rounded font-bold transition">A</button>
+                            <button type="button" onclick="formatText('foreColor', '#ffffff', 'add-palm-desc')" class="w-8 h-8 flex items-center justify-center text-white hover:bg-white/10 rounded font-bold transition">A</button>
+                            <div class="relative ml-auto">
+                                <button type="button" onclick="document.getElementById('palm-emoji-picker').classList.toggle('hidden')" class="w-8 h-8 flex items-center justify-center hover:bg-white/10 rounded transition text-lg">😀</button>
+                                <div id="palm-emoji-picker" class="absolute right-0 top-10 bg-black border border-white/10 rounded-xl p-2 grid grid-cols-5 gap-1 w-56 hidden z-50 shadow-2xl">
+                                    <span onclick="insertEmoji(this.innerText, 'add-palm-desc', 'palm-emoji-picker')" class="cursor-pointer hover:bg-white/10 p-1.5 rounded text-lg text-center">🏆</span>
+                                    <span onclick="insertEmoji(this.innerText, 'add-palm-desc', 'palm-emoji-picker')" class="cursor-pointer hover:bg-white/10 p-1.5 rounded text-lg text-center">🔥</span>
+                                    <span onclick="insertEmoji(this.innerText, 'add-palm-desc', 'palm-emoji-picker')" class="cursor-pointer hover:bg-white/10 p-1.5 rounded text-lg text-center">🚀</span>
+                                    <span onclick="insertEmoji(this.innerText, 'add-palm-desc', 'palm-emoji-picker')" class="cursor-pointer hover:bg-white/10 p-1.5 rounded text-lg text-center">🎮</span>
+                                    <span onclick="insertEmoji(this.innerText, 'add-palm-desc', 'palm-emoji-picker')" class="cursor-pointer hover:bg-white/10 p-1.5 rounded text-lg text-center">🏎️</span>
+                                    <span onclick="insertEmoji(this.innerText, 'add-palm-desc', 'palm-emoji-picker')" class="cursor-pointer hover:bg-white/10 p-1.5 rounded text-lg text-center">💪</span>
+                                    <span onclick="insertEmoji(this.innerText, 'add-palm-desc', 'palm-emoji-picker')" class="cursor-pointer hover:bg-white/10 p-1.5 rounded text-lg text-center">✅</span>
+                                    <span onclick="insertEmoji(this.innerText, 'add-palm-desc', 'palm-emoji-picker')" class="cursor-pointer hover:bg-white/10 p-1.5 rounded text-lg text-center">❌</span>
+                                    <span onclick="insertEmoji(this.innerText, 'add-palm-desc', 'palm-emoji-picker')" class="cursor-pointer hover:bg-white/10 p-1.5 rounded text-lg text-center">🇫🇷</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="add-palm-desc" contenteditable="true" placeholder="Rédigez l'article de ce résultat (optionnel)..." class="rich-editor w-full bg-black/50 border border-white/10 rounded-b-xl px-5 py-4 text-white text-sm h-40 overflow-y-auto outline-none focus:border-aerix-purple transition shadow-inner"></div>
+                    </div>
+
                     <div id="palm-img-preview" class="w-full h-40 bg-white/5 rounded-xl mb-4 hidden bg-cover bg-center border border-white/10 relative">
                         <button type="button" onclick="tempPalmImage=null; this.parentElement.classList.add('hidden')" class="absolute top-2 right-2 bg-red-500 text-white text-[10px] w-6 h-6 rounded-full font-bold">✕</button>
                     </div>
@@ -1845,7 +1899,7 @@
                 }
 
                 container.innerHTML += `
-                    <div class="glass-panel p-6 rounded-3xl reveal delay-${(index%3)*100} flex flex-col h-full border-t-2 ${p.game === 'Rocket League' ? (p.result==='Victoire'?'border-t-aerix-win':'border-t-aerix-loss') : 'border-t-aerix-lmu'}">
+                    <div onclick="openPalmaresArticle('${p.id}')" class="glass-panel p-6 rounded-3xl reveal delay-${(index%3)*100} flex flex-col h-full cursor-pointer border-t-2 ${p.game === 'Rocket League' ? (p.result==='Victoire'?'border-t-aerix-win':'border-t-aerix-loss') : 'border-t-aerix-lmu'}">
                         ${layoutHTML}
                     </div>`;
             });
@@ -1853,6 +1907,49 @@
             translateDynamicContent();
             translateDynamicContent();
         }
+
+        // Vue "article" plein écran d'un résultat du palmarès (image, titre, catégorie,
+        // voiture, date et description complète rédigée via l'éditeur riche).
+        function openPalmaresArticle(id) {
+            const item = globalPalmares.find(p => p.id === id); if(!item) return;
+
+            const imgWrap = document.getElementById('palmares-article-img-wrap');
+            if (item.image) { document.getElementById('palmares-article-img').src = item.image; imgWrap.classList.remove('hidden'); }
+            else { imgWrap.classList.add('hidden'); }
+
+            document.getElementById('palmares-article-title').textContent = item.title || '';
+
+            const badges = [getGameBadge(item.game)];
+            if (item.game === 'Rocket League') {
+                let badgeClass = item.result === 'Victoire' ? 'bg-aerix-win/20 text-aerix-win border-aerix-win/30' : 'bg-aerix-loss/20 text-aerix-loss border-aerix-loss/30';
+                badges.push(`<span class="text-xs font-bold px-2 py-1 rounded-md border ${badgeClass}">${item.result || 'Résultat'}</span>`);
+            } else {
+                badges.push(`<span class="text-xs font-bold px-2 py-1 rounded-md border bg-aerix-lmu/20 text-aerix-lmu border-aerix-lmu/30">${normalizeSimracingPosition(item.position)}</span>`);
+            }
+            document.getElementById('palmares-article-badges').innerHTML = badges.join('');
+
+            const metaEl = document.getElementById('palmares-article-meta');
+            if (item.game === 'Rocket League') {
+                metaEl.innerHTML = `
+                    <div class="bg-black/50 rounded-xl p-3 border border-white/5 sm:col-span-3 flex items-center justify-between">
+                        <div class="font-bold text-white uppercase text-sm truncate w-1/3 text-left">AERIX</div>
+                        <div class="font-black text-xl text-white tracking-widest px-3">${item.score || 'VS'}</div>
+                        <div class="font-bold text-gray-400 uppercase text-sm truncate w-1/3 text-right">${item.opponent || 'Adversaire'}</div>
+                    </div>`;
+            } else {
+                metaEl.innerHTML = `
+                    <div class="bg-black/50 rounded-xl p-3 border border-white/5"><span class="block text-xs text-gray-500 uppercase font-bold tracking-widest mb-1">Catégorie</span><span class="text-sm text-white font-bold">${item.split || 'N/A'}</span></div>
+                    <div class="bg-black/50 rounded-xl p-3 border border-white/5"><span class="block text-xs text-gray-500 uppercase font-bold tracking-widest mb-1">Voiture</span><span class="text-sm text-white font-bold">${item.car || 'N/A'}</span></div>
+                    <div class="bg-black/50 rounded-xl p-3 border border-white/5"><span class="block text-xs text-gray-500 uppercase font-bold tracking-widest mb-1">Position</span><span class="text-sm text-white font-bold">${normalizeSimracingPosition(item.position)}</span></div>`;
+            }
+
+            document.getElementById('palmares-article-date').textContent = item.date || 'Non daté';
+            document.getElementById('palmares-article-desc').innerHTML = item.desc || '<p class="text-gray-500 italic">Aucun article rédigé pour ce résultat.</p>';
+
+            document.getElementById('palmares-article-modal').classList.remove('hidden');
+            translateDynamicContent();
+        }
+        function closePalmaresArticle() { document.getElementById('palmares-article-modal').classList.add('hidden'); }
 
         // ACTUALITÉS (TEXTE RICHE + ANIMATION)
         let annoncesView = 'liste';
@@ -2913,6 +3010,7 @@ function checkAdminSessionTimeout() {
             document.getElementById('add-palm-title').value = item.title;
             document.getElementById('add-palm-date').value = item.date || '';
             document.getElementById('add-palm-game').value = item.game || 'Rocket League';
+            document.getElementById('add-palm-desc').innerHTML = item.desc || '';
             
             togglePalmaresFields(); // Met à jour l'affichage selon le jeu choisi
             
@@ -2934,6 +3032,7 @@ function checkAdminSessionTimeout() {
             document.getElementById('edit-palmares-id').value = ''; document.getElementById('add-palm-title').value = ''; document.getElementById('add-palm-date').value = ''; document.getElementById('add-palm-game').value = 'Rocket League';
             document.getElementById('add-palm-opponent').value = ''; document.getElementById('add-palm-score').value = ''; document.getElementById('add-palm-result').value = 'Victoire';
             document.getElementById('add-palm-position').value = ''; document.getElementById('add-palm-split').value = ''; document.getElementById('add-palm-car').value = '';
+            document.getElementById('add-palm-desc').innerHTML = '';
             
             togglePalmaresFields();
 
@@ -2946,7 +3045,8 @@ function checkAdminSessionTimeout() {
             
             if(!title) return showToast("Titre/Compétition obligatoire.", "error");
 
-            let data = { title, date, game, image: tempPalmImage || "" };
+            const desc = document.getElementById('add-palm-desc').innerHTML;
+            let data = { title, date, game, image: tempPalmImage || "", desc };
 
             if(game === 'Rocket League') {
                 data.opponent = document.getElementById('add-palm-opponent').value;
@@ -2987,9 +3087,9 @@ function checkAdminSessionTimeout() {
             } catch(e) { showToast("Erreur", "error"); }
         }
 
-        // --- EDITION ANNONCES (TEXTE RICHE) ---
-        function formatText(command, value = null) { document.execCommand(command, false, value); document.getElementById('add-announcement-desc').focus(); }
-        function insertEmoji(emoji) { document.execCommand('insertText', false, emoji); document.getElementById('emoji-picker').classList.add('hidden'); document.getElementById('add-announcement-desc').focus(); }
+        // --- EDITION ANNONCES (TEXTE RICHE) — éditeur générique, réutilisé aussi par le Palmarès ---
+        function formatText(command, value = null, targetId = 'add-announcement-desc') { document.execCommand(command, false, value); document.getElementById(targetId).focus(); }
+        function insertEmoji(emoji, targetId = 'add-announcement-desc', pickerId = 'emoji-picker') { document.execCommand('insertText', false, emoji); document.getElementById(pickerId).classList.add('hidden'); document.getElementById(targetId).focus(); }
 
         function startEditAnnouncement(id) {
             const item = globalAnnonces.find(a => a.id === id); if(!item) return;
@@ -3336,11 +3436,11 @@ function checkAdminSessionTimeout() {
         const legalTexts = {
             fr: {
                 mentions: `<p class="text-xs text-gray-500 mb-6">Dernière mise à jour : septembre 2026</p><h4 class="font-bold text-white mb-2 text-lg">1. Éditeur du site</h4><p class="mb-5">Le présent site est édité par AERIX Esports, structure esport indépendante organisée sous forme associative, regroupant des divisions compétitives en Rocket League, Le Mans Ultimate et Richard Burns Rally. Le site est accessible à l'adresse à laquelle vous consultez ce document. Pour toute question relative à l'édition du site, vous pouvez utiliser le formulaire de contact disponible sur le site ou le serveur Discord officiel d'AERIX.</p><h4 class="font-bold text-white mb-2 text-lg">2. Directeur de la publication</h4><p class="mb-6">La direction de la publication est assurée par le fondateur d'AERIX Esports, responsable du contenu diffusé sur le site.</p><h4 class="font-bold text-white mb-2 text-lg">3. Hébergement</h4><p class="mb-6">Le site est hébergé par GitHub, Inc. (GitHub Pages), 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis. Les données applicatives (comptes, contenus, avis, tickets) sont hébergées et gérées via les services Google Firebase (Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irlande).</p><h4 class="font-bold text-white mb-2 text-lg">4. Propriété intellectuelle</h4><p class="mb-6">L'ensemble des éléments composant le site (textes, logos, visuels, identité graphique, charte de couleurs, structure et code) est la propriété exclusive d'AERIX Esports, sauf mention contraire. Toute reproduction, représentation, modification, publication ou adaptation de tout ou partie des éléments du site, quel que soit le moyen ou le procédé utilisé, est interdite sans autorisation écrite préalable d'AERIX Esports, en dehors des cas prévus par les dispositions légales en vigueur.</p><h4 class="font-bold text-white mb-2 text-lg">5. Comptes utilisateurs et contenus publiés</h4><p class="mb-6">La création d'un compte permet notamment de réserver des sessions de coaching et de publier des avis. L'utilisateur reste seul responsable des contenus qu'il publie (avis, commentaires) et s'engage à ne pas publier de contenu illicite, injurieux, diffamatoire ou contraire à l'ordre public. AERIX se réserve le droit de modérer, refuser ou supprimer tout contenu ne respectant pas ces règles, notamment via la console d'administration dédiée aux avis.</p><h4 class="font-bold text-white mb-2 text-lg">6. Liens hypertextes</h4><p class="mb-6">Le site peut contenir des liens vers des sites tiers, notamment Discord. AERIX Esports n'exerce aucun contrôle sur ces sites et décline toute responsabilité quant à leur contenu ou leur politique de confidentialité.</p><h4 class="font-bold text-white mb-2 text-lg">7. Limitation de responsabilité</h4><p class="mb-6">Les informations diffusées sur le site (résultats, effectifs, actualités) le sont à titre informatif et peuvent être corrigées, modifiées ou retirées à tout moment sans préavis. AERIX Esports ne saurait être tenue responsable des éventuelles erreurs, omissions ou de l'indisponibilité temporaire du site, notamment en cas de maintenance ou de dysfonctionnement des services tiers utilisés (GitHub Pages, Firebase).</p><h4 class="font-bold text-white mb-2 text-lg">8. Droit applicable</h4><p>Le présent site et les présentes mentions légales sont soumis au droit français. En cas de litige, et à défaut de résolution amiable, les tribunaux français seront seuls compétents.</p>`,
-                confidentialite: `<p class="text-xs text-gray-500 mb-6">Dernière mise à jour : septembre 2026</p><h4 class="font-bold text-white mb-2 text-lg">Données traitées</h4><p class="mb-6">Selon les fonctionnalités utilisées, le site peut traiter les informations saisies dans les formulaires de création de compte ainsi que les données nécessaires au fonctionnement des fonctionnalités d’administration. Les données collectées doivent rester limitées à ce qui est nécessaire.</p><h4 class="font-bold text-white mb-2 text-lg">Finalités</h4><p class="mb-6">Les informations sont utilisées pour traiter les demandes envoyées via le site, gérer les contenus AERIX et assurer le fonctionnement des services proposés.</p><h4 class="font-bold text-white mb-2 text-lg">Conservation et droits</h4><p class="mb-6">Les durées de conservation doivent être définies selon chaque finalité. Pour demander l’accès, la rectification ou la suppression de données, utilisez le moyen de contact officiel indiqué par AERIX.</p><h4 class="font-bold text-white mb-2 text-lg">Services tiers</h4><p>Le site peut charger des ressources externes, notamment Google Fonts, FlagCDN et les services Firebase utilisés par l’application. Google Analytics n’est chargé qu’après votre consentement explicite à la mesure d’audience (voir le bandeau cookies) et peut être désactivé à tout moment depuis « Personnaliser ».</p>`
+                confidentialite: `<p class="text-xs text-gray-500 mb-6">Dernière mise à jour : septembre 2026</p><h4 class="font-bold text-white mb-2 text-lg">Responsable de traitement</h4><p class="mb-6">Le responsable des traitements décrits ci-dessous est AERIX Esports. Pour toute question ou exercice de vos droits, utilisez le formulaire de contact du site ou le serveur Discord officiel d'AERIX.</p><h4 class="font-bold text-white mb-2 text-lg">Données traitées et bases légales</h4><p class="mb-2">Selon les fonctionnalités utilisées, le site traite :</p><p class="mb-1">— Données de compte (pseudo, email, mot de passe chiffré, avatar) : exécution du contrat d'utilisation du service (création et gestion du compte).</p><p class="mb-1">— Demandes de coaching, tickets de contact et avis publiés : exécution d'une demande précontractuelle ou intérêt légitime à répondre aux sollicitations.</p><p class="mb-6">— Mesure d'audience (Google Analytics) : uniquement sur la base de votre consentement explicite, recueilli via le bandeau cookies.</p><h4 class="font-bold text-white mb-2 text-lg">Finalités</h4><p class="mb-6">Les informations sont utilisées pour créer et gérer les comptes utilisateurs, traiter les demandes envoyées via le site (coaching, contact, tickets), gérer les avis publiés et assurer le fonctionnement des services proposés.</p><h4 class="font-bold text-white mb-2 text-lg">Durées de conservation</h4><p class="mb-1">— Données de compte : conservées pendant toute la durée de vie du compte, puis supprimées dans un délai de 12 mois après sa suppression ou après 3 ans d'inactivité.</p><p class="mb-1">— Tickets, demandes de coaching et échanges de contact : conservés 3 ans à compter du dernier échange.</p><p class="mb-6">— Avis publiés : conservés tant qu'ils restent affichés sur le site, ou jusqu'à demande de suppression par leur auteur.</p><h4 class="font-bold text-white mb-2 text-lg">Vos droits</h4><p class="mb-6">Conformément au Règlement Général sur la Protection des Données (RGPD) et à la loi Informatique et Libertés, vous disposez d'un droit d'accès, de rectification, d'effacement, de limitation et d'opposition sur vos données, ainsi que du droit à la portabilité lorsqu'il s'applique. Pour exercer ces droits, contactez AERIX via le moyen de contact officiel indiqué sur le site. Vous disposez également du droit d'introduire une réclamation auprès de la Commission Nationale de l'Informatique et des Libertés (CNIL — www.cnil.fr) si vous estimez que vos droits ne sont pas respectés.</p><h4 class="font-bold text-white mb-2 text-lg">Services tiers</h4><p>Le site peut charger des ressources externes, notamment Google Fonts, FlagCDN et les services Firebase (hébergement des données applicatives) utilisés par l'application. Google Analytics n'est chargé qu'après votre consentement explicite à la mesure d'audience (voir le bandeau cookies) et peut être désactivé à tout moment depuis « Personnaliser ».</p>`
             },
             en: {
                 mentions: `<p class="text-xs text-gray-500 mb-6">Last updated: September 2026</p><h4 class="font-bold text-white mb-2 text-lg">1. Website publisher</h4><p class="mb-5">This website is published by AERIX Esports, an independent esports organization operating as an association, bringing together competitive divisions in Rocket League, Le Mans Ultimate and Richard Burns Rally. For any question regarding the publication of this website, you may use the contact form available on the site or AERIX's official Discord server.</p><h4 class="font-bold text-white mb-2 text-lg">2. Publication director</h4><p class="mb-6">The publication is directed by the founder of AERIX Esports, who is responsible for the content published on the website.</p><h4 class="font-bold text-white mb-2 text-lg">3. Hosting</h4><p class="mb-6">The website is hosted by GitHub, Inc. (GitHub Pages), 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, USA. Application data (accounts, content, reviews, tickets) is hosted and managed via Google Firebase services (Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Ireland).</p><h4 class="font-bold text-white mb-2 text-lg">4. Intellectual property</h4><p class="mb-6">All elements making up the website (text, logos, visuals, graphic identity, color scheme, structure and code) are the exclusive property of AERIX Esports, unless stated otherwise. Any reproduction, representation, modification, publication or adaptation of all or part of the website's elements, by any means or process, is prohibited without AERIX Esports' prior written authorization, except in cases provided for by applicable law.</p><h4 class="font-bold text-white mb-2 text-lg">5. User accounts and published content</h4><p class="mb-6">Creating an account notably allows users to book coaching sessions and publish reviews. Users remain solely responsible for the content they publish (reviews, comments) and agree not to publish any content that is unlawful, abusive, defamatory or contrary to public order. AERIX reserves the right to moderate, refuse or remove any content that does not comply with these rules, notably through the dedicated review-moderation panel.</p><h4 class="font-bold text-white mb-2 text-lg">6. Hyperlinks</h4><p class="mb-6">The website may contain links to third-party sites, including Discord. AERIX Esports has no control over such sites and disclaims any liability regarding their content or privacy practices.</p><h4 class="font-bold text-white mb-2 text-lg">7. Limitation of liability</h4><p class="mb-6">Information published on the website (results, rosters, news) is provided for informational purposes and may be corrected, modified or removed at any time without notice. AERIX Esports cannot be held liable for any errors, omissions, or temporary unavailability of the website, in particular in the event of maintenance or malfunction of third-party services used (GitHub Pages, Firebase).</p><h4 class="font-bold text-white mb-2 text-lg">8. Governing law</h4><p>This website and these legal notices are governed by French law. In the event of a dispute, and failing an amicable resolution, French courts shall have exclusive jurisdiction.</p>`,
-                confidentialite: `<p class="text-xs text-gray-500 mb-6">Last updated: September 2026</p><h4 class="font-bold text-white mb-2 text-lg">Data processed</h4><p class="mb-6">Depending on the features used, the website may process information submitted through account-creation forms and data required for administration features. Data collection should remain limited to what is necessary.</p><h4 class="font-bold text-white mb-2 text-lg">Purposes</h4><p class="mb-6">Information is used to process requests submitted through the website, manage AERIX content and operate the services provided.</p><h4 class="font-bold text-white mb-2 text-lg">Retention and rights</h4><p class="mb-6">Retention periods should be defined for each purpose. To request access, correction or deletion of data, use AERIX's official contact method.</p><h4 class="font-bold text-white mb-2 text-lg">Third-party services</h4><p>The website may load external resources, including Google Fonts, FlagCDN and Firebase services used by the application. Google Analytics is only loaded after your explicit consent to analytics (see the cookie banner) and can be disabled at any time from "Customize".</p>`
+                confidentialite: `<p class="text-xs text-gray-500 mb-6">Last updated: September 2026</p><h4 class="font-bold text-white mb-2 text-lg">Data controller</h4><p class="mb-6">The controller for the processing described below is AERIX Esports. For any question or to exercise your rights, use the contact form on the website or AERIX's official Discord server.</p><h4 class="font-bold text-white mb-2 text-lg">Data processed and legal bases</h4><p class="mb-2">Depending on the features used, the website processes:</p><p class="mb-1">— Account data (username, email, encrypted password, avatar): performance of the service agreement (account creation and management).</p><p class="mb-1">— Coaching requests, contact tickets and published reviews: performance of a pre-contractual request or legitimate interest in responding to inquiries.</p><p class="mb-6">— Analytics (Google Analytics): only on the basis of your explicit consent, collected via the cookie banner.</p><h4 class="font-bold text-white mb-2 text-lg">Purposes</h4><p class="mb-6">Information is used to create and manage user accounts, process requests submitted through the website (coaching, contact, tickets), manage published reviews and operate the services provided.</p><h4 class="font-bold text-white mb-2 text-lg">Retention periods</h4><p class="mb-1">— Account data: kept for the lifetime of the account, then deleted within 12 months after account deletion or after 3 years of inactivity.</p><p class="mb-1">— Tickets, coaching requests and contact exchanges: kept for 3 years from the last exchange.</p><p class="mb-6">— Published reviews: kept as long as they remain displayed on the website, or until their author requests deletion.</p><h4 class="font-bold text-white mb-2 text-lg">Your rights</h4><p class="mb-6">In accordance with the General Data Protection Regulation (GDPR), you have the right to access, rectify, erase, restrict and object to the processing of your data, as well as the right to data portability where applicable. To exercise these rights, contact AERIX via the official contact method indicated on the website. You also have the right to lodge a complaint with your national data protection authority (in France, the CNIL — www.cnil.fr) if you believe your rights are not being respected.</p><h4 class="font-bold text-white mb-2 text-lg">Third-party services</h4><p>The website may load external resources, including Google Fonts, FlagCDN and Firebase services (hosting of application data) used by the application. Google Analytics is only loaded after your explicit consent to analytics (see the cookie banner) and can be disabled at any time from "Customize".</p>`
             }
         };
 
