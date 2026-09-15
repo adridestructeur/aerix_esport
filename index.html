@@ -245,7 +245,7 @@
 
 
     /* ASSISTANT AERIX */
-    #aerix-assistant { position: fixed; right: 24px; bottom: 24px; z-index: 180; }
+    #aerix-assistant { position: fixed; right: 18px; bottom: 38px; z-index: 180; }
     #aerix-assistant-panel { width: min(370px, calc(100vw - 32px)); height: min(560px, calc(100dvh - 110px)); transform-origin: bottom right; opacity: 0; transform: translateY(14px) scale(.96); pointer-events: none; transition: opacity .28s ease, transform .32s cubic-bezier(.16,1,.3,1); }
     #aerix-assistant-panel.open { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
     #aerix-assistant-launcher { width: 58px; height: 58px; border-radius: 9999px; border: 1px solid rgba(139,92,246,.55); background: linear-gradient(145deg, rgba(139,92,246,.28), rgba(15,15,15,.92)); box-shadow: 0 10px 35px rgba(0,0,0,.5), 0 0 28px rgba(139,92,246,.28), inset 0 1px 0 rgba(255,255,255,.18); color:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer; backdrop-filter:blur(18px); transition:transform .25s ease, box-shadow .25s ease; }
@@ -260,7 +260,7 @@
     .assistant-user { background:rgba(139,92,246,.18); border:1px solid rgba(139,92,246,.28); color:#fff; align-self:flex-end; }
     .assistant-quick { padding:8px 10px; border-radius:9999px; border:1px solid rgba(255,255,255,.1); background:rgba(255,255,255,.04); color:#d1d5db; font-size:11px; transition:.2s ease; }
     .assistant-quick:hover { border-color:rgba(139,92,246,.55); background:rgba(139,92,246,.12); color:#fff; }
-    @media(max-width:640px){ #aerix-assistant{right:14px;bottom:14px;} #aerix-assistant-panel{width:calc(100vw - 28px);height:min(600px,calc(100dvh - 88px));} #aerix-assistant-launcher{width:54px;height:54px;} }
+    @media(max-width:640px){ #aerix-assistant{right:14px;bottom:24px;} #aerix-assistant-panel{width:calc(100vw - 28px);height:min(600px,calc(100dvh - 88px));} #aerix-assistant-launcher{width:54px;height:54px;} }
 
     /* MENU LANGUE */
     #language-menu { opacity: 0; visibility: hidden; transform: translateY(-6px) scale(.98); pointer-events: none; transition: opacity .32s ease, transform .32s cubic-bezier(.16,1,.3,1), visibility .32s ease; }
@@ -2220,6 +2220,10 @@ function checkAdminSessionTimeout() {
             // le message affiché dans la conversation doit suivre la langue active.
             const quickTranslations = {
                 'Qui est AERIX ?': { fr: 'Qui est AERIX ?', en: 'Who is AERIX?' },
+                'Comment rejoindre AERIX ?': { fr: 'Rejoindre AERIX', en: 'Join AERIX' },
+                "Je veux contacter les administrateurs": { fr: "Contacter l'administration", en: 'Contact administration' },
+                'Demander un coaching': { fr: 'Coaching', en: 'Coaching' },
+                // Compatibilité avec d'anciens appels éventuels.
                 'Rejoindre AERIX': { fr: 'Rejoindre AERIX', en: 'Join AERIX' },
                 "Contacter l'administration": { fr: "Contacter l'administration", en: 'Contact administration' },
                 'Coaching': { fr: 'Coaching', en: 'Coaching' }
