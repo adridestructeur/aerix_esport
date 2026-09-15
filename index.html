@@ -2213,7 +2213,7 @@ function checkAdminSessionTimeout() {
             }
             if(q.includes('rejoindre') || q.includes('recrut') || q.includes('roster') || q.includes('équipe')) {
                 answer='Pour rejoindre AERIX, consulte la section <strong class="text-white">Effectifs</strong> pour voir nos divisions et équipes. Pour une demande précise, tu peux aussi contacter l’administration.';
-                addAssistantMessage('bot',answer+'<br><button onclick="navigate('effectifs');toggleAerixAssistant(false)" class="mt-3 px-3 py-2 rounded-xl bg-white/10 border border-white/10 text-white text-[11px] font-bold">Voir les effectifs</button>'); return;
+                addAssistantMessage('bot',answer+'<br><button onclick="navigate(\'effectifs\');toggleAerixAssistant(false)" class="mt-3 px-3 py-2 rounded-xl bg-white/10 border border-white/10 text-white text-[11px] font-bold">Voir les effectifs</button>'); return;
             }
             if(q.includes('qui est aerix') || q.includes('aerix')) {
                 addAssistantMessage('bot','AERIX est une structure indépendante orientée <strong class="text-white">esport et simracing</strong>, présente notamment sur Rocket League, Le Mans Ultimate, iRacing et Richard Burns Rally.'); return;
