@@ -167,19 +167,13 @@
 
     .filter-btn { padding: 0.5rem 1.2rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: #9ca3af; cursor: pointer; }
 
-    /* ROSTER : 5 cartes visibles sur desktop + hover non rogné */
-    .roster-track { display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - 4 * 1.1rem) / 5); align-items: stretch; gap: 1.1rem; overflow-x: auto; overflow-y: visible; scroll-behavior: smooth; scroll-snap-type: x mandatory; padding: .8rem .4rem .6rem; margin: -.25rem -.4rem 0; -ms-overflow-style: none; scrollbar-width: none; }
+    /* ROSTER : CARROUSEL JOUEURS (4 visibles max, défilement horizontal) */
+    .roster-track { display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - 3 * 1.5rem) / 4); align-items: stretch; gap: 1.5rem; overflow-x: auto; scroll-behavior: smooth; scroll-snap-type: x mandatory; padding-bottom: .25rem; -ms-overflow-style: none; scrollbar-width: none; }
     .roster-track::-webkit-scrollbar { display: none; }
-    .roster-track > * { scroll-snap-align: start; min-width: 0; }
-    .roster-player-card { overflow: visible !important; isolation: isolate; }
-    .roster-player-card::before { z-index: 2; }
-    .roster-player-card::after { z-index: 1; }
-    .roster-player-card:hover { z-index: 20; transform: translateY(-4px) translateZ(0); }
-    .roster-player-media { position: relative; z-index: 3; }
-    @media (max-width: 1100px) { .roster-track { grid-auto-columns: calc((100% - 3 * 1rem) / 4); gap: 1rem; } }
-    @media (max-width: 900px) { .roster-track { grid-auto-columns: calc((100% - 2 * 1rem) / 3); } }
-    @media (max-width: 700px) { .roster-track { grid-auto-columns: calc((100% - 1 * .85rem) / 2); gap: .85rem; } }
-    @media (max-width: 480px) { .roster-track { grid-auto-columns: 82%; } }
+    .roster-track > * { scroll-snap-align: start; }
+    @media (max-width: 1024px) { .roster-track { grid-auto-columns: calc((100% - 2 * 1.5rem) / 3); } }
+    @media (max-width: 768px) { .roster-track { grid-auto-columns: calc((100% - 1 * 1rem) / 2); gap: 1rem; } }
+    @media (max-width: 480px) { .roster-track { grid-auto-columns: 78%; } }
     .filter-btn.active { background: #8B5CF6; color: white; border-color: #8B5CF6; box-shadow: 0 0 20px rgba(139,92,246,0.6); transform: scale(1.05); }
     .filter-btn:hover:not(.active) { background: rgba(255,255,255,0.1); color: white; transform: translateY(-2px); }
     
@@ -273,186 +267,6 @@
     #language-menu.lang-menu-open { opacity: 1; visibility: visible; transform: translateY(0) scale(1); pointer-events: auto; }
     #lang-btn .lang-chevron { display: inline-block; transition: transform .32s cubic-bezier(.16,1,.3,1); }
     #lang-btn.lang-open .lang-chevron { transform: rotate(180deg); }
-
-    /* PASS 2 — RESPONSIVE / MOBILE / BUGS VISUELS */
-    html { overflow-x: hidden; }
-    *, *::before, *::after { box-sizing: border-box; }
-    img, video, svg { max-width: 100%; }
-    button, a, input, textarea, select { -webkit-tap-highlight-color: transparent; }
-
-    /* Évite les débordements horizontaux des éléments flex/grid et des textes longs. */
-    main, section, article, footer, nav, .page-view, .page-view > * { min-width: 0; }
-    h1, h2, h3, h4, h5, h6, p, span, a, button, label { overflow-wrap: anywhere; }
-
-    /* Navigation mobile : zone sûre et hauteur stable sous les écrans à encoche. */
-    @media (max-width: 767px) {
-        nav > div:first-child {
-            padding-left: max(1rem, env(safe-area-inset-left));
-            padding-right: max(1rem, env(safe-area-inset-right));
-            padding-top: max(.55rem, env(safe-area-inset-top));
-            padding-bottom: .55rem;
-            min-height: 68px;
-        }
-        nav .aerix-logo { height: 3.2rem; max-width: 150px; }
-        nav .aerix-logo-wrap { min-width: 0; }
-        nav .aerix-logo-wrap img { width: auto; }
-        nav .md\\:hidden { flex-shrink: 0; }
-
-        #mobile-menu {
-            padding-left: max(1rem, env(safe-area-inset-left));
-            padding-right: max(1rem, env(safe-area-inset-right));
-            padding-top: 1rem;
-        }
-
-        /* Le contenu ne doit jamais être masqué par la barre fixe. */
-        .flex-grow.pt-32.pb-24 {
-            padding-top: 5.8rem;
-            padding-bottom: max(6rem, env(safe-area-inset-bottom));
-        }
-
-        .page-view {
-            width: 100%;
-            max-width: 100%;
-            padding-left: 1rem !important;
-            padding-right: 1rem !important;
-        }
-        #page-home { margin-top: .75rem !important; }
-        #page-home > div:first-child { min-height: min(58vh, 520px); margin-bottom: 3.5rem; }
-        #page-home h1 { font-size: clamp(2.35rem, 11vw, 3.5rem); line-height: .98; gap: .12em .2em; }
-        #page-home .max-w-2xl { max-width: 100%; }
-        #page-home .flex-col.sm\\:flex-row { width: 100%; }
-        #page-home .flex-col.sm\\:flex-row > button { width: 100%; }
-
-        #page-effectifs, #page-palmares, #page-histoire, #page-boutique, #page-partenaires, #page-annonces {
-            margin-top: .5rem !important;
-        }
-        #page-effectifs h3, #page-palmares h3, #page-histoire h3, #page-boutique h3, #page-partenaires h3, #page-annonces h3 {
-            font-size: clamp(1.9rem, 8vw, 2.5rem);
-            line-height: 1.05;
-        }
-
-        /* Filtres : défilement horizontal au lieu de casser la mise en page. */
-        .filter-btn { flex: 0 0 auto; white-space: nowrap; }
-        #filters-effectifs, #filters-palmares, #filters-annonces, #annonces-view-toggle {
-            justify-content: flex-start !important;
-            flex-wrap: nowrap !important;
-            overflow-x: auto;
-            overflow-y: hidden;
-            padding: .2rem .1rem .45rem;
-            margin-left: -.1rem;
-            margin-right: -.1rem;
-            scrollbar-width: none;
-            -webkit-overflow-scrolling: touch;
-            overscroll-behavior-x: contain;
-        }
-        #filters-effectifs::-webkit-scrollbar, #filters-palmares::-webkit-scrollbar, #filters-annonces::-webkit-scrollbar, #annonces-view-toggle::-webkit-scrollbar { display:none; }
-
-        /* Roster : cartes suffisamment grandes pour rester lisibles, sans dépasser l'écran. */
-        .roster-track {
-            width: 100%;
-            max-width: 100%;
-            padding: .65rem .35rem .8rem;
-            margin: -.15rem -.35rem 0;
-            overscroll-behavior-x: contain;
-            scroll-padding-inline: .35rem;
-        }
-        .roster-player-card { min-width: 0; }
-        .roster-player-media { min-height: 0; }
-        .roster-player-card h5 { font-size: clamp(1.15rem, 6vw, 1.5rem); }
-        #effectifs-container { overflow: visible; }
-
-        /* Historique : timeline plus compacte sur petits écrans. */
-        #page-histoire .border-l { margin-left: .35rem; }
-        #page-histoire .border-l > .relative { padding-left: 1.65rem; }
-        #page-histoire .border-l > .relative > .absolute { left: -7px; width: 13px; height: 13px; }
-        #page-histoire .glass-panel { padding: 1.15rem !important; }
-        #page-histoire h4 { font-size: 1.25rem; line-height: 1.2; }
-
-        /* Grilles : réduire les gaps sur les très petits écrans. */
-        #shop-container, #palmares-container { gap: 1rem !important; }
-        #partners-container { gap: 2.5rem; }
-
-        /* Footer : évite les liens trop serrés et les dépassements. */
-        footer { padding-bottom: max(2rem, env(safe-area-inset-bottom)) !important; }
-        footer .max-w-7xl { padding-left: 1rem; padding-right: 1rem; }
-        footer .space-x-6 { flex-wrap: wrap; justify-content: center; gap: .7rem 1rem; }
-        footer .space-x-6 > * { margin-left: 0 !important; }
-
-        /* Toasts : largeur contrôlée sur mobile. */
-        #toast-container { top: max(76px, calc(env(safe-area-inset-top) + 70px)); left: 12px; right: 12px; width: auto; }
-        .toast { width: 100%; max-width: none; padding: 11px 13px; font-size: .78rem; }
-
-        /* Assistant : tient dans le viewport, y compris en mode paysage. */
-        #aerix-assistant { right: max(12px, env(safe-area-inset-right)); bottom: max(12px, env(safe-area-inset-bottom)); }
-        #aerix-assistant-panel {
-            width: min(390px, calc(100vw - 24px));
-            height: min(620px, calc(100dvh - 92px));
-            max-height: calc(100svh - 92px);
-            border-radius: 1.35rem;
-        }
-        #aerix-assistant-messages { padding: .75rem; }
-        .assistant-msg { max-width: 92%; font-size: 11.5px; }
-        #aerix-assistant-launcher { width: 52px; height: 52px; }
-
-        /* Modales : plein écran utilisable sans couper le contenu. */
-        #player-modal, #product-modal, #cookie-settings-modal, #contact-modal, #tickets-modal {
-            padding: max(.65rem, env(safe-area-inset-top)) max(.65rem, env(safe-area-inset-right)) max(.65rem, env(safe-area-inset-bottom)) max(.65rem, env(safe-area-inset-left));
-            align-items: center;
-        }
-        #player-modal > .glass-panel, #product-modal > .glass-panel {
-            width: 100%;
-            max-width: 100%;
-            max-height: calc(100dvh - 1.3rem);
-            border-radius: 1.35rem;
-        }
-        #player-modal > .glass-panel > button, #product-modal > .glass-panel > button { top: .75rem; right: .75rem; width: 2.25rem; height: 2.25rem; }
-        #player-modal .text-5xl { font-size: clamp(2.2rem, 10vw, 3rem); }
-        #player-modal .w-full.md\\:w-1\\/2.h-64 { height: 42vh; min-height: 220px; max-height: 360px; }
-        #player-modal .w-full.md\\:w-1\\/2.p-8 { padding: 1.25rem !important; }
-        #product-modal .w-full.md\\:w-1\\/2.h-1\\/2 { height: 42vh; min-height: 220px; max-height: 360px; }
-        #product-modal .w-full.md\\:w-1\\/2.p-8 { padding: 1.25rem !important; }
-        #product-modal #modal-product-title { font-size: clamp(1.8rem, 8vw, 2.5rem); }
-
-        /* Fenêtre admin / formulaires : largeur et hauteur stables. */
-        #admin-modal > .glass-panel,
-        #admin-modal .glass-panel-no-hover {
-            max-width: calc(100vw - 1.3rem);
-            max-height: calc(100dvh - 1.3rem);
-        }
-        #admin-tabs-container { flex-wrap: nowrap !important; overflow-x: auto; scrollbar-width: none; }
-        #admin-tabs-container::-webkit-scrollbar { display:none; }
-        #admin-tabs-container .admin-tab-btn { flex: 0 0 auto !important; min-width: 92px; }
-    }
-
-    @media (max-width: 480px) {
-        nav > div:first-child { min-height: 62px; }
-        nav .aerix-logo { height: 2.8rem; max-width: 125px; }
-        .flex-grow.pt-32.pb-24 { padding-top: 5.25rem; }
-        #page-home h1 { font-size: clamp(2.15rem, 12vw, 3rem); }
-        #page-home > div:first-child { min-height: 52vh; }
-        .roster-track { grid-auto-columns: 86% !important; gap: .7rem !important; }
-        #page-histoire .border-l > .relative { padding-left: 1.4rem; }
-        #aerix-assistant-panel { width: calc(100vw - 20px); height: min(590px, calc(100dvh - 82px)); max-height: calc(100svh - 82px); }
-        #aerix-assistant { right: 10px; bottom: 10px; }
-    }
-
-    @media (max-width: 360px) {
-        nav .aerix-logo { max-width: 105px; }
-        #page-home h1 { font-size: 2rem; }
-        #page-home p { font-size: .9rem; }
-        .roster-track { grid-auto-columns: 90% !important; }
-    }
-
-    @media (max-height: 560px) and (orientation: landscape) {
-        #aerix-assistant-panel { height: calc(100dvh - 70px); max-height: calc(100svh - 70px); }
-        #page-home > div:first-child { min-height: 72vh; }
-        #player-modal > .glass-panel, #product-modal > .glass-panel { max-height: calc(100dvh - .8rem); }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-        *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
-    }
-
     </style>
 </head>
 <body class="antialiased selection:bg-purple-500 selection:text-white min-h-screen flex flex-col relative">
@@ -467,23 +281,23 @@
             <div class="px-5 py-4 border-b border-white/10 flex items-center justify-between shrink-0">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-xl bg-aerix-purple/15 border border-aerix-purple/35 flex items-center justify-center text-aerix-purple font-black">A</div>
-                    <div><div class="text-white font-bold text-sm">AERIX Assistant</div><div class="text-[10px] text-gray-500 uppercase tracking-widest" data-i18n="assistant_header_sub">Administration · 7j/7</div></div>
+                    <div><div class="text-white font-bold text-sm">AERIX Assistant</div><div class="text-[10px] text-gray-500 uppercase tracking-widest">Administration · 7j/7</div></div>
                 </div>
                 <button onclick="toggleAerixAssistant(false)" class="w-8 h-8 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-white transition">✕</button>
             </div>
             <div id="aerix-assistant-messages" class="flex-1 overflow-y-auto p-4 space-y-3 min-h-0"></div>
             <div class="px-4 pb-3 flex flex-wrap gap-2 shrink-0">
-                <button class="assistant-quick" data-i18n="assistant_quick_who" onclick="assistantQuick(currentLang==='en'?'Who is AERIX?':'Qui est AERIX ?')">Qui est AERIX ?</button>
-                <button class="assistant-quick" data-i18n="assistant_quick_join" onclick="assistantQuick(currentLang==='en'?'How to join AERIX?':'Comment rejoindre AERIX ?')">Rejoindre AERIX</button>
-                <button class="assistant-quick" data-i18n="assistant_quick_contact" onclick="assistantQuick(currentLang==='en'?'I want to contact the administrators':'Je veux contacter les administrateurs')">Contacter l'administration</button>
-                <button class="assistant-quick" data-i18n="assistant_quick_coaching" onclick="assistantQuick(currentLang==='en'?'Request coaching':'Demander un coaching')">Coaching</button>
+                <button class="assistant-quick" onclick="assistantQuick('Qui est AERIX ?')">Qui est AERIX ?</button>
+                <button class="assistant-quick" onclick="assistantQuick('Comment rejoindre AERIX ?')">Rejoindre AERIX</button>
+                <button class="assistant-quick" onclick="assistantQuick('Je veux contacter les administrateurs')">Contacter l'administration</button>
+                <button class="assistant-quick" onclick="assistantQuick('Demander un coaching')">Coaching</button>
             </div>
             <form onsubmit="sendAerixAssistant(event)" class="p-3 border-t border-white/10 flex gap-2 shrink-0">
-                <input id="aerix-assistant-input" type="text" maxlength="300" autocomplete="off" data-i18n-placeholder="assistant_input_placeholder" placeholder="Écris ta demande..." class="flex-1 min-w-0 bg-black/45 border border-white/10 rounded-xl px-3 py-2.5 text-white text-xs outline-none focus:border-aerix-purple">
+                <input id="aerix-assistant-input" type="text" maxlength="300" autocomplete="off" placeholder="Écris ta demande..." class="flex-1 min-w-0 bg-black/45 border border-white/10 rounded-xl px-3 py-2.5 text-white text-xs outline-none focus:border-aerix-purple">
                 <button type="submit" class="w-11 rounded-xl bg-aerix-purple text-white font-bold hover:bg-purple-500 transition">➤</button>
             </form>
         </div>
-        <button id="aerix-assistant-launcher" onclick="toggleAerixAssistant()" aria-label="Ouvrir AERIX Assistant" data-i18n-aria-label="assistant_open">
+        <button id="aerix-assistant-launcher" onclick="toggleAerixAssistant()" aria-label="Ouvrir AERIX Assistant">
             <span class="text-lg">✦</span>
         </button>
     </div>
@@ -607,9 +421,9 @@
                 <h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2" data-i18n="roster_subtitle">Divisions</h2>
                 <h3 class="text-4xl font-black text-white mb-8" data-i18n="roster_title">Nos équipes</h3>
                 <div class="flex flex-wrap justify-center gap-3" id="filters-effectifs">
-                    <button onclick="setFilter('effectifs', 'Tous')" data-filter="Tous" class="filter-btn active" data-i18n="filter_all">Tous</button>
-                    <button onclick="setFilter('effectifs', 'Rocket League')" data-filter="Rocket League" class="filter-btn" data-i18n="filter_rocket">Rocket League</button>
-                    <button onclick="setFilter('effectifs', 'Le Mans Ultimate')" data-filter="Le Mans Ultimate" class="filter-btn" data-i18n="filter_lmu">Le Mans Ultimate</button>
+                    <button onclick="setFilter('effectifs', 'Tous')" data-filter="Tous" class="filter-btn active">Tous</button>
+                    <button onclick="setFilter('effectifs', 'Rocket League')" data-filter="Rocket League" class="filter-btn">Rocket League</button>
+                    <button onclick="setFilter('effectifs', 'Le Mans Ultimate')" data-filter="Le Mans Ultimate" class="filter-btn">Le Mans Ultimate</button>
                 </div>
             </div>
             <div id="effectifs-container" class="space-y-16"></div>
@@ -621,11 +435,11 @@
                 <h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2" data-i18n="results_subtitle">Compétitions</h2>
                 <h3 class="text-4xl font-black text-white mb-8" data-i18n="results_title">Résultats & Palmarès</h3>
                 <div class="flex flex-wrap justify-center gap-3" id="filters-palmares">
-                    <button onclick="setFilter('palmares', 'Tous')" data-filter="Tous" class="filter-btn active" data-i18n="filter_all">Tous</button>
-                    <button onclick="setFilter('palmares', 'Rocket League')" data-filter="Rocket League" class="filter-btn" data-i18n="filter_rocket">Rocket League</button>
-                    <button onclick="setFilter('palmares', 'Le Mans Ultimate')" data-filter="Le Mans Ultimate" class="filter-btn" data-i18n="filter_lmu">Le Mans Ultimate</button>
-                    <button onclick="setFilter('palmares', 'RBR')" data-filter="RBR" class="filter-btn" data-i18n="filter_rbr">RBR</button>
-                    <button onclick="setFilter('palmares', 'iRacing')" data-filter="iRacing" class="filter-btn" data-i18n="filter_iracing">iRacing</button>
+                    <button onclick="setFilter('palmares', 'Tous')" data-filter="Tous" class="filter-btn active">Tous</button>
+                    <button onclick="setFilter('palmares', 'Rocket League')" data-filter="Rocket League" class="filter-btn">Rocket League</button>
+                    <button onclick="setFilter('palmares', 'Le Mans Ultimate')" data-filter="Le Mans Ultimate" class="filter-btn">Le Mans Ultimate</button>
+                    <button onclick="setFilter('palmares', 'RBR')" data-filter="RBR" class="filter-btn">RBR</button>
+                    <button onclick="setFilter('palmares', 'iRacing')" data-filter="iRacing" class="filter-btn">iRacing</button>
                 </div>
             </div>
             <div id="palmares-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
@@ -641,33 +455,33 @@
             <div class="relative border-l border-white/10 ml-4 md:ml-1/2 space-y-24 py-10">
                 <div class="relative pl-8 md:pl-12 reveal">
                     <div class="absolute w-4 h-4 bg-aerix-purple rounded-full -left-[8.5px] top-1.5 shadow-[0_0_15px_#8B5CF6]"></div>
-                    <div class="text-aerix-purple font-bold text-xl mb-2" data-i18n="history_dec_2025">Décembre 2025</div>
-                    <h4 class="text-2xl font-bold text-white mb-4" data-i18n="history_genesis_title">La Genèse sur les circuits</h4>
-                    <div class="glass-panel p-8 rounded-3xl"><p class="text-gray-400 text-sm leading-relaxed" data-i18n="history_genesis_desc">Lancement officiel d'un championnat sur <strong class="text-white">Assetto Corsa Competizione (ACC)</strong>.</p></div>
+                    <div class="text-aerix-purple font-bold text-xl mb-2">Décembre 2025</div>
+                    <h4 class="text-2xl font-bold text-white mb-4">La Genèse sur les circuits</h4>
+                    <div class="glass-panel p-8 rounded-3xl"><p class="text-gray-400 text-sm leading-relaxed">Lancement officiel d'un championnat sur <strong class="text-white">Assetto Corsa Competizione (ACC)</strong>.</p></div>
                 </div>
                 <div class="relative pl-8 md:pl-12 reveal delay-100">
                     <div class="absolute w-4 h-4 bg-aerix-purple rounded-full -left-[8.5px] top-1.5 shadow-[0_0_15px_#8B5CF6]"></div>
-                    <div class="text-aerix-purple font-bold text-xl mb-2" data-i18n="history_feb_2026">Février 2026</div>
-                    <h4 class="text-2xl font-bold text-white mb-4" data-i18n="history_endurance_title">L'ère de l'Endurance</h4>
-                    <div class="glass-panel p-8 rounded-3xl"><p class="text-gray-400 text-sm leading-relaxed" data-i18n="history_endurance_desc">Débuts remarqués sur <strong class="text-white">Le Mans Ultimate</strong>. La stratégie devient le cœur de notre pôle Motorsport.</p></div>
+                    <div class="text-aerix-purple font-bold text-xl mb-2">Février 2026</div>
+                    <h4 class="text-2xl font-bold text-white mb-4">L'ère de l'Endurance</h4>
+                    <div class="glass-panel p-8 rounded-3xl"><p class="text-gray-400 text-sm leading-relaxed">Débuts remarqués sur <strong class="text-white">Le Mans Ultimate</strong>. La stratégie devient le cœur de notre pôle Motorsport.</p></div>
                 </div>
                 <div class="relative pl-8 md:pl-12 reveal delay-200">
                     <div class="absolute w-4 h-4 bg-aerix-purple rounded-full -left-[8.5px] top-1.5 shadow-[0_0_15px_#8B5CF6]"></div>
-                    <div class="text-aerix-purple font-bold text-xl mb-2" data-i18n="history_may_2026">Mai 2026</div>
-                    <h4 class="text-2xl font-bold text-white mb-4" data-i18n="history_esports_title">L'expansion Esport</h4>
-                    <div class="glass-panel p-8 rounded-3xl"><p class="text-gray-400 text-sm leading-relaxed" data-i18n="history_esports_desc">Entrée officielle sur <strong class="text-white">Rocket League</strong> avec des joueurs allant de Grand Champion 2 à SSL.</p></div>
+                    <div class="text-aerix-purple font-bold text-xl mb-2">Mai 2026</div>
+                    <h4 class="text-2xl font-bold text-white mb-4">L'expansion Esport</h4>
+                    <div class="glass-panel p-8 rounded-3xl"><p class="text-gray-400 text-sm leading-relaxed">Entrée officielle sur <strong class="text-white">Rocket League</strong> avec des joueurs allant de Grand Champion 2 à SSL.</p></div>
                 </div>
                 <div class="relative pl-8 md:pl-12 reveal delay-300">
                     <div class="absolute w-4 h-4 bg-aerix-purple rounded-full -left-[8.5px] top-1.5 shadow-[0_0_15px_#8B5CF6]"></div>
-                    <div class="text-aerix-purple font-bold text-xl mb-2" data-i18n="history_june_2026">Juin 2026</div>
-                    <h4 class="text-2xl font-bold text-white mb-4" data-i18n="history_iracing_title">L'arrivée d'iRacing</h4>
-                    <div class="glass-panel p-8 rounded-3xl"><p class="text-gray-400 text-sm leading-relaxed" data-i18n="history_iracing_desc">AERIX étend son pôle Motorsport avec l'arrivée d'<strong class="text-white">iRacing</strong>, renforçant sa présence sur la scène sim-racing.</p></div>
+                    <div class="text-aerix-purple font-bold text-xl mb-2">Juin 2026</div>
+                    <h4 class="text-2xl font-bold text-white mb-4">L'arrivée d'iRacing</h4>
+                    <div class="glass-panel p-8 rounded-3xl"><p class="text-gray-400 text-sm leading-relaxed">AERIX étend son pôle Motorsport avec l'arrivée d'<strong class="text-white">iRacing</strong>, renforçant sa présence sur la scène sim-racing.</p></div>
                 </div>
                 <div class="relative pl-8 md:pl-12 reveal delay-400">
                     <div class="absolute w-4 h-4 bg-aerix-purple rounded-full -left-[8.5px] top-1.5 shadow-[0_0_15px_#8B5CF6]"></div>
-                    <div class="text-aerix-purple font-bold text-xl mb-2" data-i18n="history_aug_2026">Août 2026</div>
-                    <h4 class="text-2xl font-bold text-white mb-4" data-i18n="history_rbr_title">L'arrivée de RBR</h4>
-                    <div class="glass-panel p-8 rounded-3xl"><p class="text-gray-400 text-sm leading-relaxed" data-i18n="history_rbr_desc">Nouvelle division sur <strong class="text-white">Richard Burns Rally</strong>, confirmant l'ambition d'AERIX sur le rallye virtuel.</p></div>
+                    <div class="text-aerix-purple font-bold text-xl mb-2">Août 2026</div>
+                    <h4 class="text-2xl font-bold text-white mb-4">L'arrivée de RBR</h4>
+                    <div class="glass-panel p-8 rounded-3xl"><p class="text-gray-400 text-sm leading-relaxed">Nouvelle division sur <strong class="text-white">Richard Burns Rally</strong>, confirmant l'ambition d'AERIX sur le rallye virtuel.</p></div>
                 </div>
             </div>
         </main>
@@ -700,11 +514,11 @@
                     <button onclick="setAnnoncesView('galerie')" data-view="galerie" class="filter-btn" data-i18n="filter_gallery">Galerie</button>
                 </div>
                 <div class="flex flex-wrap justify-center gap-3 mb-8" id="filters-annonces">
-                    <button onclick="setFilter('annonces', 'Tous')" data-filter="Tous" class="filter-btn active" data-i18n="filter_all">Tous</button>
-                    <button onclick="setFilter('annonces', 'Rocket League')" data-filter="Rocket League" class="filter-btn" data-i18n="filter_rocket">Rocket League</button>
-                    <button onclick="setFilter('annonces', 'Le Mans Ultimate')" data-filter="Le Mans Ultimate" class="filter-btn" data-i18n="filter_lmu">Le Mans Ultimate</button>
-                    <button onclick="setFilter('annonces', 'RBR')" data-filter="RBR" class="filter-btn" data-i18n="filter_rbr">RBR</button>
-                    <button onclick="setFilter('annonces', 'iRacing')" data-filter="iRacing" class="filter-btn" data-i18n="filter_iracing">iRacing</button>
+                    <button onclick="setFilter('annonces', 'Tous')" data-filter="Tous" class="filter-btn active">Tous</button>
+                    <button onclick="setFilter('annonces', 'Rocket League')" data-filter="Rocket League" class="filter-btn">Rocket League</button>
+                    <button onclick="setFilter('annonces', 'Le Mans Ultimate')" data-filter="Le Mans Ultimate" class="filter-btn">Le Mans Ultimate</button>
+                    <button onclick="setFilter('annonces', 'RBR')" data-filter="RBR" class="filter-btn">RBR</button>
+                    <button onclick="setFilter('annonces', 'iRacing')" data-filter="iRacing" class="filter-btn">iRacing</button>
                 </div>
             </div>
             <div id="announcements-container" class="space-y-10"></div>
@@ -719,16 +533,16 @@
             <div class="flex flex-col md:flex-row items-center gap-4 text-center md:text-left">
                 <p class="text-xs text-gray-600">© 2026 AERIX Esports. Tous droits réservés.</p>
                 <div class="flex space-x-6 text-xs text-gray-500">
-                    <button onclick="openLegal('mentions')" class="hover:text-white transition" data-i18n="legal_notice">Mentions légales</button>
-                    <button onclick="openLegal('confidentialite')" class="hover:text-white transition" data-i18n="privacy">Confidentialité</button>
+                    <button onclick="openLegal('mentions')" class="hover:text-white transition">Mentions légales</button>
+                    <button onclick="openLegal('confidentialite')" class="hover:text-white transition">Confidentialité</button>
                     <button onclick="openContactModal()" class="hover:text-white transition" data-i18n="contact_form">Contact</button>
-                    <button onclick="openCookieSettings()" class="hover:text-white transition" data-i18n="manage_cookies">Gérer les cookies</button>
+                    <button onclick="openCookieSettings()" class="hover:text-white transition">Gérer les cookies</button>
                 </div>
             </div>
             <div class="flex items-center gap-4">
-                <a href="https://www.twitch.tv/aerix_esport" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:border-aerix-purple transition hover:-translate-y-1"><svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M11.64 5.93h1.61v4.81h-1.61V5.93m3.48 0h1.61v4.81h-1.61V5.93M4.43 0L1.61 2.82v16.11h5.65V24l3.23-3.23h4.84l8.06-8.06V0H4.43m17.74 11.29l-3.23 3.23h-4.84l-2.42 2.42v-2.42H6.45V1.61h15.72v9.68z"/></svg></a>
-                <a href="https://x.com/aerix_esport" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:border-aerix-purple transition hover:-translate-y-1"><svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
-                <a href="https://www.instagram.com/aerix_esport" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:border-aerix-purple transition hover:-translate-y-1"><svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+                <a href="https://www.twitch.tv/aerix_esport" target="_blank" class="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:border-aerix-purple transition hover:-translate-y-1"><svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M11.64 5.93h1.61v4.81h-1.61V5.93m3.48 0h1.61v4.81h-1.61V5.93M4.43 0L1.61 2.82v16.11h5.65V24l3.23-3.23h4.84l8.06-8.06V0H4.43m17.74 11.29l-3.23 3.23h-4.84l-2.42 2.42v-2.42H6.45V1.61h15.72v9.68z"/></svg></a>
+                <a href="https://x.com/aerix_esport" target="_blank" class="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:border-aerix-purple transition hover:-translate-y-1"><svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+                <a href="https://www.instagram.com/aerix_esport" target="_blank" class="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:border-aerix-purple transition hover:-translate-y-1"><svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
             </div>
         </div>
     </footer>
@@ -1494,15 +1308,7 @@
                 coaching_admin_requests_title: "Demandes de coaching", coaching_admin_requests_desc: "Centralisées avec les autres tickets — réponds pour envoyer un devis personnalisé.",
                 nav_review: "Avis", review_title: "Laisser un avis", review_subtitle: "Partage ton expérience avec la communauté AERIX.", review_select_rating: "Sélectionne une note", review_comment_placeholder: "Ton commentaire...", review_submit: "Publier mon avis",
                 review_admin_title: "Avis publiés", review_admin_desc: "Tous les avis laissés par les membres. Supprime les avis abusifs ou hors sujet.", no_reviews: "Aucun avis pour le moment.",
-                filter_gallery: "Galerie",
-                filter_all: "Tous", filter_rocket: "Rocket League", filter_lmu: "Le Mans Ultimate", filter_rbr: "RBR", filter_iracing: "iRacing",
-                history_dec_2025: "Décembre 2025", history_genesis_title: "La Genèse sur les circuits", history_genesis_desc: "Lancement officiel d'un championnat sur Assetto Corsa Competizione (ACC).",
-                history_feb_2026: "Février 2026", history_endurance_title: "L'ère de l'Endurance", history_endurance_desc: "Débuts remarqués sur Le Mans Ultimate. La stratégie devient le cœur de notre pôle Motorsport.",
-                history_may_2026: "Mai 2026", history_esports_title: "L'expansion Esport", history_esports_desc: "Entrée officielle sur Rocket League avec des joueurs allant de Grand Champion 2 à SSL.",
-                history_june_2026: "Juin 2026", history_iracing_title: "L'arrivée d'iRacing", history_iracing_desc: "AERIX étend son pôle Motorsport avec l'arrivée d'iRacing, renforçant sa présence sur la scène sim-racing.",
-                history_aug_2026: "Août 2026", history_rbr_title: "L'arrivée de RBR", history_rbr_desc: "Nouvelle division sur Richard Burns Rally, confirmant l'ambition d'AERIX sur le rallye virtuel.",
-                legal_notice: "Mentions légales", privacy: "Confidentialité", manage_cookies: "Gérer les cookies",
-                assistant_header_sub: "Administration · 7j/7", assistant_quick_who: "Qui est AERIX ?", assistant_quick_join: "Rejoindre AERIX", assistant_quick_contact: "Contacter l'administration", assistant_quick_coaching: "Coaching", assistant_input_placeholder: "Écris ta demande...", assistant_open: "Ouvrir AERIX Assistant"
+                filter_gallery: "Galerie"
             },
             en: {
                 nav_home: "Home", nav_effectifs: "Rosters", nav_palmares: "Results", nav_histoire: "History", nav_boutique: "Shop", nav_partenaires: "Partners", nav_annonces: "News",
@@ -1533,15 +1339,7 @@
                 coaching_admin_requests_title: "Coaching requests", coaching_admin_requests_desc: "Centralized with the other tickets — reply to send a personalized quote.",
                 nav_review: "Reviews", review_title: "Leave a review", review_subtitle: "Share your experience with the AERIX community.", review_select_rating: "Select a rating", review_comment_placeholder: "Your comment...", review_submit: "Publish my review",
                 review_admin_title: "Published reviews", review_admin_desc: "All reviews left by members. Delete abusive or off-topic reviews.", no_reviews: "No reviews yet.",
-                filter_gallery: "Gallery",
-                filter_all: "All", filter_rocket: "Rocket League", filter_lmu: "Le Mans Ultimate", filter_rbr: "RBR", filter_iracing: "iRacing",
-                history_dec_2025: "December 2025", history_genesis_title: "The Genesis on the circuits", history_genesis_desc: "Official launch of a championship on Assetto Corsa Competizione (ACC).",
-                history_feb_2026: "February 2026", history_endurance_title: "The Endurance Era", history_endurance_desc: "Strong first appearances on Le Mans Ultimate. Strategy becomes the core of our Motorsport division.",
-                history_may_2026: "May 2026", history_esports_title: "Esports Expansion", history_esports_desc: "Official entry into Rocket League with players ranging from Grand Champion 2 to SSL.",
-                history_june_2026: "June 2026", history_iracing_title: "The arrival of iRacing", history_iracing_desc: "AERIX expands its Motorsport division with the arrival of iRacing, strengthening its presence in virtual racing.",
-                history_aug_2026: "August 2026", history_rbr_title: "The arrival of RBR", history_rbr_desc: "A new Richard Burns Rally division, confirming AERIX's ambition in virtual rallying.",
-                legal_notice: "Legal notice", privacy: "Privacy", manage_cookies: "Manage cookies",
-                assistant_header_sub: "Administration · 7 days a week", assistant_quick_who: "Who is AERIX?", assistant_quick_join: "Join AERIX", assistant_quick_contact: "Contact administration", assistant_quick_coaching: "Coaching", assistant_input_placeholder: "Type your request...", assistant_open: "Open AERIX Assistant"
+                filter_gallery: "Gallery"
             }
         };
         let currentLang = localStorage.getItem('aerix_lang') || ((navigator.language || '').toLowerCase().startsWith('en') ? 'en' : 'fr');
@@ -1574,19 +1372,46 @@
         });
 
         function translateStaticUI() {
-            const dictionary = i18n[currentLang] || i18n.fr;
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (dictionary[key] !== undefined) el.textContent = dictionary[key];
+            const en = currentLang === 'en';
+            const pairs = {
+                'Accueil':'Home','Effectifs':'Rosters','Palmarès':'Results','Histoire':'History','Boutique':'Shop','Partenaires':'Partners','Annonces':'News',
+                'Découvrir les équipes':'Discover Rosters','Notre Palmarès':'Our Achievements','Performance & Élite':'Elite Performance',"Esprit d'équipe":'Team Spirit',
+                "Cohésion, communication stratégique et la force d'un collectif uni pour surmonter tous les défis.":'Cohesion, strategic communication, and the strength of a united team to overcome every challenge.',
+                'Nos équipes':'Our Rosters','Compétitions':'Competitions','Résultats & Palmarès':'Results & Achievements',"L'Héritage":'The Legacy',
+                "Née d'une passion commune pour le sport automobile virtuel et l'esport, AERIX n'a cessé d'évoluer.":'Born from a shared passion for virtual motorsport and esports, AERIX has continuously evolved.',
+                'Décembre 2025':'December 2025','La Genèse sur les circuits':'The Genesis on the circuits','Février 2026':'February 2026',"L'ère de l'Endurance":'The Endurance Era','Mai 2026':'May 2026','L’expansion Esport':'Esports Expansion',"L'expansion Esport":'Esports Expansion','Juin 2026':'June 2026',"L'arrivée d'iRacing":'The arrival of iRacing','Août 2026':'August 2026',"L'arrivée de RBR":'The arrival of RBR',
+                "Lancement officiel d'un championnat sur Assetto Corsa Competizione (ACC).":'Official launch of a championship on Assetto Corsa Competizione (ACC).',
+                "Débuts remarqués sur Le Mans Ultimate qui marque notre arrivée dans le monde de l'esport.":'Strong first appearances on Le Mans Ultimate. Strategy becomes the core of our Motorsport division.',
+                'Entrée officielle sur Rocket League avec des joueurs de rang Grand Champion.':'Official entry into Rocket League with Grand Champion-level players.',
+                'Équipement Officiel':'Official Merch','Sponsors & Affiliés':'Sponsors & Affiliates','Actualités':'News','Annonces & Mises à jour':'Announcements & Updates',
+                '© 2026 AERIX Esports. Tous droits réservés.':'© 2026 AERIX Esports. All rights reserved.','Mentions légales':'Legal notice','Confidentialité':'Privacy','Gérer les cookies':'Manage cookies',
+                'Votre confidentialité':'Your privacy','Voir les détails et préférences':'View details and preferences','Préférences de cookies':'Cookie preferences','Nécessaires':'Necessary',
+                'Indispensables pour les préférences, la navigation et le fonctionnement du site. Toujours actifs.':'Required for preferences, navigation and site operation. Always active.',
+                'Mesure d’audience':'Analytics','Autorise les outils d’analyse d’audience lorsqu’ils sont activés par AERIX.':'Allows analytics tools when enabled by AERIX.',
+                'Votre choix est enregistré localement. Aucun outil d’analyse facultatif ne doit être chargé avant votre consentement.':'Your choice is stored locally. No optional analytics tool should load before your consent.',
+                'Enregistrer mes choix':'Save my choices','Accès Sécurisé':'Secure access',"Panel d'administration AERIX":'AERIX administration panel','Mot de passe...':'Password...','Annuler':'Cancel','Connexion':'Sign in',
+                'Studio de recadrage':'Crop studio',"Valider l'image":'Confirm image','Boutique AERIX':'AERIX Shop','Tailles Disponibles':'Available sizes','Nom Complet':'Full name','Âge':'Age','Nationalité':'Nationality',
+                'Éditer':'Edit','Suppr':'Delete','Ajouter un produit':'Add a product','Nom du produit':'Product name','Prix (€)':'Price (€)','Description du produit...':'Product description...',
+                'Uploader des images (4:5)':'Upload images (4:5)','Publier le produit':'Publish product','Créer un Roster':'Create a roster','Nom du Roster (ex: GC2, Endurance...)':'Roster name (e.g. GC2, Endurance...)',
+                'Jeu / Catégorie Générale':'Game / General category','Description du roster...':'Roster description...','Création de Cartes Joueurs':'Player card creation','Photo':'Photo','Prénom Nom':'First name Last name',
+                'Joueur ajouté au brouillon.':'Player added to draft.','Retirer':'Remove','Déclarer un Résultat':'Add a result','Modifier le Résultat':'Edit result','Titre/Compétition obligatoire.':'Title/competition required.',
+                'Résultat sauvegardé !':'Result saved!','Ajouter un Partenaire':'Add a partner',"Nom de l'entreprise":'Company name','Lien vers leur site web (https://...)':'Website link (https://...)','Enregistrer':'Save',
+                "Publier l'article":'Publish article','Rédigez votre article ici...':'Write your article here...','+ Miniature (16:9)':'+ Thumbnail (16:9)','Général':'General','Équipementier':'Equipment partner','Setup & Simracing':'Setup & Simracing','Partenaire Officiel':'Official Partner','Affilié':'Affiliate',
+                '+ Logo (fond transparent de préférence)':'+ Logo (transparent background preferred)','Résultats':'Results','Actualités':'News','Comptes':'Accounts','Sponsors':'Sponsors','Effectifs':'Rosters','Boutique':'Shop','Réessayer':'Retry','❌ Défaite':'❌ Loss','Enregistrer le Résultat':'Save result',"Rédiger un Article":'Write an article','Tous':'All','🇩🇿 Algérie':'🇩🇿 Algeria','Rejoindre le Discord':'Join our Discord','Refuser':'Decline','Personnaliser':'Customize','Accepter':'Accept','AERIX utilise un stockage nécessaire au fonctionnement du site et peut utiliser des mesures d’audience uniquement avec votre accord. Vous pouvez modifier votre choix à tout moment.':'AERIX uses storage required for the site to function and may use analytics only with your consent. You can change your choice at any time.',
+                'Aucun résultat pour cette catégorie.':'No results for this category.','Résultat':'Result','Non daté':'Undated','Adversaire':'Opponent','Classé':'Ranked','Catégorie':'Category','Voiture':'Car',
+                'Aucune annonce.':'No announcements.','Aucun partenaire renseigné.':'No partners listed.','Partenaires & Affiliés':'Partners & Affiliates',
+                'Aucun effectif pour cette catégorie.':'No roster for this category.','Aucun joueur dans ce roster.':'No player in this roster.',
+                'Boutique vide.':'Shop empty.','Sans image':'No image','Détails':'Details'
+            };
+            const reverse = {}; Object.entries(pairs).forEach(([frText,enText]) => reverse[enText]=frText);
+            const map = en ? pairs : reverse;
+            document.querySelectorAll('body *').forEach(el => {
+                if(el.children.length===0 && !['INPUT','TEXTAREA','SELECT','OPTION'].includes(el.tagName)) {
+                    const t=el.textContent.trim(); if(map[t]) el.textContent=map[t];
+                }
             });
-            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-                const key = el.getAttribute('data-i18n-placeholder');
-                if (dictionary[key] !== undefined) el.setAttribute('placeholder', dictionary[key]);
-            });
-            document.querySelectorAll('[data-i18n-aria-label]').forEach(el => {
-                const key = el.getAttribute('data-i18n-aria-label');
-                if (dictionary[key] !== undefined) el.setAttribute('aria-label', dictionary[key]);
-            });
+            document.querySelectorAll('input[placeholder], textarea[placeholder], [contenteditable][placeholder]').forEach(el => { const t=el.getAttribute('placeholder'); if(map[t]) el.setAttribute('placeholder',map[t]); });
+            document.querySelectorAll('option').forEach(el => { const t=el.textContent.trim(); if(map[t]) el.textContent=map[t]; });
         }
 
         function setLang(lang) {
@@ -1608,8 +1433,6 @@
             });
                    closeLanguageMenu();
             translateStaticUI();
-            const assistantLauncher = document.getElementById('aerix-assistant-launcher');
-            if (assistantLauncher) assistantLauncher.setAttribute('aria-label', currentLang === 'en' ? 'Open AERIX Assistant' : 'Ouvrir AERIX Assistant');
             renderAccountArea();
             refreshNavPill();
             // Ré-affiche le contenu dynamique (annonces, rosters, palmarès) pour déclencher
@@ -1618,15 +1441,6 @@
             if (typeof globalPalmares !== 'undefined') renderPalmares();
             if (typeof globalAnnonces !== 'undefined') renderAnnonces();
              if (typeof renderUserTickets === 'function' && document.getElementById('tickets-modal') && !document.getElementById('tickets-modal').classList.contains('hidden')) renderUserTickets();
-            // Réinitialise le fil de l'assistant AERIX pour que son message d'accueil
-            // (et toute la conversation déjà affichée) repasse dans la langue choisie.
-            const assistantBox = document.getElementById('aerix-assistant-messages');
-            if (assistantBox) {
-                assistantBox.innerHTML = '';
-                if (aerixAssistantOpen) addAssistantMessage('bot', currentLang==='en'
-                    ? 'Hi! I\'m the AERIX assistant. I can guide you about our rosters, coaching, recruitment, or put you in touch with the administration. <strong class="text-white">The administration is available 7 days a week.</strong>'
-                    : 'Bonjour ! Je suis l’assistant AERIX. Je peux t’orienter sur nos équipes, le coaching, le recrutement ou te mettre en relation avec l’administration. <strong class="text-white">L’administration est disponible 7 jours sur 7.</strong>');
-            }
         }
 
         // TOAST NOTIFICATIONS
@@ -1769,19 +1583,19 @@
                     r.players.forEach(p => {
                         const escapedPlayer = encodeURIComponent(JSON.stringify({...p, game: r.game}));
                         playersHTML += `
-                        <div class="glass-panel roster-player-card p-4 sm:p-5 flex flex-col items-center rounded-3xl cursor-pointer group hover:border-aerix-purple/50 transition-all duration-300" data-player="${escapeHtml(escapedPlayer)}" onclick="openPlayerModalFromElement(this)">
-                            <div class="roster-player-media relative w-full aspect-[3/4] rounded-2xl overflow-hidden mb-4 sm:mb-5 border border-white/10 group-hover:border-aerix-purple/30 bg-[#050505]">
-                                <img src="${escapeHtml(p.avatar || 'transparent-blanc.png')}" alt="${escapeHtml(p.pseudo || p.name || 'AERIX')}" loading="lazy" decoding="async" class="w-full h-full object-cover object-top-custom transition duration-500 group-hover:scale-105 group-hover:brightness-110" onerror="this.onerror=null;this.src='transparent-blanc.png';">
+                        <div class="glass-panel p-5 flex flex-col items-center rounded-3xl cursor-pointer group hover:border-aerix-purple/50 transition-all duration-300 overflow-hidden" onclick="openPlayerModal('${escapedPlayer}')">
+                            <div class="relative w-full aspect-[3/4] rounded-2xl overflow-hidden mb-5 border border-white/10 group-hover:border-aerix-purple/30 bg-[#050505]">
+                                <img src='${p.avatar}' class="w-full h-full object-cover object-top-custom transition duration-500 group-hover:scale-105 group-hover:brightness-110">
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80"></div>
                                 <div class="absolute bottom-3 left-3 flex gap-2 z-10">
                                     <span class="bg-black/60 backdrop-blur-md text-white text-sm px-2 py-1 rounded-lg border border-white/20 filter drop-shadow-md">${p.country || '🌍'}</span>
                                     ${p.number ? `<span class="bg-aerix-purple text-white text-xs font-black px-2 py-1 rounded-lg border border-purple-400 shadow-[0_0_10px_rgba(139,92,246,0.5)] flex items-center">#${p.number}</span>` : ''}
                                 </div>
                             </div>
-                            <h5 class="text-2xl font-black text-white uppercase tracking-tighter w-full text-left truncate">${escapeHtml(p.pseudo || p.name || '')}</h5>
+                            <h5 class="text-2xl font-black text-white uppercase tracking-tighter w-full text-left truncate">${p.pseudo || p.name}</h5>
                             <p class="text-xs font-medium text-gray-500 w-full text-left truncate flex items-center gap-2">
-                                <span>${escapeHtml(p.name || '')}</span>
-                                ${p.age ? `<span class="w-1 h-1 rounded-full bg-gray-600"></span> <span>${escapeHtml(String(p.age))} ${currentLang==='en'?'y.o.':'ans'}</span>` : ''}
+                                <span>${p.name}</span>
+                                ${p.age ? `<span class="w-1 h-1 rounded-full bg-gray-600"></span> <span>${p.age} ${currentLang==='en'?'y.o.':'ans'}</span>` : ''}
                             </p>
                         </div>`;
                     });
@@ -1806,14 +1620,6 @@
                     </div>`;
             });
             setTimeout(revealActiveElements, 20);
-            translateDynamicContent();
-        }
-
-        function openPlayerModalFromElement(el) {
-            if (!el) return;
-            const encoded = el.getAttribute('data-player');
-            if (!encoded) return;
-            try { openPlayerModal(encoded); } catch (e) { console.error('Player modal data error:', e); }
         }
 
         function openPlayerModal(playerDataStr) {
@@ -1996,6 +1802,7 @@
             });
             setTimeout(revealActiveElements, 20);
             translateDynamicContent();
+            translateDynamicContent();
         }
 
         // ACTUALITÉS (TEXTE RICHE + ANIMATION)
@@ -2075,7 +1882,7 @@
                 
                 categories[cat].forEach((p, index) => {
                     const contentHTML = p.image ? `<img src="${p.image}" alt="${p.name}" class="max-h-16 max-w-full object-contain filter drop-shadow-[0_0_10px_rgba(255,255,255,0.1)] group-hover:drop-shadow-[0_0_20px_rgba(139,92,246,0.6)] transition-all duration-500 group-hover:scale-110">` : `<span class="text-xl font-bold text-white tracking-tighter transition-all duration-500 group-hover:scale-110 inline-block">${p.name}</span>`;
-                    const wrapperHTML = p.url ? `<a href="${p.url}" target="_blank" rel="noopener noreferrer" class="partner-card-tile glass-panel p-6 rounded-2xl flex items-center justify-center min-h-[120px] group reveal delay-${(index%5)*100} hover:border-aerix-purple/50 bg-[#050505]/50">${contentHTML}</a>` : `<div class="partner-card-tile glass-panel p-6 rounded-2xl flex items-center justify-center min-h-[120px] group reveal delay-${(index%5)*100} bg-[#050505]/50">${contentHTML}</div>`;
+                    const wrapperHTML = p.url ? `<a href="${p.url}" target="_blank" class="partner-card-tile glass-panel p-6 rounded-2xl flex items-center justify-center min-h-[120px] group reveal delay-${(index%5)*100} hover:border-aerix-purple/50 bg-[#050505]/50">${contentHTML}</a>` : `<div class="partner-card-tile glass-panel p-6 rounded-2xl flex items-center justify-center min-h-[120px] group reveal delay-${(index%5)*100} bg-[#050505]/50">${contentHTML}</div>`;
                     sectionHTML += wrapperHTML;
                 });
                 sectionHTML += `</div></div>`;
@@ -2365,9 +2172,7 @@ function checkAdminSessionTimeout() {
             panel.classList.toggle('open', aerixAssistantOpen);
             if(aerixAssistantOpen) {
                 const box=document.getElementById('aerix-assistant-messages');
-                if(box && !box.children.length) addAssistantMessage('bot', currentLang==='en'
-                    ? 'Hi! I\'m the AERIX assistant. I can guide you about our rosters, coaching, recruitment, or put you in touch with the administration. <strong class="text-white">The administration is available 7 days a week.</strong>'
-                    : 'Bonjour ! Je suis l’assistant AERIX. Je peux t’orienter sur nos équipes, le coaching, le recrutement ou te mettre en relation avec l’administration. <strong class="text-white">L’administration est disponible 7 jours sur 7.</strong>');
+                if(box && !box.children.length) addAssistantMessage('bot','Bonjour ! Je suis l’assistant AERIX. Je peux t’orienter sur nos équipes, le coaching, le recrutement ou te mettre en relation avec l’administration. <strong class="text-white">L’administration est disponible 7 jours sur 7.</strong>');
                 setTimeout(()=>document.getElementById('aerix-assistant-input')?.focus(),120);
             }
         }
@@ -2406,34 +2211,23 @@ function checkAdminSessionTimeout() {
             const delay=1100+Math.floor(Math.random()*800);
             setTimeout(()=>{
                 typing?.remove();
-                const en = currentLang === 'en';
                 if(q.includes('contact') || q.includes('admin') || q.includes('administr')) {
-                    addAssistantMessage('bot', en
-                        ? 'Of course. <strong class="text-white">The AERIX administration is available 7 days a week.</strong> You can open the contact form to send a ticket directly to the administrators.<br><button onclick="openContactModal();toggleAerixAssistant(false)" class="mt-3 px-3 py-2 rounded-xl bg-aerix-purple text-white text-[11px] font-bold">Contact the administrators</button>'
-                        : 'Bien sûr. <strong class="text-white">L’administration AERIX est disponible 7 jours sur 7.</strong> Tu peux ouvrir le formulaire de contact pour envoyer directement un ticket aux administrateurs.<br><button onclick="openContactModal();toggleAerixAssistant(false)" class="mt-3 px-3 py-2 rounded-xl bg-aerix-purple text-white text-[11px] font-bold">Contacter les administrateurs</button>');
+                    addAssistantMessage('bot','Bien sûr. <strong class="text-white">L’administration AERIX est disponible 7 jours sur 7.</strong> Tu peux ouvrir le formulaire de contact pour envoyer directement un ticket aux administrateurs.<br><button onclick="openContactModal();toggleAerixAssistant(false)" class="mt-3 px-3 py-2 rounded-xl bg-aerix-purple text-white text-[11px] font-bold">Contacter les administrateurs</button>');
                     return;
                 }
                 if(q.includes('coaching')) {
-                    addAssistantMessage('bot', en
-                        ? 'AERIX coaching covers <strong class="text-white">Le Mans Ultimate and iRacing</strong>, solo or in a group. You can open the request directly from the website.<br><button onclick="openCoachingModal();toggleAerixAssistant(false)" class="mt-3 px-3 py-2 rounded-xl bg-aerix-purple text-white text-[11px] font-bold">Request coaching</button>'
-                        : 'Le coaching AERIX concerne <strong class="text-white">Le Mans Ultimate et iRacing</strong>, en individuel ou en groupe. Tu peux ouvrir la demande directement depuis le site.<br><button onclick="openCoachingModal();toggleAerixAssistant(false)" class="mt-3 px-3 py-2 rounded-xl bg-aerix-purple text-white text-[11px] font-bold">Demander un coaching</button>');
+                    addAssistantMessage('bot','Le coaching AERIX concerne <strong class="text-white">Le Mans Ultimate et iRacing</strong>, en individuel ou en groupe. Tu peux ouvrir la demande directement depuis le site.<br><button onclick="openCoachingModal();toggleAerixAssistant(false)" class="mt-3 px-3 py-2 rounded-xl bg-aerix-purple text-white text-[11px] font-bold">Demander un coaching</button>');
                     return;
                 }
-                if(q.includes('rejoindre') || q.includes('recrut') || q.includes('roster') || q.includes('équipe') || q.includes('join') || q.includes('recruit') || q.includes('team')) {
-                    addAssistantMessage('bot', en
-                        ? 'The easiest way to join AERIX is directly through our <strong class="text-white">Discord</strong>. You\'ll find recruitment information there and can chat with the team.<br><a href="https://discord.gg/dJcHwYT4HY" target="_blank" rel="noopener noreferrer" class="inline-flex mt-3 px-3 py-2 rounded-xl bg-aerix-purple text-white text-[11px] font-bold">Join the Discord</a>'
-                        : 'Pour rejoindre AERIX, le plus simple est de passer directement par notre <strong class="text-white">Discord</strong>. Tu pourras y retrouver les informations de recrutement et échanger avec l’équipe.<br><a href="https://discord.gg/dJcHwYT4HY" target="_blank" rel="noopener noreferrer" class="inline-flex mt-3 px-3 py-2 rounded-xl bg-aerix-purple text-white text-[11px] font-bold">Rejoindre le Discord</a>');
+                if(q.includes('rejoindre') || q.includes('recrut') || q.includes('roster') || q.includes('équipe')) {
+                    addAssistantMessage('bot','Pour rejoindre AERIX, le plus simple est de passer directement par notre <strong class="text-white">Discord</strong>. Tu pourras y retrouver les informations de recrutement et échanger avec l’équipe.<br><a href="https://discord.gg/dJcHwYT4HY" target="_blank" rel="noopener noreferrer" class="inline-flex mt-3 px-3 py-2 rounded-xl bg-aerix-purple text-white text-[11px] font-bold">Rejoindre le Discord</a>');
                     return;
                 }
-                if(q.includes('qui est aerix') || q.includes('who is aerix') || q.includes('aerix')) {
-                    addAssistantMessage('bot', en
-                        ? 'AERIX is an independent structure focused on <strong class="text-white">esports and sim-racing</strong>, present notably on Rocket League, Le Mans Ultimate, iRacing and Richard Burns Rally.'
-                        : 'AERIX est une structure indépendante orientée <strong class="text-white">esport et simracing</strong>, présente notamment sur Rocket League, Le Mans Ultimate, iRacing et Richard Burns Rally.');
+                if(q.includes('qui est aerix') || q.includes('aerix')) {
+                    addAssistantMessage('bot','AERIX est une structure indépendante orientée <strong class="text-white">esport et simracing</strong>, présente notamment sur Rocket League, Le Mans Ultimate, iRacing et Richard Burns Rally.');
                     return;
                 }
-                addAssistantMessage('bot', en
-                    ? 'I can help with <strong class="text-white">rosters</strong>, <strong class="text-white">recruitment</strong>, <strong class="text-white">coaching</strong> or <strong class="text-white">contacting the administration</strong>. If your request needs an administrator, the contact form is available here.'
-                    : 'Je peux t’aider pour les <strong class="text-white">effectifs</strong>, le <strong class="text-white">recrutement</strong>, le <strong class="text-white">coaching</strong> ou le <strong class="text-white">contact avec l’administration</strong>. Si ta demande nécessite un administrateur, le formulaire de contact est disponible ici.');
+                addAssistantMessage('bot','Je peux t’aider pour les <strong class="text-white">effectifs</strong>, le <strong class="text-white">recrutement</strong>, le <strong class="text-white">coaching</strong> ou le <strong class="text-white">contact avec l’administration</strong>. Si ta demande nécessite un administrateur, le formulaire de contact est disponible ici.');
             },delay);
         }
 
