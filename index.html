@@ -167,19 +167,42 @@
 
     .filter-btn { padding: 0.5rem 1.2rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: #9ca3af; cursor: pointer; }
 
-    /* ROSTER : CARROUSEL JOUEURS (4 visibles max, défilement horizontal) */
-    .roster-track { display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - 3 * 1.5rem) / 4); align-items: stretch; gap: 1.5rem; overflow-x: auto; scroll-behavior: smooth; scroll-snap-type: x mandatory; padding-bottom: .25rem; -ms-overflow-style: none; scrollbar-width: none; }
-    .roster-track::-webkit-scrollbar { display: none; }
-    .roster-track > * { scroll-snap-align: start; }
-    @media (max-width: 1024px) { .roster-track { grid-auto-columns: calc((100% - 2 * 1.5rem) / 3); } }
-    @media (max-width: 768px) { .roster-track { grid-auto-columns: calc((100% - 1 * 1rem) / 2); gap: 1rem; } }
-    @media (max-width: 480px) { .roster-track { grid-auto-columns: 78%; } }
-    .roster-nav-controls { position: absolute; right: 0; top: -4.35rem; display: flex; align-items: center; gap: .5rem; z-index: 30; }
-    .roster-nav-btn { width: 2.75rem; height: 2.75rem; border-radius: 9999px; background: rgba(12,12,12,0.92); border: 1px solid rgba(255,255,255,0.12); color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background .25s ease, border-color .25s ease, box-shadow .25s ease, transform .25s cubic-bezier(.16,1,.3,1); backdrop-filter: blur(10px); flex-shrink: 0; }
-    .roster-nav-btn:hover { background: rgba(139,92,246,0.25); border-color: rgba(139,92,246,0.6); box-shadow: 0 0 18px rgba(139,92,246,.22); transform: translateY(-1px) scale(1.04); }
-    .roster-nav-btn:disabled { opacity: .3; cursor: default; pointer-events: none; }
-    @media (max-width: 767px) { .roster-nav-controls { display: none !important; } }
-    .roster-nav-btn:disabled { opacity: 0.3; cursor: default; pointer-events: none; }
+    /* EFFECTIFS : toutes les cartes visibles, sans carrousel ni boutons */
+    .roster-track {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        align-items: stretch;
+        gap: 1.5rem;
+        width: 100%;
+        overflow: visible;
+    }
+    @media (max-width: 1100px) {
+        .roster-track { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+    @media (max-width: 768px) {
+        .roster-track { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+    }
+    @media (max-width: 480px) {
+        .roster-track { grid-template-columns: 1fr; }
+    }
+
+    /* Cartes joueurs : aucun effet décoratif Liquid Glass ne recouvre la photo. */
+    .player-roster-card::before,
+    .player-roster-card::after {
+        display: none !important;
+    }
+    .player-roster-card {
+        isolation: isolate;
+    }
+    .player-roster-card:hover {
+        transform: translateY(-4px) translateZ(0);
+        border-color: rgba(139,92,246,.42);
+        box-shadow: 0 16px 42px rgba(0,0,0,.46), 0 0 26px rgba(139,92,246,.18), inset 0 1px 0 rgba(255,255,255,.20);
+    }
+    .player-roster-card .player-photo,
+    .player-roster-card:hover .player-photo {
+        transform: none !important;
+    }
     .filter-btn.active { background: #8B5CF6; color: white; border-color: #8B5CF6; box-shadow: 0 0 20px rgba(139,92,246,0.6); transform: scale(1.05); }
     .filter-btn:hover:not(.active) { background: rgba(255,255,255,0.1); color: white; transform: translateY(-2px); }
     
@@ -1542,9 +1565,9 @@
                     r.players.forEach(p => {
                         const escapedPlayer = encodeURIComponent(JSON.stringify({...p, game: r.game}));
                         playersHTML += `
-                        <div class="glass-panel p-5 flex flex-col items-center rounded-3xl cursor-pointer group hover:border-aerix-purple/50 transition-all duration-300 overflow-hidden" onclick="openPlayerModal('${escapedPlayer}')">
+                        <div class="glass-panel player-roster-card p-5 flex flex-col items-center rounded-3xl cursor-pointer group overflow-hidden" onclick="openPlayerModal('${escapedPlayer}')">
                             <div class="relative w-full aspect-[3/4] rounded-2xl overflow-hidden mb-5 border border-white/10 group-hover:border-aerix-purple/30 bg-[#050505]">
-                                <img src='${p.avatar}' class="w-full h-full object-cover object-top-custom transition duration-500 group-hover:scale-105 group-hover:brightness-110">
+                                <img src='${p.avatar}' class="player-photo w-full h-full object-cover object-top-custom transition duration-500 group-hover:brightness-110">
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80"></div>
                                 <div class="absolute bottom-3 left-3 flex gap-2 z-10">
                                     <span class="bg-black/60 backdrop-blur-md text-white text-sm px-2 py-1 rounded-lg border border-white/20 filter drop-shadow-md">${p.country || '🌍'}</span>
@@ -1572,33 +1595,14 @@
                             ${r.desc ? `<p class="text-gray-400 text-sm md:max-w-md text-left md:text-right leading-relaxed" data-translate-src="${escapeHtml(r.desc)}">${r.desc}</p>` : ''}
                         </div>
                         <div class="relative">
-                            <div class="roster-track ${r.players && r.players.length > 4 ? 'md:pl-14 md:pr-14' : ''}" id="roster-track-${index}">
+                            <div class="roster-track" id="roster-track-${index}">
                                 ${playersHTML}
                             </div>
-                            ${r.players && r.players.length > 4 ? `
-                            <div class="roster-nav-controls">
-                                <button type="button" onclick="scrollRoster(${index}, -1)" class="roster-nav-btn shadow-[0_4px_20px_rgba(0,0,0,0.5)]" aria-label="Joueurs précédents">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-                                </button>
-                                <button type="button" onclick="scrollRoster(${index}, 1)" class="roster-nav-btn shadow-[0_4px_20px_rgba(0,0,0,0.5)]" aria-label="Joueurs suivants">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                                </button>
-                            </div>` : ''}
                         </div>
                     </div>`;
             });
             setTimeout(revealActiveElements, 20);
         }
-        // Fait défiler horizontalement le carrousel de joueurs d'un roster donné
-        // (largeur d'une carte à chaque clic sur la flèche).
-        function scrollRoster(index, direction) {
-            const track = document.getElementById('roster-track-' + index);
-            if (!track) return;
-            const card = track.firstElementChild;
-            const cardWidth = card ? card.getBoundingClientRect().width + 24 : track.clientWidth / 4;
-            track.scrollBy({ left: cardWidth * direction, behavior: 'smooth' });
-        }
-
         function openPlayerModal(playerDataStr) {
             const p = JSON.parse(decodeURIComponent(playerDataStr));
             document.getElementById('pm-img').src = p.avatar;
