@@ -280,19 +280,6 @@
     img, video, svg { max-width: 100%; }
     button, a, input, textarea, select { -webkit-tap-highlight-color: transparent; }
 
-    /* Les effets de survol ne doivent pas provoquer de déplacement permanent au tactile. */
-    @media (hover: none), (pointer: coarse) {
-        .glass-panel:hover { transform: none; }
-        .glass-panel:hover::before { opacity: .52; }
-        .glass-panel:hover::after { opacity: .65; transform: translate3d(-3%, -2%, 0); }
-        .roster-player-card:hover { transform: none; }
-        .partner-card-tile:hover { transform: none; }
-        .news-card-animated:hover { transform: none; }
-        .news-card-animated:hover .news-img { transform: none; }
-        .aerix-logo-wrap:hover::before { opacity: 0; transform: scale(.95); }
-        .aerix-logo-wrap:hover .aerix-logo { filter: none; }
-    }
-
     /* Évite les débordements horizontaux des éléments flex/grid et des textes longs. */
     main, section, article, footer, nav, .page-view, .page-view > * { min-width: 0; }
     h1, h2, h3, h4, h5, h6, p, span, a, button, label { overflow-wrap: anywhere; }
