@@ -78,22 +78,6 @@
     }
     .glass-panel:hover::before { opacity: .9; }
     .glass-panel:hover::after { opacity: .9; transform: translate3d(4%, 3%, 0); }
-
-    /* CARTES JOUEURS EFFECTIF : neutralise les pseudo-éléments décoratifs du
-       liquid glass sur les cartes contenant une photo. Sans cela, le ::after
-       de .glass-panel peut se superposer à l'image pendant le hover et créer
-       un rectangle/carré parasite selon la position de la souris. */
-    .roster-player-card {
-        isolation: isolate;
-    }
-    .roster-player-card::before,
-    .roster-player-card::after {
-        display: none !important;
-    }
-    .roster-player-card > * {
-        position: relative;
-        z-index: 1;
-    }
     
     .glass-panel-no-hover { background: rgba(10, 10, 10, 0.85); backdrop-filter: blur(35px); -webkit-backdrop-filter: blur(35px); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 8px 32px 0 rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.05); }
 
@@ -190,8 +174,11 @@
     @media (max-width: 1024px) { .roster-track { grid-auto-columns: calc((100% - 2 * 1.5rem) / 3); } }
     @media (max-width: 768px) { .roster-track { grid-auto-columns: calc((100% - 1 * 1rem) / 2); gap: 1rem; } }
     @media (max-width: 480px) { .roster-track { grid-auto-columns: 78%; } }
-    .roster-nav-btn { width: 3rem; height: 3rem; border-radius: 9999px; background: rgba(12,12,12,0.85); border: 1px solid rgba(255,255,255,0.12); color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1); backdrop-filter: blur(8px); flex-shrink: 0; }
-    .roster-nav-btn:hover { background: rgba(139,92,246,0.25); border-color: rgba(139,92,246,0.6); transform: scale(1.06); }
+    .roster-nav-controls { position: absolute; right: 0; top: -4.35rem; display: flex; align-items: center; gap: .5rem; z-index: 30; }
+    .roster-nav-btn { width: 2.75rem; height: 2.75rem; border-radius: 9999px; background: rgba(12,12,12,0.92); border: 1px solid rgba(255,255,255,0.12); color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background .25s ease, border-color .25s ease, box-shadow .25s ease, transform .25s cubic-bezier(.16,1,.3,1); backdrop-filter: blur(10px); flex-shrink: 0; }
+    .roster-nav-btn:hover { background: rgba(139,92,246,0.25); border-color: rgba(139,92,246,0.6); box-shadow: 0 0 18px rgba(139,92,246,.22); transform: translateY(-1px) scale(1.04); }
+    .roster-nav-btn:disabled { opacity: .3; cursor: default; pointer-events: none; }
+    @media (max-width: 767px) { .roster-nav-controls { display: none !important; } }
     .roster-nav-btn:disabled { opacity: 0.3; cursor: default; pointer-events: none; }
     .filter-btn.active { background: #8B5CF6; color: white; border-color: #8B5CF6; box-shadow: 0 0 20px rgba(139,92,246,0.6); transform: scale(1.05); }
     .filter-btn:hover:not(.active) { background: rgba(255,255,255,0.1); color: white; transform: translateY(-2px); }
@@ -1555,7 +1542,7 @@
                     r.players.forEach(p => {
                         const escapedPlayer = encodeURIComponent(JSON.stringify({...p, game: r.game}));
                         playersHTML += `
-                        <div class="glass-panel roster-player-card p-5 flex flex-col items-center rounded-3xl cursor-pointer group hover:border-aerix-purple/50 transition-all duration-300 overflow-hidden" onclick="openPlayerModal('${escapedPlayer}')">
+                        <div class="glass-panel p-5 flex flex-col items-center rounded-3xl cursor-pointer group hover:border-aerix-purple/50 transition-all duration-300 overflow-hidden" onclick="openPlayerModal('${escapedPlayer}')">
                             <div class="relative w-full aspect-[3/4] rounded-2xl overflow-hidden mb-5 border border-white/10 group-hover:border-aerix-purple/30 bg-[#050505]">
                                 <img src='${p.avatar}' class="w-full h-full object-cover object-top-custom transition duration-500 group-hover:scale-105 group-hover:brightness-110">
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80"></div>
@@ -1589,12 +1576,14 @@
                                 ${playersHTML}
                             </div>
                             ${r.players && r.players.length > 4 ? `
-                            <button type="button" onclick="scrollRoster(${index}, -1)" class="roster-nav-btn absolute left-0 top-1/2 -translate-y-1/2 hidden md:flex z-20 shadow-[0_4px_20px_rgba(0,0,0,0.5)]" aria-label="Joueurs précédents">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-                            </button>
-                            <button type="button" onclick="scrollRoster(${index}, 1)" class="roster-nav-btn absolute right-0 top-1/2 -translate-y-1/2 hidden md:flex z-20 shadow-[0_4px_20px_rgba(0,0,0,0.5)]" aria-label="Joueurs suivants">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                            </button>` : ''}
+                            <div class="roster-nav-controls">
+                                <button type="button" onclick="scrollRoster(${index}, -1)" class="roster-nav-btn shadow-[0_4px_20px_rgba(0,0,0,0.5)]" aria-label="Joueurs précédents">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                                </button>
+                                <button type="button" onclick="scrollRoster(${index}, 1)" class="roster-nav-btn shadow-[0_4px_20px_rgba(0,0,0,0.5)]" aria-label="Joueurs suivants">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                </button>
+                            </div>` : ''}
                         </div>
                     </div>`;
             });
