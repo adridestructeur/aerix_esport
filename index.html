@@ -151,12 +151,12 @@
     .news-card-animated:hover .news-img { transform: scale(1.08); }
 
     /* NAVIGATION & FILTRES */
-    .nav-btn { padding: .48rem 1rem; border-radius: 9999px; font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #9ca3af; transition: color .25s ease, text-shadow .25s ease; position: relative; z-index: 2; background: transparent; border: none; cursor: pointer; white-space: nowrap; }
+    .nav-btn { padding: .48rem .82rem; border-radius: 9999px; font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: #9ca3af; transition: color .25s ease, text-shadow .25s ease; position: relative; z-index: 2; background: transparent; border: none; cursor: pointer; white-space: nowrap; }
     .nav-btn.active { color: #fff; text-shadow: 0 0 10px rgba(255,255,255,.55); }
     .nav-btn:hover { color: #fff; }
     
     /* SYSTÈME D'ÉTOILES — AVIS */
-    .review-star { background: transparent; border: none; cursor: pointer; font-size: 2.4rem; line-height: 1; color: rgba(255,255,255,0.15); padding: 0; transition: color 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), text-shadow 0.25s ease; transform: scale(1); }
+    .review-star { background: transparent; border: none; cursor: pointer; font-size: 2.4rem; line-height: 1; color: rgba(255,255,255,0.15); padding: 0; transition: color 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), text-shadow 0.25s ease; transform: scale(1); touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
     .review-star:hover { transform: scale(1.2); }
     .review-star.filled { color: #8B5CF6; text-shadow: 0 0 14px rgba(139,92,246,.7); }
     .review-star.pop { animation: reviewStarPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); }
@@ -165,6 +165,17 @@
     .review-star-display.empty { color: rgba(255,255,255,0.15); text-shadow: none; }
 
     .filter-btn { padding: 0.5rem 1.2rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: #9ca3af; cursor: pointer; }
+
+    /* ROSTER : CARROUSEL JOUEURS (4 visibles max, défilement horizontal) */
+    .roster-track { display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - 3 * 1.5rem) / 4); gap: 1.5rem; overflow-x: auto; scroll-behavior: smooth; scroll-snap-type: x mandatory; padding-bottom: .25rem; -ms-overflow-style: none; scrollbar-width: none; }
+    .roster-track::-webkit-scrollbar { display: none; }
+    .roster-track > * { scroll-snap-align: start; }
+    @media (max-width: 1024px) { .roster-track { grid-auto-columns: calc((100% - 2 * 1.5rem) / 3); } }
+    @media (max-width: 768px) { .roster-track { grid-auto-columns: calc((100% - 1 * 1rem) / 2); gap: 1rem; } }
+    @media (max-width: 480px) { .roster-track { grid-auto-columns: 78%; } }
+    .roster-nav-btn { width: 3rem; height: 3rem; border-radius: 9999px; background: rgba(12,12,12,0.85); border: 1px solid rgba(255,255,255,0.12); color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1); backdrop-filter: blur(8px); flex-shrink: 0; }
+    .roster-nav-btn:hover { background: rgba(139,92,246,0.25); border-color: rgba(139,92,246,0.6); transform: scale(1.06); }
+    .roster-nav-btn:disabled { opacity: 0.3; cursor: default; pointer-events: none; }
     .filter-btn.active { background: #8B5CF6; color: white; border-color: #8B5CF6; box-shadow: 0 0 20px rgba(139,92,246,0.6); transform: scale(1.05); }
     .filter-btn:hover:not(.active) { background: rgba(255,255,255,0.1); color: white; transform: translateY(-2px); }
     
@@ -253,13 +264,13 @@
 
     <!-- Barre de navigation -->
     <nav class="fixed w-full z-50 border-b border-white/5 bg-[#080808]/82 backdrop-blur-xl">
-        <div class="max-w-[90rem] mx-auto px-6 py-2.5 flex justify-between items-center">
+        <div class="max-w-[94rem] mx-auto px-8 py-2.5 flex justify-between items-center gap-4">
             <div class="aerix-logo-wrap cursor-pointer flex items-center shrink-0" onclick="handleLogoClick()">
                 <img src="transparent-blanc.png" alt="AERIX Logo" class="aerix-logo h-16 w-auto object-contain transition-transform duration-300 hover:scale-105">
             </div>
             
             <!-- Menu Desktop -->
-            <div class="hidden md:flex space-x-1 text-xs font-medium text-gray-400 uppercase tracking-widest items-center relative bg-[#0c0c0c]/80 p-1 rounded-full border border-white/10 overflow-hidden shadow-inner" id="nav-container">
+            <div class="hidden md:flex space-x-0.5 text-xs font-medium text-gray-400 uppercase tracking-widest items-center relative bg-[#0c0c0c]/80 p-1 rounded-full border border-white/10 overflow-hidden shadow-inner shrink-0" id="nav-container">
                 <div id="nav-pill" class="absolute h-8 rounded-full bg-aerix-purple/20 transition-all duration-300 ease-out z-0 pointer-events-none backdrop-blur-md border border-aerix-purple/60 shadow-[0_0_25px_rgba(139,92,246,0.7)]"></div>
                 <button id="nav-home" onclick="navigate('home')" class="nav-btn hover:text-white active" data-i18n="nav_home">Accueil</button>
                 <button id="nav-histoire" onclick="navigate('histoire')" class="nav-btn hover:text-white" data-i18n="nav_histoire">Histoire</button>
@@ -729,11 +740,11 @@
             <div id="review-form" class="space-y-6">
                 <div class="text-center">
                     <div id="review-stars" class="flex items-center justify-center gap-2" role="radiogroup" aria-label="Note sur 5 étoiles">
-                        <button type="button" class="review-star" data-value="1" onclick="setReviewRating(1)" onmouseenter="previewReviewRating(1)" aria-label="1 étoile">★</button>
-                        <button type="button" class="review-star" data-value="2" onclick="setReviewRating(2)" onmouseenter="previewReviewRating(2)" aria-label="2 étoiles">★</button>
-                        <button type="button" class="review-star" data-value="3" onclick="setReviewRating(3)" onmouseenter="previewReviewRating(3)" aria-label="3 étoiles">★</button>
-                        <button type="button" class="review-star" data-value="4" onclick="setReviewRating(4)" onmouseenter="previewReviewRating(4)" aria-label="4 étoiles">★</button>
-                        <button type="button" class="review-star" data-value="5" onclick="setReviewRating(5)" onmouseenter="previewReviewRating(5)" aria-label="5 étoiles">★</button>
+                        <button type="button" class="review-star" data-value="1" onclick="setReviewRating(1)" onmouseenter="previewReviewRating(1)" ontouchstart="event.preventDefault(); setReviewRating(1);" aria-label="1 étoile">★</button>
+                        <button type="button" class="review-star" data-value="2" onclick="setReviewRating(2)" onmouseenter="previewReviewRating(2)" ontouchstart="event.preventDefault(); setReviewRating(2);" aria-label="2 étoiles">★</button>
+                        <button type="button" class="review-star" data-value="3" onclick="setReviewRating(3)" onmouseenter="previewReviewRating(3)" ontouchstart="event.preventDefault(); setReviewRating(3);" aria-label="3 étoiles">★</button>
+                        <button type="button" class="review-star" data-value="4" onclick="setReviewRating(4)" onmouseenter="previewReviewRating(4)" ontouchstart="event.preventDefault(); setReviewRating(4);" aria-label="4 étoiles">★</button>
+                        <button type="button" class="review-star" data-value="5" onclick="setReviewRating(5)" onmouseenter="previewReviewRating(5)" ontouchstart="event.preventDefault(); setReviewRating(5);" aria-label="5 étoiles">★</button>
                     </div>
                     <p id="review-rating-label" class="text-xs text-gray-500 mt-3" data-i18n="review_select_rating">Sélectionne une note</p>
                 </div>
@@ -1193,7 +1204,7 @@
         // accepté la mesure d'audience lors d'une visite précédente, on charge GA
         // directement sans réafficher la bannière (voir checkCookies()).
         function loadAnalyticsIfConsented() {
-            if (localStorage.getItem('aerix_cookies_analytics') === 'true') loadGoogleAnalytics();
+            if (getPersistedValue('aerix_cookies_analytics') === 'true') loadGoogleAnalytics();
         }
 
         // Session console d'administration :
@@ -1365,7 +1376,7 @@
             const flagMap = { fr: "https://flagcdn.com/w20/fr.png", en: "https://flagcdn.com/w20/gb.png" };
             const textMap = { fr: "FR", en: "EN" };
             const langBtn = document.getElementById('lang-btn');
-            if(langBtn) langBtn.innerHTML = `<img id="current-flag" src="${flagMap[lang]}" alt="${textMap[lang]}" class="w-5 h-3.5 object-cover rounded-[2px] shadow-sm"> ${textMap[lang]} ▾`;
+            if(langBtn) langBtn.innerHTML = `<img id="current-flag" src="${flagMap[lang]}" alt="${textMap[lang]}" class="w-5 h-3.5 object-cover rounded-[2px] shadow-sm"> <span id="current-lang-text">${textMap[lang]}</span> <span class="lang-chevron">▾</span>`;
             document.documentElement.lang = lang;
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
@@ -1556,12 +1567,27 @@
                             </div>
                             ${r.desc ? `<p class="text-gray-400 text-sm md:max-w-md text-left md:text-right leading-relaxed" data-translate-src="${escapeHtml(r.desc)}">${r.desc}</p>` : ''}
                         </div>
-                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
-                            ${playersHTML}
+                        <div class="relative">
+                            <div class="roster-track" id="roster-track-${index}">
+                                ${playersHTML}
+                            </div>
+                            ${r.players && r.players.length > 4 ? `
+                            <button type="button" onclick="scrollRoster(${index}, 1)" class="roster-nav-btn absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 hidden md:flex" aria-label="Joueurs suivants">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                            </button>` : ''}
                         </div>
                     </div>`;
             });
             setTimeout(revealActiveElements, 20);
+        }
+        // Fait défiler horizontalement le carrousel de joueurs d'un roster donné
+        // (largeur d'une carte à chaque clic sur la flèche).
+        function scrollRoster(index, direction) {
+            const track = document.getElementById('roster-track-' + index);
+            if (!track) return;
+            const card = track.firstElementChild;
+            const cardWidth = card ? card.getBoundingClientRect().width + 24 : track.clientWidth / 4;
+            track.scrollBy({ left: cardWidth * direction, behavior: 'smooth' });
         }
 
         function openPlayerModal(playerDataStr) {
@@ -2965,7 +2991,7 @@ function checkAdminSessionTimeout() {
         // CROP STUDIO
         let cropper = null, cropCallback = null;
         function openCropper(file, ratio, callback) { const reader = new FileReader(); reader.onload = (e) => { const image = document.getElementById('crop-image'); image.src = e.target.result; document.getElementById('crop-modal').classList.remove('hidden'); if (cropper) cropper.destroy(); cropper = new Cropper(image, { aspectRatio: ratio, viewMode: 1, background: false, autoCropArea: 1 }); cropCallback = callback; }; reader.readAsDataURL(file); }
-        function confirmCrop() { if (!cropper) return; const canvas = cropper.getCroppedCanvas({ maxWidth: 2400, maxHeight: 2400, imageSmoothingEnabled: true, imageSmoothingQuality: 'high', fillColor: 'transparent' }); document.getElementById('crop-modal').classList.add('hidden'); cropper.destroy(); cropper = null; if (cropCallback) cropCallback(canvas.toDataURL('image/webp', 0.95)); }
+        function confirmCrop() { if (!cropper) return; const canvas = cropper.getCroppedCanvas({ maxWidth: 4096, maxHeight: 4096, imageSmoothingEnabled: true, imageSmoothingQuality: 'high', fillColor: 'transparent' }); document.getElementById('crop-modal').classList.add('hidden'); cropper.destroy(); cropper = null; if (cropCallback) cropCallback(canvas.toDataURL('image/webp', 0.98)); }
         function cancelCrop() { document.getElementById('crop-modal').classList.add('hidden'); if (cropper) cropper.destroy(); cropper = null; }
 
         let tempShopImages = [], tempPlayerAvatar = null, tempPlayers = [], tempPartnerImage = null, tempAnnouncementImage = null, tempPalmImage = null, tempGalleryImage = null;
@@ -3128,11 +3154,11 @@ function checkAdminSessionTimeout() {
         // MODAL LEGAL & COOKIES
         const legalTexts = {
             fr: {
-                mentions: `<p class="text-xs text-gray-500 mb-6">Dernière mise à jour : septembre 2026</p><h4 class="font-bold text-white mb-2 text-lg">1. Éditeur du site</h4><p class="mb-5">AERIX Esports — structure esport indépendante.</p><h4 class="font-bold text-white mb-2 text-lg">2. Hébergement</h4><p class="mb-6">Le site est publié via GitHub Pages. Les informations d’hébergement et de contact doivent être vérifiées et complétées avant la mise en ligne définitive.</p><h4 class="font-bold text-white mb-2 text-lg">3. Propriété intellectuelle</h4><p class="mb-6">Les éléments graphiques, textes, logos et contenus propres à AERIX Esports ne peuvent être réutilisés, reproduits ou redistribués sans autorisation préalable, sauf exceptions prévues par la loi.</p><h4 class="font-bold text-white mb-2 text-lg">4. Responsabilité</h4><p>Les contenus sont fournis à titre informatif. AERIX peut modifier, corriger ou retirer un contenu à tout moment.</p>`,
+                mentions: `<p class="text-xs text-gray-500 mb-6">Dernière mise à jour : septembre 2026</p><h4 class="font-bold text-white mb-2 text-lg">1. Éditeur du site</h4><p class="mb-5">Le présent site est édité par AERIX Esports, structure esport indépendante organisée sous forme associative, regroupant des divisions compétitives en Rocket League, Le Mans Ultimate et Richard Burns Rally. Le site est accessible à l'adresse à laquelle vous consultez ce document. Pour toute question relative à l'édition du site, vous pouvez utiliser le formulaire de contact disponible sur le site ou le serveur Discord officiel d'AERIX.</p><h4 class="font-bold text-white mb-2 text-lg">2. Directeur de la publication</h4><p class="mb-6">La direction de la publication est assurée par le fondateur d'AERIX Esports, responsable du contenu diffusé sur le site.</p><h4 class="font-bold text-white mb-2 text-lg">3. Hébergement</h4><p class="mb-6">Le site est hébergé par GitHub, Inc. (GitHub Pages), 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis. Les données applicatives (comptes, contenus, avis, tickets) sont hébergées et gérées via les services Google Firebase (Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irlande).</p><h4 class="font-bold text-white mb-2 text-lg">4. Propriété intellectuelle</h4><p class="mb-6">L'ensemble des éléments composant le site (textes, logos, visuels, identité graphique, charte de couleurs, structure et code) est la propriété exclusive d'AERIX Esports, sauf mention contraire. Toute reproduction, représentation, modification, publication ou adaptation de tout ou partie des éléments du site, quel que soit le moyen ou le procédé utilisé, est interdite sans autorisation écrite préalable d'AERIX Esports, en dehors des cas prévus par les dispositions légales en vigueur.</p><h4 class="font-bold text-white mb-2 text-lg">5. Comptes utilisateurs et contenus publiés</h4><p class="mb-6">La création d'un compte permet notamment de réserver des sessions de coaching et de publier des avis. L'utilisateur reste seul responsable des contenus qu'il publie (avis, commentaires) et s'engage à ne pas publier de contenu illicite, injurieux, diffamatoire ou contraire à l'ordre public. AERIX se réserve le droit de modérer, refuser ou supprimer tout contenu ne respectant pas ces règles, notamment via la console d'administration dédiée aux avis.</p><h4 class="font-bold text-white mb-2 text-lg">6. Liens hypertextes</h4><p class="mb-6">Le site peut contenir des liens vers des sites tiers, notamment Discord. AERIX Esports n'exerce aucun contrôle sur ces sites et décline toute responsabilité quant à leur contenu ou leur politique de confidentialité.</p><h4 class="font-bold text-white mb-2 text-lg">7. Limitation de responsabilité</h4><p class="mb-6">Les informations diffusées sur le site (résultats, effectifs, actualités) le sont à titre informatif et peuvent être corrigées, modifiées ou retirées à tout moment sans préavis. AERIX Esports ne saurait être tenue responsable des éventuelles erreurs, omissions ou de l'indisponibilité temporaire du site, notamment en cas de maintenance ou de dysfonctionnement des services tiers utilisés (GitHub Pages, Firebase).</p><h4 class="font-bold text-white mb-2 text-lg">8. Droit applicable</h4><p>Le présent site et les présentes mentions légales sont soumis au droit français. En cas de litige, et à défaut de résolution amiable, les tribunaux français seront seuls compétents.</p>`,
                 confidentialite: `<p class="text-xs text-gray-500 mb-6">Dernière mise à jour : septembre 2026</p><h4 class="font-bold text-white mb-2 text-lg">Données traitées</h4><p class="mb-6">Selon les fonctionnalités utilisées, le site peut traiter les informations saisies dans les formulaires de création de compte ainsi que les données nécessaires au fonctionnement des fonctionnalités d’administration. Les données collectées doivent rester limitées à ce qui est nécessaire.</p><h4 class="font-bold text-white mb-2 text-lg">Finalités</h4><p class="mb-6">Les informations sont utilisées pour traiter les demandes envoyées via le site, gérer les contenus AERIX et assurer le fonctionnement des services proposés.</p><h4 class="font-bold text-white mb-2 text-lg">Conservation et droits</h4><p class="mb-6">Les durées de conservation doivent être définies selon chaque finalité. Pour demander l’accès, la rectification ou la suppression de données, utilisez le moyen de contact officiel indiqué par AERIX.</p><h4 class="font-bold text-white mb-2 text-lg">Services tiers</h4><p>Le site peut charger des ressources externes, notamment Google Fonts, FlagCDN et les services Firebase utilisés par l’application. Google Analytics n’est chargé qu’après votre consentement explicite à la mesure d’audience (voir le bandeau cookies) et peut être désactivé à tout moment depuis « Personnaliser ».</p>`
             },
             en: {
-                mentions: `<p class="text-xs text-gray-500 mb-6">Last updated: September 2026</p><h4 class="font-bold text-white mb-2 text-lg">1. Website publisher</h4><p class="mb-5">AERIX Esports — independent esports organization.</p><h4 class="font-bold text-white mb-2 text-lg">2. Hosting</h4><p class="mb-6">The website is published through GitHub Pages. Hosting and contact information should be verified before final publication.</p><h4 class="font-bold text-white mb-2 text-lg">3. Intellectual property</h4><p class="mb-6">AERIX Esports graphics, texts, logos and original content may not be reused, reproduced or redistributed without prior authorization, except where permitted by law.</p><h4 class="font-bold text-white mb-2 text-lg">4. Liability</h4><p>Content is provided for information purposes. AERIX may modify, correct or remove content at any time.</p>`,
+                mentions: `<p class="text-xs text-gray-500 mb-6">Last updated: September 2026</p><h4 class="font-bold text-white mb-2 text-lg">1. Website publisher</h4><p class="mb-5">This website is published by AERIX Esports, an independent esports organization operating as an association, bringing together competitive divisions in Rocket League, Le Mans Ultimate and Richard Burns Rally. For any question regarding the publication of this website, you may use the contact form available on the site or AERIX's official Discord server.</p><h4 class="font-bold text-white mb-2 text-lg">2. Publication director</h4><p class="mb-6">The publication is directed by the founder of AERIX Esports, who is responsible for the content published on the website.</p><h4 class="font-bold text-white mb-2 text-lg">3. Hosting</h4><p class="mb-6">The website is hosted by GitHub, Inc. (GitHub Pages), 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, USA. Application data (accounts, content, reviews, tickets) is hosted and managed via Google Firebase services (Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Ireland).</p><h4 class="font-bold text-white mb-2 text-lg">4. Intellectual property</h4><p class="mb-6">All elements making up the website (text, logos, visuals, graphic identity, color scheme, structure and code) are the exclusive property of AERIX Esports, unless stated otherwise. Any reproduction, representation, modification, publication or adaptation of all or part of the website's elements, by any means or process, is prohibited without AERIX Esports' prior written authorization, except in cases provided for by applicable law.</p><h4 class="font-bold text-white mb-2 text-lg">5. User accounts and published content</h4><p class="mb-6">Creating an account notably allows users to book coaching sessions and publish reviews. Users remain solely responsible for the content they publish (reviews, comments) and agree not to publish any content that is unlawful, abusive, defamatory or contrary to public order. AERIX reserves the right to moderate, refuse or remove any content that does not comply with these rules, notably through the dedicated review-moderation panel.</p><h4 class="font-bold text-white mb-2 text-lg">6. Hyperlinks</h4><p class="mb-6">The website may contain links to third-party sites, including Discord. AERIX Esports has no control over such sites and disclaims any liability regarding their content or privacy practices.</p><h4 class="font-bold text-white mb-2 text-lg">7. Limitation of liability</h4><p class="mb-6">Information published on the website (results, rosters, news) is provided for informational purposes and may be corrected, modified or removed at any time without notice. AERIX Esports cannot be held liable for any errors, omissions, or temporary unavailability of the website, in particular in the event of maintenance or malfunction of third-party services used (GitHub Pages, Firebase).</p><h4 class="font-bold text-white mb-2 text-lg">8. Governing law</h4><p>This website and these legal notices are governed by French law. In the event of a dispute, and failing an amicable resolution, French courts shall have exclusive jurisdiction.</p>`,
                 confidentialite: `<p class="text-xs text-gray-500 mb-6">Last updated: September 2026</p><h4 class="font-bold text-white mb-2 text-lg">Data processed</h4><p class="mb-6">Depending on the features used, the website may process information submitted through account-creation forms and data required for administration features. Data collection should remain limited to what is necessary.</p><h4 class="font-bold text-white mb-2 text-lg">Purposes</h4><p class="mb-6">Information is used to process requests submitted through the website, manage AERIX content and operate the services provided.</p><h4 class="font-bold text-white mb-2 text-lg">Retention and rights</h4><p class="mb-6">Retention periods should be defined for each purpose. To request access, correction or deletion of data, use AERIX's official contact method.</p><h4 class="font-bold text-white mb-2 text-lg">Third-party services</h4><p>The website may load external resources, including Google Fonts, FlagCDN and Firebase services used by the application. Google Analytics is only loaded after your explicit consent to analytics (see the cookie banner) and can be disabled at any time from "Customize".</p>`
             }
         };
@@ -3151,8 +3177,26 @@ function checkAdminSessionTimeout() {
             b.classList.add('translate-y-full');
             setTimeout(() => b.classList.add('hidden'), 450);
         }
+        // Persistance du consentement cookies : LocalStorage en priorité, avec un
+        // cookie de secours (1 an) en complément pour les navigateurs qui bloquent
+        // ou effacent le LocalStorage (ex. Safari iOS en navigation privée stricte).
+        function setPersistedValue(key, value) {
+            try { localStorage.setItem(key, value); } catch(e) {}
+            try { document.cookie = `${key}=${encodeURIComponent(value)}; max-age=31536000; path=/; SameSite=Lax`; } catch(e) {}
+        }
+        function getPersistedValue(key) {
+            try {
+                const fromStorage = localStorage.getItem(key);
+                if (fromStorage !== null) return fromStorage;
+            } catch(e) {}
+            try {
+                const match = document.cookie.match(new RegExp('(?:^|; )' + key + '=([^;]*)'));
+                if (match) return decodeURIComponent(match[1]);
+            } catch(e) {}
+            return null;
+        }
         function checkCookies() {
-            if(localStorage.getItem('aerix_cookie_consent_v2')) return;
+            if(getPersistedValue('aerix_cookie_consent_v2')) return;
             setTimeout(() => {
                 const b = document.getElementById('cookie-banner');
                 if(!b) return;
@@ -3161,7 +3205,7 @@ function checkAdminSessionTimeout() {
             }, 900);
         }
         function applyCookieConsent(analytics) {
-            localStorage.setItem('aerix_cookies_analytics', analytics ? 'true' : 'false');
+            setPersistedValue('aerix_cookies_analytics', analytics ? 'true' : 'false');
             // Charge Google Analytics uniquement si l'utilisateur a donné son accord.
             // GA ne se décharge pas dynamiquement si le consentement est retiré après coup
             // (limite technique du SDK gtag.js) : un rechargement de page est nécessaire
@@ -3170,19 +3214,19 @@ function checkAdminSessionTimeout() {
         }
         function acceptCookies(all) {
             applyCookieConsent(!!all);
-            localStorage.setItem('aerix_cookie_consent_v2', 'true');
+            setPersistedValue('aerix_cookie_consent_v2', 'true');
             hideCookieBanner();
             showToast(currentLang==='en'?'Preferences saved':'Préférences enregistrées');
         }
         function openCookieSettings() {
             document.getElementById('cookie-settings-modal').classList.remove('hidden');
-            document.getElementById('cookie-analytics').checked = localStorage.getItem('aerix_cookies_analytics') === 'true';
+            document.getElementById('cookie-analytics').checked = getPersistedValue('aerix_cookies_analytics') === 'true';
         }
         function closeCookieSettings() { document.getElementById('cookie-settings-modal').classList.add('hidden'); }
         function saveCookieSettings() {
             const analytics = document.getElementById('cookie-analytics').checked;
             applyCookieConsent(analytics);
-            localStorage.setItem('aerix_cookie_consent_v2', 'true');
+            setPersistedValue('aerix_cookie_consent_v2', 'true');
             closeCookieSettings();
             hideCookieBanner();
             showToast(currentLang==='en'?'Preferences saved':'Préférences enregistrées');
