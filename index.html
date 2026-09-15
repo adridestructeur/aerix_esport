@@ -1565,9 +1565,8 @@
             }
         }
 
-        // Traduit tous les éléments marqués data-translate-src="<texte original>" présents
-        // dans le DOM au moment de l'appel, puis remplace leur contenu une fois la
-        // traduction reçue (le FR reste affiché entre-temps, pas de flash de contenu vide).
+        // Traduit les messages dynamiques sans remplacer leur structure HTML.
+        // Les boutons/liens portant data-i18n restent donc de vrais éléments cliquables.
         function translateDynamicContent() {
             document.querySelectorAll('[data-translate-src]').forEach(async el => {
                 const original = el.getAttribute('data-translate-src');
@@ -1582,10 +1581,27 @@
                 }
 
                 const targetLang = currentLang;
-                const translated = await translateText(original, targetLang);
-                // Vérifie qu'on est toujours sur la même langue et que l'élément est encore affiché.
+
+                // On traduit uniquement les nœuds texte et on laisse intacts les éléments
+                // d'action [data-i18n] (boutons/liens), dont le texte est géré par i18n.
+                const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+                const textNodes = [];
+                let node;
+                while ((node = walker.nextNode())) {
+                    if (node.parentElement?.closest('[data-i18n]')) continue;
+                    if (node.nodeValue?.trim()) textNodes.push(node);
+                }
+
+                await Promise.all(textNodes.map(async textNode => {
+                    const translated = await translateText(textNode.nodeValue, targetLang);
+                    if (currentLang === targetLang && document.body.contains(textNode)) {
+                        textNode.nodeValue = translated;
+                    }
+                }));
+
+                // Réapplique les traductions des boutons/liens d'action.
                 if (currentLang === targetLang && document.body.contains(el)) {
-                    el.innerHTML = translated;
+                    refreshAssistantTranslations();
                 }
             });
         }
