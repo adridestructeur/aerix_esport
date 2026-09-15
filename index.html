@@ -167,46 +167,16 @@
 
     .filter-btn { padding: 0.5rem 1.2rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: #9ca3af; cursor: pointer; }
 
-    /* EFFECTIFS : toutes les cartes visibles, sans carrousel ni boutons */
-    .roster-track {
-        display: grid;
-        grid-template-columns: repeat(5, minmax(0, 1fr));
-        align-items: stretch;
-        gap: 1.1rem;
-        width: 100%;
-        overflow: visible;
-    }
-    /* 5 joueurs sur une seule ligne sur desktop, puis adaptation progressive */
-    @media (max-width: 1200px) {
-        .roster-track { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-    }
-    @media (max-width: 900px) {
-        .roster-track { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
-    }
-    @media (max-width: 650px) {
-        .roster-track { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .85rem; }
-    }
-    @media (max-width: 420px) {
-        .roster-track { grid-template-columns: 1fr; }
-    }
-
-    /* Cartes joueurs : aucun effet décoratif Liquid Glass ne recouvre la photo. */
-    .player-roster-card::before,
-    .player-roster-card::after {
-        display: none !important;
-    }
-    .player-roster-card {
-        isolation: isolate;
-    }
-    .player-roster-card:hover {
-        transform: translateY(-4px) translateZ(0);
-        border-color: rgba(139,92,246,.42);
-        box-shadow: 0 16px 42px rgba(0,0,0,.46), 0 0 26px rgba(139,92,246,.18), inset 0 1px 0 rgba(255,255,255,.20);
-    }
-    .player-roster-card .player-photo,
-    .player-roster-card:hover .player-photo {
-        transform: none !important;
-    }
+    /* ROSTER : CARROUSEL JOUEURS (4 visibles max, défilement horizontal) */
+    .roster-track { display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - 3 * 1.5rem) / 4); align-items: stretch; gap: 1.5rem; overflow-x: auto; scroll-behavior: smooth; scroll-snap-type: x mandatory; padding-bottom: .25rem; -ms-overflow-style: none; scrollbar-width: none; }
+    .roster-track::-webkit-scrollbar { display: none; }
+    .roster-track > * { scroll-snap-align: start; }
+    @media (max-width: 1024px) { .roster-track { grid-auto-columns: calc((100% - 2 * 1.5rem) / 3); } }
+    @media (max-width: 768px) { .roster-track { grid-auto-columns: calc((100% - 1 * 1rem) / 2); gap: 1rem; } }
+    @media (max-width: 480px) { .roster-track { grid-auto-columns: 78%; } }
+    .roster-nav-btn { width: 3rem; height: 3rem; border-radius: 9999px; background: rgba(12,12,12,0.85); border: 1px solid rgba(255,255,255,0.12); color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1); backdrop-filter: blur(8px); flex-shrink: 0; }
+    .roster-nav-btn:hover { background: rgba(139,92,246,0.25); border-color: rgba(139,92,246,0.6); transform: scale(1.06); }
+    .roster-nav-btn:disabled { opacity: 0.3; cursor: default; pointer-events: none; }
     .filter-btn.active { background: #8B5CF6; color: white; border-color: #8B5CF6; box-shadow: 0 0 20px rgba(139,92,246,0.6); transform: scale(1.05); }
     .filter-btn:hover:not(.active) { background: rgba(255,255,255,0.1); color: white; transform: translateY(-2px); }
     
@@ -276,6 +246,20 @@
     .toast.success { border-left: 4px solid #10B981; }
     .toast.error { border-left: 4px solid #EF4444; }
 
+
+    /* ASSISTANT AERIX */
+    #aerix-assistant { position: fixed; right: 24px; bottom: 24px; z-index: 180; }
+    #aerix-assistant-panel { width: min(370px, calc(100vw - 32px)); height: min(560px, calc(100dvh - 110px)); transform-origin: bottom right; opacity: 0; transform: translateY(14px) scale(.96); pointer-events: none; transition: opacity .28s ease, transform .32s cubic-bezier(.16,1,.3,1); }
+    #aerix-assistant-panel.open { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+    #aerix-assistant-launcher { width: 58px; height: 58px; border-radius: 9999px; border: 1px solid rgba(139,92,246,.55); background: linear-gradient(145deg, rgba(139,92,246,.28), rgba(15,15,15,.92)); box-shadow: 0 10px 35px rgba(0,0,0,.5), 0 0 28px rgba(139,92,246,.28), inset 0 1px 0 rgba(255,255,255,.18); color:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer; backdrop-filter:blur(18px); transition:transform .25s ease, box-shadow .25s ease; }
+    #aerix-assistant-launcher:hover { transform:translateY(-3px) scale(1.04); box-shadow:0 14px 40px rgba(0,0,0,.55),0 0 35px rgba(139,92,246,.42),inset 0 1px 0 rgba(255,255,255,.22); }
+    .assistant-msg { max-width:88%; padding:10px 12px; border-radius:14px; font-size:12px; line-height:1.5; }
+    .assistant-bot { background:rgba(255,255,255,.055); border:1px solid rgba(255,255,255,.08); color:#d1d5db; align-self:flex-start; }
+    .assistant-user { background:rgba(139,92,246,.18); border:1px solid rgba(139,92,246,.28); color:#fff; align-self:flex-end; }
+    .assistant-quick { padding:8px 10px; border-radius:9999px; border:1px solid rgba(255,255,255,.1); background:rgba(255,255,255,.04); color:#d1d5db; font-size:11px; transition:.2s ease; }
+    .assistant-quick:hover { border-color:rgba(139,92,246,.55); background:rgba(139,92,246,.12); color:#fff; }
+    @media(max-width:640px){ #aerix-assistant{right:14px;bottom:14px;} #aerix-assistant-panel{width:calc(100vw - 28px);height:min(600px,calc(100dvh - 88px));} #aerix-assistant-launcher{width:54px;height:54px;} }
+
     /* MENU LANGUE */
     #language-menu { opacity: 0; visibility: hidden; transform: translateY(-6px) scale(.98); pointer-events: none; transition: opacity .32s ease, transform .32s cubic-bezier(.16,1,.3,1), visibility .32s ease; }
     #language-menu.lang-menu-open { opacity: 1; visibility: visible; transform: translateY(0) scale(1); pointer-events: auto; }
@@ -288,6 +272,34 @@
     <div id="mouse-glow"></div>
     <div id="page-bg-layer" class="fixed inset-0 pointer-events-none z-[-2] transition-all duration-700 bg-cover bg-center" style="background-image: linear-gradient(to bottom, rgba(5,5,5,0.65), rgba(5,5,5,0.85)), url('abstract-black-violet-colors-background-design-flat_662214-314713.avif');"></div>
     <div id="toast-container"></div>
+
+    <!-- ASSISTANT AERIX -->
+    <div id="aerix-assistant">
+        <div id="aerix-assistant-panel" class="glass-panel rounded-[1.7rem] mb-3 overflow-hidden flex flex-col shadow-[0_20px_70px_rgba(0,0,0,.65)]">
+            <div class="px-5 py-4 border-b border-white/10 flex items-center justify-between shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-aerix-purple/15 border border-aerix-purple/35 flex items-center justify-center text-aerix-purple font-black">A</div>
+                    <div><div class="text-white font-bold text-sm">AERIX Assistant</div><div class="text-[10px] text-gray-500 uppercase tracking-widest">Administration · 7j/7</div></div>
+                </div>
+                <button onclick="toggleAerixAssistant(false)" class="w-8 h-8 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-white transition">✕</button>
+            </div>
+            <div id="aerix-assistant-messages" class="flex-1 overflow-y-auto p-4 space-y-3 min-h-0"></div>
+            <div class="px-4 pb-3 flex flex-wrap gap-2 shrink-0">
+                <button class="assistant-quick" onclick="assistantQuick('Qui est AERIX ?')">Qui est AERIX ?</button>
+                <button class="assistant-quick" onclick="assistantQuick('Comment rejoindre AERIX ?')">Rejoindre AERIX</button>
+                <button class="assistant-quick" onclick="assistantQuick('Je veux contacter les administrateurs')">Contacter l'administration</button>
+                <button class="assistant-quick" onclick="assistantQuick('Demander un coaching')">Coaching</button>
+            </div>
+            <form onsubmit="sendAerixAssistant(event)" class="p-3 border-t border-white/10 flex gap-2 shrink-0">
+                <input id="aerix-assistant-input" type="text" maxlength="300" autocomplete="off" placeholder="Écris ta demande..." class="flex-1 min-w-0 bg-black/45 border border-white/10 rounded-xl px-3 py-2.5 text-white text-xs outline-none focus:border-aerix-purple">
+                <button type="submit" class="w-11 rounded-xl bg-aerix-purple text-white font-bold hover:bg-purple-500 transition">➤</button>
+            </form>
+        </div>
+        <button id="aerix-assistant-launcher" onclick="toggleAerixAssistant()" aria-label="Ouvrir AERIX Assistant">
+            <span class="text-lg">✦</span>
+        </button>
+    </div>
+
 
     <button id="scrollTopBtn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="fixed bottom-6 right-6 z-[90] glass-panel-no-hover text-white p-4 rounded-full opacity-0 pointer-events-none transition-all duration-500 hover:bg-aerix-purple/20 hover:border-aerix-purple shadow-lg">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"></path></svg>
@@ -1569,9 +1581,9 @@
                     r.players.forEach(p => {
                         const escapedPlayer = encodeURIComponent(JSON.stringify({...p, game: r.game}));
                         playersHTML += `
-                        <div class="glass-panel player-roster-card p-5 flex flex-col items-center rounded-3xl cursor-pointer group overflow-hidden" onclick="openPlayerModal('${escapedPlayer}')">
+                        <div class="glass-panel p-5 flex flex-col items-center rounded-3xl cursor-pointer group hover:border-aerix-purple/50 transition-all duration-300 overflow-hidden" onclick="openPlayerModal('${escapedPlayer}')">
                             <div class="relative w-full aspect-[3/4] rounded-2xl overflow-hidden mb-5 border border-white/10 group-hover:border-aerix-purple/30 bg-[#050505]">
-                                <img src='${p.avatar}' class="player-photo w-full h-full object-cover object-top-custom transition duration-500 group-hover:brightness-110">
+                                <img src='${p.avatar}' class="w-full h-full object-cover object-top-custom transition duration-500 group-hover:scale-105 group-hover:brightness-110">
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80"></div>
                                 <div class="absolute bottom-3 left-3 flex gap-2 z-10">
                                     <span class="bg-black/60 backdrop-blur-md text-white text-sm px-2 py-1 rounded-lg border border-white/20 filter drop-shadow-md">${p.country || '🌍'}</span>
@@ -1599,14 +1611,31 @@
                             ${r.desc ? `<p class="text-gray-400 text-sm md:max-w-md text-left md:text-right leading-relaxed" data-translate-src="${escapeHtml(r.desc)}">${r.desc}</p>` : ''}
                         </div>
                         <div class="relative">
-                            <div class="roster-track" id="roster-track-${index}">
+                            <div class="roster-track ${r.players && r.players.length > 4 ? 'md:pl-14 md:pr-14' : ''}" id="roster-track-${index}">
                                 ${playersHTML}
                             </div>
+                            ${r.players && r.players.length > 4 ? `
+                            <button type="button" onclick="scrollRoster(${index}, -1)" class="roster-nav-btn absolute left-0 top-1/2 -translate-y-1/2 hidden md:flex z-20 shadow-[0_4px_20px_rgba(0,0,0,0.5)]" aria-label="Joueurs précédents">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                            </button>
+                            <button type="button" onclick="scrollRoster(${index}, 1)" class="roster-nav-btn absolute right-0 top-1/2 -translate-y-1/2 hidden md:flex z-20 shadow-[0_4px_20px_rgba(0,0,0,0.5)]" aria-label="Joueurs suivants">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                            </button>` : ''}
                         </div>
                     </div>`;
             });
             setTimeout(revealActiveElements, 20);
         }
+        // Fait défiler horizontalement le carrousel de joueurs d'un roster donné
+        // (largeur d'une carte à chaque clic sur la flèche).
+        function scrollRoster(index, direction) {
+            const track = document.getElementById('roster-track-' + index);
+            if (!track) return;
+            const card = track.firstElementChild;
+            const cardWidth = card ? card.getBoundingClientRect().width + 24 : track.clientWidth / 4;
+            track.scrollBy({ left: cardWidth * direction, behavior: 'smooth' });
+        }
+
         function openPlayerModal(playerDataStr) {
             const p = JSON.parse(decodeURIComponent(playerDataStr));
             document.getElementById('pm-img').src = p.avatar;
@@ -2148,6 +2177,50 @@ function checkAdminSessionTimeout() {
         }
 
         async function logoutAccount() { try { await auth.signOut(); document.querySelectorAll('.account-menu').forEach(m => m.classList.add('hidden')); showToast(currentLang==='en'?'Signed out.':'Déconnexion réussie.'); } catch(e){ console.error(e); } }
+
+        let aerixAssistantOpen = false;
+        function toggleAerixAssistant(force) {
+            const panel=document.getElementById('aerix-assistant-panel');
+            if(!panel) return;
+            aerixAssistantOpen = typeof force === 'boolean' ? force : !aerixAssistantOpen;
+            panel.classList.toggle('open', aerixAssistantOpen);
+            if(aerixAssistantOpen) {
+                const box=document.getElementById('aerix-assistant-messages');
+                if(box && !box.children.length) addAssistantMessage('bot','Bonjour ! Je suis l’assistant AERIX. Je peux t’orienter sur nos équipes, le coaching, le recrutement ou te mettre en relation avec l’administration. <strong class="text-white">L’administration est disponible 7 jours sur 7.</strong>');
+                setTimeout(()=>document.getElementById('aerix-assistant-input')?.focus(),120);
+            }
+        }
+        function addAssistantMessage(type,html) {
+            const box=document.getElementById('aerix-assistant-messages'); if(!box) return;
+            const el=document.createElement('div'); el.className='assistant-msg '+(type==='user'?'assistant-user':'assistant-bot'); el.innerHTML=html; box.appendChild(el); box.scrollTop=box.scrollHeight;
+        }
+        function assistantQuick(text) {
+            addAssistantMessage('user',escapeAssistantHtml(text)); handleAssistantRequest(text);
+        }
+        function sendAerixAssistant(e) {
+            e.preventDefault(); const input=document.getElementById('aerix-assistant-input'); const text=input?.value.trim(); if(!text) return;
+            addAssistantMessage('user',escapeAssistantHtml(text)); input.value=''; handleAssistantRequest(text);
+        }
+        function escapeAssistantHtml(text) { const d=document.createElement('div'); d.textContent=text; return d.innerHTML; }
+        function handleAssistantRequest(text) {
+            const q=text.toLowerCase(); let answer='';
+            if(q.includes('contact') || q.includes('admin') || q.includes('administr')) {
+                answer='Bien sûr. <strong class="text-white">L’administration AERIX est disponible 7 jours sur 7.</strong> Tu peux ouvrir le formulaire de contact pour envoyer directement un ticket aux administrateurs.';
+                addAssistantMessage('bot',answer+'<br><button onclick="openContactModal();toggleAerixAssistant(false)" class="mt-3 px-3 py-2 rounded-xl bg-aerix-purple text-white text-[11px] font-bold">Contacter les administrateurs</button>'); return;
+            }
+            if(q.includes('coaching')) {
+                addAssistantMessage('bot','Le coaching AERIX concerne <strong class="text-white">Le Mans Ultimate et iRacing</strong>, en individuel ou en groupe. Tu peux ouvrir la demande directement depuis le site.<br><button onclick="openCoachingModal();toggleAerixAssistant(false)" class="mt-3 px-3 py-2 rounded-xl bg-aerix-purple text-white text-[11px] font-bold">Demander un coaching</button>'); return;
+            }
+            if(q.includes('rejoindre') || q.includes('recrut') || q.includes('roster') || q.includes('équipe')) {
+                answer='Pour rejoindre AERIX, consulte la section <strong class="text-white">Effectifs</strong> pour voir nos divisions et équipes. Pour une demande précise, tu peux aussi contacter l’administration.';
+                addAssistantMessage('bot',answer+'<br><button onclick="navigate('effectifs');toggleAerixAssistant(false)" class="mt-3 px-3 py-2 rounded-xl bg-white/10 border border-white/10 text-white text-[11px] font-bold">Voir les effectifs</button>'); return;
+            }
+            if(q.includes('qui est aerix') || q.includes('aerix')) {
+                addAssistantMessage('bot','AERIX est une structure indépendante orientée <strong class="text-white">esport et simracing</strong>, présente notamment sur Rocket League, Le Mans Ultimate, iRacing et Richard Burns Rally.'); return;
+            }
+            addAssistantMessage('bot','Je peux t’aider pour les <strong class="text-white">effectifs</strong>, le <strong class="text-white">recrutement</strong>, le <strong class="text-white">coaching</strong> ou le <strong class="text-white">contact avec l’administration</strong>. Si ta demande nécessite un administrateur, le formulaire de contact est disponible ici.');
+        }
+
         function openContactModal() {
             document.getElementById('contact-modal')?.classList.remove('hidden');
             backToContactChoice();
