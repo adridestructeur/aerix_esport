@@ -168,7 +168,7 @@
     .filter-btn { padding: 0.5rem 1.2rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: #9ca3af; cursor: pointer; }
 
     /* ROSTER : CARROUSEL JOUEURS (4 visibles max, défilement horizontal) */
-    .roster-track { display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - 3 * 1.5rem) / 4); align-items: stretch; gap: 1.5rem; overflow-x: auto; scroll-behavior: smooth; scroll-snap-type: x mandatory; padding-bottom: .25rem; -ms-overflow-style: none; scrollbar-width: none; }
+    .roster-track { display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - 4 * 1.25rem) / 5); align-items: stretch; gap: 1.25rem; overflow-x: auto; scroll-behavior: smooth; scroll-snap-type: x mandatory; padding-bottom: .25rem; -ms-overflow-style: none; scrollbar-width: none; }
     .roster-track::-webkit-scrollbar { display: none; }
     .roster-track > * { scroll-snap-align: start; }
     @media (max-width: 1024px) { .roster-track { grid-auto-columns: calc((100% - 2 * 1.5rem) / 3); } }
@@ -1558,10 +1558,18 @@
         // dans le DOM au moment de l'appel, puis remplace leur contenu une fois la
         // traduction reçue (le FR reste affiché entre-temps, pas de flash de contenu vide).
         function translateDynamicContent() {
-            if (currentLang === 'fr') return;
             document.querySelectorAll('[data-translate-src]').forEach(async el => {
                 const original = el.getAttribute('data-translate-src');
                 if (!original) return;
+
+                // En français, on restaure systématiquement le contenu source.
+                // Cela permet aussi de retranscrire les conversations déjà affichées du bot
+                // lorsqu'on repasse de l'anglais au français.
+                if (currentLang === 'fr') {
+                    el.innerHTML = original;
+                    return;
+                }
+
                 const targetLang = currentLang;
                 const translated = await translateText(original, targetLang);
                 // Vérifie qu'on est toujours sur la même langue et que l'élément est encore affiché.
@@ -1583,8 +1591,8 @@
                     r.players.forEach(p => {
                         const escapedPlayer = encodeURIComponent(JSON.stringify({...p, game: r.game}));
                         playersHTML += `
-                        <div class="glass-panel p-5 flex flex-col items-center rounded-3xl cursor-pointer group hover:border-aerix-purple/50 transition-all duration-300 overflow-hidden" onclick="openPlayerModal('${escapedPlayer}')">
-                            <div class="relative w-full aspect-[3/4] rounded-2xl overflow-hidden mb-5 border border-white/10 group-hover:border-aerix-purple/30 bg-[#050505]">
+                        <div class="glass-panel p-4 flex flex-col items-center rounded-3xl cursor-pointer group hover:border-aerix-purple/50 transition-all duration-300 overflow-hidden" onclick="openPlayerModal('${escapedPlayer}')">
+                            <div class="relative w-full aspect-[3/4] rounded-2xl overflow-hidden mb-4 border border-white/10 group-hover:border-aerix-purple/30 bg-[#050505]">
                                 <img src='${p.avatar}' class="w-full h-full object-cover object-top-custom transition duration-500 group-hover:scale-105 group-hover:brightness-110">
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80"></div>
                                 <div class="absolute bottom-3 left-3 flex gap-2 z-10">
@@ -1592,7 +1600,7 @@
                                     ${p.number ? `<span class="bg-aerix-purple text-white text-xs font-black px-2 py-1 rounded-lg border border-purple-400 shadow-[0_0_10px_rgba(139,92,246,0.5)] flex items-center">#${p.number}</span>` : ''}
                                 </div>
                             </div>
-                            <h5 class="text-2xl font-black text-white uppercase tracking-tighter w-full text-left truncate">${p.pseudo || p.name}</h5>
+                            <h5 class="text-xl font-black text-white uppercase tracking-tighter w-full text-left truncate">${p.pseudo || p.name}</h5>
                             <p class="text-xs font-medium text-gray-500 w-full text-left truncate flex items-center gap-2">
                                 <span>${p.name}</span>
                                 ${p.age ? `<span class="w-1 h-1 rounded-full bg-gray-600"></span> <span>${p.age} ${currentLang==='en'?'y.o.':'ans'}</span>` : ''}
@@ -2178,7 +2186,21 @@ function checkAdminSessionTimeout() {
         }
         function addAssistantMessage(type,html) {
             const box=document.getElementById('aerix-assistant-messages'); if(!box) return;
-            const el=document.createElement('div'); el.className='assistant-msg '+(type==='user'?'assistant-user':'assistant-bot'); el.innerHTML=html; box.appendChild(el); box.scrollTop=box.scrollHeight;
+            const el=document.createElement('div');
+            el.className='assistant-msg '+(type==='user'?'assistant-user':'assistant-bot');
+
+            // Les réponses du bot sont stockées avec leur texte FR d'origine afin que
+            // le système multilingue puisse les traduire puis les restaurer proprement.
+            if(type === 'bot') {
+                el.setAttribute('data-translate-src', html);
+            }
+
+            el.innerHTML=html;
+            box.appendChild(el);
+            box.scrollTop=box.scrollHeight;
+
+            // Traduit immédiatement le nouveau message si le site est en anglais.
+            if(type === 'bot') translateDynamicContent();
         }
         function assistantQuick(text) {
             addAssistantMessage('user', escapeAssistantHtml(text));
