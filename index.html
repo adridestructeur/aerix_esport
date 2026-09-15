@@ -1602,6 +1602,20 @@
                 // Réapplique les traductions des boutons/liens d'action.
                 if (currentLang === targetLang && document.body.contains(el)) {
                     refreshAssistantTranslations();
+
+                    // Google Translate peut supprimer l'espace entre un texte et un élément
+                    // <strong>/<b> lorsqu'ils sont traduits séparément. On restaure donc
+                    // uniquement l'espace nécessaire avant les textes en gras, sans ajouter
+                    // d'espace avant une ponctuation.
+                    el.querySelectorAll('strong, b').forEach(bold => {
+                        const previous = bold.previousSibling;
+                        if (previous && previous.nodeType === Node.TEXT_NODE) {
+                            const value = previous.nodeValue || '';
+                            if (value && !/\s$/.test(value)) {
+                                previous.nodeValue = value + ' ';
+                            }
+                        }
+                    });
                 }
             });
         }
