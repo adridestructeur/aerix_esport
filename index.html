@@ -3565,31 +3565,5 @@ document.addEventListener('keydown', function(e) {
     }
 });
     </script>
-    <!-- === DIAGNOSTIC TEMPORAIRE — À SUPPRIMER APRÈS TEST === -->
-    <div id="aerix-debug-bar" style="position:fixed; top:0; left:0; width:100%; z-index:999999; background:#ff0000; color:#fff; font:bold 12px monospace; padding:8px; text-align:center; word-break:break-all; pointer-events:none;">
-        DEBUG : tape n'importe où sur l'écran
-    </div>
-    <script>
-    (function(){
-        function report(x, y) {
-            var el = document.elementFromPoint(x, y);
-            if (!el) { document.getElementById('aerix-debug-bar').textContent = 'DEBUG: aucun élément trouvé à ce point'; return; }
-            var desc = el.tagName.toLowerCase();
-            if (el.id) desc += '#' + el.id;
-            if (el.className && typeof el.className === 'string') desc += '.' + el.className.trim().split(/\s+/).slice(0,3).join('.');
-            var cs = window.getComputedStyle(el);
-            desc += ' | z-index:' + cs.zIndex + ' pos:' + cs.position + ' pe:' + cs.pointerEvents;
-            document.getElementById('aerix-debug-bar').textContent = 'DEBUG: ' + desc;
-        }
-        document.addEventListener('touchstart', function(e){
-            var t = e.touches[0];
-            report(t.clientX, t.clientY);
-        }, true);
-        document.addEventListener('click', function(e){
-            report(e.clientX, e.clientY);
-        }, true);
-    })();
-    </script>
-    <!-- === FIN DIAGNOSTIC TEMPORAIRE === -->
 </body>
 </html>
