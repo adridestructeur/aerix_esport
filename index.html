@@ -170,19 +170,23 @@
     /* EFFECTIFS : toutes les cartes visibles, sans carrousel ni boutons */
     .roster-track {
         display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
+        grid-template-columns: repeat(5, minmax(0, 1fr));
         align-items: stretch;
-        gap: 1.5rem;
+        gap: 1.1rem;
         width: 100%;
         overflow: visible;
     }
-    @media (max-width: 1100px) {
-        .roster-track { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    /* 5 joueurs sur une seule ligne sur desktop, puis adaptation progressive */
+    @media (max-width: 1200px) {
+        .roster-track { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     }
-    @media (max-width: 768px) {
-        .roster-track { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+    @media (max-width: 900px) {
+        .roster-track { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
     }
-    @media (max-width: 480px) {
+    @media (max-width: 650px) {
+        .roster-track { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .85rem; }
+    }
+    @media (max-width: 420px) {
         .roster-track { grid-template-columns: 1fr; }
     }
 
