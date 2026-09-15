@@ -2226,7 +2226,10 @@ function checkAdminSessionTimeout() {
                 // Compatibilité avec d'anciens appels éventuels.
                 'Rejoindre AERIX': { fr: 'Rejoindre AERIX', en: 'Join AERIX' },
                 "Contacter l'administration": { fr: "Contacter l'administration", en: 'Contact administration' },
-                'Coaching': { fr: 'Coaching', en: 'Coaching' }
+                'Coaching': { fr: 'Coaching', en: 'Coaching' },
+                'Join AERIX': { fr: 'Rejoindre AERIX', en: 'Join AERIX' },
+                'Request coaching': { fr: 'Coaching', en: 'Request coaching' },
+                'Contact administration': { fr: "Contacter l'administration", en: 'Contact administration' }
             };
             const displayText = quickTranslations[text]?.[currentLang] || text;
             addAssistantMessage('user', escapeAssistantHtml(displayText));
@@ -2263,15 +2266,15 @@ function checkAdminSessionTimeout() {
                     addAssistantMessage('bot','Bien sûr. <strong class="text-white">L’administration AERIX est disponible 7 jours sur 7.</strong> Tu peux ouvrir le formulaire de contact pour envoyer directement un ticket aux administrateurs.<br><button onclick="openContactModal();toggleAerixAssistant(false)" class="mt-3 px-3 py-2 rounded-xl bg-aerix-purple text-white text-[11px] font-bold" data-i18n="assistant_action_contact">Contacter les administrateurs</button>');
                     return;
                 }
-                if(q.includes('coaching')) {
+                if(q.includes('coaching') || q.includes('request coaching')) {
                     addAssistantMessage('bot','Le coaching AERIX concerne <strong class="text-white">Le Mans Ultimate et iRacing</strong>, en individuel ou en groupe. Tu peux ouvrir la demande directement depuis le site.<br><button onclick="openCoachingModal();toggleAerixAssistant(false)" class="mt-3 px-3 py-2 rounded-xl bg-aerix-purple text-white text-[11px] font-bold" data-i18n="assistant_action_coaching">Demander un coaching</button>');
                     return;
                 }
-                if(q.includes('rejoindre') || q.includes('recrut') || q.includes('roster') || q.includes('équipe')) {
+                if(q.includes('rejoindre') || q.includes('recrut') || q.includes('roster') || q.includes('équipe') || q.includes('join aerix') || q.includes('how to join aerix') || q.includes('recruit')) {
                     addAssistantMessage('bot','Pour rejoindre AERIX, le plus simple est de passer directement par notre <strong class="text-white">Discord</strong>. Tu pourras y retrouver les informations de recrutement et échanger avec l’équipe.<br><a href="https://discord.gg/dJcHwYT4HY" target="_blank" rel="noopener noreferrer" class="inline-flex mt-3 px-3 py-2 rounded-xl bg-aerix-purple text-white text-[11px] font-bold" data-i18n="assistant_action_discord">Rejoindre le Discord</a>');
                     return;
                 }
-                if(q.includes('qui est aerix') || q.includes('aerix')) {
+                if(q.includes('qui est aerix') || q.includes('who is aerix') || q.includes('aerix')) {
                     addAssistantMessage('bot','AERIX est une structure indépendante orientée <strong class="text-white">esport et simracing</strong>, présente notamment sur Rocket League, Le Mans Ultimate, iRacing et Richard Burns Rally.');
                     return;
                 }
