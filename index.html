@@ -167,7 +167,7 @@
     .filter-btn { padding: 0.5rem 1.2rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: #9ca3af; cursor: pointer; }
 
     /* ROSTER : CARROUSEL JOUEURS (4 visibles max, défilement horizontal) */
-    .roster-track { display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - 3 * 1.5rem) / 4); gap: 1.5rem; overflow-x: auto; scroll-behavior: smooth; scroll-snap-type: x mandatory; padding-bottom: .25rem; -ms-overflow-style: none; scrollbar-width: none; }
+    .roster-track { display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - 3 * 1.5rem) / 4); align-items: stretch; gap: 1.5rem; overflow-x: auto; scroll-behavior: smooth; scroll-snap-type: x mandatory; padding-bottom: .25rem; -ms-overflow-style: none; scrollbar-width: none; }
     .roster-track::-webkit-scrollbar { display: none; }
     .roster-track > * { scroll-snap-align: start; }
     @media (max-width: 1024px) { .roster-track { grid-auto-columns: calc((100% - 2 * 1.5rem) / 3); } }
@@ -1568,11 +1568,14 @@
                             ${r.desc ? `<p class="text-gray-400 text-sm md:max-w-md text-left md:text-right leading-relaxed" data-translate-src="${escapeHtml(r.desc)}">${r.desc}</p>` : ''}
                         </div>
                         <div class="relative">
-                            <div class="roster-track" id="roster-track-${index}">
+                            <div class="roster-track ${r.players && r.players.length > 4 ? 'md:pl-14 md:pr-14' : ''}" id="roster-track-${index}">
                                 ${playersHTML}
                             </div>
                             ${r.players && r.players.length > 4 ? `
-                            <button type="button" onclick="scrollRoster(${index}, 1)" class="roster-nav-btn absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 hidden md:flex" aria-label="Joueurs suivants">
+                            <button type="button" onclick="scrollRoster(${index}, -1)" class="roster-nav-btn absolute left-0 top-1/2 -translate-y-1/2 hidden md:flex z-20 shadow-[0_4px_20px_rgba(0,0,0,0.5)]" aria-label="Joueurs précédents">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                            </button>
+                            <button type="button" onclick="scrollRoster(${index}, 1)" class="roster-nav-btn absolute right-0 top-1/2 -translate-y-1/2 hidden md:flex z-20 shadow-[0_4px_20px_rgba(0,0,0,0.5)]" aria-label="Joueurs suivants">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                             </button>` : ''}
                         </div>
