@@ -78,6 +78,22 @@
     }
     .glass-panel:hover::before { opacity: .9; }
     .glass-panel:hover::after { opacity: .9; transform: translate3d(4%, 3%, 0); }
+
+    /* CARTES JOUEURS EFFECTIF : neutralise les pseudo-éléments décoratifs du
+       liquid glass sur les cartes contenant une photo. Sans cela, le ::after
+       de .glass-panel peut se superposer à l'image pendant le hover et créer
+       un rectangle/carré parasite selon la position de la souris. */
+    .roster-player-card {
+        isolation: isolate;
+    }
+    .roster-player-card::before,
+    .roster-player-card::after {
+        display: none !important;
+    }
+    .roster-player-card > * {
+        position: relative;
+        z-index: 1;
+    }
     
     .glass-panel-no-hover { background: rgba(10, 10, 10, 0.85); backdrop-filter: blur(35px); -webkit-backdrop-filter: blur(35px); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 8px 32px 0 rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.05); }
 
@@ -1539,7 +1555,7 @@
                     r.players.forEach(p => {
                         const escapedPlayer = encodeURIComponent(JSON.stringify({...p, game: r.game}));
                         playersHTML += `
-                        <div class="glass-panel p-5 flex flex-col items-center rounded-3xl cursor-pointer group hover:border-aerix-purple/50 transition-all duration-300 overflow-hidden" onclick="openPlayerModal('${escapedPlayer}')">
+                        <div class="glass-panel roster-player-card p-5 flex flex-col items-center rounded-3xl cursor-pointer group hover:border-aerix-purple/50 transition-all duration-300 overflow-hidden" onclick="openPlayerModal('${escapedPlayer}')">
                             <div class="relative w-full aspect-[3/4] rounded-2xl overflow-hidden mb-5 border border-white/10 group-hover:border-aerix-purple/30 bg-[#050505]">
                                 <img src='${p.avatar}' class="w-full h-full object-cover object-top-custom transition duration-500 group-hover:scale-105 group-hover:brightness-110">
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80"></div>
