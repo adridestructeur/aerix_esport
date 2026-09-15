@@ -2215,7 +2215,17 @@ function checkAdminSessionTimeout() {
             if(type === 'bot') { translateDynamicContent(); refreshAssistantTranslations(); }
         }
         function assistantQuick(text) {
-            addAssistantMessage('user', escapeAssistantHtml(text));
+            // Le texte passé par onclick reste volontairement en français pour que
+            // le moteur de détection de la demande fonctionne toujours. En revanche,
+            // le message affiché dans la conversation doit suivre la langue active.
+            const quickTranslations = {
+                'Qui est AERIX ?': { fr: 'Qui est AERIX ?', en: 'Who is AERIX?' },
+                'Rejoindre AERIX': { fr: 'Rejoindre AERIX', en: 'Join AERIX' },
+                "Contacter l'administration": { fr: "Contacter l'administration", en: 'Contact administration' },
+                'Coaching': { fr: 'Coaching', en: 'Coaching' }
+            };
+            const displayText = quickTranslations[text]?.[currentLang] || text;
+            addAssistantMessage('user', escapeAssistantHtml(displayText));
             handleAssistantRequest(text);
         }
         function sendAerixAssistant(e) {
