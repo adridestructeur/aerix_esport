@@ -877,7 +877,7 @@
             <div id="account-login-form" class="space-y-4 hidden">
                 <p id="account-login-desc" class="text-xs text-gray-400 leading-relaxed" data-i18n="account_login_desc">Connecte-toi avec ton compte AERIX.</p>
                 <input id="account-login-email" type="email" placeholder="Adresse email" data-i18n-placeholder="email_placeholder" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
-                <input id="account-login-password" type="password" placeholder="Mot de passe" data-i18n-placeholder="password_placeholder" onkeypress="if(event.key==='Enter') loginAccount()" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
+                <input id="account-login-password" type="password" autocomplete="off" placeholder="Mot de passe" data-i18n-placeholder="password_placeholder" onkeypress="if(event.key==='Enter') loginAccount()" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
                 <button onclick="loginAccount()" class="w-full bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition" data-i18n="account_login">Connexion</button>
                 <button type="button" onclick="resetAccountPassword()" class="w-full text-xs font-bold text-aerix-purple hover:text-white transition py-1" data-i18n="forgot_password">Mot de passe oublié ?</button>
                 <button onclick="showAccountRegistration()" class="w-full bg-white/5 border border-white/10 text-white font-bold py-3 rounded-xl hover:bg-white/10 transition text-sm" data-i18n="create_account">Créer un compte</button>
@@ -2525,12 +2525,23 @@ function checkAdminSessionTimeout() {
             );
 
             try {
+                // Prevent the browser/password manager from interfering with the recovery flow.
+                const loginPassword = document.getElementById('account-login-password');
+                if (loginPassword) loginPassword.value = '';
+
                 passwordResetEmail = email;
                 await aerixPasswordApi('request', { email });
                 showPasswordResetOtp();
                 showToast(currentLang==='en' ? 'A verification code has been sent.' : 'Un code de vérification vient d’être envoyé.', 'success');
             } catch (e) {
                 console.error(e);
+                // If a code was already sent less than 60 seconds ago, keep the user in
+                // the OTP screen instead of displaying a misleading generic error.
+                if (e && e.message === 'please-wait' && passwordResetEmail === email) {
+                    showPasswordResetOtp();
+                    showToast(currentLang==='en' ? 'A code was already sent. Check your email.' : 'Un code a déjà été envoyé. Vérifie ta boîte mail.', 'success');
+                    return;
+                }
                 showToast(currentLang==='en' ? 'Unable to send the verification code.' : 'Impossible d’envoyer le code de vérification.', 'error');
             }
         }
