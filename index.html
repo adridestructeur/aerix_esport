@@ -2447,7 +2447,7 @@ function checkAdminSessionTimeout() {
             const message = document.getElementById('contact-message').value.trim();
             if (!subject || !message) return showToast(currentLang==='en'?'Subject and message are required.':'Sujet et message obligatoires.','error');
             try {
-                await db.collection('contactRequests').add({ uid: currentUser.uid, username: currentAccount.username || '', email: currentUser.email || currentAccount.email || '', category, subject, message, status: 'new', adminReply: '', unreadByUser: false, createdAt: firebase.firestore.FieldValue.serverTimestamp(), updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+                await db.collection('contactRequests').add({ uid: currentUser.uid, username: currentAccount.username || '', email: currentUser.email || currentAccount.email || '', category, subject, message, status: 'new', adminReply: '', messages: [], unreadByUser: false, unreadByAdmin: false, createdAt: firebase.firestore.FieldValue.serverTimestamp(), updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
                 document.getElementById('contact-subject').value = '';
                 document.getElementById('contact-message').value = '';
                 closeContactModal();
@@ -2498,6 +2498,44 @@ function checkAdminSessionTimeout() {
                 else b.classList.add('hidden');
             });
         }
+        // ============ FIL DE DISCUSSION D'UN TICKET (admin <-> pilote) ============
+        // Un ticket stocke désormais un tableau "messages" ({from:'admin'|'user', text, at}),
+        // affiché comme une vraie conversation dans les deux vues (admin et utilisateur).
+        // Compat : les tickets créés avant ce système n'ont qu'un champ "adminReply" unique,
+        // affiché comme premier message admin tant qu'aucun message n'a encore été échangé.
+        function buildTicketThreadHTML(t) {
+            const msgs = Array.isArray(t.messages) ? [...t.messages] : [];
+            if (!msgs.length && t.adminReply) msgs.push({ from: 'admin', text: t.adminReply });
+            if (!msgs.length) return '';
+            return `<div class="mt-4 pt-4 border-t border-white/10 space-y-2.5">${msgs.map(m => {
+                const isAdmin = m.from === 'admin';
+                return `<div class="flex ${isAdmin ? 'justify-start' : 'justify-end'}"><div class="max-w-[85%] rounded-xl px-3.5 py-2.5 text-xs whitespace-pre-wrap break-words ${isAdmin ? 'bg-aerix-purple/15 border border-aerix-purple/25 text-gray-200' : 'bg-white/5 border border-white/10 text-gray-300'}"><div class="text-[9px] uppercase tracking-widest font-bold mb-1 ${isAdmin ? 'text-aerix-purple' : 'text-gray-500'}">${isAdmin ? 'AERIX' : (currentLang==='en'?'You':'Toi')}</div>${escapeHtml(m.text || '')}</div></div>`;
+            }).join('')}</div>`;
+        }
+        // Zone de saisie de réponse, affichée aussi bien côté admin que côté pilote.
+        // "from" ('admin' ou 'user') détermine qui envoie le message et quel drapeau non-lu poser.
+        function buildTicketReplyBoxHTML(t, from) {
+            if ((t.status || 'new') === 'archived') return '';
+            const placeholder = currentLang==='en' ? 'Type your reply...' : 'Écris ta réponse...';
+            const sendLabel = currentLang==='en' ? 'Send' : 'Envoyer';
+            return `<div class="mt-3 flex gap-2"><textarea id="ticket-reply-${from}-${t.id}" rows="2" placeholder="${placeholder}" class="flex-1 bg-black/50 border border-white/10 rounded-xl px-3 py-2 text-white text-xs outline-none focus:border-aerix-purple resize-none"></textarea><button onclick="sendTicketMessage('${t.id}','${from}')" class="shrink-0 self-end bg-aerix-purple text-white font-bold text-xs px-4 py-2 rounded-xl hover:bg-purple-500 transition">${sendLabel}</button></div>`;
+        }
+        async function sendTicketMessage(id, from) {
+            if (from === 'admin' && !hasAdminAccess()) return;
+            const input = document.getElementById(`ticket-reply-${from}-${id}`);
+            if (!input) return;
+            const text = input.value.trim();
+            if (!text) return;
+            const msg = { from, text, at: Date.now() };
+            try {
+                const updates = { messages: firebase.firestore.FieldValue.arrayUnion(msg), updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
+                if (from === 'admin') { updates.status = 'progress'; updates.unreadByUser = true; }
+                else { updates.unreadByAdmin = true; }
+                await db.collection('contactRequests').doc(id).update(updates);
+                input.value = '';
+                showToast(currentLang==='en'?'Message sent.':'Message envoyé.');
+            } catch(e) { console.error(e); showToast(currentLang==='en'?'Failed to send.':"Échec de l'envoi.",'error'); }
+        }
         function renderUserTickets() {
             const el = document.getElementById('user-tickets-list');
             if (!el) return;
@@ -2507,19 +2545,12 @@ function checkAdminSessionTimeout() {
                 const status=t.status||'new'; const cls=status==='done'?'text-green-400 bg-green-500/10':status==='progress'?'text-blue-300 bg-blue-500/10':'text-yellow-300 bg-yellow-500/10';
                 const isCoaching = t.type === 'coaching';
                 const coachingInfo = isCoaching ? `<div class="mt-3 grid grid-cols-2 gap-2 text-[11px] text-gray-400"><div><span class="text-gray-600">${currentLang==='en'?'Game':'Jeu'} :</span> ${escapeHtml(t.coachGame||'—')}</div><div><span class="text-gray-600">${currentLang==='en'?'Format':'Format'} :</span> ${escapeHtml(t.coachFormat||'—')}</div><div><span class="text-gray-600">${currentLang==='en'?'Duration':'Durée'} :</span> ${escapeHtml(t.coachDuration||'—')}</div><div><span class="text-gray-600">${currentLang==='en'?'Date':'Date'} :</span> ${escapeHtml(t.coachDate||'—')}</div></div>` : '';
-                return `<div class="glass-panel p-5 rounded-2xl"><div class="flex flex-col md:flex-row md:items-start md:justify-between gap-3"><div><div class="text-white font-bold text-base">${escapeHtml(t.subject||'—')}</div><div class="text-[10px] uppercase tracking-widest text-aerix-purple mt-2">${escapeHtml(t.category||'Autre demande')}</div></div><span class="self-start px-2.5 py-1 rounded-full text-[10px] font-bold ${cls}">${labels[status]||status}</span></div><div class="mt-4 text-xs text-gray-400 whitespace-pre-wrap break-words">${escapeHtml(t.message||'')}</div>${coachingInfo}${t.adminReply?`<div class="mt-4 pt-4 border-t border-white/10"><div class="text-[10px] uppercase tracking-widest text-aerix-purple font-bold mb-2">${currentLang==='en'?'AERIX reply':'Réponse AERIX'}</div><div class="text-xs text-gray-300 whitespace-pre-wrap break-words">${escapeHtml(t.adminReply)}</div></div>`:''}</div>`;
+                return `<div class="glass-panel p-5 rounded-2xl"><div class="flex flex-col md:flex-row md:items-start md:justify-between gap-3"><div><div class="text-white font-bold text-base">${escapeHtml(t.subject||'—')}</div><div class="text-[10px] uppercase tracking-widest text-aerix-purple mt-2">${escapeHtml(t.category||'Autre demande')}</div></div><span class="self-start px-2.5 py-1 rounded-full text-[10px] font-bold ${cls}">${labels[status]||status}</span></div><div class="mt-4 text-xs text-gray-400 whitespace-pre-wrap break-words">${escapeHtml(t.message||'')}</div>${coachingInfo}${buildTicketThreadHTML(t)}${buildTicketReplyBoxHTML(t,'user')}</div>`;
             }).join('') : `<p class="text-gray-500 text-sm italic">${currentLang==='en'?'No active tickets.':'Aucun ticket en cours.'}</p>`;
         }
         async function updateTicketStatus(id, status) {
             if(!hasAdminAccess() || !['new','progress','done','archived'].includes(status)) return;
             try { await db.collection('contactRequests').doc(id).update({status,updatedAt:firebase.firestore.FieldValue.serverTimestamp()}); showToast(currentLang==='en'?'Ticket updated.':'Ticket mis à jour.'); } catch(e) { console.error(e); showToast(currentLang==='en'?'Update failed.':'Échec de la mise à jour.','error'); }
-        }
-        async function replyToTicket(id) {
-            if(!hasAdminAccess()) return;
-            const t=globalContactRequests.find(x=>x.id===id); if(!t) return;
-            const reply=prompt(currentLang==='en'?'AERIX reply:':'Réponse AERIX :',t.adminReply||'');
-            if(reply===null) return;
-            try { await db.collection('contactRequests').doc(id).update({adminReply:reply.trim(),updatedAt:firebase.firestore.FieldValue.serverTimestamp(),status:reply.trim()?'progress':(t.status||'new'),unreadByUser:!!reply.trim()}); showToast(currentLang==='en'?'Reply saved.':'Réponse enregistrée.'); } catch(e) { console.error(e); showToast(currentLang==='en'?'Reply failed.':'Échec de la réponse.','error'); }
         }
         async function deleteContactTicket(id) {
             if(!isOwner()) return showToast(currentLang==='en'?'Only the Owner can delete tickets.':'Seul le Owner peut supprimer les tickets.','error');
@@ -2712,7 +2743,7 @@ function checkAdminSessionTimeout() {
                     email: currentUser.email || currentAccount.email || '',
                     category: 'Coaching',
                     subject, message,
-                    status: 'new', adminReply: '', unreadByUser: false,
+                    status: 'new', adminReply: '', messages: [], unreadByUser: false, unreadByAdmin: false,
                     type: 'coaching',
                     coachDiscord: discord,
                     coachGame: game,
@@ -2878,7 +2909,7 @@ function checkAdminSessionTimeout() {
             const statusClass = status === 'done' ? 'text-green-400 bg-green-500/10' : status === 'archived' ? 'text-gray-400 bg-white/5' : status === 'progress' ? 'text-blue-300 bg-blue-500/10' : 'text-yellow-300 bg-yellow-500/10';
             const isCoaching = t.type === 'coaching';
             const coachingInfo = isCoaching ? `<div class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3 text-[11px] text-gray-400 bg-black/25 border border-white/5 rounded-xl p-3"><div><span class="text-gray-600 block">${currentLang==='en'?'Game':'Jeu'}</span>${escapeHtml(t.coachGame||'—')}</div><div><span class="text-gray-600 block">${currentLang==='en'?'Level':'Niveau'}</span>${escapeHtml(t.coachLevel||'—')}</div><div><span class="text-gray-600 block">${currentLang==='en'?'Format':'Format'}</span>${escapeHtml(t.coachFormat||'—')} · ${escapeHtml(t.coachDuration||'—')}</div><div><span class="text-gray-600 block">${currentLang==='en'?'Date':'Date'}</span>${escapeHtml(t.coachDate||'—')}</div>${t.coachDiscord ? `<div class="col-span-2 md:col-span-4"><span class="text-gray-600 block">Discord</span>${escapeHtml(t.coachDiscord)}</div>` : ''}</div>` : '';
-            return `<div class="glass-panel p-5 rounded-2xl"><div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4"><div class="min-w-0"><div class="flex flex-wrap items-center gap-2 mb-2">${isCoaching ? `<span class="text-aerix-purple text-xs">🎮</span>` : ''}<span class="text-white font-bold text-sm">${escapeHtml(t.subject || '—')}</span><span class="px-2 py-1 rounded-full text-[10px] font-bold ${statusClass}">${statusLabels[status] || status}</span></div><div class="text-xs text-gray-500">${escapeHtml(t.username || '—')} · ${escapeHtml(t.email || '—')}</div><div class="text-[10px] uppercase tracking-widest text-aerix-purple mt-2">${escapeHtml(t.category || 'Autre demande')}</div></div><select onchange="updateTicketStatus('${t.id}', this.value)" class="bg-black/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none"><option value="new" ${status==='new'?'selected':''}>${statusLabels.new}</option><option value="progress" ${status==='progress'?'selected':''}>${statusLabels.progress}</option><option value="done" ${status==='done'?'selected':''}>${statusLabels.done}</option><option value="archived" ${status==='archived'?'selected':''}>${statusLabels.archived}</option></select></div><div class="mt-4 bg-black/35 border border-white/5 rounded-xl p-4"><div class="text-xs text-gray-300 whitespace-pre-wrap break-words">${escapeHtml(t.message || '')}</div>${t.adminReply ? `<div class="mt-4 pt-4 border-t border-white/10"><div class="text-[10px] uppercase tracking-widest text-aerix-purple font-bold mb-2">${currentLang==='en'?'AERIX reply':'Réponse AERIX'}</div><div class="text-xs text-gray-300 whitespace-pre-wrap break-words">${escapeHtml(t.adminReply)}</div></div>` : ''}</div>${coachingInfo}<div class="flex gap-2 mt-3"><button onclick="replyToTicket('${t.id}')" class="text-xs font-bold px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-aerix-purple/20">${currentLang==='en'?'Reply':'Répondre'}</button><button onclick="deleteContactTicket('${t.id}')" class="text-xs font-bold px-3 py-2 rounded-xl bg-red-500/10 text-red-300 hover:bg-red-500/20">${currentLang==='en'?'Delete':'Supprimer'}</button></div></div>`;
+            return `<div class="glass-panel p-5 rounded-2xl"><div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4"><div class="min-w-0"><div class="flex flex-wrap items-center gap-2 mb-2">${isCoaching ? `<span class="text-aerix-purple text-xs">🎮</span>` : ''}<span class="text-white font-bold text-sm">${escapeHtml(t.subject || '—')}</span><span class="px-2 py-1 rounded-full text-[10px] font-bold ${statusClass}">${statusLabels[status] || status}</span></div><div class="text-xs text-gray-500">${escapeHtml(t.username || '—')} · ${escapeHtml(t.email || '—')}</div><div class="text-[10px] uppercase tracking-widest text-aerix-purple mt-2">${escapeHtml(t.category || 'Autre demande')}</div></div><select onchange="updateTicketStatus('${t.id}', this.value)" class="bg-black/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none"><option value="new" ${status==='new'?'selected':''}>${statusLabels.new}</option><option value="progress" ${status==='progress'?'selected':''}>${statusLabels.progress}</option><option value="done" ${status==='done'?'selected':''}>${statusLabels.done}</option><option value="archived" ${status==='archived'?'selected':''}>${statusLabels.archived}</option></select></div><div class="mt-4 bg-black/35 border border-white/5 rounded-xl p-4"><div class="text-xs text-gray-300 whitespace-pre-wrap break-words">${escapeHtml(t.message || '')}</div>${buildTicketThreadHTML(t)}${buildTicketReplyBoxHTML(t,'admin')}</div>${coachingInfo}<div class="flex gap-2 mt-3"><button onclick="deleteContactTicket('${t.id}')" class="text-xs font-bold px-3 py-2 rounded-xl bg-red-500/10 text-red-300 hover:bg-red-500/20">${currentLang==='en'?'Delete':'Supprimer'}</button></div></div>`;
         }
 
         // Menu "⋯" (rôle) sur chaque compte dans l'admin : ces deux fonctions étaient
