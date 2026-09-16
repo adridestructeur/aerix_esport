@@ -2381,16 +2381,82 @@ function checkAdminSessionTimeout() {
             setTimeout(() => document.getElementById('account-new-password')?.focus(), 80);
         }
 
+        let aerixOtpTransportFrame = null;
+        let aerixOtpTransportForm = null;
+        let aerixOtpTransportPromise = null;
+
+        function ensureAerixOtpTransport() {
+            if (aerixOtpTransportFrame && aerixOtpTransportForm) return;
+
+            aerixOtpTransportFrame = document.createElement('iframe');
+            aerixOtpTransportFrame.name = 'aerix-otp-transport-frame';
+            aerixOtpTransportFrame.id = 'aerix-otp-transport-frame';
+            aerixOtpTransportFrame.setAttribute('aria-hidden', 'true');
+            aerixOtpTransportFrame.tabIndex = -1;
+            aerixOtpTransportFrame.style.position = 'fixed';
+            aerixOtpTransportFrame.style.width = '1px';
+            aerixOtpTransportFrame.style.height = '1px';
+            aerixOtpTransportFrame.style.border = '0';
+            aerixOtpTransportFrame.style.opacity = '0';
+            aerixOtpTransportFrame.style.pointerEvents = 'none';
+            aerixOtpTransportFrame.style.left = '-10000px';
+            aerixOtpTransportFrame.style.top = '-10000px';
+            document.body.appendChild(aerixOtpTransportFrame);
+
+            aerixOtpTransportForm = document.createElement('form');
+            aerixOtpTransportForm.method = 'POST';
+            aerixOtpTransportForm.target = aerixOtpTransportFrame.name;
+            aerixOtpTransportForm.style.display = 'none';
+            document.body.appendChild(aerixOtpTransportForm);
+        }
+
         async function aerixPasswordApi(action, payload) {
-            const response = await fetch(`${AERIX_PASSWORD_API_BASE}/${action}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                body: JSON.stringify(payload)
+            ensureAerixOtpTransport();
+
+            if (aerixOtpTransportPromise) {
+                throw new Error('request-in-progress');
+            }
+
+            const requestUrl = `${AERIX_PASSWORD_API_BASE}/${action}`;
+
+            aerixOtpTransportPromise = new Promise((resolve, reject) => {
+                const timeout = setTimeout(() => {
+                    cleanup();
+                    reject(new Error('request-timeout'));
+                }, 30000);
+
+                function cleanup() {
+                    clearTimeout(timeout);
+                    window.removeEventListener('message', onMessage);
+                    aerixOtpTransportPromise = null;
+                }
+
+                function onMessage(event) {
+                    if (event.source !== aerixOtpTransportFrame.contentWindow) return;
+                    const message = event.data;
+                    if (!message || message.type !== 'AERIX_OTP_RESPONSE') return;
+
+                    cleanup();
+                    const data = message.data || {};
+                    if (data.ok === false) reject(new Error(data.error || 'request-failed'));
+                    else resolve(data);
+                }
+
+                window.addEventListener('message', onMessage);
+
+                aerixOtpTransportForm.action = requestUrl;
+                aerixOtpTransportForm.innerHTML = '';
+
+                const payloadInput = document.createElement('input');
+                payloadInput.type = 'hidden';
+                payloadInput.name = 'payload';
+                payloadInput.value = JSON.stringify(payload || {});
+                aerixOtpTransportForm.appendChild(payloadInput);
+
+                aerixOtpTransportForm.submit();
             });
-            let data = {};
-            try { data = await response.json(); } catch (_) {}
-            if (!response.ok || data.ok === false) throw new Error(data.error || 'request-failed');
-            return data;
+
+            return aerixOtpTransportPromise;
         }
 
         function otpValue() {
