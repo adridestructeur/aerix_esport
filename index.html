@@ -2420,6 +2420,7 @@ function checkAdminSessionTimeout() {
 
             const requestId = 'aerix-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2);
             const requestUrl = `${AERIX_PASSWORD_API_BASE}/${action}`;
+            const callbackOrigin = window.location.origin;
 
             aerixOtpTransportPromise = new Promise((resolve, reject) => {
                 let finished = false;
@@ -2428,8 +2429,10 @@ function checkAdminSessionTimeout() {
                     if (finished) return;
                     finished = true;
                     clearTimeout(timeout);
-                    window.removeEventListener('message', onMessage);
                     aerixOtpTransportPromise = null;
+                    if (aerixOtpTransportFrame) {
+                        aerixOtpTransportFrame.onload = null;
+                    }
                     fn(value);
                 };
 
@@ -2437,17 +2440,31 @@ function checkAdminSessionTimeout() {
                     finish(reject, new Error('request-timeout'));
                 }, 30000);
 
-                function onMessage(event) {
-                    const message = event.data;
-                    if (!message || message.type !== 'AERIX_OTP_RESPONSE') return;
-                    if (message.requestId !== requestId) return;
+                const readCallback = () => {
+                    try {
+                        const frameWindow = aerixOtpTransportFrame.contentWindow;
+                        if (!frameWindow) return;
 
-                    const data = message.data || {};
-                    if (data.ok === false) finish(reject, new Error(data.error || 'request-failed'));
-                    else finish(resolve, data);
-                }
+                        // Apps Script returns to the same-origin callback page with
+                        // window.name containing the response. Reading window.name is
+                        // allowed once the iframe has navigated back to AERIX.
+                        const raw = frameWindow.name || '';
+                        if (!raw.startsWith('AERIX_OTP_RESPONSE:')) return;
+                        frameWindow.name = '';
 
-                window.addEventListener('message', onMessage);
+                        const message = JSON.parse(raw.slice('AERIX_OTP_RESPONSE:'.length));
+                        if (!message || message.requestId !== requestId) return;
+
+                        const data = message.data || {};
+                        if (data.ok === false) finish(reject, new Error(data.error || 'request-failed'));
+                        else finish(resolve, data);
+                    } catch (_) {
+                        // Ignore the initial cross-origin iframe load. The callback
+                        // page becomes same-origin before the response is processed.
+                    }
+                };
+
+                aerixOtpTransportFrame.onload = readCallback;
 
                 aerixOtpTransportForm.action = requestUrl;
                 aerixOtpTransportForm.innerHTML = '';
@@ -2462,8 +2479,14 @@ function checkAdminSessionTimeout() {
                 requestIdInput.name = 'requestId';
                 requestIdInput.value = requestId;
 
+                const callbackInput = document.createElement('input');
+                callbackInput.type = 'hidden';
+                callbackInput.name = 'callbackOrigin';
+                callbackInput.value = callbackOrigin;
+
                 aerixOtpTransportForm.appendChild(payloadInput);
                 aerixOtpTransportForm.appendChild(requestIdInput);
+                aerixOtpTransportForm.appendChild(callbackInput);
                 aerixOtpTransportForm.submit();
             });
 
