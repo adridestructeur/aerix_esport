@@ -2405,41 +2405,46 @@ function checkAdminSessionTimeout() {
 
             aerixOtpTransportForm = document.createElement('form');
             aerixOtpTransportForm.method = 'POST';
+            aerixOtpTransportForm.enctype = 'application/x-www-form-urlencoded';
             aerixOtpTransportForm.target = aerixOtpTransportFrame.name;
             aerixOtpTransportForm.style.display = 'none';
             document.body.appendChild(aerixOtpTransportForm);
         }
 
-        async function aerixPasswordApi(action, payload) {
+        function aerixPasswordApi(action, payload) {
             ensureAerixOtpTransport();
 
             if (aerixOtpTransportPromise) {
-                throw new Error('request-in-progress');
+                return Promise.reject(new Error('request-in-progress'));
             }
 
+            const requestId = 'aerix-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2);
             const requestUrl = `${AERIX_PASSWORD_API_BASE}/${action}`;
 
             aerixOtpTransportPromise = new Promise((resolve, reject) => {
-                const timeout = setTimeout(() => {
-                    cleanup();
-                    reject(new Error('request-timeout'));
-                }, 30000);
+                let finished = false;
 
-                function cleanup() {
+                const finish = (fn, value) => {
+                    if (finished) return;
+                    finished = true;
                     clearTimeout(timeout);
                     window.removeEventListener('message', onMessage);
                     aerixOtpTransportPromise = null;
-                }
+                    fn(value);
+                };
+
+                const timeout = setTimeout(() => {
+                    finish(reject, new Error('request-timeout'));
+                }, 30000);
 
                 function onMessage(event) {
-                    if (event.source !== aerixOtpTransportFrame.contentWindow) return;
                     const message = event.data;
                     if (!message || message.type !== 'AERIX_OTP_RESPONSE') return;
+                    if (message.requestId !== requestId) return;
 
-                    cleanup();
                     const data = message.data || {};
-                    if (data.ok === false) reject(new Error(data.error || 'request-failed'));
-                    else resolve(data);
+                    if (data.ok === false) finish(reject, new Error(data.error || 'request-failed'));
+                    else finish(resolve, data);
                 }
 
                 window.addEventListener('message', onMessage);
@@ -2451,8 +2456,14 @@ function checkAdminSessionTimeout() {
                 payloadInput.type = 'hidden';
                 payloadInput.name = 'payload';
                 payloadInput.value = JSON.stringify(payload || {});
-                aerixOtpTransportForm.appendChild(payloadInput);
 
+                const requestIdInput = document.createElement('input');
+                requestIdInput.type = 'hidden';
+                requestIdInput.name = 'requestId';
+                requestIdInput.value = requestId;
+
+                aerixOtpTransportForm.appendChild(payloadInput);
+                aerixOtpTransportForm.appendChild(requestIdInput);
                 aerixOtpTransportForm.submit();
             });
 
