@@ -926,87 +926,6 @@
                 <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('coaching')" id="tab-btn-coaching" class="admin-tab-btn flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10" data-i18n="nav_coaching">Coaching</button>
                 <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('avis')" id="tab-btn-avis" class="admin-tab-btn flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10" data-i18n="nav_review">Avis</button>
             </div>
-// --- DRAG AND DROP DES EFFECTIFS (GLISSAGE) ---
-        let draggedEffectifId = null;
-
-        function dragEffectifRow(ev) {
-            const row = ev.target.closest('.effectif-row');
-            draggedEffectifId = row.dataset.id;
-            ev.dataTransfer.effectAllowed = 'move';
-            
-            // Un petit délai permet à l'image glissée par le navigateur de rester opaque 
-            // tandis que l'élément d'origine devient semi-transparent
-            setTimeout(() => { row.style.opacity = '0.4'; }, 0);
-        }
-
-        function allowDropEffectifRow(ev) {
-            ev.preventDefault();
-            ev.dataTransfer.dropEffect = 'move';
-            const row = ev.target.closest('.effectif-row');
-            // Feedback visuel quand on survole une autre ligne
-            if (row && row.dataset.id !== draggedEffectifId) {
-                row.style.borderColor = '#8B5CF6'; 
-                row.style.boxShadow = '0 0 15px rgba(139,92,246,0.3)';
-            }
-        }
-
-        function dragLeaveEffectifRow(ev) {
-            const row = ev.target.closest('.effectif-row');
-            if (row) {
-                row.style.borderColor = ''; 
-                row.style.boxShadow = '';
-            }
-        }
-
-        function dragEndEffectifRow(ev) {
-            ev.target.closest('.effectif-row').style.opacity = '1';
-            document.querySelectorAll('.effectif-row').forEach(row => {
-                row.style.borderColor = '';
-                row.style.boxShadow = '';
-            });
-        }
-
-        async function dropEffectifRow(ev) {
-            ev.preventDefault();
-            const targetRow = ev.target.closest('.effectif-row');
-            if (!targetRow) return;
-            
-            const targetId = targetRow.dataset.id;
-            
-            // Nettoyage des bordures
-            document.querySelectorAll('.effectif-row').forEach(row => {
-                row.style.borderColor = '';
-                row.style.boxShadow = '';
-            });
-
-            if (!draggedEffectifId || draggedEffectifId === targetId) return;
-
-            // Réorganisation locale des données
-            const sorted = [...globalEffectifs].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-            const draggedIndex = sorted.findIndex(r => r.id === draggedEffectifId);
-            const targetIndex = sorted.findIndex(r => r.id === targetId);
-
-            if (draggedIndex === -1 || targetIndex === -1) return;
-
-            const [movedItem] = sorted.splice(draggedIndex, 1);
-            sorted.splice(targetIndex, 0, movedItem);
-
-            // Mise à jour groupée en base de données (Firebase Batch)
-            try {
-                const batch = db.batch();
-                sorted.forEach((item, index) => {
-                    const ref = db.collection("effectifs").doc(item.id);
-                    batch.update(ref, { order: index });
-                });
-                await batch.commit();
-                showToast(currentLang === 'en' ? "Roster order updated!" : "Ordre mis à jour !", "success");
-            } catch(e) {
-                console.error(e);
-                showToast(currentLang === 'en' ? "Reorder failed." : "Erreur lors de la réorganisation.", "error");
-            }
-            
-            draggedEffectifId = null;
-        }
 
             <!-- TAB: COMPTES -->
             <div id="admin-tab-comptes" class="admin-tab hidden space-y-8">
@@ -2952,26 +2871,7 @@ function checkAdminSessionTimeout() {
             }
             document.getElementById('admin-list-boutique').innerHTML = globalShop.map(item => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm">${item.name}</div><div class="text-xs text-gray-500">${item.price} €</div></div><div class="flex gap-2"><button onclick="startEditShop('${item.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('shop', '${item.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
             const sortedAdminEffectifs = [...globalEffectifs].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-            document.getElementById('admin-list-effectifs').innerHTML = sortedAdminEffectifs.map((r, idx) => `
-            <div class="glass-panel p-4 rounded-xl flex justify-between items-center effectif-row transition-colors" draggable="true" data-id="${r.id}" ondragstart="dragEffectifRow(event)" ondragover="allowDropEffectifRow(event)" ondragleave="dragLeaveEffectifRow(event)" ondrop="dropEffectifRow(event)" ondragend="dragEndEffectifRow(event)">
-                <div class="flex items-center gap-4">
-                    <div class="cursor-grab text-gray-500 hover:text-white transition flex items-center justify-center active:cursor-grabbing px-1" title="Glisser pour réorganiser">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><circle cx="9" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="15" cy="18" r="1.5"/></svg>
-                    </div>
-                    <div class="flex flex-col gap-1">
-                        <button onclick="moveEffectif('${r.id}', -1)" ${idx === 0 ? 'disabled' : ''} class="w-6 h-6 flex items-center justify-center rounded-md bg-white/10 hover:bg-aerix-purple text-white text-xs transition disabled:opacity-20 disabled:cursor-not-allowed" title="Monter">▲</button>
-                        <button onclick="moveEffectif('${r.id}', 1)" ${idx === sortedAdminEffectifs.length - 1 ? 'disabled' : ''} class="w-6 h-6 flex items-center justify-center rounded-md bg-white/10 hover:bg-aerix-purple text-white text-xs transition disabled:opacity-20 disabled:cursor-not-allowed" title="Descendre">▼</button>
-                    </div>
-                    <div>
-                        <div class="text-white font-bold text-sm flex items-center gap-2">${r.name} <span class="bg-white/10 text-[9px] px-2 py-0.5 rounded-full">${r.players?.length||0} j.</span></div>
-                        <div class="text-xs text-gray-500">${r.game || 'Général'}</div>
-                    </div>
-                </div>
-                <div class="flex gap-2">
-                    <button onclick="startEditEffectif('${r.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button>
-                    <button onclick="deleteItem('effectifs', '${r.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button>
-                </div>
-            </div>`).join('');
+            document.getElementById('admin-list-effectifs').innerHTML = sortedAdminEffectifs.map((r, idx) => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div class="flex items-center gap-2"><div class="flex flex-col gap-1"><button onclick="moveEffectif('${r.id}', -1)" ${idx === 0 ? 'disabled' : ''} class="w-6 h-6 flex items-center justify-center rounded-md bg-white/10 hover:bg-aerix-purple text-white text-xs transition disabled:opacity-20 disabled:cursor-not-allowed" title="Monter">▲</button><button onclick="moveEffectif('${r.id}', 1)" ${idx === sortedAdminEffectifs.length - 1 ? 'disabled' : ''} class="w-6 h-6 flex items-center justify-center rounded-md bg-white/10 hover:bg-aerix-purple text-white text-xs transition disabled:opacity-20 disabled:cursor-not-allowed" title="Descendre">▼</button></div><div><div class="text-white font-bold text-sm flex items-center gap-2">${r.name} <span class="bg-white/10 text-[9px] px-2 py-0.5 rounded-full">${r.players?.length||0} j.</span></div><div class="text-xs text-gray-500">${r.game || 'Général'}</div></div></div><div class="flex gap-2"><button onclick="startEditEffectif('${r.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('effectifs', '${r.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
             document.getElementById('admin-list-palmares').innerHTML = sortByDateDesc(globalPalmares).map(p => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm truncate max-w-[150px]">${p.title}</div><div class="text-xs text-gray-500">${p.game || 'Général'}</div></div><div class="flex gap-2"><button onclick="startEditPalmares('${p.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('palmares', '${p.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
             document.getElementById('admin-list-partenaires').innerHTML = globalPartners.map(p => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm">${p.name}</div><div class="text-xs text-gray-500">${p.category || 'Partenaire'}</div></div><div class="flex gap-2"><button onclick="startEditPartner('${p.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('partners', '${p.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
             document.getElementById('admin-list-annonces').innerHTML = sortByDateDesc(globalAnnonces).map(a => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm truncate max-w-[200px]">${a.title}</div><div class="text-xs text-gray-500">${a.date}</div></div><div class="flex gap-2"><button onclick="startEditAnnouncement('${a.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('annonces', '${a.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
