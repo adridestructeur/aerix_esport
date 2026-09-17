@@ -852,29 +852,6 @@
                 <button type="button" onclick="resetAccountPassword()" class="w-full text-xs font-bold text-aerix-purple hover:text-white transition py-1" data-i18n="forgot_password">Mot de passe oublié ?</button>
                 <button onclick="showAccountRegistration()" class="w-full bg-white/5 border border-white/10 text-white font-bold py-3 rounded-xl hover:bg-white/10 transition text-sm" data-i18n="create_account">Créer un compte</button>
             </div>
-
-            <div id="account-otp-form" class="space-y-4 hidden">
-                <p id="account-otp-desc" class="text-xs text-gray-400 leading-relaxed"></p>
-                <div class="flex justify-center gap-2.5" id="account-otp-inputs">
-                    <input type="text" inputmode="numeric" maxlength="1" autocomplete="one-time-code" class="aerix-otp-input w-12 h-14 md:w-14 md:h-16 rounded-xl bg-black/50 border border-white/10 text-white text-center text-2xl font-black outline-none focus:border-aerix-purple transition" aria-label="1">
-                    <input type="text" inputmode="numeric" maxlength="1" class="aerix-otp-input w-12 h-14 md:w-14 md:h-16 rounded-xl bg-black/50 border border-white/10 text-white text-center text-2xl font-black outline-none focus:border-aerix-purple transition" aria-label="2">
-                    <input type="text" inputmode="numeric" maxlength="1" class="aerix-otp-input w-12 h-14 md:w-14 md:h-16 rounded-xl bg-black/50 border border-white/10 text-white text-center text-2xl font-black outline-none focus:border-aerix-purple transition" aria-label="3">
-                    <input type="text" inputmode="numeric" maxlength="1" class="aerix-otp-input w-12 h-14 md:w-14 md:h-16 rounded-xl bg-black/50 border border-white/10 text-white text-center text-2xl font-black outline-none focus:border-aerix-purple transition" aria-label="4">
-                </div>
-                <button type="button" onclick="verifyAerixOtp()" class="w-full bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition shadow-[0_0_15px_rgba(139,92,246,.3)]">
-                    <span id="account-otp-verify-text">Vérifier le code</span>
-                </button>
-                <button type="button" id="account-otp-resend" onclick="resendAerixOtp()" class="w-full text-xs font-bold text-aerix-purple hover:text-white transition py-1">Renvoyer le code</button>
-                <button type="button" onclick="showAccountLogin()" class="w-full bg-white/5 border border-white/10 text-white font-bold py-3 rounded-xl hover:bg-white/10 transition text-sm">Retour à la connexion</button>
-            </div>
-
-            <div id="account-new-password-form" class="space-y-4 hidden">
-                <p id="account-new-password-desc" class="text-xs text-gray-400 leading-relaxed"></p>
-                <input id="account-new-password" type="password" minlength="8" placeholder="Nouveau mot de passe (8 caractères min.)" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
-                <input id="account-new-password-confirm" type="password" minlength="8" placeholder="Confirmer le nouveau mot de passe" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple" onkeypress="if(event.key==='Enter') completeAerixPasswordReset()">
-                <button type="button" onclick="completeAerixPasswordReset()" class="w-full bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition shadow-[0_0_15px_rgba(139,92,246,.3)]">Modifier le mot de passe</button>
-                <button type="button" onclick="showAccountLogin()" class="w-full bg-white/5 border border-white/10 text-white font-bold py-3 rounded-xl hover:bg-white/10 transition text-sm">Retour à la connexion</button>
-            </div>
         </div>
     </div>
 
@@ -1300,10 +1277,6 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const auth = firebase.auth();
-
-        // AERIX OTP PASSWORD RESET API
-        // URL /exec du Google Apps Script déployé pour la récupération par code.
-        const AERIX_PASSWORD_API_BASE = 'https://aerix-password-api.adrien-utzinger.workers.dev';
 
         // ACCOUNT CONFIGURATION
         // Replace OWNER_EMAIL with the email of the AERIX owner account.
@@ -2284,26 +2257,9 @@ function checkAdminSessionTimeout() {
         document.addEventListener('click', e => { if(e.target.closest('#account-area') || e.target.closest('#mobile-account-area')) return; document.querySelectorAll('.account-menu').forEach(m => m.classList.add('hidden')); });
         document.addEventListener('click', e => { if(e.target.closest('.role-menu')) return; document.querySelectorAll('.role-menu').forEach(m => { m.classList.add('hidden'); m.closest('.glass-panel')?.classList.remove('z-[60]'); }); });
         function openAccountModal() { showAccountRegistration(); document.getElementById('account-modal').classList.remove('hidden'); }
-        function closeAccountModal() {
-            document.getElementById('account-modal').classList.add('hidden');
-            clearInterval(aerixOtpResendTimer);
-            aerixOtpResendSeconds = 0;
-            aerixResetToken = '';
-        }
-        function showAccountLogin() {
-            document.getElementById('account-register-form').classList.add('hidden');
-            document.getElementById('account-login-form').classList.remove('hidden');
-            document.getElementById('account-otp-form')?.classList.add('hidden');
-            document.getElementById('account-new-password-form')?.classList.add('hidden');
-            document.getElementById('account-modal-title').innerText=currentLang==='en'?'Sign in':'Connexion';
-        }
-        function showAccountRegistration() {
-            document.getElementById('account-login-form').classList.add('hidden');
-            document.getElementById('account-register-form').classList.remove('hidden');
-            document.getElementById('account-otp-form')?.classList.add('hidden');
-            document.getElementById('account-new-password-form')?.classList.add('hidden');
-            document.getElementById('account-modal-title').innerText=currentLang==='en'?'Create account':'Créer un compte';
-        }
+        function closeAccountModal() { document.getElementById('account-modal').classList.add('hidden'); }
+        function showAccountLogin() { document.getElementById('account-register-form').classList.add('hidden'); document.getElementById('account-login-form').classList.remove('hidden'); document.getElementById('account-modal-title').innerText=currentLang==='en'?'Sign in':'Connexion'; }
+        function showAccountRegistration() { document.getElementById('account-login-form').classList.add('hidden'); document.getElementById('account-register-form').classList.remove('hidden'); document.getElementById('account-modal-title').innerText=currentLang==='en'?'Create account':'Créer un compte'; }
         async function createAccount() {
             const username=document.getElementById('account-register-username').value.trim();
             const email=document.getElementById('account-register-email').value.trim().toLowerCase();
@@ -2332,99 +2288,6 @@ function checkAdminSessionTimeout() {
         }
         async function loginAccount() { const email=document.getElementById('account-login-email').value.trim(); const password=document.getElementById('account-login-password').value; if(!email||!password) return showToast(currentLang==='en'?'Email and password are required.':'Email et mot de passe obligatoires.','error'); try { await auth.signInWithEmailAndPassword(email,password); closeAccountModal(); showToast(currentLang==='en'?'Signed in.':'Connexion réussie.'); } catch(e){ showToast(currentLang==='en'?'Invalid email or password.':'Email ou mot de passe incorrect.','error'); } }
 
-        let aerixResetEmail = '';
-        let aerixResetToken = '';
-        let aerixOtpResendTimer = null;
-        let aerixOtpResendSeconds = 0;
-
-        async function aerixPasswordApi(action, payload) {
-            const requestUrl = `${AERIX_PASSWORD_API_BASE}/${encodeURIComponent(action)}`;
-            const response = await fetch(requestUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                body: JSON.stringify(payload || {}),
-                redirect: 'follow',
-                cache: 'no-store',
-                credentials: 'omit'
-            });
-
-            const raw = await response.text();
-            let data;
-            try {
-                data = JSON.parse(raw);
-            } catch (_) {
-                throw new Error('invalid-api-response');
-            }
-
-            if (!data || data.ok === false) {
-                throw new Error(data?.error || 'request-failed');
-            }
-            return data;
-        }
-
-        function showAccountResetOtp() {
-            document.getElementById('account-register-form').classList.add('hidden');
-            document.getElementById('account-login-form').classList.add('hidden');
-            document.getElementById('account-new-password-form').classList.add('hidden');
-            document.getElementById('account-otp-form').classList.remove('hidden');
-            document.getElementById('account-modal-title').innerText = currentLang === 'en' ? 'Verify your email' : 'Vérifie ton e-mail';
-            document.getElementById('account-otp-desc').innerText = currentLang === 'en'
-                ? `Enter the 4-digit code sent to ${aerixResetEmail}.`
-                : `Entre le code à 4 chiffres envoyé à ${aerixResetEmail}.`;
-            document.querySelectorAll('.aerix-otp-input').forEach(i => i.value = '');
-            setTimeout(() => document.querySelector('.aerix-otp-input')?.focus(), 80);
-        }
-
-        function showAccountNewPassword() {
-            document.getElementById('account-register-form').classList.add('hidden');
-            document.getElementById('account-login-form').classList.add('hidden');
-            document.getElementById('account-otp-form').classList.add('hidden');
-            document.getElementById('account-new-password-form').classList.remove('hidden');
-            document.getElementById('account-modal-title').innerText = currentLang === 'en' ? 'New password' : 'Nouveau mot de passe';
-            document.getElementById('account-new-password-desc').innerText = currentLang === 'en'
-                ? 'Choose a new password of at least 8 characters.'
-                : 'Choisis un nouveau mot de passe d’au moins 8 caractères.';
-            document.getElementById('account-new-password').value = '';
-            document.getElementById('account-new-password-confirm').value = '';
-            setTimeout(() => document.getElementById('account-new-password')?.focus(), 80);
-        }
-
-        function startAerixOtpResendTimer(seconds = 60) {
-            clearInterval(aerixOtpResendTimer);
-            aerixOtpResendSeconds = seconds;
-            const btn = document.getElementById('account-otp-resend');
-            if (!btn) return;
-            const tick = () => {
-                if (aerixOtpResendSeconds <= 0) {
-                    clearInterval(aerixOtpResendTimer);
-                    btn.disabled = false;
-                    btn.classList.remove('opacity-50', 'cursor-not-allowed');
-                    btn.innerText = currentLang === 'en' ? 'Resend code' : 'Renvoyer le code';
-                    return;
-                }
-                btn.disabled = true;
-                btn.classList.add('opacity-50', 'cursor-not-allowed');
-                btn.innerText = currentLang === 'en' ? `Resend code (${aerixOtpResendSeconds}s)` : `Renvoyer le code (${aerixOtpResendSeconds}s)`;
-                aerixOtpResendSeconds--;
-            };
-            tick();
-            aerixOtpResendTimer = setInterval(tick, 1000);
-        }
-
-        function aerixResetErrorMessage(error) {
-            const messages = {
-                'please-wait': currentLang === 'en' ? 'Please wait before requesting another code.' : 'Attends avant de demander un nouveau code.',
-                'rate-limit': currentLang === 'en' ? 'Too many requests. Please try again later.' : 'Trop de demandes. Réessaie plus tard.',
-                'invalid-code': currentLang === 'en' ? 'Incorrect code.' : 'Code incorrect.',
-                'expired-code': currentLang === 'en' ? 'This code has expired. Request a new one.' : 'Ce code a expiré. Demande-en un nouveau.',
-                'invalid-reset': currentLang === 'en' ? 'This reset session is no longer valid.' : 'Cette session de réinitialisation n’est plus valide.',
-                'invalid-request': currentLang === 'en' ? 'Invalid request.' : 'Demande invalide.',
-                'invalid-api-response': currentLang === 'en' ? 'The reset service returned an invalid response.' : 'Le service de récupération a renvoyé une réponse invalide.',
-                'server-error': currentLang === 'en' ? 'The reset service is temporarily unavailable.' : 'Le service de récupération est temporairement indisponible.'
-            };
-            return messages[error] || (currentLang === 'en' ? 'An error occurred.' : 'Une erreur est survenue.');
-        }
-
         async function resetAccountPassword() {
             const email = document.getElementById('account-login-email')?.value.trim().toLowerCase();
             if (!email) {
@@ -2435,136 +2298,25 @@ function checkAdminSessionTimeout() {
                     'error'
                 );
             }
-            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                return showToast(currentLang === 'en' ? 'Invalid email address.' : 'Adresse email invalide.', 'error');
-            }
-
-            aerixResetEmail = email;
-            aerixResetToken = '';
-
             try {
-                await aerixPasswordApi('request', { email: aerixResetEmail });
-                showAccountResetOtp();
-                startAerixOtpResendTimer(60);
+                await auth.sendPasswordResetEmail(email);
                 showToast(
                     currentLang === 'en'
-                        ? 'A verification code has been sent to your email.'
-                        : 'Un code de vérification a été envoyé à ton adresse e-mail.',
+                        ? 'Password reset email sent. Check your inbox.'
+                        : 'E-mail de réinitialisation envoyé. Vérifie ta boîte mail.',
                     'success'
                 );
             } catch (e) {
                 console.error(e);
-                showToast(aerixResetErrorMessage(e.message), 'error');
+                let message = currentLang === 'en'
+                    ? 'Unable to send the reset email.'
+                    : 'Impossible d’envoyer l’e-mail de réinitialisation.';
+                if (e.code === 'auth/invalid-email') {
+                    message = currentLang === 'en' ? 'Invalid email address.' : 'Adresse email invalide.';
+                }
+                showToast(message, 'error');
             }
         }
-
-        function otpValue() {
-            return [...document.querySelectorAll('.aerix-otp-input')].map(i => i.value).join('');
-        }
-
-        async function verifyAerixOtp() {
-            const code = otpValue();
-            if (!/^\d{4}$/.test(code)) {
-                return showToast(currentLang === 'en' ? 'Enter the 4-digit code.' : 'Entre le code à 4 chiffres.', 'error');
-            }
-
-            try {
-                const data = await aerixPasswordApi('verify', { email: aerixResetEmail, code });
-                aerixResetToken = String(data.resetToken || '');
-                if (!aerixResetToken) throw new Error('invalid-reset');
-                showAccountNewPassword();
-            } catch (e) {
-                console.error(e);
-                showToast(aerixResetErrorMessage(e.message), 'error');
-                document.querySelectorAll('.aerix-otp-input').forEach(i => i.classList.remove('border-red-500'));
-                document.querySelectorAll('.aerix-otp-input').forEach(i => i.classList.add('border-red-500'));
-            }
-        }
-
-        async function resendAerixOtp() {
-            if (aerixOtpResendSeconds > 0) return;
-            try {
-                await aerixPasswordApi('request', { email: aerixResetEmail });
-                document.querySelectorAll('.aerix-otp-input').forEach(i => i.value = '');
-                startAerixOtpResendTimer(60);
-                showToast(
-                    currentLang === 'en' ? 'A new code has been sent.' : 'Un nouveau code a été envoyé.',
-                    'success'
-                );
-                setTimeout(() => document.querySelector('.aerix-otp-input')?.focus(), 80);
-            } catch (e) {
-                console.error(e);
-                showToast(aerixResetErrorMessage(e.message), 'error');
-                if (e.message === 'please-wait') startAerixOtpResendTimer(60);
-            }
-        }
-
-        async function completeAerixPasswordReset() {
-            const password = document.getElementById('account-new-password')?.value || '';
-            const confirm = document.getElementById('account-new-password-confirm')?.value || '';
-            if (password.length < 8) {
-                return showToast(currentLang === 'en' ? 'Password must be at least 8 characters.' : 'Le mot de passe doit contenir au moins 8 caractères.', 'error');
-            }
-            if (password !== confirm) {
-                return showToast(currentLang === 'en' ? 'Passwords do not match.' : 'Les mots de passe ne correspondent pas.', 'error');
-            }
-            if (!aerixResetEmail || !aerixResetToken) {
-                return showToast(currentLang === 'en' ? 'Reset session expired. Start again.' : 'La session de récupération a expiré. Recommence.', 'error');
-            }
-
-            try {
-                await aerixPasswordApi('complete', {
-                    email: aerixResetEmail,
-                    resetToken: aerixResetToken,
-                    newPassword: password
-                });
-                clearInterval(aerixOtpResendTimer);
-                aerixResetToken = '';
-                document.getElementById('account-login-password').value = '';
-                showAccountLogin();
-                document.getElementById('account-login-email').value = aerixResetEmail;
-                showToast(
-                    currentLang === 'en'
-                        ? 'Password changed successfully. You can now sign in.'
-                        : 'Mot de passe modifié. Tu peux maintenant te connecter.',
-                    'success'
-                );
-            } catch (e) {
-                console.error(e);
-                showToast(aerixResetErrorMessage(e.message), 'error');
-            }
-        }
-
-        document.addEventListener('input', e => {
-            if (!e.target.classList.contains('aerix-otp-input')) return;
-            e.target.value = e.target.value.replace(/\D/g, '').slice(0, 1);
-            e.target.classList.remove('border-red-500');
-            if (e.target.value) {
-                const inputs = [...document.querySelectorAll('.aerix-otp-input')];
-                const index = inputs.indexOf(e.target);
-                inputs[index + 1]?.focus();
-            }
-        });
-
-        document.addEventListener('keydown', e => {
-            if (!e.target.classList.contains('aerix-otp-input')) return;
-            if (e.key === 'Backspace' && !e.target.value) {
-                const inputs = [...document.querySelectorAll('.aerix-otp-input')];
-                const index = inputs.indexOf(e.target);
-                inputs[index - 1]?.focus();
-            }
-            if (e.key === 'Enter') verifyAerixOtp();
-        });
-
-        document.addEventListener('paste', e => {
-            if (!e.target.classList.contains('aerix-otp-input')) return;
-            const pasted = (e.clipboardData?.getData('text') || '').replace(/\D/g, '').slice(0, 4);
-            if (!pasted) return;
-            e.preventDefault();
-            const inputs = [...document.querySelectorAll('.aerix-otp-input')];
-            inputs.forEach((input, index) => input.value = pasted[index] || '');
-            inputs[Math.min(pasted.length, 4) - 1]?.focus();
-        });
 
         async function logoutAccount() { try { await auth.signOut(); document.querySelectorAll('.account-menu').forEach(m => m.classList.add('hidden')); showToast(currentLang==='en'?'Signed out.':'Déconnexion réussie.'); } catch(e){ console.error(e); } }
 
