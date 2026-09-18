@@ -82,6 +82,12 @@
     
     .glass-panel-no-hover { background: rgba(10, 10, 10, 0.85); backdrop-filter: blur(35px); -webkit-backdrop-filter: blur(35px); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 8px 32px 0 rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.05); }
 
+    /* FIL DE DISCUSSION TICKETS (coaching / contact) : zone scrollable */
+    .ticket-thread-scroll { scrollbar-width: thin; }
+    .ticket-thread-scroll::-webkit-scrollbar { width: 6px; }
+    .ticket-thread-scroll::-webkit-scrollbar-thumb { background: rgba(139,92,246,.35); border-radius: 999px; }
+    .ticket-thread-scroll::-webkit-scrollbar-track { background: transparent; }
+
     /* DRAG & DROP EFFECTIFS */
     .effectif-row { transition: opacity .18s ease, box-shadow .18s ease, transform .18s ease; }
     .effectif-row.dragging { opacity: 0.45; box-shadow: 0 10px 30px rgba(0,0,0,.55), 0 0 0 1px rgba(139,92,246,.5); }
@@ -471,33 +477,33 @@
             <div class="relative border-l border-white/10 ml-4 md:ml-1/2 space-y-24 py-10">
                 <div class="relative pl-8 md:pl-12 reveal">
                     <div class="absolute w-4 h-4 bg-aerix-purple rounded-full -left-[8.5px] top-1.5 shadow-[0_0_15px_#8B5CF6]"></div>
-                    <div class="text-aerix-purple font-bold text-xl mb-2">Décembre 2025</div>
-                    <h4 class="text-2xl font-bold text-white mb-4">La Genèse sur les circuits</h4>
-                    <div class="glass-panel p-8 rounded-3xl"><p class="text-gray-400 text-sm leading-relaxed">Lancement officiel d'un championnat sur <strong class="text-white">Assetto Corsa Competizione (ACC)</strong>.</p></div>
+                    <div class="text-aerix-purple font-bold text-xl mb-2" data-i18n="history_date_1">Décembre 2025</div>
+                    <h4 class="text-2xl font-bold text-white mb-4" data-i18n="history_title_1">La Genèse sur les circuits</h4>
+                    <div class="glass-panel p-8 rounded-3xl"><p class="text-gray-400 text-sm leading-relaxed" data-i18n="history_text_1">Lancement officiel d'un championnat sur <strong class="text-white">Assetto Corsa Competizione (ACC)</strong>.</p></div>
                 </div>
                 <div class="relative pl-8 md:pl-12 reveal delay-100">
                     <div class="absolute w-4 h-4 bg-aerix-purple rounded-full -left-[8.5px] top-1.5 shadow-[0_0_15px_#8B5CF6]"></div>
-                    <div class="text-aerix-purple font-bold text-xl mb-2">Février 2026</div>
-                    <h4 class="text-2xl font-bold text-white mb-4">L'ère de l'Endurance</h4>
-                    <div class="glass-panel p-8 rounded-3xl"><p class="text-gray-400 text-sm leading-relaxed">Débuts remarqués sur <strong class="text-white">Le Mans Ultimate</strong>. La stratégie devient le cœur de notre pôle Motorsport.</p></div>
+                    <div class="text-aerix-purple font-bold text-xl mb-2" data-i18n="history_date_2">Février 2026</div>
+                    <h4 class="text-2xl font-bold text-white mb-4" data-i18n="history_title_2">L'ère de l'Endurance</h4>
+                    <div class="glass-panel p-8 rounded-3xl"><p class="text-gray-400 text-sm leading-relaxed" data-i18n="history_text_2">Débuts remarqués sur <strong class="text-white">Le Mans Ultimate</strong>. La stratégie devient le cœur de notre pôle Motorsport.</p></div>
                 </div>
                 <div class="relative pl-8 md:pl-12 reveal delay-200">
                     <div class="absolute w-4 h-4 bg-aerix-purple rounded-full -left-[8.5px] top-1.5 shadow-[0_0_15px_#8B5CF6]"></div>
-                    <div class="text-aerix-purple font-bold text-xl mb-2">Mai 2026</div>
-                    <h4 class="text-2xl font-bold text-white mb-4">L'expansion Esport</h4>
-                    <div class="glass-panel p-8 rounded-3xl"><p class="text-gray-400 text-sm leading-relaxed">Entrée officielle sur <strong class="text-white">Rocket League</strong> avec des joueurs allant de Grand Champion 2 à SSL.</p></div>
+                    <div class="text-aerix-purple font-bold text-xl mb-2" data-i18n="history_date_3">Mai 2026</div>
+                    <h4 class="text-2xl font-bold text-white mb-4" data-i18n="history_title_3">L'expansion Esport</h4>
+                    <div class="glass-panel p-8 rounded-3xl"><p class="text-gray-400 text-sm leading-relaxed" data-i18n="history_text_3">Entrée officielle sur <strong class="text-white">Rocket League</strong> avec des joueurs allant de Grand Champion 2 à SSL.</p></div>
                 </div>
                 <div class="relative pl-8 md:pl-12 reveal delay-300">
                     <div class="absolute w-4 h-4 bg-aerix-purple rounded-full -left-[8.5px] top-1.5 shadow-[0_0_15px_#8B5CF6]"></div>
-                    <div class="text-aerix-purple font-bold text-xl mb-2">Juin 2026</div>
-                    <h4 class="text-2xl font-bold text-white mb-4">L'arrivée d'iRacing</h4>
-                    <div class="glass-panel p-8 rounded-3xl"><p class="text-gray-400 text-sm leading-relaxed">AERIX étend son pôle Motorsport avec l'arrivée d'<strong class="text-white">iRacing</strong>, renforçant sa présence sur la scène sim-racing.</p></div>
+                    <div class="text-aerix-purple font-bold text-xl mb-2" data-i18n="history_date_4">Juin 2026</div>
+                    <h4 class="text-2xl font-bold text-white mb-4" data-i18n="history_title_4">L'arrivée d'iRacing</h4>
+                    <div class="glass-panel p-8 rounded-3xl"><p class="text-gray-400 text-sm leading-relaxed" data-i18n="history_text_4">AERIX étend son pôle Motorsport avec l'arrivée d'<strong class="text-white">iRacing</strong>, renforçant sa présence sur la scène sim-racing.</p></div>
                 </div>
                 <div class="relative pl-8 md:pl-12 reveal delay-400">
                     <div class="absolute w-4 h-4 bg-aerix-purple rounded-full -left-[8.5px] top-1.5 shadow-[0_0_15px_#8B5CF6]"></div>
-                    <div class="text-aerix-purple font-bold text-xl mb-2">Août 2026</div>
-                    <h4 class="text-2xl font-bold text-white mb-4">L'arrivée de RBR</h4>
-                    <div class="glass-panel p-8 rounded-3xl"><p class="text-gray-400 text-sm leading-relaxed">Nouvelle division sur <strong class="text-white">Richard Burns Rally</strong>, confirmant l'ambition d'AERIX sur le rallye virtuel.</p></div>
+                    <div class="text-aerix-purple font-bold text-xl mb-2" data-i18n="history_date_5">Août 2026</div>
+                    <h4 class="text-2xl font-bold text-white mb-4" data-i18n="history_title_5">L'arrivée de RBR</h4>
+                    <div class="glass-panel p-8 rounded-3xl"><p class="text-gray-400 text-sm leading-relaxed" data-i18n="history_text_5">Nouvelle division sur <strong class="text-white">Richard Burns Rally</strong>, confirmant l'ambition d'AERIX sur le rallye virtuel.</p></div>
                 </div>
             </div>
         </main>
@@ -1361,6 +1367,11 @@
                 roster_subtitle: "Divisions", roster_title: "Nos équipes",
                 results_subtitle: "Compétitions", results_title: "Résultats & Palmarès",
                 history_subtitle: "L'Héritage", history_title: "L'Histoire d'AERIX", history_desc: "Née d'une passion commune pour le sport automobile virtuel et l'esport, AERIX n'a cessé d'évoluer.",
+                history_date_1: "Décembre 2025", history_title_1: "La Genèse sur les circuits", history_text_1: "Lancement officiel d'un championnat sur <strong class=\"text-white\">Assetto Corsa Competizione (ACC)</strong>.",
+                history_date_2: "Février 2026", history_title_2: "L'ère de l'Endurance", history_text_2: "Débuts remarqués sur <strong class=\"text-white\">Le Mans Ultimate</strong>. La stratégie devient le cœur de notre pôle Motorsport.",
+                history_date_3: "Mai 2026", history_title_3: "L'expansion Esport", history_text_3: "Entrée officielle sur <strong class=\"text-white\">Rocket League</strong> avec des joueurs allant de Grand Champion 2 à SSL.",
+                history_date_4: "Juin 2026", history_title_4: "L'arrivée d'iRacing", history_text_4: "AERIX étend son pôle Motorsport avec l'arrivée d'<strong class=\"text-white\">iRacing</strong>, renforçant sa présence sur la scène sim-racing.",
+                history_date_5: "Août 2026", history_title_5: "L'arrivée de RBR", history_text_5: "Nouvelle division sur <strong class=\"text-white\">Richard Burns Rally</strong>, confirmant l'ambition d'AERIX sur le rallye virtuel.",
                 shop_subtitle: "Shop", shop_title: "Équipement Officiel",
                 partners_subtitle: "Sponsors & Affiliés", partners_title: "Partenaires Techniques",
                 news_subtitle: "Actualités", news_title: "Annonces & Mises à jour", account_create: "Créer un compte", account_profile: "Mon compte", account_login: "Connexion", account_logout: "Déconnexion", admin_access: "Administration",
@@ -1392,6 +1403,11 @@
                 roster_subtitle: "Divisions", roster_title: "Our Rosters",
                 results_subtitle: "Competitions", results_title: "Results & Achievements",
                 history_subtitle: "The Legacy", history_title: "AERIX History", history_desc: "Born from a shared passion for virtual motorsport and esports, AERIX has continuously evolved.",
+                history_date_1: "December 2025", history_title_1: "The Genesis on track", history_text_1: "Official launch of a championship on <strong class=\"text-white\">Assetto Corsa Competizione (ACC)</strong>.",
+                history_date_2: "February 2026", history_title_2: "The Endurance era", history_text_2: "Standout debut on <strong class=\"text-white\">Le Mans Ultimate</strong>. Strategy becomes the core of our Motorsport division.",
+                history_date_3: "May 2026", history_title_3: "Esports expansion", history_text_3: "Official entry into <strong class=\"text-white\">Rocket League</strong> with players ranging from Grand Champion 2 to SSL.",
+                history_date_4: "June 2026", history_title_4: "iRacing joins", history_text_4: "AERIX expands its Motorsport division with the arrival of <strong class=\"text-white\">iRacing</strong>, strengthening its presence on the sim-racing scene.",
+                history_date_5: "August 2026", history_title_5: "RBR joins", history_text_5: "New division on <strong class=\"text-white\">Richard Burns Rally</strong>, confirming AERIX's ambition in virtual rally.",
                 shop_subtitle: "Shop", shop_title: "Official Merch",
                 partners_subtitle: "Sponsors & Affiliates", partners_title: "Technical Partners",
                 news_subtitle: "News", news_title: "Announcements & Updates", account_create: "Create account", account_profile: "My account", account_login: "Sign in", account_logout: "Sign out", admin_access: "Admin panel",
@@ -1505,7 +1521,7 @@
             document.documentElement.lang = lang;
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
-                if(i18n[lang][key]) el.textContent = i18n[lang][key];
+                if(i18n[lang][key]) el.innerHTML = i18n[lang][key];
             });
             document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
                 const key = el.getAttribute('data-i18n-placeholder');
@@ -2514,10 +2530,10 @@ function checkAdminSessionTimeout() {
             const msgs = Array.isArray(t.messages) ? [...t.messages] : [];
             if (!msgs.length && t.adminReply) msgs.push({ from: 'admin', text: t.adminReply });
             if (!msgs.length) return '';
-            return `<div class="mt-4 pt-4 border-t border-white/10 space-y-2.5">${msgs.map(m => {
+            return `<div class="mt-4 pt-4 border-t border-white/10"><div class="max-h-64 overflow-y-auto pr-1 space-y-2.5 ticket-thread-scroll">${msgs.map(m => {
                 const isAdmin = m.from === 'admin';
                 return `<div class="flex ${isAdmin ? 'justify-start' : 'justify-end'}"><div class="max-w-[85%] rounded-xl px-3.5 py-2.5 text-xs whitespace-pre-wrap break-words ${isAdmin ? 'bg-aerix-purple/15 border border-aerix-purple/25 text-gray-200' : 'bg-white/5 border border-white/10 text-gray-300'}"><div class="text-[9px] uppercase tracking-widest font-bold mb-1 ${isAdmin ? 'text-aerix-purple' : 'text-gray-500'}">${isAdmin ? 'AERIX' : (currentLang==='en'?'You':'Toi')}</div>${escapeHtml(m.text || '')}</div></div>`;
-            }).join('')}</div>`;
+            }).join('')}</div></div>`;
         }
         // Zone de saisie de réponse, affichée aussi bien côté admin que côté pilote.
         // "from" ('admin' ou 'user') détermine qui envoie le message et quel drapeau non-lu poser.
@@ -2554,6 +2570,15 @@ function checkAdminSessionTimeout() {
                 const coachingInfo = isCoaching ? `<div class="mt-3 grid grid-cols-2 gap-2 text-[11px] text-gray-400"><div><span class="text-gray-600">${currentLang==='en'?'Game':'Jeu'} :</span> ${escapeHtml(t.coachGame||'—')}</div><div><span class="text-gray-600">${currentLang==='en'?'Format':'Format'} :</span> ${escapeHtml(t.coachFormat||'—')}</div><div><span class="text-gray-600">${currentLang==='en'?'Duration':'Durée'} :</span> ${escapeHtml(t.coachDuration||'—')}</div><div><span class="text-gray-600">${currentLang==='en'?'Date':'Date'} :</span> ${escapeHtml(t.coachDate||'—')}</div></div>` : '';
                 return `<div class="glass-panel p-5 rounded-2xl"><div class="flex flex-col md:flex-row md:items-start md:justify-between gap-3"><div><div class="text-white font-bold text-base">${escapeHtml(t.subject||'—')}</div><div class="text-[10px] uppercase tracking-widest text-aerix-purple mt-2">${escapeHtml(t.category||'Autre demande')}</div></div><span class="self-start px-2.5 py-1 rounded-full text-[10px] font-bold ${cls}">${labels[status]||status}</span></div><div class="mt-4 text-xs text-gray-400 whitespace-pre-wrap break-words">${escapeHtml(t.message||'')}</div>${coachingInfo}${buildTicketThreadHTML(t)}${buildTicketReplyBoxHTML(t,'user')}</div>`;
             }).join('') : `<p class="text-gray-500 text-sm italic">${currentLang==='en'?'No active tickets.':'Aucun ticket en cours.'}</p>`;
+            scrollTicketThreadsToBottom(el);
+        }
+        // Fait défiler chaque fil de discussion (tickets/coaching) tout en bas après rendu,
+        // pour toujours afficher le dernier message reçu par défaut.
+        function scrollTicketThreadsToBottom(container) {
+            if (!container) return;
+            requestAnimationFrame(() => {
+                container.querySelectorAll('.ticket-thread-scroll').forEach(el => { el.scrollTop = el.scrollHeight; });
+            });
         }
         async function updateTicketStatus(id, status) {
             if(!hasAdminAccess() || !['new','progress','done','archived'].includes(status)) return;
@@ -2715,7 +2740,7 @@ function checkAdminSessionTimeout() {
                 const isAvailable = !!globalCoachAvailability[key] && key >= todayKey;
                 const isSelected = coachingSelectedDate === key;
                 if (isAvailable) {
-                    cells += `<button type="button" onclick="selectCoachingDate('${key}')" class="aspect-square rounded-xl text-xs font-bold flex items-center justify-center transition-all duration-300 ${isSelected ? 'bg-aerix-purple text-white shadow-[0_0_18px_rgba(139,92,246,0.9)] scale-105' : 'bg-aerix-purple/15 text-white border border-aerix-purple/50 hover:bg-aerix-purple/30 hover:shadow-[0_0_14px_rgba(139,92,246,0.6)]'}">${d}</button>`;
+                    cells += `<button type="button" onclick="selectCoachingDate('${key}')" class="aspect-square rounded-xl text-xs font-bold flex items-center justify-center transition-all duration-300 border border-aerix-purple/60 ${isSelected ? 'bg-aerix-purple text-white shadow-[0_0_22px_rgba(139,92,246,1)] scale-105' : 'bg-aerix-purple/15 text-white shadow-[0_0_12px_rgba(139,92,246,0.55)] hover:bg-aerix-purple/30 hover:shadow-[0_0_20px_rgba(139,92,246,0.85)] hover:scale-105'}">${d}</button>`;
                 } else {
                     cells += `<div class="aspect-square rounded-xl text-xs flex items-center justify-center text-gray-600 bg-white/[0.02] border border-white/5">${d}</div>`;
                 }
@@ -2891,6 +2916,8 @@ function checkAdminSessionTimeout() {
                 const coachingOnly = globalContactRequests.filter(t => t.type === 'coaching');
                 coachingEl.innerHTML = coachingOnly.length ? coachingOnly.map(t => renderAdminTicketCard(t)).join('') : `<p class="text-gray-500 text-sm italic">${currentLang==='en'?'No coaching requests.':'Aucune demande de coaching.'}</p>`;
             }
+            scrollTicketThreadsToBottom(contactEl);
+            scrollTicketThreadsToBottom(coachingEl);
             const avisEl = document.getElementById('admin-list-avis');
             if (avisEl) {
                 avisEl.innerHTML = globalReviews.length ? globalReviews.map(r => renderAdminReviewCard(r)).join('') : `<p class="text-gray-500 text-sm italic">${currentLang==='en'?'No reviews yet.':'Aucun avis pour le moment.'}</p>`;
@@ -3344,6 +3371,17 @@ function checkAdminSessionTimeout() {
 
             updateNavPill(document.getElementById('nav-' + pageId));
             refreshNavPill();
+
+            // Masquer le bouton/panel de l'assistant IA dans la console d'administration
+            const assistantWidget = document.getElementById('aerix-assistant');
+            if (assistantWidget) {
+                if (pageId === 'admin') {
+                    if (aerixAssistantOpen) toggleAerixAssistant(false);
+                    assistantWidget.style.display = 'none';
+                } else {
+                    assistantWidget.style.display = '';
+                }
+            }
 
             document.querySelectorAll('.animate-fade-up').forEach(el => {
                 el.style.animation = 'none';
