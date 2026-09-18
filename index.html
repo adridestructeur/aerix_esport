@@ -263,7 +263,10 @@
     /* ASSISTANT AERIX */
     /* Positionné au-dessus du bouton "retour en haut" (bottom-6/right-6) pour ne jamais le
        chevaucher, et calé sur les zones sûres (encoche / barre de gestes) sur mobile. */
-    #aerix-assistant { position: fixed; right: max(32px, env(safe-area-inset-right)); bottom: calc(92px + env(safe-area-inset-bottom)); z-index: 180; }
+    #aerix-assistant { position: fixed; right: max(32px, env(safe-area-inset-right)); bottom: calc(92px + env(safe-area-inset-bottom)); z-index: 180; display: flex; flex-direction: column; align-items: flex-end; pointer-events: none; }
+    #aerix-assistant > * { pointer-events: auto; }
+    #aerix-assistant > #aerix-assistant-panel { pointer-events: none; }
+    #aerix-assistant > #aerix-assistant-panel.open { pointer-events: auto; }
     /* Le panneau est totalement retiré du rendu (display:none) tant qu'il n'est pas ouvert :
        un panneau avec backdrop-filter toujours présent dans le DOM, même invisible (opacity:0),
        continue d'être peint par le moteur de rendu. Sur mobile, ce blur permanent combiné aux
@@ -459,6 +462,10 @@
             <div class="mb-14 text-center animate-fade-up opacity-0">
                 <h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2" data-i18n="results_subtitle">Compétitions</h2>
                 <h3 class="text-4xl font-black text-white mb-8" data-i18n="results_title">Résultats & Palmarès</h3>
+                <div class="flex flex-wrap justify-center gap-3 mb-4" id="palmares-view-toggle">
+                    <button onclick="setPalmaresView('resultats')" data-view="resultats" class="filter-btn active" data-i18n="results_tab_results">Résultats</button>
+                    <button onclick="setPalmaresView('palmares')" data-view="palmares" class="filter-btn" data-i18n="results_tab_achievements">Palmarès</button>
+                </div>
                 <div class="flex flex-wrap justify-center gap-3" id="filters-palmares">
                     <button onclick="setFilter('palmares', 'Tous')" data-filter="Tous" class="filter-btn active">Tous</button>
                     <button onclick="setFilter('palmares', 'Rocket League')" data-filter="Rocket League" class="filter-btn">Rocket League</button>
@@ -468,6 +475,7 @@
                 </div>
             </div>
             <div id="palmares-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+            <div id="achievements-container" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </main>
 
         <!-- 4. HISTOIRE -->
@@ -1077,6 +1085,7 @@
             <!-- TAB: PALMARÈS -->
             <div id="admin-tab-palmares" class="admin-tab hidden space-y-8">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="admin-list-palmares"></div>
+                <div><h4 class="text-sm font-bold text-gray-300 uppercase tracking-widest mb-3">Palmarès globaux</h4><div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="admin-list-achievements"></div></div>
                 <div class="glass-panel glass-panel-form p-6 rounded-2xl border border-white/5">
                     <h4 id="palmares-form-title" class="text-lg font-bold text-white mb-6 border-b border-white/10 pb-2">Déclarer un Résultat</h4>
                     <input type="hidden" id="edit-palmares-id" value="">
@@ -1155,6 +1164,27 @@
                     <div class="flex gap-3">
                         <button id="palmares-cancel-btn" onclick="resetPalmaresForm()" class="hidden px-6 py-3.5 bg-white/5 border border-white/10 hover:bg-white/10 text-white rounded-xl text-sm font-bold transition">Annuler</button>
                         <button onclick="savePalmares()" class="flex-1 bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition shadow-[0_0_15px_rgba(139,92,246,0.3)]">Enregistrer le Résultat</button>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap gap-3">
+                    <button type="button" onclick="toggleAchievementForm(true)" class="px-5 py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-aerix-purple/15 hover:border-aerix-purple/40 text-white text-sm font-bold transition">+ Ajouter un palmarès</button>
+                    <button type="button" onclick="toggleAchievementForm(false)" class="px-5 py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-gray-300 text-sm font-bold transition">Gérer les palmarès</button>
+                </div>
+
+                <div id="achievement-form-panel" class="hidden glass-panel glass-panel-form p-6 rounded-2xl border border-white/5">
+                    <h4 id="achievement-form-title" class="text-lg font-bold text-white mb-6 border-b border-white/10 pb-2">Ajouter un palmarès</h4>
+                    <input type="hidden" id="edit-achievement-id" value="">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <input type="text" id="add-achievement-title" placeholder="Intitulé (ex: Tournois remportés)" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple transition font-bold">
+                        <input type="text" id="add-achievement-value" placeholder="Valeur (ex: 12 ou 1 250 €)" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple transition font-black">
+                        <input type="text" id="add-achievement-category" placeholder="Catégorie (ex: Rocket League, Motorsport...)" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple transition">
+                        <input type="text" id="add-achievement-icon" maxlength="4" placeholder="Icône (ex: 🏆)" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple transition">
+                    </div>
+                    <textarea id="add-achievement-description" placeholder="Description courte (optionnelle)..." class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm h-24 mb-6 outline-none focus:border-aerix-purple transition resize-y"></textarea>
+                    <div class="flex gap-3">
+                        <button type="button" onclick="resetAchievementForm()" class="px-6 py-3.5 bg-white/5 border border-white/10 hover:bg-white/10 text-white rounded-xl text-sm font-bold transition">Annuler</button>
+                        <button type="button" onclick="saveAchievement()" class="flex-1 bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition shadow-[0_0_15px_rgba(139,92,246,0.3)]">Enregistrer le palmarès</button>
                     </div>
                 </div>
             </div>
@@ -1355,7 +1385,7 @@
         let adminCoachingCalendarDate = new Date();
 
         // VARIABLES GLOBALES
-        let globalShop = [], globalEffectifs = [], globalPalmares = [], globalAnnonces = [], globalPartners = [];
+        let globalShop = [], globalEffectifs = [], globalPalmares = [], globalAchievements = [], globalAnnonces = [], globalPartners = [];
         let currentFilters = { effectifs: 'Tous', annonces: 'Tous', palmares: 'Tous' };
         
         // I18N (LANGUES)
@@ -1369,7 +1399,7 @@
                 card_2_title: "Performance & Élite", card_2_desc: "Viser les sommets dans les compétitions majeures sur Rocket League et les circuits d'endurance virtuels.",
                 card_3_title: "Esprit d'équipe", card_3_desc: "Cohésion, communication stratégique et la force d'un collectif uni pour surmonter tous les défis.",
                 roster_subtitle: "Divisions", roster_title: "Nos équipes",
-                results_subtitle: "Compétitions", results_title: "Résultats & Palmarès",
+                results_subtitle: "Compétitions", results_title: "Résultats & Palmarès", results_tab_results: "Résultats", results_tab_achievements: "Palmarès",
                 history_subtitle: "L'Héritage", history_title: "L'Histoire d'AERIX", history_desc: "Née d'une passion commune pour le sport automobile virtuel et l'esport, AERIX n'a cessé d'évoluer.",
                 history_date_1: "Décembre 2025", history_title_1: "La Genèse sur les circuits", history_text_1: "Lancement officiel d'un championnat sur <strong class=\"text-white\">Assetto Corsa Competizione (ACC)</strong>.",
                 history_date_2: "Février 2026", history_title_2: "L'ère de l'Endurance", history_text_2: "Débuts remarqués sur <strong class=\"text-white\">Le Mans Ultimate</strong>. La stratégie devient le cœur de notre pôle Motorsport.",
@@ -1405,7 +1435,7 @@
                 card_2_title: "Elite Performance", card_2_desc: "Aim for the top in major Rocket League competitions and virtual endurance circuits.",
                 card_3_title: "Team Spirit", card_3_desc: "Cohesion, strategic communication, and the strength of a united collective.",
                 roster_subtitle: "Divisions", roster_title: "Our Rosters",
-                results_subtitle: "Competitions", results_title: "Results & Achievements",
+                results_subtitle: "Competitions", results_title: "Results & Achievements", results_tab_results: "Results", results_tab_achievements: "Achievements",
                 history_subtitle: "The Legacy", history_title: "AERIX History", history_desc: "Born from a shared passion for virtual motorsport and esports, AERIX has continuously evolved.",
                 history_date_1: "December 2025", history_title_1: "The Genesis on track", history_text_1: "Official launch of a championship on <strong class=\"text-white\">Assetto Corsa Competizione (ACC)</strong>.",
                 history_date_2: "February 2026", history_title_2: "The Endurance era", history_text_2: "Standout debut on <strong class=\"text-white\">Le Mans Ultimate</strong>. Strategy becomes the core of our Motorsport division.",
@@ -1559,6 +1589,7 @@
             db.collection("shop").onSnapshot((snapshot) => { globalShop = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderShop(); renderAdminLists(); });
             db.collection("effectifs").onSnapshot((snapshot) => { globalEffectifs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderEffectifs(); renderAdminLists(); });
             db.collection("palmares").onSnapshot((snapshot) => { globalPalmares = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderPalmares(); renderAdminLists(); });
+            db.collection("achievements").onSnapshot((snapshot) => { globalAchievements = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderAchievements(); renderAdminLists(); }, () => { globalAchievements = []; renderAchievements(); renderAdminLists(); });
             db.collection("annonces").onSnapshot((snapshot) => { globalAnnonces = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); globalAnnonces = sortByDateDesc(globalAnnonces); renderAnnonces(); renderAdminLists(); }, error => { globalAnnonces = []; db.collection("annonces").get().then(s => { globalAnnonces = s.docs.map(doc => ({ id: doc.id, ...doc.data() })); globalAnnonces = sortByDateDesc(globalAnnonces); renderAnnonces(); renderAdminLists(); }); });
             db.collection("partners").onSnapshot((snapshot) => { globalPartners = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderPartners(); renderAdminLists(); });
             db.collection("accounts").onSnapshot((snapshot) => { globalAccounts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderAdminLists(); }, () => { globalAccounts = []; renderAdminLists(); });
@@ -1888,6 +1919,44 @@
             if (match) return `P${match[1]}`;
 
             return raw;
+        }
+
+        // RÉSULTATS & PALMARÈS — BASCULE FRONT-END
+        let palmaresView = 'resultats';
+        function setPalmaresView(view) {
+            palmaresView = view === 'palmares' ? 'palmares' : 'resultats';
+            document.querySelectorAll('#palmares-view-toggle .filter-btn').forEach(btn => btn.classList.toggle('active', btn.getAttribute('data-view') === palmaresView));
+            const resultsContainer = document.getElementById('palmares-container');
+            const achievementsContainer = document.getElementById('achievements-container');
+            const filters = document.getElementById('filters-palmares');
+            if (resultsContainer) resultsContainer.classList.toggle('hidden', palmaresView !== 'resultats');
+            if (achievementsContainer) achievementsContainer.classList.toggle('hidden', palmaresView !== 'palmares');
+            if (filters) filters.classList.toggle('hidden', palmaresView !== 'resultats');
+            if (palmaresView === 'resultats') renderPalmares();
+            else renderAchievements();
+        }
+
+        function renderAchievements() {
+            const container = document.getElementById('achievements-container');
+            if (!container) return;
+            const items = [...(globalAchievements || [])].sort((a,b) => {
+                const ao = Number(a.order ?? 999999), bo = Number(b.order ?? 999999);
+                if (ao !== bo) return ao - bo;
+                const ad = a.createdAt?.toDate ? a.createdAt.toDate().getTime() : new Date(a.createdAt || 0).getTime();
+                const bd = b.createdAt?.toDate ? b.createdAt.toDate().getTime() : new Date(b.createdAt || 0).getTime();
+                return bd - ad;
+            });
+            container.innerHTML = items.length ? items.map((a, index) => `
+                <div class="glass-panel p-6 rounded-3xl reveal delay-${(index%3)*100} border-t-2 border-t-aerix-purple/70">
+                    <div class="flex items-start justify-between gap-4">
+                        <div class="w-12 h-12 shrink-0 rounded-2xl bg-aerix-purple/10 border border-aerix-purple/30 flex items-center justify-center text-2xl shadow-[inset_0_0_12px_rgba(139,92,246,.18)]">${escapeHtml(a.icon || '🏆')}</div>
+                        <span class="text-[10px] uppercase tracking-widest text-gray-500 font-bold">${escapeHtml(a.category || 'AERIX')}</span>
+                    </div>
+                    <div class="mt-6 text-3xl font-black text-white tracking-tight">${escapeHtml(a.value || '—')}</div>
+                    <h4 class="text-lg font-bold text-white mt-2">${escapeHtml(a.title || 'Palmarès')}</h4>
+                    ${a.description ? `<p class="text-sm text-gray-400 leading-relaxed mt-2">${escapeHtml(a.description)}</p>` : ''}
+                </div>`).join('') : `<p class="text-gray-500 text-sm italic col-span-full text-center">${currentLang==='en'?'No achievements yet.':'Aucun palmarès pour le moment.'}</p>`;
+            setTimeout(revealActiveElements, 20);
         }
 
         // RÉSULTATS (PALMARÈS) FRONT-END
@@ -2245,6 +2314,7 @@ function checkAdminSessionTimeout() {
                     <button onclick="toggleAccountMenu(event, '${menuId}')" class="account-trigger${isMobile ? '-mobile' : ''} relative text-xs text-white transition px-4 py-1.5 rounded-full border border-aerix-purple/40 bg-aerix-purple/10 hover:bg-aerix-purple/20 font-medium flex items-center gap-2">
                         ${avatarHtml}
                         <span>${escapeHtml(currentAccount.username || currentUser.email || 'Account')}</span>
+                        ${hasAdminAccess() ? `<span class="admin-notif-badge hidden min-w-[18px] h-[18px] px-1 rounded-full bg-red-500 text-white text-[10px] font-black flex items-center justify-center shadow-[0_0_10px_rgba(239,68,68,0.8)] border border-black/40">1</span>` : ''}
                         <span>▾</span>
                         <span class="tickets-notif-badge hidden absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-aerix-purple text-white text-[10px] font-black flex items-center justify-center shadow-[0_0_10px_rgba(139,92,246,0.8)] border border-black/40">1</span>
                     </button>
@@ -2257,7 +2327,7 @@ function checkAdminSessionTimeout() {
                             <div class="min-w-0"><div class="text-white text-xs font-bold truncate">${escapeHtml(currentAccount.username || '')}</div><div class="text-gray-500 text-[10px] truncate">${escapeHtml(currentAccount.email || currentUser.email || '')}</div></div>
                         </div>
                         <button onclick="openTicketsModal()" class="account-menu-item w-full text-left px-3 py-2.5 text-xs font-bold text-white rounded-xl flex items-center justify-between">🎫 ${currentLang === 'en' ? 'Tickets' : 'Tickets'}<span class="tickets-notif-badge hidden min-w-[18px] h-[18px] px-1 rounded-full bg-aerix-purple text-white text-[10px] font-black flex items-center justify-center">1</span></button>
-                        ${hasAdminAccess() ? `<button onclick="openAdminFromAccount()" class="account-menu-item w-full text-left px-3 py-2.5 text-xs font-bold text-white rounded-xl">${currentLang === 'en' ? 'Admin panel' : 'Administration'}</button>` : ''}
+                        ${hasAdminAccess() ? `<button onclick="openAdminFromAccount()" class="account-menu-item w-full text-left px-3 py-2.5 text-xs font-bold text-white rounded-xl flex items-center justify-between">${currentLang === 'en' ? 'Admin panel' : 'Administration'}<span class="admin-notif-badge hidden min-w-[18px] h-[18px] px-1 rounded-full bg-red-500 text-white text-[10px] font-black flex items-center justify-center">1</span></button>` : ''}
                         <button onclick="logoutAccount()" class="account-menu-item w-full text-left px-3 py-2.5 text-xs font-bold text-gray-300 rounded-xl">${currentLang === 'en' ? 'Sign out' : 'Déconnexion'}</button>
                     </div>
                 </div>` : `
@@ -2477,7 +2547,7 @@ function checkAdminSessionTimeout() {
             const message = document.getElementById('contact-message').value.trim();
             if (!subject || !message) return showToast(currentLang==='en'?'Subject and message are required.':'Sujet et message obligatoires.','error');
             try {
-                await db.collection('contactRequests').add({ uid: currentUser.uid, username: currentAccount.username || '', email: currentUser.email || currentAccount.email || '', category, subject, message, status: 'new', adminReply: '', messages: [], unreadByUser: false, unreadByAdmin: false, createdAt: firebase.firestore.FieldValue.serverTimestamp(), updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+                await db.collection('contactRequests').add({ uid: currentUser.uid, username: currentAccount.username || '', email: currentUser.email || currentAccount.email || '', category, subject, message, status: 'new', adminReply: '', messages: [], unreadByUser: false, unreadByAdmin: true, createdAt: firebase.firestore.FieldValue.serverTimestamp(), updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
                 document.getElementById('contact-subject').value = '';
                 document.getElementById('contact-message').value = '';
                 closeContactModal();
@@ -2527,6 +2597,43 @@ function checkAdminSessionTimeout() {
                 if (count > 0) { b.textContent = count > 9 ? '9+' : String(count); b.classList.remove('hidden'); }
                 else b.classList.add('hidden');
             });
+            updateAdminNotifBadge();
+        }
+        // Pastille de notification admin/owner : compte les demandes de coaching, avis de
+        // contact et autres tickets non encore traités (nouveaux ou avec une réponse du
+        // joueur non lue par l'admin). Affichée à côté du nom du compte, comme le badge
+        // "tickets" déjà existant côté membre.
+        function updateAdminNotifBadge() {
+            if (!hasAdminAccess()) {
+                document.querySelectorAll('.admin-notif-badge').forEach(b => b.classList.add('hidden'));
+                return;
+            }
+            const ticketsCount = (globalContactRequests || []).filter(t => t.unreadByAdmin).length;
+            const reviewsCount = (globalReviews || []).filter(r => r.readByAdmin === false).length;
+            const count = ticketsCount + reviewsCount;
+            document.querySelectorAll('.admin-notif-badge').forEach(b => {
+                if (count > 0) { b.textContent = count > 9 ? '9+' : String(count); b.classList.remove('hidden'); }
+                else b.classList.add('hidden');
+            });
+        }
+        // Marque comme traités (lus) les tickets/avis de l'onglet admin qu'on vient d'ouvrir,
+        // pour faire redescendre la pastille de notification — même principe que
+        // markTicketsAsRead() côté joueur.
+        async function markAdminTicketsAsRead(tab) {
+            if (!hasAdminAccess()) return;
+            try {
+                if (tab === 'avis') {
+                    const toClear = (globalReviews || []).filter(r => r.readByAdmin === false);
+                    if (toClear.length) await Promise.all(toClear.map(r => db.collection('reviews').doc(r.id).update({ readByAdmin: true })));
+                    return;
+                }
+                const wantedType = tab === 'coaching' ? 'coaching' : null; // 'contact' regroupe tout sauf coaching
+                const toClear = (globalContactRequests || []).filter(t => {
+                    if (!t.unreadByAdmin) return false;
+                    return wantedType ? t.type === wantedType : t.type !== 'coaching';
+                });
+                if (toClear.length) await Promise.all(toClear.map(t => db.collection('contactRequests').doc(t.id).update({ unreadByAdmin: false })));
+            } catch(e) { console.error(e); }
         }
         // ============ FIL DE DISCUSSION D'UN TICKET (admin <-> pilote) ============
         // Un ticket stocke désormais un tableau "messages" ({from:'admin'|'user', text, at}),
@@ -2756,6 +2863,7 @@ function checkAdminSessionTimeout() {
                     username: currentAccount.username || '',
                     rating: reviewRating,
                     comment: comment,
+                    readByAdmin: false,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 showToast(currentLang === 'en' ? 'Review published!' : 'Avis publié !');
@@ -2838,7 +2946,7 @@ function checkAdminSessionTimeout() {
                     email: currentUser.email || currentAccount.email || '',
                     category: 'Coaching',
                     subject, message,
-                    status: 'new', adminReply: '', messages: [], unreadByUser: false, unreadByAdmin: false,
+                    status: 'new', adminReply: '', messages: [], unreadByUser: false, unreadByAdmin: true,
                     type: 'coaching',
                     coachDiscord: discord,
                     coachGame: game,
@@ -2954,6 +3062,7 @@ function checkAdminSessionTimeout() {
         });
 
         function renderAdminLists() {
+            updateAdminNotifBadge();
             const usersEl = document.getElementById('admin-list-users');
             if (usersEl) {
                 usersEl.innerHTML = globalAccounts.length ? globalAccounts.map(u => {
@@ -2967,6 +3076,10 @@ function checkAdminSessionTimeout() {
             const sortedAdminEffectifs = [...globalEffectifs].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
             document.getElementById('admin-list-effectifs').innerHTML = sortedAdminEffectifs.map((r, idx) => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center effectif-row" draggable="true" data-id="${r.id}" ondragstart="dragEffectifStart(event)" ondragend="dragEffectifEnd(event)" ondragover="dragEffectifOver(event)" ondrop="dropEffectif(event)"><div class="flex items-center gap-2"><div class="effectif-drag-handle cursor-grab active:cursor-grabbing text-gray-500 hover:text-white transition px-1" title="Glisser pour réordonner"><svg width="10" height="16" viewBox="0 0 10 16" fill="currentColor"><circle cx="2" cy="2" r="1.5"/><circle cx="8" cy="2" r="1.5"/><circle cx="2" cy="8" r="1.5"/><circle cx="8" cy="8" r="1.5"/><circle cx="2" cy="14" r="1.5"/><circle cx="8" cy="14" r="1.5"/></svg></div><div class="flex flex-col gap-1"><button onclick="moveEffectif('${r.id}', -1)" ${idx === 0 ? 'disabled' : ''} class="w-6 h-6 flex items-center justify-center rounded-md bg-white/10 hover:bg-aerix-purple text-white text-xs transition disabled:opacity-20 disabled:cursor-not-allowed" title="Monter">▲</button><button onclick="moveEffectif('${r.id}', 1)" ${idx === sortedAdminEffectifs.length - 1 ? 'disabled' : ''} class="w-6 h-6 flex items-center justify-center rounded-md bg-white/10 hover:bg-aerix-purple text-white text-xs transition disabled:opacity-20 disabled:cursor-not-allowed" title="Descendre">▼</button></div><div><div class="text-white font-bold text-sm flex items-center gap-2">${r.name} <span class="bg-white/10 text-[9px] px-2 py-0.5 rounded-full">${r.players?.length||0} j.</span></div><div class="text-xs text-gray-500">${r.game || 'Général'}</div></div></div><div class="flex gap-2"><button onclick="startEditEffectif('${r.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('effectifs', '${r.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
             document.getElementById('admin-list-palmares').innerHTML = sortByDateDesc(globalPalmares).map(p => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm truncate max-w-[150px]">${p.title}</div><div class="text-xs text-gray-500">${p.game || 'Général'}</div></div><div class="flex gap-2"><button onclick="startEditPalmares('${p.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('palmares', '${p.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
+            const achievementsEl = document.getElementById('admin-list-achievements');
+            if (achievementsEl) {
+                achievementsEl.innerHTML = (globalAchievements || []).map(a => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center gap-3"><div class="min-w-0"><div class="text-white font-bold text-sm truncate">${escapeHtml(a.icon || '🏆')} ${escapeHtml(a.title || 'Palmarès')}</div><div class="text-aerix-purple text-sm font-black mt-1">${escapeHtml(a.value || '—')}</div><div class="text-xs text-gray-500 mt-1">${escapeHtml(a.category || 'AERIX')}</div></div><div class="flex gap-2 shrink-0"><button onclick="startEditAchievement('${a.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('achievements', '${a.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('') || `<p class="text-gray-500 text-sm italic col-span-full">${currentLang==='en'?'No achievements yet.':'Aucun palmarès ajouté.'}</p>`;
+            }
             document.getElementById('admin-list-partenaires').innerHTML = globalPartners.map(p => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm">${p.name}</div><div class="text-xs text-gray-500">${p.category || 'Partenaire'}</div></div><div class="flex gap-2"><button onclick="startEditPartner('${p.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('partners', '${p.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
             document.getElementById('admin-list-annonces').innerHTML = sortByDateDesc(globalAnnonces).map(a => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm truncate max-w-[200px]">${a.title}</div><div class="text-xs text-gray-500">${a.date}</div></div><div class="flex gap-2"><button onclick="startEditAnnouncement('${a.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('annonces', '${a.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
             const contactEl = document.getElementById('admin-list-contact');
@@ -3282,6 +3395,75 @@ function checkAdminSessionTimeout() {
                 if(id) await db.collection("palmares").doc(id).update(data); else await db.collection("palmares").add(data);
                 showToast("Résultat sauvegardé !"); resetPalmaresForm();
             } catch(e) { showToast("Erreur de sauvegarde", "error"); }
+        }
+
+        // --- GESTION PALMARÈS GLOBAUX ---
+        function toggleAchievementForm(show) {
+            const panel = document.getElementById('achievement-form-panel');
+            if (!panel) return;
+            panel.classList.toggle('hidden', !show);
+            if (show) {
+                resetAchievementForm();
+                panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+
+        function startEditAchievement(id) {
+            const item = (globalAchievements || []).find(a => a.id === id);
+            if (!item) return;
+            document.getElementById('edit-achievement-id').value = item.id;
+            document.getElementById('add-achievement-title').value = item.title || '';
+            document.getElementById('add-achievement-value').value = item.value || '';
+            document.getElementById('add-achievement-category').value = item.category || '';
+            document.getElementById('add-achievement-icon').value = item.icon || '🏆';
+            document.getElementById('add-achievement-description').value = item.description || '';
+            document.getElementById('achievement-form-title').innerText = 'Modifier un palmarès';
+            document.getElementById('achievement-form-panel').classList.remove('hidden');
+            document.getElementById('achievement-form-panel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function resetAchievementForm() {
+            const id = document.getElementById('edit-achievement-id');
+            if (id) id.value = '';
+            const title = document.getElementById('add-achievement-title');
+            const value = document.getElementById('add-achievement-value');
+            const category = document.getElementById('add-achievement-category');
+            const icon = document.getElementById('add-achievement-icon');
+            const desc = document.getElementById('add-achievement-description');
+            if (title) title.value = '';
+            if (value) value.value = '';
+            if (category) category.value = '';
+            if (icon) icon.value = '🏆';
+            if (desc) desc.value = '';
+            const heading = document.getElementById('achievement-form-title');
+            if (heading) heading.innerText = 'Ajouter un palmarès';
+        }
+
+        async function saveAchievement() {
+            if (!hasAdminAccess()) return;
+            const id = document.getElementById('edit-achievement-id').value;
+            const title = document.getElementById('add-achievement-title').value.trim();
+            const value = document.getElementById('add-achievement-value').value.trim();
+            const category = document.getElementById('add-achievement-category').value.trim();
+            const icon = document.getElementById('add-achievement-icon').value.trim() || '🏆';
+            const description = document.getElementById('add-achievement-description').value.trim();
+            if (!title || !value) return showToast(currentLang==='en' ? 'Title and value are required.' : 'L’intitulé et la valeur sont obligatoires.', 'error');
+            const data = { title, value, category, icon, description, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
+            try {
+                if (id) {
+                    await db.collection('achievements').doc(id).update(data);
+                } else {
+                    data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                    data.order = (globalAchievements || []).length;
+                    await db.collection('achievements').add(data);
+                }
+                showToast(currentLang==='en' ? 'Achievement saved.' : 'Palmarès enregistré !');
+                resetAchievementForm();
+                document.getElementById('achievement-form-panel')?.classList.add('hidden');
+            } catch (e) {
+                console.error(e);
+                showToast(currentLang==='en' ? 'Save failed.' : 'Erreur de sauvegarde.', 'error');
+            }
         }
 
         // --- EDITION PARTENAIRES ---
@@ -3688,6 +3870,7 @@ function checkAdminSessionTimeout() {
             void target.offsetWidth;
             target.classList.add('animate-tab-change');
             if (tab === 'coaching') renderAdminCoachingCalendar();
+            if (tab === 'contact' || tab === 'coaching' || tab === 'avis') markAdminTicketsAsRead(tab);
             ['comptes', 'boutique', 'effectifs', 'palmares', 'partenaires', 'annonces', 'contact', 'coaching', 'avis'].forEach(t => {
                 const btn = document.getElementById('tab-btn-' + t);
                 if(btn) {
@@ -3829,6 +4012,7 @@ function checkAdminSessionTimeout() {
         navigate('home');
         requestAnimationFrame(() => updateNavPill(document.getElementById('nav-home')));
         togglePalmaresFields();
+        setPalmaresView('resultats');
         initImageDropZones();
 
 // Bloquer le clic droit (menu contextuel)
