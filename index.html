@@ -3088,8 +3088,16 @@ function checkAdminSessionTimeout() {
         async function saveEffectif() {
             const id = document.getElementById('edit-effectif-id').value, name = document.getElementById('add-roster-name').value, game = document.getElementById('add-roster-game').value, desc = document.getElementById('add-roster-desc').value;
             if(!name) return showToast("Nom du roster obligatoire.", "error");
+            const data = { name, game, desc, players: tempPlayers };
+            // Garde-fou : Firestore refuse tout document dépassant ~1 Mo. On estime la taille
+            // avant l'écriture pour donner un message clair plutôt qu'un échec silencieux côté
+            // serveur (c'était la cause du "Erreur de sauvegarde" alors que "Enregistrer les
+            // modifications" sur un joueur seul, lui, ne touche pas encore Firestore).
+            const approxBytes = new Blob([JSON.stringify(data)]).size;
+            if (approxBytes > 950000) {
+                return showToast("Erreur de sauvegarde : le roster est trop volumineux (trop de photos ou photos trop lourdes cumulées). Réduis le nombre ou le poids des photos des joueurs.", "error");
+            }
             try {
-                const data = { name, game, desc, players: tempPlayers };
                 if(id) {
                     await db.collection("effectifs").doc(id).update(data);
                 } else {
@@ -3098,7 +3106,13 @@ function checkAdminSessionTimeout() {
                     await db.collection("effectifs").add(data);
                 }
                 showToast("Roster sauvegardé !"); resetEffectifForm();
-            } catch(e) { showToast("Erreur de sauvegarde", "error"); }
+            } catch(e) {
+                console.error('saveEffectif error:', e);
+                const msg = e && e.code === 'invalid-argument'
+                    ? "Erreur de sauvegarde : le roster est trop volumineux (trop de photos ou photos trop lourdes). Réduis la taille/qualité des images."
+                    : `Erreur de sauvegarde${e && e.message ? ' : ' + e.message : ''}`;
+                showToast(msg, "error");
+            }
         }
         async function moveEffectif(id, direction) {
             // On trie par order (avec fallback stable sur l'id) puis on renumérote
@@ -3463,9 +3477,14 @@ function checkAdminSessionTimeout() {
         if (window.ResizeObserver) { const navResizeObserver = new ResizeObserver(() => refreshNavPill()); const navContainer = document.getElementById('nav-container'); if(navContainer) navResizeObserver.observe(navContainer); }
 
         // CROP STUDIO
-        let cropper = null, cropCallback = null;
-        function openCropper(file, ratio, callback) { const reader = new FileReader(); reader.onload = (e) => { const image = document.getElementById('crop-image'); image.src = e.target.result; document.getElementById('crop-modal').classList.remove('hidden'); if (cropper) cropper.destroy(); cropper = new Cropper(image, { aspectRatio: ratio, viewMode: 1, background: false, autoCropArea: 1 }); cropCallback = callback; }; reader.readAsDataURL(file); }
-        function confirmCrop() { if (!cropper) return; const canvas = cropper.getCroppedCanvas({ maxWidth: 8192, maxHeight: 8192, imageSmoothingEnabled: true, imageSmoothingQuality: 'high', fillColor: 'transparent' }); document.getElementById('crop-modal').classList.add('hidden'); cropper.destroy(); cropper = null; if (cropCallback) cropCallback(canvas.toDataURL('image/webp', 1)); }
+        let cropper = null, cropCallback = null, cropMaxDim = 8192;
+        function openCropper(file, ratio, callback, maxDim) { const reader = new FileReader(); reader.onload = (e) => { const image = document.getElementById('crop-image'); image.src = e.target.result; document.getElementById('crop-modal').classList.remove('hidden'); if (cropper) cropper.destroy(); cropper = new Cropper(image, { aspectRatio: ratio, viewMode: 1, background: false, autoCropArea: 1 }); cropCallback = callback; cropMaxDim = maxDim || 8192; }; reader.readAsDataURL(file); }
+        // Qualité WebP maximale (1.0) partout. La résolution de sortie est plafonnée par
+        // cropMaxDim : élevée par défaut (8192px) pour les visuels affichés en grand
+        // (boutique, palmarès, annonces...), mais réduite pour les avatars de joueurs
+        // (affichés en petit format) afin d'éviter de dépasser la limite de 1 Mo par
+        // document Firestore quand un roster contient plusieurs joueurs.
+        function confirmCrop() { if (!cropper) return; const canvas = cropper.getCroppedCanvas({ maxWidth: cropMaxDim, maxHeight: cropMaxDim, imageSmoothingEnabled: true, imageSmoothingQuality: 'high', fillColor: 'transparent' }); document.getElementById('crop-modal').classList.add('hidden'); cropper.destroy(); cropper = null; if (cropCallback) cropCallback(canvas.toDataURL('image/webp', 1)); }
         function cancelCrop() { document.getElementById('crop-modal').classList.add('hidden'); if (cropper) cropper.destroy(); cropper = null; }
 
         // DRAG & DROP GÉNÉRIQUE POUR LES ZONES D'UPLOAD ADMIN (boutique, effectifs, palmarès,
@@ -3516,7 +3535,7 @@ function checkAdminSessionTimeout() {
         document.getElementById('shop-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 4/5, b => { tempShopImages.push(b); renderShopPreviews(); }); e.target.value=''; });
         function renderShopPreviews() { document.getElementById('shop-img-previews').innerHTML = tempShopImages.map((src, i) => `<div class="relative w-16 h-20 rounded-lg overflow-hidden border border-white/20"><img src="${src}" class="w-full h-full object-cover"><button type="button" onclick="tempShopImages.splice(${i}, 1); renderShopPreviews()" class="absolute top-0 right-0 bg-red-500/90 text-white text-[10px] w-5 h-5">✕</button></div>`).join(''); }
         
-        document.getElementById('player-avatar-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 3/4, b => { tempPlayerAvatar = b; document.getElementById('player-avatar-preview').src = b; }); e.target.value=''; });
+        document.getElementById('player-avatar-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 3/4, b => { tempPlayerAvatar = b; document.getElementById('player-avatar-preview').src = b; }, 700); e.target.value=''; });
         document.getElementById('profile-avatar-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 1/1, b => updateProfileAvatar(b)); e.target.value=''; });
         async function updateProfileAvatar(dataUrl) {
             if(!currentUser) return;
