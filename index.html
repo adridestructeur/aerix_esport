@@ -82,6 +82,12 @@
     
     .glass-panel-no-hover { background: rgba(10, 10, 10, 0.85); backdrop-filter: blur(35px); -webkit-backdrop-filter: blur(35px); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 8px 32px 0 rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.05); }
 
+    /* DRAG & DROP EFFECTIFS */
+    .effectif-row { transition: opacity .18s ease, box-shadow .18s ease, transform .18s ease; }
+    .effectif-row.dragging { opacity: 0.45; box-shadow: 0 10px 30px rgba(0,0,0,.55), 0 0 0 1px rgba(139,92,246,.5); }
+    .effectif-row.drag-over-top { box-shadow: inset 0 2px 0 0 #8B5CF6; }
+    .effectif-row.drag-over-bottom { box-shadow: inset 0 -2px 0 0 #8B5CF6; }
+
     /* MENU COMPTE : effet néon au survol (Tickets / Administration / Déconnexion) */
     .account-menu-item { border: 1px solid transparent; transition: background .25s ease, border-color .25s ease, box-shadow .25s ease, color .25s ease; }
     .account-menu-item:hover { background: rgba(139,92,246,0.12); border-color: rgba(139,92,246,0.55); box-shadow: 0 0 10px rgba(139,92,246,0.55), 0 0 22px rgba(139,92,246,0.35), inset 0 0 10px rgba(139,92,246,0.15); color: #fff; }
@@ -254,8 +260,8 @@
        continue d'être peint par le moteur de rendu. Sur mobile, ce blur permanent combiné aux
        autres effets "glass" de la page pouvait épuiser la mémoire du compositeur et faire planter
        la page. display:none supprime ce coût tant que le chat n'est pas ouvert. */
-    #aerix-assistant-panel { display: none; width: min(370px, calc(100vw - 32px)); height: min(560px, calc(100dvh - 160px)); transform-origin: bottom right; opacity: 0; transform: translateY(14px) scale(.96); pointer-events: none; transition: opacity .28s ease, transform .32s cubic-bezier(.16,1,.3,1); }
-    #aerix-assistant-panel.open { display: flex; opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+    #aerix-assistant-panel { display: flex; visibility: hidden; width: min(370px, calc(100vw - 32px)); height: min(560px, calc(100dvh - 160px)); transform-origin: bottom right; opacity: 0; transform: translateY(14px) scale(.96); pointer-events: none; transition: opacity .28s ease, transform .32s cubic-bezier(.16,1,.3,1), visibility 0s linear .32s; }
+    #aerix-assistant-panel.open { visibility: visible; opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; transition: opacity .28s ease, transform .32s cubic-bezier(.16,1,.3,1), visibility 0s linear 0s; }
     #aerix-assistant-launcher { width: 58px; height: 58px; border-radius: 9999px; border: 1px solid rgba(139,92,246,.55); background: linear-gradient(145deg, rgba(139,92,246,.28), rgba(15,15,15,.92)); box-shadow: 0 10px 35px rgba(0,0,0,.5), 0 0 28px rgba(139,92,246,.28), inset 0 1px 0 rgba(255,255,255,.18); color:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer; backdrop-filter:blur(18px); transition:transform .25s ease, box-shadow .25s ease; }
     #aerix-assistant-launcher:hover { transform:translateY(-3px) scale(1.04); box-shadow:0 14px 40px rgba(0,0,0,.55),0 0 35px rgba(139,92,246,.42),inset 0 1px 0 rgba(255,255,255,.22); }
     .assistant-msg { max-width:88%; padding:10px 12px; border-radius:14px; font-size:12px; line-height:1.5; }
@@ -2871,7 +2877,7 @@ function checkAdminSessionTimeout() {
             }
             document.getElementById('admin-list-boutique').innerHTML = globalShop.map(item => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm">${item.name}</div><div class="text-xs text-gray-500">${item.price} €</div></div><div class="flex gap-2"><button onclick="startEditShop('${item.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('shop', '${item.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
             const sortedAdminEffectifs = [...globalEffectifs].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-            document.getElementById('admin-list-effectifs').innerHTML = sortedAdminEffectifs.map((r, idx) => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div class="flex items-center gap-2"><div class="flex flex-col gap-1"><button onclick="moveEffectif('${r.id}', -1)" ${idx === 0 ? 'disabled' : ''} class="w-6 h-6 flex items-center justify-center rounded-md bg-white/10 hover:bg-aerix-purple text-white text-xs transition disabled:opacity-20 disabled:cursor-not-allowed" title="Monter">▲</button><button onclick="moveEffectif('${r.id}', 1)" ${idx === sortedAdminEffectifs.length - 1 ? 'disabled' : ''} class="w-6 h-6 flex items-center justify-center rounded-md bg-white/10 hover:bg-aerix-purple text-white text-xs transition disabled:opacity-20 disabled:cursor-not-allowed" title="Descendre">▼</button></div><div><div class="text-white font-bold text-sm flex items-center gap-2">${r.name} <span class="bg-white/10 text-[9px] px-2 py-0.5 rounded-full">${r.players?.length||0} j.</span></div><div class="text-xs text-gray-500">${r.game || 'Général'}</div></div></div><div class="flex gap-2"><button onclick="startEditEffectif('${r.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('effectifs', '${r.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
+            document.getElementById('admin-list-effectifs').innerHTML = sortedAdminEffectifs.map((r, idx) => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center effectif-row" draggable="true" data-id="${r.id}" ondragstart="dragEffectifStart(event)" ondragend="dragEffectifEnd(event)" ondragover="dragEffectifOver(event)" ondrop="dropEffectif(event)"><div class="flex items-center gap-2"><div class="effectif-drag-handle cursor-grab active:cursor-grabbing text-gray-500 hover:text-white transition px-1" title="Glisser pour réordonner"><svg width="10" height="16" viewBox="0 0 10 16" fill="currentColor"><circle cx="2" cy="2" r="1.5"/><circle cx="8" cy="2" r="1.5"/><circle cx="2" cy="8" r="1.5"/><circle cx="8" cy="8" r="1.5"/><circle cx="2" cy="14" r="1.5"/><circle cx="8" cy="14" r="1.5"/></svg></div><div class="flex flex-col gap-1"><button onclick="moveEffectif('${r.id}', -1)" ${idx === 0 ? 'disabled' : ''} class="w-6 h-6 flex items-center justify-center rounded-md bg-white/10 hover:bg-aerix-purple text-white text-xs transition disabled:opacity-20 disabled:cursor-not-allowed" title="Monter">▲</button><button onclick="moveEffectif('${r.id}', 1)" ${idx === sortedAdminEffectifs.length - 1 ? 'disabled' : ''} class="w-6 h-6 flex items-center justify-center rounded-md bg-white/10 hover:bg-aerix-purple text-white text-xs transition disabled:opacity-20 disabled:cursor-not-allowed" title="Descendre">▼</button></div><div><div class="text-white font-bold text-sm flex items-center gap-2">${r.name} <span class="bg-white/10 text-[9px] px-2 py-0.5 rounded-full">${r.players?.length||0} j.</span></div><div class="text-xs text-gray-500">${r.game || 'Général'}</div></div></div><div class="flex gap-2"><button onclick="startEditEffectif('${r.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('effectifs', '${r.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
             document.getElementById('admin-list-palmares').innerHTML = sortByDateDesc(globalPalmares).map(p => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm truncate max-w-[150px]">${p.title}</div><div class="text-xs text-gray-500">${p.game || 'Général'}</div></div><div class="flex gap-2"><button onclick="startEditPalmares('${p.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('palmares', '${p.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
             document.getElementById('admin-list-partenaires').innerHTML = globalPartners.map(p => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm">${p.name}</div><div class="text-xs text-gray-500">${p.category || 'Partenaire'}</div></div><div class="flex gap-2"><button onclick="startEditPartner('${p.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('partners', '${p.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
             document.getElementById('admin-list-annonces').innerHTML = sortByDateDesc(globalAnnonces).map(a => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm truncate max-w-[200px]">${a.title}</div><div class="text-xs text-gray-500">${a.date}</div></div><div class="flex gap-2"><button onclick="startEditAnnouncement('${a.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('annonces', '${a.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
@@ -3018,18 +3024,87 @@ function checkAdminSessionTimeout() {
             } catch(e) { showToast("Erreur de sauvegarde", "error"); }
         }
         async function moveEffectif(id, direction) {
-            const sorted = [...globalEffectifs].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+            // On trie par order (avec fallback stable sur l'id) puis on renumérote
+            // systématiquement en 0..n-1 avant de permuter : ça garantit des valeurs
+            // uniques et contiguës, donc plus jamais de blocage dû à des order
+            // dupliqués/manquants qui empêchaient parfois de remonter un élément.
+            const sorted = [...globalEffectifs].sort((a, b) => (a.order ?? 0) - (b.order ?? 0) || String(a.id).localeCompare(String(b.id)));
             const idx = sorted.findIndex(r => r.id === id);
             const targetIdx = idx + direction;
             if(idx === -1 || targetIdx < 0 || targetIdx >= sorted.length) return;
-            const current = sorted[idx], target = sorted[targetIdx];
-            const currentOrder = current.order ?? idx;
-            const targetOrder = target.order ?? targetIdx;
+
+            // Renumérotation propre de tout le tableau
+            const normalized = sorted.map((r, i) => ({ id: r.id, order: i }));
+            // Permutation des deux éléments concernés
+            const tmp = normalized[idx].order;
+            normalized[idx].order = normalized[targetIdx].order;
+            normalized[targetIdx].order = tmp;
+
             try {
-                await Promise.all([
-                    db.collection("effectifs").doc(current.id).update({ order: targetOrder }),
-                    db.collection("effectifs").doc(target.id).update({ order: currentOrder })
-                ]);
+                // On ne pousse en base que ce qui a réellement changé par rapport
+                // à l'état actuel, pour limiter les écritures.
+                const writes = normalized
+                    .filter(n => {
+                        const original = globalEffectifs.find(r => r.id === n.id);
+                        return !original || (original.order ?? -1) !== n.order;
+                    })
+                    .map(n => db.collection("effectifs").doc(n.id).update({ order: n.order }));
+                await Promise.all(writes);
+            } catch(e) { showToast("Erreur lors du réordonnancement", "error"); }
+        }
+
+        // --- DRAG & DROP REORDONNANCEMENT EFFECTIFS (poignée 6 points) ---
+        let draggedEffectifId = null;
+        function dragEffectifStart(ev) {
+            const row = ev.currentTarget;
+            draggedEffectifId = row.dataset.id;
+            ev.dataTransfer.effectAllowed = 'move';
+            try { ev.dataTransfer.setData('text/plain', draggedEffectifId); } catch(e) {}
+            requestAnimationFrame(() => row.classList.add('dragging'));
+        }
+        function dragEffectifEnd(ev) {
+            ev.currentTarget.classList.remove('dragging');
+            document.querySelectorAll('.effectif-row').forEach(el => el.classList.remove('drag-over-top', 'drag-over-bottom'));
+            draggedEffectifId = null;
+        }
+        function dragEffectifOver(ev) {
+            ev.preventDefault();
+            ev.dataTransfer.dropEffect = 'move';
+            const row = ev.currentTarget;
+            if (row.dataset.id === draggedEffectifId) return;
+            const rect = row.getBoundingClientRect();
+            const before = (ev.clientY - rect.top) < rect.height / 2;
+            row.classList.toggle('drag-over-top', before);
+            row.classList.toggle('drag-over-bottom', !before);
+        }
+        async function dropEffectif(ev) {
+            ev.preventDefault();
+            const row = ev.currentTarget;
+            const targetId = row.dataset.id;
+            const before = row.classList.contains('drag-over-top');
+            row.classList.remove('drag-over-top', 'drag-over-bottom');
+            if (!draggedEffectifId || draggedEffectifId === targetId) return;
+
+            const sorted = [...globalEffectifs].sort((a, b) => (a.order ?? 0) - (b.order ?? 0) || String(a.id).localeCompare(String(b.id)));
+            const fromIdx = sorted.findIndex(r => r.id === draggedEffectifId);
+            let toIdx = sorted.findIndex(r => r.id === targetId);
+            if (fromIdx === -1 || toIdx === -1) return;
+
+            const [moved] = sorted.splice(fromIdx, 1);
+            // Recalcule l'index d'insertion après retrait de l'élément déplacé
+            toIdx = sorted.findIndex(r => r.id === targetId);
+            const insertIdx = before ? toIdx : toIdx + 1;
+            sorted.splice(insertIdx, 0, moved);
+
+            const normalized = sorted.map((r, i) => ({ id: r.id, order: i }));
+            try {
+                const writes = normalized
+                    .filter(n => {
+                        const original = globalEffectifs.find(r => r.id === n.id);
+                        return !original || (original.order ?? -1) !== n.order;
+                    })
+                    .map(n => db.collection("effectifs").doc(n.id).update({ order: n.order }));
+                await Promise.all(writes);
             } catch(e) { showToast("Erreur lors du réordonnancement", "error"); }
         }
 
