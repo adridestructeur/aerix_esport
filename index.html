@@ -2531,7 +2531,10 @@ function checkAdminSessionTimeout() {
         // affiché comme premier message admin tant qu'aucun message n'a encore été échangé.
         function buildTicketThreadHTML(t) {
             const msgs = Array.isArray(t.messages) ? [...t.messages] : [];
-            if (!msgs.length && t.adminReply) msgs.push({ from: 'admin', text: t.adminReply });
+            // L'ancienne réponse admin (champ unique "adminReply", système avant l'historique
+            // multi-messages) doit toujours apparaître en premier si elle existe, même si des
+            // messages ont été échangés depuis via "messages" — sinon elle disparaît du fil.
+            if (t.adminReply) msgs.unshift({ from: 'admin', text: t.adminReply });
             if (!msgs.length) return '';
             return `<div class="mt-4 pt-4 border-t border-white/10"><div class="max-h-64 overflow-y-auto pr-1 space-y-2.5 ticket-thread-scroll">${msgs.map(m => {
                 const isAdmin = m.from === 'admin';
