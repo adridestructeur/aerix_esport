@@ -3372,17 +3372,6 @@ function checkAdminSessionTimeout() {
             updateNavPill(document.getElementById('nav-' + pageId));
             refreshNavPill();
 
-            // Masquer le bouton/panel de l'assistant IA dans la console d'administration
-            const assistantWidget = document.getElementById('aerix-assistant');
-            if (assistantWidget) {
-                if (pageId === 'admin') {
-                    if (aerixAssistantOpen) toggleAerixAssistant(false);
-                    assistantWidget.style.display = 'none';
-                } else {
-                    assistantWidget.style.display = '';
-                }
-            }
-
             document.querySelectorAll('.animate-fade-up').forEach(el => {
                 el.style.animation = 'none';
                 void el.offsetWidth;
@@ -3512,6 +3501,17 @@ function checkAdminSessionTimeout() {
                 startAdminSession();
             } else {
                 stopAdminSession();
+            }
+            // Masquer le bouton/panel de l'assistant IA pendant que la console
+            // d'administration est ouverte (chevauchement visuel sinon).
+            const assistantWidget = document.getElementById('aerix-assistant');
+            if (assistantWidget) {
+                if (willOpen) {
+                    if (aerixAssistantOpen) toggleAerixAssistant(false);
+                    assistantWidget.style.display = 'none';
+                } else {
+                    assistantWidget.style.display = '';
+                }
             }
         }
         function updateAdminTabPill(activeBtn) {
