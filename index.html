@@ -2096,6 +2096,7 @@
         document.getElementById('admin-modal').classList.remove('hidden');
         applyAdminTabVisibility();
         switchAdminTab(isOwner() ? 'comptes' : 'effectifs');
+        setAssistantHiddenForAdmin(true);
         
         // On relance le minuteur s'il était arrêté
         if (!adminSessionTimer) {
@@ -2136,6 +2137,7 @@ function expireAdminSession() {
     const loginModal = document.getElementById('admin-login-modal');
     
     if (adminModal) adminModal.classList.add('hidden'); // Ferme l'admin
+    setAssistantHiddenForAdmin(false);
     if (loginModal && currentUser && hasAdminAccess()) {
         loginModal.classList.remove('hidden'); // Redemande le mot de passe
         const input = document.getElementById('admin-pwd-input');
@@ -2190,6 +2192,7 @@ function checkAdminSessionTimeout() {
                 applyAdminTabVisibility();
                 switchAdminTab(isOwner() ? 'comptes' : 'effectifs');
                 startAdminSession();
+                setAssistantHiddenForAdmin(true);
                 showToast(currentLang==='en'?'Admin access confirmed.':'Accès administrateur confirmé.', 'success');
             } catch (e) {
                 console.error(e);
@@ -3487,6 +3490,19 @@ function checkAdminSessionTimeout() {
         document.getElementById('announcement-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 16/9, b => { tempAnnouncementImage = b; document.getElementById('announcement-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('announcement-img-preview').classList.remove('hidden'); }); e.target.value=''; });
         document.getElementById('gallery-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 1/1, b => { tempGalleryImage = b; document.getElementById('gallery-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('gallery-img-preview').classList.remove('hidden'); }); e.target.value=''; });
 
+        // Affiche/masque le widget assistant IA en fonction de l'état de la console
+        // d'administration. Centralisé ici car la modale admin peut être ouverte/fermée
+        // depuis plusieurs endroits (toggleAdmin, openAdminLogin, checkAdminPwd, expireAdminSession...).
+        function setAssistantHiddenForAdmin(hidden) {
+            const assistantWidget = document.getElementById('aerix-assistant');
+            if (!assistantWidget) return;
+            if (hidden) {
+                if (aerixAssistantOpen) toggleAerixAssistant(false);
+                assistantWidget.style.display = 'none';
+            } else {
+                assistantWidget.style.display = '';
+            }
+        }
         function toggleAdmin() {
             if (!hasAdminAccess()) {
                 openAdminLogin();
@@ -3502,17 +3518,7 @@ function checkAdminSessionTimeout() {
             } else {
                 stopAdminSession();
             }
-            // Masquer le bouton/panel de l'assistant IA pendant que la console
-            // d'administration est ouverte (chevauchement visuel sinon).
-            const assistantWidget = document.getElementById('aerix-assistant');
-            if (assistantWidget) {
-                if (willOpen) {
-                    if (aerixAssistantOpen) toggleAerixAssistant(false);
-                    assistantWidget.style.display = 'none';
-                } else {
-                    assistantWidget.style.display = '';
-                }
-            }
+            setAssistantHiddenForAdmin(willOpen);
         }
         function updateAdminTabPill(activeBtn) {
             const pill = document.getElementById('admin-tab-pill');
