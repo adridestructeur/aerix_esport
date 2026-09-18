@@ -2533,6 +2533,16 @@ function checkAdminSessionTimeout() {
         // affiché comme une vraie conversation dans les deux vues (admin et utilisateur).
         // Compat : les tickets créés avant ce système n'ont qu'un champ "adminReply" unique,
         // affiché comme premier message admin tant qu'aucun message n'a encore été échangé.
+        // Formate un timestamp de message (m.at) en date + heure lisible, adapté à la langue
+        // courante. Reste discret ("il y a peu") pour les tout récents.
+        function formatMessageTimestamp(at) {
+            if (!at) return '';
+            const d = new Date(at);
+            if (isNaN(d.getTime())) return '';
+            const datePart = d.toLocaleDateString(currentLang === 'en' ? 'en-GB' : 'fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            const timePart = d.toLocaleTimeString(currentLang === 'en' ? 'en-GB' : 'fr-FR', { hour: '2-digit', minute: '2-digit' });
+            return `${datePart} · ${timePart}`;
+        }
         function buildTicketThreadHTML(t, isAdminView) {
             const msgs = Array.isArray(t.messages) ? [...t.messages] : [];
             // L'ancienne réponse admin (champ unique "adminReply", système avant l'historique
@@ -2551,7 +2561,10 @@ function checkAdminSessionTimeout() {
                 const realIdx = hasLegacyReply ? i - 1 : i;
                 const canEdit = isAdminView && isAdmin && !m.legacy && realIdx >= 0;
                 const actions = canEdit ? `<div class="flex gap-2 mt-1.5 pt-1.5 border-t border-white/10"><button onclick="editTicketMessage('${t.id}', ${realIdx})" class="text-[10px] font-bold text-gray-400 hover:text-white transition">${currentLang==='en'?'Edit':'Modifier'}</button><button onclick="deleteTicketMessage('${t.id}', ${realIdx})" class="text-[10px] font-bold text-red-400 hover:text-red-300 transition">${currentLang==='en'?'Delete':'Supprimer'}</button></div>` : '';
-                return `<div class="flex ${isAdmin ? 'justify-start' : 'justify-end'}"><div class="max-w-[85%] rounded-xl px-3.5 py-2.5 text-xs whitespace-pre-wrap break-words ${isAdmin ? 'bg-aerix-purple/15 border border-aerix-purple/25 text-gray-200' : 'bg-white/5 border border-white/10 text-gray-300'}"><div class="text-[9px] uppercase tracking-widest font-bold mb-1 ${isAdmin ? 'text-aerix-purple' : 'text-gray-500'}">${isAdmin ? 'AERIX' : (currentLang==='en'?'You':'Toi')}</div><span id="ticket-msg-text-${t.id}-${realIdx}">${escapeHtml(m.text || '')}</span>${actions}</div></div>`;
+                const timestampLabel = formatMessageTimestamp(m.at);
+                const editedLabel = m.editedAt ? ` (${currentLang==='en'?'edited':'modifié'})` : '';
+                const timestampHTML = timestampLabel ? `<div class="text-[9px] text-gray-500 mt-1">${timestampLabel}${editedLabel}</div>` : '';
+                return `<div class="flex ${isAdmin ? 'justify-start' : 'justify-end'}"><div class="max-w-[85%] rounded-xl px-3.5 py-2.5 text-xs whitespace-pre-wrap break-words ${isAdmin ? 'bg-aerix-purple/15 border border-aerix-purple/25 text-gray-200' : 'bg-white/5 border border-white/10 text-gray-300'}"><div class="text-[9px] uppercase tracking-widest font-bold mb-1 ${isAdmin ? 'text-aerix-purple' : 'text-gray-500'}">${isAdmin ? 'AERIX' : (currentLang==='en'?'You':'Toi')}</div><span id="ticket-msg-text-${t.id}-${realIdx}">${escapeHtml(m.text || '')}</span>${timestampHTML}${actions}</div></div>`;
             }).join('')}</div></div>`;
         }
         // Modification d'un message admin existant dans t.messages (identifié par son index).
