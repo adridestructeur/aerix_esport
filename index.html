@@ -88,6 +88,9 @@
     .ticket-thread-scroll::-webkit-scrollbar-thumb { background: rgba(139,92,246,.35); border-radius: 999px; }
     .ticket-thread-scroll::-webkit-scrollbar-track { background: transparent; }
 
+    /* ZONES DE GLISSER-DÉPOSER D'IMAGES (admin) */
+    .drop-zone-active { border-color: #8B5CF6 !important; background: rgba(139,92,246,.12) !important; box-shadow: 0 0 20px rgba(139,92,246,.35); }
+
     /* DRAG & DROP EFFECTIFS */
     .effectif-row { transition: opacity .18s ease, box-shadow .18s ease, transform .18s ease; }
     .effectif-row.dragging { opacity: 0.45; box-shadow: 0 10px 30px rgba(0,0,0,.55), 0 0 0 1px rgba(139,92,246,.5); }
@@ -1003,7 +1006,7 @@
                     <textarea id="add-shop-desc" placeholder="Description du produit..." class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm h-24 mb-4 outline-none focus:border-aerix-purple transition custom-scrollbar"></textarea>
                     
                     <div id="shop-img-previews" class="flex gap-3 flex-wrap mb-4"></div>
-                    <button type="button" onclick="document.getElementById('shop-img-input').click()" class="bg-white/5 border border-dashed border-white/20 text-gray-400 hover:text-white hover:border-white/40 text-xs font-bold px-4 py-4 rounded-xl w-full mb-6 transition">+ Uploader des images (4:5)</button>
+                    <button type="button" id="shop-drop-zone" onclick="document.getElementById('shop-img-input').click()" class="bg-white/5 border border-dashed border-white/20 text-gray-400 hover:text-white hover:border-white/40 text-xs font-bold px-4 py-4 rounded-xl w-full mb-6 transition">+ Uploader des images (4:5) — ou glisser-déposer ici</button>
                     <input type="file" id="shop-img-input" accept="image/*" class="hidden">
                     <div class="flex gap-3">
                         <button id="shop-cancel-btn" onclick="resetShopForm()" class="hidden px-6 py-3.5 bg-white/5 border border-white/10 hover:bg-white/10 text-white rounded-xl text-sm font-bold transition">Annuler</button>
@@ -1032,13 +1035,14 @@
                         <h5 class="text-sm font-bold text-white mb-4 flex items-center gap-2"><svg class="w-4 h-4 text-aerix-purple" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg> Création de Cartes Joueurs</h5>
                         <div id="temp-players-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6"></div>
                         
-                        <div class="glass-panel p-4 rounded-xl border border-dashed border-white/20">
+                        <div id="player-drop-zone" class="glass-panel p-4 rounded-xl border border-dashed border-white/20">
                             <div class="flex flex-col md:flex-row gap-4 items-start md:items-center">
                                 <div class="relative group cursor-pointer shrink-0" onclick="document.getElementById('player-avatar-input').click()">
                                     <img id="player-avatar-preview" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E" class="w-20 h-24 rounded-lg object-cover object-top-custom bg-black/80 border border-white/20 hover:border-aerix-purple transition">
                                     <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition rounded-lg text-xs font-bold text-white">Photo</div>
                                 </div>
                                 <input type="file" id="player-avatar-input" accept="image/*" class="hidden">
+                                <p class="text-[10px] text-gray-500 md:hidden">Glisse une photo n'importe où dans ce bloc</p>
                                 
                                 <div class="flex-1 grid grid-cols-2 gap-3 w-full">
                                     <input type="text" id="temp-player-pseudo" placeholder="PSEUDO" class="col-span-2 bg-black/50 border border-white/10 rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-aerix-purple font-bold uppercase">
@@ -1145,7 +1149,7 @@
                     <div id="palm-img-preview" class="w-full h-40 bg-white/5 rounded-xl mb-4 hidden bg-cover bg-center border border-white/10 relative">
                         <button type="button" onclick="tempPalmImage=null; this.parentElement.classList.add('hidden')" class="absolute top-2 right-2 bg-red-500 text-white text-[10px] w-6 h-6 rounded-full font-bold">✕</button>
                     </div>
-                    <button type="button" onclick="document.getElementById('palm-img-input').click()" class="bg-white/5 border border-dashed border-white/20 text-gray-400 hover:text-white hover:border-white/40 text-xs font-bold px-4 py-4 rounded-xl w-full mb-6 transition">+ Uploader Image du Match (16:9)</button>
+                    <button type="button" id="palm-drop-zone" onclick="document.getElementById('palm-img-input').click()" class="bg-white/5 border border-dashed border-white/20 text-gray-400 hover:text-white hover:border-white/40 text-xs font-bold px-4 py-4 rounded-xl w-full mb-6 transition">+ Uploader Image du Match (16:9) — ou glisser-déposer ici</button>
                     <input type="file" id="palm-img-input" accept="image/*" class="hidden">
 
                     <div class="flex gap-3">
@@ -1212,7 +1216,7 @@
                     <div id="announcement-img-preview" class="w-full h-40 bg-white/5 rounded-xl mb-4 hidden bg-cover bg-center border border-white/10 relative">
                         <button type="button" onclick="tempAnnouncementImage=null; this.parentElement.classList.add('hidden')" class="absolute top-2 right-2 bg-red-500 text-white text-[10px] w-6 h-6 rounded-full font-bold">✕</button>
                     </div>
-                    <button type="button" onclick="document.getElementById('announcement-img-input').click()" class="bg-white/5 border border-dashed border-white/20 text-gray-400 hover:text-white hover:border-white/40 text-xs font-bold px-4 py-4 rounded-xl w-full mb-6 transition">+ Miniature (16:9)</button>
+                    <button type="button" id="announcement-drop-zone" onclick="document.getElementById('announcement-img-input').click()" class="bg-white/5 border border-dashed border-white/20 text-gray-400 hover:text-white hover:border-white/40 text-xs font-bold px-4 py-4 rounded-xl w-full mb-6 transition">+ Miniature (16:9) — ou glisser-déposer ici</button>
                     <input type="file" id="announcement-img-input" accept="image/*" class="hidden">
                     
                     <div class="flex gap-3">
@@ -1238,7 +1242,7 @@
                     <div id="gallery-img-preview" class="w-full h-40 bg-white/5 rounded-xl mb-4 hidden bg-cover bg-center border border-white/10 relative">
                         <button type="button" onclick="tempGalleryImage=null; this.parentElement.classList.add('hidden')" class="absolute top-2 right-2 bg-red-500 text-white text-[10px] w-6 h-6 rounded-full font-bold">✕</button>
                     </div>
-                    <button type="button" onclick="document.getElementById('gallery-img-input').click()" class="bg-white/5 border border-dashed border-white/20 text-gray-400 hover:text-white hover:border-white/40 text-xs font-bold px-4 py-4 rounded-xl w-full mb-6 transition">+ Ajouter une photo</button>
+                    <button type="button" id="gallery-drop-zone" onclick="document.getElementById('gallery-img-input').click()" class="bg-white/5 border border-dashed border-white/20 text-gray-400 hover:text-white hover:border-white/40 text-xs font-bold px-4 py-4 rounded-xl w-full mb-6 transition">+ Ajouter une photo — ou glisser-déposer ici</button>
                     <input type="file" id="gallery-img-input" accept="image/*" class="hidden">
                     <button onclick="saveGalleryPhoto()" class="w-full bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition shadow-[0_0_15px_rgba(139,92,246,0.3)]">Ajouter à la galerie</button>
                     <div id="admin-list-gallery" class="grid grid-cols-3 md:grid-cols-4 gap-3 mt-6"></div>
@@ -1263,7 +1267,7 @@
                     <div id="partner-img-preview" class="w-48 h-24 bg-white/5 rounded-xl mb-4 hidden bg-contain bg-center bg-no-repeat border border-white/10 relative p-2">
                         <button type="button" onclick="tempPartnerImage=null; this.parentElement.classList.add('hidden')" class="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] w-6 h-6 rounded-full font-bold">✕</button>
                     </div>
-                    <button type="button" onclick="document.getElementById('partner-img-input').click()" class="bg-white/5 border border-dashed border-white/20 text-gray-400 hover:text-white hover:border-white/40 text-xs font-bold px-4 py-4 rounded-xl w-full mb-6 transition">+ Logo (fond transparent de préférence)</button>
+                    <button type="button" id="partner-drop-zone" onclick="document.getElementById('partner-img-input').click()" class="bg-white/5 border border-dashed border-white/20 text-gray-400 hover:text-white hover:border-white/40 text-xs font-bold px-4 py-4 rounded-xl w-full mb-6 transition">+ Logo (fond transparent de préférence) — ou glisser-déposer ici</button>
                     <input type="file" id="partner-img-input" accept="image/*" class="hidden">
                     <div class="flex gap-3">
                         <button id="partner-cancel-btn" onclick="resetPartnerForm()" class="hidden px-6 py-3.5 bg-white/5 border border-white/10 hover:bg-white/10 text-white rounded-xl text-sm font-bold transition">Annuler</button>
@@ -3461,8 +3465,50 @@ function checkAdminSessionTimeout() {
         // CROP STUDIO
         let cropper = null, cropCallback = null;
         function openCropper(file, ratio, callback) { const reader = new FileReader(); reader.onload = (e) => { const image = document.getElementById('crop-image'); image.src = e.target.result; document.getElementById('crop-modal').classList.remove('hidden'); if (cropper) cropper.destroy(); cropper = new Cropper(image, { aspectRatio: ratio, viewMode: 1, background: false, autoCropArea: 1 }); cropCallback = callback; }; reader.readAsDataURL(file); }
-        function confirmCrop() { if (!cropper) return; const canvas = cropper.getCroppedCanvas({ maxWidth: 4096, maxHeight: 4096, imageSmoothingEnabled: true, imageSmoothingQuality: 'high', fillColor: 'transparent' }); document.getElementById('crop-modal').classList.add('hidden'); cropper.destroy(); cropper = null; if (cropCallback) cropCallback(canvas.toDataURL('image/webp', 0.98)); }
+        function confirmCrop() { if (!cropper) return; const canvas = cropper.getCroppedCanvas({ maxWidth: 8192, maxHeight: 8192, imageSmoothingEnabled: true, imageSmoothingQuality: 'high', fillColor: 'transparent' }); document.getElementById('crop-modal').classList.add('hidden'); cropper.destroy(); cropper = null; if (cropCallback) cropCallback(canvas.toDataURL('image/webp', 1)); }
         function cancelCrop() { document.getElementById('crop-modal').classList.add('hidden'); if (cropper) cropper.destroy(); cropper = null; }
+
+        // DRAG & DROP GÉNÉRIQUE POUR LES ZONES D'UPLOAD ADMIN (boutique, effectifs, palmarès,
+        // annonces, galerie, partenaires) : permet de glisser-déposer une image directement sur
+        // la zone au lieu de systématiquement ouvrir l'explorateur de fichiers. Le fichier déposé
+        // est ensuite traité exactement comme un fichier choisi via l'input (même recadrage,
+        // même export WebP qualité maximale), donc aucune perte de qualité supplémentaire.
+        function enableImageDropZone(zoneEl, inputId) {
+            if (!zoneEl || zoneEl.dataset.dropEnabled) return;
+            zoneEl.dataset.dropEnabled = 'true';
+            const input = document.getElementById(inputId);
+            if (!input) return;
+            ['dragenter', 'dragover'].forEach(evt => zoneEl.addEventListener(evt, e => {
+                e.preventDefault(); e.stopPropagation();
+                zoneEl.classList.add('drop-zone-active');
+            }));
+            ['dragleave', 'dragend'].forEach(evt => zoneEl.addEventListener(evt, e => {
+                e.preventDefault(); e.stopPropagation();
+                zoneEl.classList.remove('drop-zone-active');
+            }));
+            zoneEl.addEventListener('drop', e => {
+                e.preventDefault(); e.stopPropagation();
+                zoneEl.classList.remove('drop-zone-active');
+                const file = e.dataTransfer?.files?.[0];
+                if (!file || !file.type.startsWith('image/')) return;
+                // Réutilise le même DataTransfer que l'input pour déclencher son event 'change'
+                // existant (et donc le même pipeline de recadrage / compression déjà en place).
+                const dt = new DataTransfer();
+                dt.items.add(file);
+                input.files = dt.files;
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+            });
+        }
+        function initImageDropZones() {
+            [
+                ['shop-drop-zone', 'shop-img-input'],
+                ['player-drop-zone', 'player-avatar-input'],
+                ['palm-drop-zone', 'palm-img-input'],
+                ['announcement-drop-zone', 'announcement-img-input'],
+                ['gallery-drop-zone', 'gallery-img-input'],
+                ['partner-drop-zone', 'partner-img-input']
+            ].forEach(([zoneId, inputId]) => enableImageDropZone(document.getElementById(zoneId), inputId));
+        }
 
         let tempShopImages = [], tempPlayerAvatar = null, tempPlayers = [], tempPartnerImage = null, tempAnnouncementImage = null, tempPalmImage = null, tempGalleryImage = null;
         const defaultAvatar = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E";
@@ -3751,6 +3797,7 @@ function checkAdminSessionTimeout() {
         navigate('home');
         requestAnimationFrame(() => updateNavPill(document.getElementById('nav-home')));
         togglePalmaresFields();
+        initImageDropZones();
 
 // Bloquer le clic droit (menu contextuel)
 document.addEventListener('contextmenu', function(e) {
