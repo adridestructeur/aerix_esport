@@ -2529,17 +2529,57 @@ function checkAdminSessionTimeout() {
         // affiché comme une vraie conversation dans les deux vues (admin et utilisateur).
         // Compat : les tickets créés avant ce système n'ont qu'un champ "adminReply" unique,
         // affiché comme premier message admin tant qu'aucun message n'a encore été échangé.
-        function buildTicketThreadHTML(t) {
+        function buildTicketThreadHTML(t, isAdminView) {
             const msgs = Array.isArray(t.messages) ? [...t.messages] : [];
             // L'ancienne réponse admin (champ unique "adminReply", système avant l'historique
             // multi-messages) doit toujours apparaître en premier si elle existe, même si des
             // messages ont été échangés depuis via "messages" — sinon elle disparaît du fil.
-            if (t.adminReply) msgs.unshift({ from: 'admin', text: t.adminReply });
+            // On la marque "legacy" pour ne pas proposer d'édition/suppression dessus (pas d'index
+            // dans t.messages), et on l'expose en lecture seule.
+            const hasLegacyReply = !!t.adminReply;
+            if (hasLegacyReply) msgs.unshift({ from: 'admin', text: t.adminReply, legacy: true });
             if (!msgs.length) return '';
-            return `<div class="mt-4 pt-4 border-t border-white/10"><div class="max-h-64 overflow-y-auto pr-1 space-y-2.5 ticket-thread-scroll">${msgs.map(m => {
+            // "editable" : seuls les messages admin (hors legacy) peuvent être modifiés/supprimés,
+            // et uniquement depuis la vue admin (isAdminView). Jamais côté utilisateur.
+            return `<div class="mt-4 pt-4 border-t border-white/10"><div class="max-h-64 overflow-y-auto pr-1 space-y-2.5 ticket-thread-scroll">${msgs.map((m, i) => {
                 const isAdmin = m.from === 'admin';
-                return `<div class="flex ${isAdmin ? 'justify-start' : 'justify-end'}"><div class="max-w-[85%] rounded-xl px-3.5 py-2.5 text-xs whitespace-pre-wrap break-words ${isAdmin ? 'bg-aerix-purple/15 border border-aerix-purple/25 text-gray-200' : 'bg-white/5 border border-white/10 text-gray-300'}"><div class="text-[9px] uppercase tracking-widest font-bold mb-1 ${isAdmin ? 'text-aerix-purple' : 'text-gray-500'}">${isAdmin ? 'AERIX' : (currentLang==='en'?'You':'Toi')}</div>${escapeHtml(m.text || '')}</div></div>`;
+                // Index réel dans t.messages (décalé de -1 si un message legacy a été inséré en tête)
+                const realIdx = hasLegacyReply ? i - 1 : i;
+                const canEdit = isAdminView && isAdmin && !m.legacy && realIdx >= 0;
+                const actions = canEdit ? `<div class="flex gap-2 mt-1.5 pt-1.5 border-t border-white/10"><button onclick="editTicketMessage('${t.id}', ${realIdx})" class="text-[10px] font-bold text-gray-400 hover:text-white transition">${currentLang==='en'?'Edit':'Modifier'}</button><button onclick="deleteTicketMessage('${t.id}', ${realIdx})" class="text-[10px] font-bold text-red-400 hover:text-red-300 transition">${currentLang==='en'?'Delete':'Supprimer'}</button></div>` : '';
+                return `<div class="flex ${isAdmin ? 'justify-start' : 'justify-end'}"><div class="max-w-[85%] rounded-xl px-3.5 py-2.5 text-xs whitespace-pre-wrap break-words ${isAdmin ? 'bg-aerix-purple/15 border border-aerix-purple/25 text-gray-200' : 'bg-white/5 border border-white/10 text-gray-300'}"><div class="text-[9px] uppercase tracking-widest font-bold mb-1 ${isAdmin ? 'text-aerix-purple' : 'text-gray-500'}">${isAdmin ? 'AERIX' : (currentLang==='en'?'You':'Toi')}</div><span id="ticket-msg-text-${t.id}-${realIdx}">${escapeHtml(m.text || '')}</span>${actions}</div></div>`;
             }).join('')}</div></div>`;
+        }
+        // Modification d'un message admin existant dans t.messages (identifié par son index).
+        // Réécrit tout le tableau "messages" (plutôt qu'arrayUnion/arrayRemove, peu fiables sur
+        // un objet contenant un timestamp) pour cibler précisément l'élément à changer.
+        async function editTicketMessage(ticketId, index) {
+            if (!hasAdminAccess()) return;
+            const ticket = globalContactRequests.find(t => t.id === ticketId);
+            if (!ticket || !Array.isArray(ticket.messages) || !ticket.messages[index] || ticket.messages[index].from !== 'admin') return;
+            const current = ticket.messages[index].text || '';
+            const next = prompt(currentLang==='en' ? 'Edit message:' : 'Modifier le message :', current);
+            if (next === null) return; // annulé
+            const trimmed = next.trim();
+            if (!trimmed) return showToast(currentLang==='en'?'Message cannot be empty.':'Le message ne peut pas être vide.', 'error');
+            const updatedMessages = [...ticket.messages];
+            updatedMessages[index] = { ...updatedMessages[index], text: trimmed, editedAt: Date.now() };
+            try {
+                await db.collection('contactRequests').doc(ticketId).update({ messages: updatedMessages, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+                showToast(currentLang==='en'?'Message updated.':'Message modifié.');
+            } catch(e) { console.error(e); showToast(currentLang==='en'?'Update failed.':'Échec de la modification.', 'error'); }
+        }
+        // Suppression d'un message admin existant dans t.messages (identifié par son index).
+        async function deleteTicketMessage(ticketId, index) {
+            if (!hasAdminAccess()) return;
+            const ticket = globalContactRequests.find(t => t.id === ticketId);
+            if (!ticket || !Array.isArray(ticket.messages) || !ticket.messages[index] || ticket.messages[index].from !== 'admin') return;
+            if (!confirm(currentLang==='en' ? 'Delete this message?' : 'Supprimer ce message ?')) return;
+            const updatedMessages = ticket.messages.filter((_, i) => i !== index);
+            try {
+                await db.collection('contactRequests').doc(ticketId).update({ messages: updatedMessages, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+                showToast(currentLang==='en'?'Message deleted.':'Message supprimé.');
+            } catch(e) { console.error(e); showToast(currentLang==='en'?'Deletion failed.':'Échec de la suppression.', 'error'); }
         }
         // Zone de saisie de réponse, affichée aussi bien côté admin que côté pilote.
         // "from" ('admin' ou 'user') détermine qui envoie le message et quel drapeau non-lu poser.
@@ -2574,7 +2614,7 @@ function checkAdminSessionTimeout() {
                 const status=t.status||'new'; const cls=status==='done'?'text-green-400 bg-green-500/10':status==='progress'?'text-blue-300 bg-blue-500/10':'text-yellow-300 bg-yellow-500/10';
                 const isCoaching = t.type === 'coaching';
                 const coachingInfo = isCoaching ? `<div class="mt-3 grid grid-cols-2 gap-2 text-[11px] text-gray-400"><div><span class="text-gray-600">${currentLang==='en'?'Game':'Jeu'} :</span> ${escapeHtml(t.coachGame||'—')}</div><div><span class="text-gray-600">${currentLang==='en'?'Format':'Format'} :</span> ${escapeHtml(t.coachFormat||'—')}</div><div><span class="text-gray-600">${currentLang==='en'?'Duration':'Durée'} :</span> ${escapeHtml(t.coachDuration||'—')}</div><div><span class="text-gray-600">${currentLang==='en'?'Date':'Date'} :</span> ${escapeHtml(t.coachDate||'—')}</div></div>` : '';
-                return `<div class="glass-panel p-5 rounded-2xl"><div class="flex flex-col md:flex-row md:items-start md:justify-between gap-3"><div><div class="text-white font-bold text-base">${escapeHtml(t.subject||'—')}</div><div class="text-[10px] uppercase tracking-widest text-aerix-purple mt-2">${escapeHtml(t.category||'Autre demande')}</div></div><span class="self-start px-2.5 py-1 rounded-full text-[10px] font-bold ${cls}">${labels[status]||status}</span></div><div class="mt-4 text-xs text-gray-400 whitespace-pre-wrap break-words">${escapeHtml(t.message||'')}</div>${coachingInfo}${buildTicketThreadHTML(t)}${buildTicketReplyBoxHTML(t,'user')}</div>`;
+                return `<div class="glass-panel p-5 rounded-2xl"><div class="flex flex-col md:flex-row md:items-start md:justify-between gap-3"><div><div class="text-white font-bold text-base">${escapeHtml(t.subject||'—')}</div><div class="text-[10px] uppercase tracking-widest text-aerix-purple mt-2">${escapeHtml(t.category||'Autre demande')}</div></div><span class="self-start px-2.5 py-1 rounded-full text-[10px] font-bold ${cls}">${labels[status]||status}</span></div><div class="mt-4 text-xs text-gray-400 whitespace-pre-wrap break-words">${escapeHtml(t.message||'')}</div>${coachingInfo}${buildTicketThreadHTML(t, false)}${buildTicketReplyBoxHTML(t,'user')}</div>`;
             }).join('') : `<p class="text-gray-500 text-sm italic">${currentLang==='en'?'No active tickets.':'Aucun ticket en cours.'}</p>`;
             scrollTicketThreadsToBottom(el);
         }
@@ -2949,7 +2989,7 @@ function checkAdminSessionTimeout() {
             const statusClass = status === 'done' ? 'text-green-400 bg-green-500/10' : status === 'archived' ? 'text-gray-400 bg-white/5' : status === 'progress' ? 'text-blue-300 bg-blue-500/10' : 'text-yellow-300 bg-yellow-500/10';
             const isCoaching = t.type === 'coaching';
             const coachingInfo = isCoaching ? `<div class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3 text-[11px] text-gray-400 bg-black/25 border border-white/5 rounded-xl p-3"><div><span class="text-gray-600 block">${currentLang==='en'?'Game':'Jeu'}</span>${escapeHtml(t.coachGame||'—')}</div><div><span class="text-gray-600 block">${currentLang==='en'?'Level':'Niveau'}</span>${escapeHtml(t.coachLevel||'—')}</div><div><span class="text-gray-600 block">${currentLang==='en'?'Format':'Format'}</span>${escapeHtml(t.coachFormat||'—')} · ${escapeHtml(t.coachDuration||'—')}</div><div><span class="text-gray-600 block">${currentLang==='en'?'Date':'Date'}</span>${escapeHtml(t.coachDate||'—')}</div>${t.coachDiscord ? `<div class="col-span-2 md:col-span-4"><span class="text-gray-600 block">Discord</span>${escapeHtml(t.coachDiscord)}</div>` : ''}</div>` : '';
-            return `<div class="glass-panel p-5 rounded-2xl"><div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4"><div class="min-w-0"><div class="flex flex-wrap items-center gap-2 mb-2">${isCoaching ? `<span class="text-aerix-purple text-xs">🎮</span>` : ''}<span class="text-white font-bold text-sm">${escapeHtml(t.subject || '—')}</span><span class="px-2 py-1 rounded-full text-[10px] font-bold ${statusClass}">${statusLabels[status] || status}</span></div><div class="text-xs text-gray-500">${escapeHtml(t.username || '—')} · ${escapeHtml(t.email || '—')}</div><div class="text-[10px] uppercase tracking-widest text-aerix-purple mt-2">${escapeHtml(t.category || 'Autre demande')}</div></div><select onchange="updateTicketStatus('${t.id}', this.value)" class="bg-black/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none"><option value="new" ${status==='new'?'selected':''}>${statusLabels.new}</option><option value="progress" ${status==='progress'?'selected':''}>${statusLabels.progress}</option><option value="done" ${status==='done'?'selected':''}>${statusLabels.done}</option><option value="archived" ${status==='archived'?'selected':''}>${statusLabels.archived}</option></select></div><div class="mt-4 bg-black/35 border border-white/5 rounded-xl p-4"><div class="text-xs text-gray-300 whitespace-pre-wrap break-words">${escapeHtml(t.message || '')}</div>${buildTicketThreadHTML(t)}${buildTicketReplyBoxHTML(t,'admin')}</div>${coachingInfo}<div class="flex gap-2 mt-3"><button onclick="deleteContactTicket('${t.id}')" class="text-xs font-bold px-3 py-2 rounded-xl bg-red-500/10 text-red-300 hover:bg-red-500/20">${currentLang==='en'?'Delete':'Supprimer'}</button></div></div>`;
+            return `<div class="glass-panel p-5 rounded-2xl"><div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4"><div class="min-w-0"><div class="flex flex-wrap items-center gap-2 mb-2">${isCoaching ? `<span class="text-aerix-purple text-xs">🎮</span>` : ''}<span class="text-white font-bold text-sm">${escapeHtml(t.subject || '—')}</span><span class="px-2 py-1 rounded-full text-[10px] font-bold ${statusClass}">${statusLabels[status] || status}</span></div><div class="text-xs text-gray-500">${escapeHtml(t.username || '—')} · ${escapeHtml(t.email || '—')}</div><div class="text-[10px] uppercase tracking-widest text-aerix-purple mt-2">${escapeHtml(t.category || 'Autre demande')}</div></div><select onchange="updateTicketStatus('${t.id}', this.value)" class="bg-black/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none"><option value="new" ${status==='new'?'selected':''}>${statusLabels.new}</option><option value="progress" ${status==='progress'?'selected':''}>${statusLabels.progress}</option><option value="done" ${status==='done'?'selected':''}>${statusLabels.done}</option><option value="archived" ${status==='archived'?'selected':''}>${statusLabels.archived}</option></select></div><div class="mt-4 bg-black/35 border border-white/5 rounded-xl p-4"><div class="text-xs text-gray-300 whitespace-pre-wrap break-words">${escapeHtml(t.message || '')}</div>${buildTicketThreadHTML(t, true)}${buildTicketReplyBoxHTML(t,'admin')}</div>${coachingInfo}<div class="flex gap-2 mt-3"><button onclick="deleteContactTicket('${t.id}')" class="text-xs font-bold px-3 py-2 rounded-xl bg-red-500/10 text-red-300 hover:bg-red-500/20">${currentLang==='en'?'Delete':'Supprimer'}</button></div></div>`;
         }
 
         // Menu "⋯" (rôle) sur chaque compte dans l'admin : ces deux fonctions étaient
