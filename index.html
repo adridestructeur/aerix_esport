@@ -4,7 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AERIX | Esports & Simracing</title>
-    <meta name="description" content="AERIX est une structure e-sport indépendante réunissant l'élite sur Rocket League et les circuits virtuels. Performance, précision et ambition.">
+    <meta name="description" content="AERIX est une structure e-sport indépendante réunissant Rocket League et le simracing. Performance, précision et ambition.">
+    <meta name="theme-color" content="#050505">
+    <link rel="canonical" href="https://aerix-esport.com/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="AERIX Esports">
+    <meta property="og:title" content="AERIX | Esports & Simracing">
+    <meta property="og:description" content="Structure e-sport indépendante présente sur Rocket League et le simracing. Performance, précision et ambition.">
+    <meta property="og:url" content="https://aerix-esport.com/">
+    <meta property="og:image" content="https://aerix-esport.com/transparent-blanc.png">
+    <meta property="og:image:alt" content="Logo AERIX Esports">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="AERIX | Esports & Simracing">
+    <meta name="twitter:description" content="Structure e-sport indépendante présente sur Rocket League et le simracing.">
+    <meta name="twitter:image" content="https://aerix-esport.com/transparent-blanc.png">
     <link rel="icon" type="image/png" href="transparent-blanc.png">
     <link rel="shortcut icon" type="image/png" href="transparent-blanc.png">
     <link rel="apple-touch-icon" href="transparent-blanc.png">
@@ -353,7 +366,8 @@
                 <button id="nav-boutique" onclick="navigate('boutique')" class="nav-btn hover:text-white" data-i18n="nav_boutique">Boutique</button>
                 <button id="nav-partenaires" onclick="navigate('partenaires')" class="nav-btn hover:text-white" data-i18n="nav_partenaires">Partenaires</button>
                 <button id="nav-coaching" onclick="openCoachingModal()" class="nav-btn hover:text-white" data-i18n="nav_coaching">Coaching</button>
-                <button id="nav-review" onclick="openReviewModal()" class="nav-btn hover:text-white" data-i18n="nav_review">Avis</button>
+                <button id="nav-recruit" onclick="openRecruitmentModal()" class="nav-btn hover:text-white" data-i18n="nav_recruit">Rejoindre</button>
+                 <button id="nav-review" onclick="openReviewModal()" class="nav-btn hover:text-white" data-i18n="nav_review">Avis</button>
             </div>
 
             <div class="hidden md:flex items-center gap-3">
@@ -367,8 +381,8 @@
                         <img id="current-flag" src="https://flagcdn.com/w20/fr.png" alt="FR" class="w-5 h-3.5 object-cover rounded-[2px] shadow-sm"> <span id="current-lang-text">FR</span> <span class="lang-chevron">▾</span>
                     </button>
                     <div id="language-menu" class="absolute right-0 mt-2 w-36 glass-panel-no-hover rounded-xl overflow-hidden flex flex-col p-2 shadow-xl border border-white/10">
-                        <button type="button" onclick="setLang('fr')" class="flex items-center gap-3 text-left px-3 py-2.5 text-xs font-bold text-white hover:bg-white/10 rounded-lg transition"><img src="https://flagcdn.com/w20/fr.png" class="w-4 h-3 object-cover rounded-sm"> Français</button>
-                        <button type="button" onclick="setLang('en')" class="flex items-center gap-3 text-left px-3 py-2.5 text-xs font-bold text-white hover:bg-white/10 rounded-lg transition"><img src="https://flagcdn.com/w20/gb.png" class="w-4 h-3 object-cover rounded-sm"> English</button>
+                        <button type="button" onclick="setLang('fr')" class="flex items-center gap-3 text-left px-3 py-2.5 text-xs font-bold text-white hover:bg-white/10 rounded-lg transition"><img src="https://flagcdn.com/w20/fr.png" class="w-4 h-3 object-cover rounded-sm" alt="Image AERIX"> Français</button>
+                        <button type="button" onclick="setLang('en')" class="flex items-center gap-3 text-left px-3 py-2.5 text-xs font-bold text-white hover:bg-white/10 rounded-lg transition"><img src="https://flagcdn.com/w20/gb.png" class="w-4 h-3 object-cover rounded-sm" alt="Image AERIX"> English</button>
                     </div>
                 </div>
             </div>
@@ -389,15 +403,16 @@
             <button onclick="navigate('boutique'); toggleMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_boutique">Boutique</button>
             <button onclick="navigate('partenaires'); toggleMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_partenaires">Partenaires</button>
             <button onclick="openCoachingModal(); toggleMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_coaching">Coaching</button>
-            <button onclick="openReviewModal(); toggleMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_review">Laisser un avis</button>
+            <button onclick="openRecruitmentModal(); toggleMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition">Rejoindre AERIX</button>
+             <button onclick="openReviewModal(); toggleMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_review">Laisser un avis</button>
             <div id="mobile-account-area"></div>
             <a href="https://discord.gg/dJcHwYT4HY" target="_blank" rel="noopener noreferrer" class="text-center text-xs text-white py-3.5 rounded-xl border border-aerix-purple/40 bg-aerix-purple/20 font-bold flex items-center justify-center gap-2">
                 <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.927 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
                 Rejoindre le Discord
             </a>
             <div class="flex gap-2 mt-1">
-                <button onclick="setLang('fr'); toggleMobileMenu();" class="flex-1 py-3 bg-white/5 border border-white/10 rounded-xl text-xs font-bold text-white flex justify-center items-center gap-2"><img src="https://flagcdn.com/w20/fr.png" class="w-4 h-3 rounded-sm"> FR</button>
-                <button onclick="setLang('en'); toggleMobileMenu();" class="flex-1 py-3 bg-white/5 border border-white/10 rounded-xl text-xs font-bold text-white flex justify-center items-center gap-2"><img src="https://flagcdn.com/w20/gb.png" class="w-4 h-3 rounded-sm"> EN</button>
+                <button onclick="setLang('fr'); toggleMobileMenu();" class="flex-1 py-3 bg-white/5 border border-white/10 rounded-xl text-xs font-bold text-white flex justify-center items-center gap-2"><img src="https://flagcdn.com/w20/fr.png" class="w-4 h-3 rounded-sm" alt="Image AERIX"> FR</button>
+                <button onclick="setLang('en'); toggleMobileMenu();" class="flex-1 py-3 bg-white/5 border border-white/10 rounded-xl text-xs font-bold text-white flex justify-center items-center gap-2"><img src="https://flagcdn.com/w20/gb.png" class="w-4 h-3 rounded-sm" alt="Image AERIX"> EN</button>
             </div>
         </div>
     </nav>
@@ -440,6 +455,34 @@
                     <h4 class="text-xl font-bold text-white mb-3" data-i18n="card_3_title">Esprit d'équipe</h4>
                     <p class="text-gray-400 text-sm leading-relaxed" data-i18n="card_3_desc">Cohésion, communication stratégique et la force d'un collectif uni pour surmonter tous les défis.</p>
                 </div>
+            </div>
+
+            <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 mt-16 reveal">
+                <section class="glass-panel p-7 rounded-3xl">
+                    <div class="flex items-center justify-between mb-5">
+                        <div>
+                            <div class="text-xs font-bold text-aerix-purple uppercase tracking-widest">Calendrier</div>
+                            <h3 class="text-2xl font-black text-white mt-1">Prochains matchs & courses</h3>
+                        </div>
+                        <span class="text-[10px] uppercase tracking-widest text-gray-500">À venir</span>
+                    </div>
+                    <div id="upcoming-events" class="space-y-3">
+                        <p class="text-sm text-gray-500">Aucun événement à venir pour le moment.</p>
+                    </div>
+                </section>
+
+                <section class="glass-panel p-7 rounded-3xl overflow-hidden">
+                    <div class="flex items-center justify-between mb-5">
+                        <div>
+                            <div class="text-xs font-bold text-aerix-purple uppercase tracking-widest">Twitch</div>
+                            <h3 class="text-2xl font-black text-white mt-1">AERIX en direct</h3>
+                        </div>
+                        <span class="text-xs text-gray-400">aerix_esport</span>
+                    </div>
+                    <div class="aspect-video rounded-2xl overflow-hidden border border-white/10 bg-black">
+                        <iframe src="https://player.twitch.tv/?channel=aerix_esport&parent=aerix-esport.com&parent=www.aerix-esport.com" class="w-full h-full" allowfullscreen title="Twitch AERIX Esports"></iframe>
+                    </div>
+                </section>
             </div>
         </main>
 
@@ -581,11 +624,11 @@
     </footer>
 
     <!-- MODAL : FICHE JOUEUR -->
-    <div id="player-modal" class="fixed inset-0 z-[120] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl">
+    <div id="player-modal" class="fixed inset-0 z-[120] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl" role="dialog" aria-modal="true" aria-label="Fenêtre AERIX">
         <div class="glass-panel w-full max-w-4xl max-h-[90vh] rounded-[2rem] flex flex-col md:flex-row overflow-hidden relative shadow-2xl">
             <button onclick="closePlayerModal()" class="absolute top-6 right-6 text-white hover:text-aerix-purple z-50 bg-black/50 w-10 h-10 rounded-full flex items-center justify-center border border-white/20 backdrop-blur-md transition">✕</button>
             <div class="w-full md:w-1/2 h-64 md:h-auto bg-[#050505] relative border-b md:border-b-0 md:border-r border-white/10">
-                <img id="pm-img" src="" class="w-full h-full object-cover object-top-custom">
+                <img id="pm-img" src="" class="w-full h-full object-cover object-top-custom" alt="Image AERIX">
                 <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent md:bg-gradient-to-r md:from-transparent md:to-[#050505]"></div>
                 <div class="absolute bottom-6 left-6 flex items-center gap-3">
                     <span id="pm-flag" class="text-3xl filter drop-shadow-lg">🇫🇷</span>
@@ -606,12 +649,12 @@
     </div>
 
     <!-- MODAL : PRODUIT BOUTIQUE -->
-    <div id="product-modal" class="fixed inset-0 z-[120] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl">
+    <div id="product-modal" class="fixed inset-0 z-[120] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl" role="dialog" aria-modal="true" aria-label="Fenêtre AERIX">
         <div class="glass-panel w-full max-w-5xl h-[85vh] md:h-[650px] rounded-[2rem] flex flex-col md:flex-row overflow-hidden relative shadow-2xl">
             <button onclick="closeProductModal()" class="absolute top-6 right-6 text-white hover:text-aerix-purple z-50 bg-black/50 w-10 h-10 rounded-full flex items-center justify-center border border-white/20 backdrop-blur-md transition">✕</button>
             <div class="w-full md:w-1/2 h-1/2 md:h-full bg-[#050505] flex items-center justify-center relative border-r border-white/10">
                 <div class="absolute inset-0 bg-gradient-to-tr from-purple-900/10 to-transparent"></div>
-                <img id="modal-product-img" src="" class="w-full h-full object-cover object-center p-0 relative z-10">
+                <img id="modal-product-img" src="" class="w-full h-full object-cover object-center p-0 relative z-10" alt="Image du produit AERIX">
                 <button id="slider-prev" onclick="prevProductImg()" class="absolute left-4 top-1/2 transform -translate-y-1/2 z-20 bg-black/60 backdrop-blur border border-white/10 text-white p-3 rounded-full hover:bg-aerix-purple transition hidden">‹</button>
                 <button id="slider-next" onclick="nextProductImg()" class="absolute right-4 top-1/2 transform -translate-y-1/2 z-20 bg-black/60 backdrop-blur border border-white/10 text-white p-3 rounded-full hover:bg-aerix-purple transition hidden">›</button>
                 <div id="slider-dots" class="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-20 flex gap-2"></div>
@@ -626,17 +669,18 @@
                 </div>
                 <div class="flex items-center justify-between mt-auto pt-6 border-t border-white/10">
                     <span id="modal-product-price" class="text-4xl font-black text-white">0 €</span>
+                    <button id="modal-product-order" type="button" onclick="orderCurrentProduct()" disabled class="px-6 py-3.5 rounded-xl bg-aerix-purple text-white text-sm font-bold shadow-[0_0_20px_rgba(139,92,246,.35)] hover:bg-purple-500 transition disabled:opacity-40 disabled:cursor-not-allowed">Commander</button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- MODAL : ARTICLE RÉSULTAT (PALMARÈS) -->
-    <div id="palmares-article-modal" class="fixed inset-0 z-[120] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl">
+    <div id="palmares-article-modal" class="fixed inset-0 z-[120] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl" role="dialog" aria-modal="true" aria-label="Fenêtre AERIX">
         <div class="glass-panel-no-hover w-full max-w-3xl max-h-[92vh] overflow-y-auto rounded-[2rem] shadow-2xl relative">
             <button onclick="closePalmaresArticle()" class="absolute top-6 right-6 text-white hover:text-aerix-purple z-50 bg-black/50 w-10 h-10 rounded-full flex items-center justify-center border border-white/20 backdrop-blur-md transition">✕</button>
             <div id="palmares-article-img-wrap" class="w-full aspect-video bg-[#050505] overflow-hidden border-b border-white/10 hidden">
-                <img id="palmares-article-img" src="" class="w-full h-full object-cover">
+                <img id="palmares-article-img" src="" class="w-full h-full object-cover" alt="Image AERIX">
             </div>
             <div class="p-6 md:p-10">
                 <div class="flex flex-wrap gap-3 items-center mb-4" id="palmares-article-badges"></div>
@@ -666,7 +710,7 @@
             </div>
         </div>
     </div>
-    <div id="cookie-settings-modal" class="fixed inset-0 z-[160] hidden flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
+    <div id="cookie-settings-modal" class="fixed inset-0 z-[160] hidden flex items-center justify-center p-4 bg-black/90 backdrop-blur-md" role="dialog" aria-modal="true" aria-label="Fenêtre AERIX">
         <div class="glass-panel w-full max-w-xl rounded-[2rem] p-6 md:p-8">
             <div class="flex justify-between items-center mb-6 border-b border-white/10 pb-4">
                 <div><p class="text-[10px] uppercase tracking-[.2em] text-aerix-purple font-bold mb-1">Confidentialité</p><h3 class="text-xl font-bold text-white">Préférences de cookies</h3></div>
@@ -688,7 +732,7 @@
     </div>
 
     <!-- MODAL : CONTACT -->
-    <div id="contact-modal" class="fixed inset-0 z-[205] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl">
+    <div id="contact-modal" class="fixed inset-0 z-[205] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl" role="dialog" aria-modal="true" aria-label="Fenêtre AERIX">
         <div class="glass-panel w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-[2rem] p-7 md:p-9 shadow-[0_0_50px_rgba(139,92,246,.2)]">
             <div class="flex justify-between items-center mb-7 border-b border-white/10 pb-4">
                 <div><p class="text-[10px] uppercase tracking-[.2em] text-aerix-purple font-bold mb-1">AERIX</p><h3 class="text-2xl font-black text-white" data-i18n="contact_title">Contact AERIX</h3><p class="text-xs text-gray-500 mt-1" data-i18n="contact_desc">Choisis Discord ou ouvre un ticket directement depuis le site.</p></div>
@@ -726,7 +770,7 @@
     </div>
 
     <!-- MODAL : TICKETS UTILISATEUR -->
-    <div id="tickets-modal" class="fixed inset-0 z-[215] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl">
+    <div id="tickets-modal" class="fixed inset-0 z-[215] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl" role="dialog" aria-modal="true" aria-label="Fenêtre AERIX">
         <div class="glass-panel-no-hover w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-[2rem] p-6 md:p-9">
             <div class="flex justify-between items-center mb-7 border-b border-white/10 pb-4">
                 <div><p class="text-[10px] uppercase tracking-[.2em] text-aerix-purple font-bold mb-1">AERIX ACCOUNT</p><h3 class="text-2xl font-black text-white" data-i18n="ticket">Tickets</h3></div>
@@ -737,7 +781,7 @@
     </div>
 
     <!-- MODAL : COACHING (CÔTÉ PILOTE) -->
-    <div id="coaching-modal" class="fixed inset-0 z-[212] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl modal-fade-target">
+    <div id="coaching-modal" class="fixed inset-0 z-[212] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl modal-fade-target" role="dialog" aria-modal="true" aria-label="Fenêtre AERIX">
         <div class="glass-panel-no-hover w-full max-w-3xl max-h-[92vh] overflow-y-auto rounded-[2rem] p-6 md:p-9 modal-fade-panel">
             <div class="flex justify-between items-center mb-7 border-b border-white/10 pb-4">
                 <div>
@@ -822,7 +866,7 @@
     </div>
 
     <!-- MODAL : LAISSER UN AVIS -->
-    <div id="review-modal" class="fixed inset-0 z-[213] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl modal-fade-target">
+    <div id="review-modal" class="fixed inset-0 z-[213] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl modal-fade-target" role="dialog" aria-modal="true" aria-label="Fenêtre AERIX">
         <div class="glass-panel-no-hover w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-[2rem] p-6 md:p-9 modal-fade-panel">
             <div class="flex justify-between items-center mb-7 border-b border-white/10 pb-4">
                 <div>
@@ -853,7 +897,7 @@
     </div>
 
     <!-- MODAL : CRÉATION / CONNEXION COMPTE -->
-    <div id="account-modal" class="fixed inset-0 z-[210] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl">
+    <div id="account-modal" class="fixed inset-0 z-[210] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl" role="dialog" aria-modal="true" aria-label="Fenêtre AERIX">
         <div class="glass-panel w-full max-w-md rounded-[2rem] p-7 md:p-8 shadow-[0_0_50px_rgba(139,92,246,.2)]">
             <div class="flex justify-between items-center mb-6">
                 <div><p id="account-modal-kicker" class="text-[10px] uppercase tracking-[.2em] text-aerix-purple font-bold mb-1">AERIX Account</p><h3 id="account-modal-title" class="text-2xl font-black text-white">Créer un compte</h3></div>
@@ -881,7 +925,7 @@
     <input type="file" id="profile-avatar-input" accept="image/*" class="hidden">
 
     <!-- MODAL : SÉCURITÉ ADMIN -->
-    <div id="admin-login-modal" class="fixed inset-0 z-[200] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl">
+    <div id="admin-login-modal" class="fixed inset-0 z-[200] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl" role="dialog" aria-modal="true" aria-label="Fenêtre AERIX">
         <div class="glass-panel w-full max-w-sm rounded-[2rem] p-8 text-center shadow-[0_0_50px_rgba(139,92,246,0.2)]">
             <div class="w-16 h-16 bg-aerix-purple/20 border border-aerix-purple/50 rounded-2xl mx-auto flex items-center justify-center mb-6 shadow-[inset_0_0_15px_rgba(139,92,246,0.5)]">
                 <svg class="w-8 h-8 text-aerix-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
@@ -897,7 +941,7 @@
     </div>
 
     <!-- MODAL : LÉGAL -->
-    <div id="legal-modal" class="fixed inset-0 z-[120] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl">
+    <div id="legal-modal" class="fixed inset-0 z-[120] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl" role="dialog" aria-modal="true" aria-label="Fenêtre AERIX">
         <div class="glass-panel w-full max-w-3xl max-h-[80vh] rounded-[2rem] p-8 overflow-y-auto border border-white/10">
             <div class="flex justify-between items-center mb-8 border-b border-white/10 pb-4">
                 <h3 id="legal-title" class="text-2xl font-bold text-white tracking-tight">Document</h3>
@@ -908,13 +952,13 @@
     </div>
 
     <!-- CROP STUDIO -->
-    <div id="crop-modal" class="fixed inset-0 z-[300] hidden flex items-center justify-center bg-black/98 p-6 backdrop-blur-2xl">
+    <div id="crop-modal" class="fixed inset-0 z-[300] hidden flex items-center justify-center bg-black/98 p-6 backdrop-blur-2xl" role="dialog" aria-modal="true" aria-label="Fenêtre AERIX">
         <div class="glass-panel w-full max-w-4xl rounded-[2rem] p-6 flex flex-col shadow-[0_0_50px_rgba(0,0,0,0.8)] border border-white/10">
             <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-3">
                 <h3 class="text-xl font-bold text-white flex items-center gap-2"><svg class="w-5 h-5 text-aerix-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> Studio de recadrage</h3>
             </div>
             <div class="w-full bg-[#030303] rounded-xl overflow-hidden relative border border-white/5 shadow-inner" id="crop-image-container" style="height: 60vh;">
-                <img id="crop-image" src="" class="block max-w-full">
+                <img id="crop-image" src="" class="block max-w-full" alt="Image AERIX">
             </div>
             <div class="flex justify-end gap-3 mt-6">
                 <button onclick="cancelCrop()" class="px-6 py-3 text-sm font-bold text-white bg-white/5 border border-white/10 hover:bg-white/10 rounded-xl transition">Annuler</button>
@@ -924,7 +968,7 @@
     </div>
 
     <!-- MODAL ADMIN -->
-    <div id="admin-modal" class="fixed inset-0 z-[110] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl">
+    <div id="admin-modal" class="fixed inset-0 z-[110] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl" role="dialog" aria-modal="true" aria-label="Fenêtre AERIX">
         <div class="glass-panel-no-hover w-full max-w-6xl max-h-[95vh] overflow-y-auto rounded-[2rem] p-6 md:p-10 border border-white/10 shadow-2xl">
             <div class="flex justify-between items-center mb-8 border-b border-white/10 pb-4">
                 <div>
@@ -1046,7 +1090,7 @@
                         <div id="player-drop-zone" class="glass-panel p-4 rounded-xl border border-dashed border-white/20">
                             <div class="flex flex-col md:flex-row gap-4 items-start md:items-center">
                                 <div class="relative group cursor-pointer shrink-0" onclick="document.getElementById('player-avatar-input').click()">
-                                    <img id="player-avatar-preview" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E" class="w-20 h-24 rounded-lg object-cover object-top-custom bg-black/80 border border-white/20 hover:border-aerix-purple transition">
+                                    <img id="player-avatar-preview" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E" class="w-20 h-24 rounded-lg object-cover object-top-custom bg-black/80 border border-white/20 hover:border-aerix-purple transition" alt="Avatar du joueur">
                                     <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition rounded-lg text-xs font-bold text-white">Photo</div>
                                 </div>
                                 <input type="file" id="player-avatar-input" accept="image/*" class="hidden">
@@ -1308,13 +1352,31 @@
         </div>
     </div>
 
+    <!-- MODAL : REJOINDRE AERIX -->
+    <div id="recruitment-modal" class="fixed inset-0 z-[210] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl">
+        <div class="glass-panel w-full max-w-2xl max-h-[92vh] overflow-y-auto rounded-[2rem] p-7 md:p-9 shadow-2xl">
+            <div class="flex items-center justify-between mb-7">
+                <div><div class="text-xs font-bold text-aerix-purple uppercase tracking-widest">AERIX Esports</div><h3 class="text-3xl font-black text-white mt-1">Rejoindre AERIX</h3></div>
+                <button type="button" onclick="closeRecruitmentModal()" class="w-10 h-10 rounded-full bg-white/5 border border-white/10 text-white">✕</button>
+            </div>
+            <form id="recruitment-form" onsubmit="submitRecruitment(event)" class="space-y-4">
+                <select id="recruitment-division" required class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
+                    <option value="">Choisir une division</option><option>Rocket League</option><option>Le Mans Ultimate</option><option>iRacing</option><option>RBR</option>
+                </select>
+                <input id="recruitment-pseudo" required placeholder="Pseudo / nom en jeu" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
+                <input id="recruitment-rank" placeholder="Rang / niveau / catégorie" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
+                <textarea id="recruitment-message" required placeholder="Présente-toi et explique ta candidature..." class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm h-32 outline-none focus:border-aerix-purple"></textarea>
+                <button type="submit" class="w-full py-3.5 rounded-xl bg-aerix-purple text-white font-bold hover:bg-purple-500 transition">Envoyer ma candidature</button>
+            </form>
+        </div>
+    </div>
+
     <!-- SCRIPTS CORE -->
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyCD4RcLGWDM4qP9XWU_B-ogvStpuaORugo",
             authDomain: "aerix-4172f.firebaseapp.com",
             projectId: "aerix-4172f",
-            storageBucket: "aerix-4172f.firebasestorage.app",
             messagingSenderId: "872781034781",
             appId: "1:872781034781:web:5eae1b46e4819a2a675df4",
             measurementId: "G-8B39F7DELZ"
@@ -1612,6 +1674,7 @@
 
         // INITIALISATION BDD
         function startSync() {
+            db.collection("events").onSnapshot((snapshot) => { globalEvents = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderUpcomingEvents(); }, () => { globalEvents = []; renderUpcomingEvents(); });
             db.collection("shop").onSnapshot((snapshot) => { globalShop = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); scheduleRender(renderShop); scheduleAdminRender(); }, (e) => console.error('shop', e));
             db.collection("effectifs").onSnapshot((snapshot) => { globalEffectifs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); scheduleRender(renderEffectifs); scheduleAdminRender(); }, (e) => console.error('effectifs', e));
             db.collection("palmares").onSnapshot((snapshot) => { globalPalmares = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); scheduleRender(renderPalmares); scheduleAdminRender(); }, (e) => console.error('palmares', e));
@@ -1658,7 +1721,7 @@
             let __html = '';
             globalShop.forEach((item, index) => {
                 let firstImg = Array.isArray(item.images) && item.images.length > 0 ? item.images[0] : item.image;
-                const imgTag = firstImg ? `<img src="${escapeHtml(firstImg)}" class="w-full h-full object-cover object-center transition duration-700 group-hover:scale-105">` : `<div class="w-full h-full bg-black/40 flex items-center justify-center text-xs text-gray-600">Sans image</div>`;
+                const imgTag = firstImg ? `<img src="${escapeHtml(firstImg)}" class="w-full h-full object-cover object-center transition duration-700 group-hover:scale-105" alt="Image AERIX">` : `<div class="w-full h-full bg-black/40 flex items-center justify-center text-xs text-gray-600">Sans image</div>`;
                 __html += `
                     <div onclick="openProductModal(${index})" class="glass-panel rounded-3xl flex flex-col h-full cursor-pointer group reveal delay-${(index%4)*100} overflow-hidden border-t-2 border-t-aerix-purple/20">
                         <div class="w-full aspect-[4/5] bg-black/80 relative border-b border-white/5 p-4">${imgTag}</div>
@@ -2370,10 +2433,10 @@ function checkAdminSessionTimeout() {
         function renderAccountArea() {
             const areas = [document.getElementById('account-area'), document.getElementById('mobile-account-area')].filter(Boolean);
             const avatarHtml = currentAccount && currentAccount.avatar
-                ? `<img src="${currentAccount.avatar}" class="w-6 h-6 rounded-full object-cover border border-aerix-purple/50">`
+                ? `<img src="${currentAccount.avatar}" class="w-6 h-6 rounded-full object-cover border border-aerix-purple/50" alt="Image AERIX">`
                 : `<span class="w-6 h-6 rounded-full bg-aerix-purple/25 border border-aerix-purple/50 flex items-center justify-center text-[10px] font-black">${escapeHtml((currentAccount?.username || 'A').charAt(0).toUpperCase())}</span>`;
             const menuAvatarHtml = currentAccount && currentAccount.avatar
-                ? `<img src="${currentAccount.avatar}" class="w-12 h-12 rounded-full object-cover border border-aerix-purple/50">`
+                ? `<img src="${currentAccount.avatar}" class="w-12 h-12 rounded-full object-cover border border-aerix-purple/50" alt="Image AERIX">`
                 : `<span class="w-12 h-12 rounded-full bg-aerix-purple/25 border border-aerix-purple/50 flex items-center justify-center text-base font-black">${escapeHtml((currentAccount?.username || 'A').charAt(0).toUpperCase())}</span>`;
             const buildHtml = (menuId, isMobile = false) => currentUser && currentAccount ? `
                 <div class="relative group ${isMobile ? 'w-full' : ''}">
@@ -2582,6 +2645,53 @@ function checkAdminSessionTimeout() {
                 }
                 addAssistantMessage('bot','Je peux t’aider pour les <strong class="text-white">effectifs</strong>, le <strong class="text-white">recrutement</strong>, le <strong class="text-white">coaching</strong> ou le <strong class="text-white">contact avec l’administration</strong>. Si ta demande nécessite un administrateur, le formulaire de contact est disponible ici.');
             },delay);
+        }
+
+        function openRecruitmentModal() {
+            document.getElementById('recruitment-modal')?.classList.remove('hidden');
+        }
+        function closeRecruitmentModal() {
+            document.getElementById('recruitment-modal')?.classList.add('hidden');
+        }
+        async function submitRecruitment(event) {
+            event.preventDefault();
+            if (!currentUser || !currentAccount) {
+                closeRecruitmentModal();
+                openContactModal();
+                openContactForm();
+                document.getElementById('contact-category').value = 'Recrutement';
+                document.getElementById('contact-subject').value = 'Candidature AERIX — Connexion requise';
+                document.getElementById('contact-message').value = 'Connecte-toi à ton compte pour envoyer ta candidature.';
+                return;
+            }
+            const division = document.getElementById('recruitment-division').value;
+            const pseudo = document.getElementById('recruitment-pseudo').value.trim();
+            const rank = document.getElementById('recruitment-rank').value.trim();
+            const message = document.getElementById('recruitment-message').value.trim();
+            if (!division || !pseudo || !message) return showToast('Division, pseudo et présentation obligatoires.', 'error');
+            try {
+                await db.collection('contactRequests').add({
+                    uid: currentUser.uid, username: currentAccount.username || '', email: currentUser.email || currentAccount.email || '',
+                    category: 'Recrutement', subject: `Candidature ${division} — ${pseudo}`,
+                    message: `Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\n\n${message}`,
+                    status:'new', adminReply:'', messages:[], unreadByUser:false, unreadByAdmin:true,
+                    createdAt:firebase.firestore.FieldValue.serverTimestamp(), updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+                });
+                document.getElementById('recruitment-form').reset();
+                closeRecruitmentModal();
+                showToast('Candidature envoyée. Elle sera traitée via les tickets.');
+            } catch(e) { console.error(e); showToast('Impossible d’envoyer la candidature.', 'error'); }
+        }
+
+        function renderUpcomingEvents() {
+            const el = document.getElementById('upcoming-events');
+            if (!el) return;
+            const events = (globalEvents || []).filter(e => e.date || e.datetime).sort((a,b) => String(a.datetime || a.date).localeCompare(String(b.datetime || b.date))).slice(0,5);
+            if (!events.length) {
+                el.innerHTML = '<p class="text-sm text-gray-500">Aucun événement à venir pour le moment.</p>';
+                return;
+            }
+            el.innerHTML = events.map(e => `<div class="rounded-2xl border border-white/10 bg-white/[.03] p-4 flex items-center justify-between gap-4"><div><div class="text-white font-bold text-sm">${escapeHtml(e.title || e.name || 'Événement')}</div><div class="text-xs text-gray-500 mt-1">${escapeHtml(e.game || 'AERIX')} · ${escapeHtml(e.date || e.datetime || '')}</div></div><span class="text-aerix-purple text-xs font-bold">${escapeHtml(e.opponent || '')}</span></div>`).join('');
         }
 
         function openContactModal() {
@@ -3166,7 +3276,7 @@ function checkAdminSessionTimeout() {
             }
             const galleryEl = document.getElementById('admin-list-gallery');
             if (galleryEl) {
-                galleryEl.innerHTML = globalGallery.length ? globalGallery.map(g => `<div class="relative group rounded-xl overflow-hidden aspect-square border border-white/10"><img src="${g.image}" class="w-full h-full object-cover"><button onclick="deleteItem('gallery', '${g.id}')" class="absolute top-1.5 right-1.5 bg-red-500 text-white text-[10px] w-6 h-6 rounded-full font-bold opacity-0 group-hover:opacity-100 transition">✕</button></div>`).join('') : `<p class="text-gray-500 text-sm italic col-span-full">Aucune photo dans la galerie.</p>`;
+                galleryEl.innerHTML = globalGallery.length ? globalGallery.map(g => `<div class="relative group rounded-xl overflow-hidden aspect-square border border-white/10"><img src="${g.image}" class="w-full h-full object-cover" alt="Image AERIX"><button onclick="deleteItem('gallery', '${g.id}')" class="absolute top-1.5 right-1.5 bg-red-500 text-white text-[10px] w-6 h-6 rounded-full font-bold opacity-0 group-hover:opacity-100 transition">✕</button></div>`).join('') : `<p class="text-gray-500 text-sm italic col-span-full">Aucune photo dans la galerie.</p>`;
             }
         }
         // Carte d'avis affichée dans l'onglet admin "Avis" : note en étoiles, auteur,
@@ -3254,8 +3364,9 @@ function checkAdminSessionTimeout() {
             const id = document.getElementById('edit-shop-id').value, name = document.getElementById('add-shop-name').value, price = document.getElementById('add-shop-price').value, sizes = document.getElementById('add-shop-sizes').value, desc = document.getElementById('add-shop-desc').value;
             if(!name || !price) return showToast("Nom et prix obligatoires.", "error");
             try {
-                if(id) await db.collection("shop").doc(id).update({ name, price, sizes, desc, images: tempShopImages });
-                else await db.collection("shop").add({ name, price, sizes, desc, images: tempShopImages });
+                const images = tempShopImages;
+                if(id) await db.collection("shop").doc(id).update({ name, price, sizes, desc, images });
+                else await db.collection("shop").add({ name, price, sizes, desc, images });
                 showToast("Produit sauvegardé !"); resetShopForm(); switchAdminTab('boutique');
             } catch(e) { showToast("Erreur de sauvegarde", "error"); }
         }
@@ -3281,14 +3392,6 @@ function checkAdminSessionTimeout() {
             const id = document.getElementById('edit-effectif-id').value, name = document.getElementById('add-roster-name').value, game = document.getElementById('add-roster-game').value, desc = document.getElementById('add-roster-desc').value;
             if(!name) return showToast("Nom du roster obligatoire.", "error");
             const data = { name, game, desc, players: tempPlayers };
-            // Garde-fou : Firestore refuse tout document dépassant ~1 Mo. On estime la taille
-            // avant l'écriture pour donner un message clair plutôt qu'un échec silencieux côté
-            // serveur (c'était la cause du "Erreur de sauvegarde" alors que "Enregistrer les
-            // modifications" sur un joueur seul, lui, ne touche pas encore Firestore).
-            const approxBytes = new Blob([JSON.stringify(data)]).size;
-            if (approxBytes > 950000) {
-                return showToast("Erreur de sauvegarde : le roster est trop volumineux (trop de photos ou photos trop lourdes cumulées). Réduis le nombre ou le poids des photos des joueurs.", "error");
-            }
             try {
                 if(id) {
                     await db.collection("effectifs").doc(id).update(data);
@@ -3599,7 +3702,8 @@ function checkAdminSessionTimeout() {
             const caption = document.getElementById('add-gallery-caption').value;
             const game = document.getElementById('add-gallery-game').value;
             try {
-                await db.collection("gallery").add({ caption, game, image: tempGalleryImage, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                const image = tempGalleryImage;
+                await db.collection("gallery").add({ caption, game, image, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
                 showToast("Photo ajoutée à la galerie !"); resetGalleryForm();
             } catch(e) { console.error(e); showToast("Erreur", "error"); }
         }
@@ -3674,26 +3778,21 @@ function checkAdminSessionTimeout() {
             updateNavPill(document.getElementById('nav-' + activeId));
         }
 
-        function navigate(pageId) {
+        function navigate(pageId, pushHistory = true) {
             const targetPage = document.getElementById('page-' + pageId);
             if(!targetPage) return;
 
-            // Retirer les classes actives et reset les animations
             document.querySelectorAll('.page-view').forEach(page => {
                 page.classList.remove('active');
                 page.classList.remove('animate-tab-change');
             });
-            
             targetPage.classList.add('active');
-            
-            // Relancer l'animation
-            void targetPage.offsetWidth; 
+            void targetPage.offsetWidth;
             targetPage.classList.add('animate-tab-change');
 
             document.querySelectorAll('#nav-container .nav-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.id === 'nav-' + pageId);
             });
-
             updateNavPill(document.getElementById('nav-' + pageId));
             refreshNavPill();
 
@@ -3703,261 +3802,65 @@ function checkAdminSessionTimeout() {
                 el.style.animation = '';
             });
 
+            if (pushHistory && window.location.hash !== '#' + pageId) {
+                history.pushState({ page: pageId }, '', '#' + pageId);
+            }
             window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            trackPageView(pageId);
-
-            setTimeout(() => {
-                setupScrollAnimations();
-                revealActiveElements();
-            }, 50);
-        }
-        // Le site est une SPA (aucun rechargement de page) : GA4 ne détecte donc pas
-        // automatiquement les changements d'onglet. On envoie un page_view virtuel
-        // à chaque navigation, uniquement si l'utilisateur a consenti et que GA est chargé.
-        function trackPageView(pageId) {
-            if (typeof gtag !== 'function') return;
-            gtag('event', 'page_view', {
-                page_title: document.title,
-                page_path: '/' + (pageId === 'home' ? '' : pageId)
-            });
+            setTimeout(revealActiveElements, 20);
         }
 
-        let mouseRaf = 0, mouseX = 0, mouseY = 0;
-        document.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX; mouseY = e.clientY;
-            if(mouseRaf) return;
-            mouseRaf = requestAnimationFrame(() => {
-                document.documentElement.style.setProperty('--mouse-x', `${mouseX}px`);
-                document.documentElement.style.setProperty('--mouse-y', `${mouseY}px`);
-                mouseRaf = 0;
-            });
-        }, { passive: true });
-
-        window.addEventListener('resize', refreshNavPill, { passive: true });
-        if (window.ResizeObserver) { const navResizeObserver = new ResizeObserver(() => refreshNavPill()); const navContainer = document.getElementById('nav-container'); if(navContainer) navResizeObserver.observe(navContainer); }
-
-        // CROP STUDIO
-        let cropper = null, cropCallback = null, cropMaxDim = 8192;
-        function openCropper(file, ratio, callback, maxDim) { const reader = new FileReader(); reader.onload = (e) => { const image = document.getElementById('crop-image'); image.src = e.target.result; document.getElementById('crop-modal').classList.remove('hidden'); if (cropper) cropper.destroy(); cropper = new Cropper(image, { aspectRatio: ratio, viewMode: 1, background: false, autoCropArea: 1 }); cropCallback = callback; cropMaxDim = maxDim || 8192; }; reader.readAsDataURL(file); }
-        // Qualité WebP maximale (1.0) partout. La résolution de sortie est plafonnée par
-        // cropMaxDim : élevée par défaut (8192px) pour les visuels affichés en grand
-        // (boutique, palmarès, annonces...), mais réduite pour les avatars de joueurs
-        // (affichés en petit format) afin d'éviter de dépasser la limite de 1 Mo par
-        // document Firestore quand un roster contient plusieurs joueurs.
-        function confirmCrop() { if (!cropper) return; const canvas = cropper.getCroppedCanvas({ maxWidth: cropMaxDim, maxHeight: cropMaxDim, imageSmoothingEnabled: true, imageSmoothingQuality: 'high', fillColor: 'transparent' }); document.getElementById('crop-modal').classList.add('hidden'); cropper.destroy(); cropper = null; if (cropCallback) cropCallback(canvas.toDataURL('image/webp', 1)); }
-        function cancelCrop() { document.getElementById('crop-modal').classList.add('hidden'); if (cropper) cropper.destroy(); cropper = null; }
-
-        // DRAG & DROP GÉNÉRIQUE POUR LES ZONES D'UPLOAD ADMIN (boutique, effectifs, palmarès,
-        // annonces, galerie, partenaires) : permet de glisser-déposer une image directement sur
-        // la zone au lieu de systématiquement ouvrir l'explorateur de fichiers. Le fichier déposé
-        // est ensuite traité exactement comme un fichier choisi via l'input (même recadrage,
-        // même export WebP qualité maximale), donc aucune perte de qualité supplémentaire.
-        function enableImageDropZone(zoneEl, inputId) {
-            if (!zoneEl || zoneEl.dataset.dropEnabled) return;
-            zoneEl.dataset.dropEnabled = 'true';
-            const input = document.getElementById(inputId);
-            if (!input) return;
-            ['dragenter', 'dragover'].forEach(evt => zoneEl.addEventListener(evt, e => {
-                e.preventDefault(); e.stopPropagation();
-                zoneEl.classList.add('drop-zone-active');
-            }));
-            ['dragleave', 'dragend'].forEach(evt => zoneEl.addEventListener(evt, e => {
-                e.preventDefault(); e.stopPropagation();
-                zoneEl.classList.remove('drop-zone-active');
-            }));
-            zoneEl.addEventListener('drop', e => {
-                e.preventDefault(); e.stopPropagation();
-                zoneEl.classList.remove('drop-zone-active');
-                const file = e.dataTransfer?.files?.[0];
-                if (!file || !file.type.startsWith('image/')) return;
-                // Réutilise le même DataTransfer que l'input pour déclencher son event 'change'
-                // existant (et donc le même pipeline de recadrage / compression déjà en place).
-                const dt = new DataTransfer();
-                dt.items.add(file);
-                input.files = dt.files;
-                input.dispatchEvent(new Event('change', { bubbles: true }));
-            });
+        function navigateFromHash() {
+            const pageId = (window.location.hash || '#home').slice(1) || 'home';
+            navigate(document.getElementById('page-' + pageId) ? pageId : 'home', false);
         }
-        function initImageDropZones() {
-            [
-                ['shop-drop-zone', 'shop-img-input'],
-                ['player-drop-zone', 'player-avatar-input'],
-                ['palm-drop-zone', 'palm-img-input'],
-                ['announcement-drop-zone', 'announcement-img-input'],
-                ['gallery-drop-zone', 'gallery-img-input'],
-                ['partner-drop-zone', 'partner-img-input']
-            ].forEach(([zoneId, inputId]) => enableImageDropZone(document.getElementById(zoneId), inputId));
-        }
-
-        let tempShopImages = [], tempPlayerAvatar = null, tempPlayers = [], tempPartnerImage = null, tempAnnouncementImage = null, tempPalmImage = null, tempGalleryImage = null;
-        const defaultAvatar = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E";
-        
-        document.getElementById('shop-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 4/5, b => { tempShopImages.push(b); renderShopPreviews(); }); e.target.value=''; });
-        function renderShopPreviews() { document.getElementById('shop-img-previews').innerHTML = tempShopImages.map((src, i) => `<div class="relative w-16 h-20 rounded-lg overflow-hidden border border-white/20"><img src="${src}" class="w-full h-full object-cover"><button type="button" onclick="tempShopImages.splice(${i}, 1); renderShopPreviews()" class="absolute top-0 right-0 bg-red-500/90 text-white text-[10px] w-5 h-5">✕</button></div>`).join(''); }
-        
-        document.getElementById('player-avatar-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 3/4, b => { tempPlayerAvatar = b; document.getElementById('player-avatar-preview').src = b; }, 700); e.target.value=''; });
-        document.getElementById('profile-avatar-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 1/1, b => updateProfileAvatar(b)); e.target.value=''; });
-        async function updateProfileAvatar(dataUrl) {
-            if(!currentUser) return;
-            try {
-                await db.collection('accounts').doc(currentUser.uid).set({ avatar: dataUrl }, { merge: true });
-                currentAccount = { ...(currentAccount || {}), avatar: dataUrl };
-                renderAccountArea();
-                showToast(currentLang==='en'?'Profile photo updated.':'Photo de profil mise à jour.');
-            } catch(e) { console.error(e); showToast(currentLang==='en'?'Failed to update photo.':'Échec de la mise à jour de la photo.','error'); }
-        }
-        let editingPlayerIndex = null;
-        function addTempPlayer() { 
-            const pseudo = document.getElementById('temp-player-pseudo').value;
-            const name = document.getElementById('temp-player-name').value; 
-            const age = document.getElementById('temp-player-age').value; 
-            const country = document.getElementById('temp-player-country').value; 
-            const number = document.getElementById('temp-player-number').value; 
-            if(!pseudo && !name) return showToast("Pseudo ou Nom requis.", "error"); 
-            const playerData = { pseudo, name, age, country, number, avatar: tempPlayerAvatar || (editingPlayerIndex !== null ? tempPlayers[editingPlayerIndex].avatar : defaultAvatar) };
-
-            if (editingPlayerIndex !== null) {
-                tempPlayers[editingPlayerIndex] = playerData;
-                showToast(currentLang==='en'?'Player updated.':'Joueur modifié.');
-            } else {
-                tempPlayers.push(playerData);
-                showToast(currentLang==='en'?'Player added to draft.':'Joueur ajouté au brouillon.');
-            }
-            resetTempPlayerForm();
-        }
-        function resetTempPlayerForm() {
-            editingPlayerIndex = null;
-            document.getElementById('temp-player-pseudo').value = ''; document.getElementById('temp-player-name').value = ''; document.getElementById('temp-player-age').value = ''; document.getElementById('temp-player-country').value = '🇫🇷'; document.getElementById('temp-player-number').value = '';
-            document.getElementById('player-avatar-preview').src = defaultAvatar; tempPlayerAvatar = null;
-            const btn = document.getElementById('temp-player-submit-btn');
-            if (btn) btn.innerText = currentLang==='en'?'Add this player to the roster':'Ajouter ce joueur au roster';
-            const cancelBtn = document.getElementById('temp-player-cancel-btn');
-            if (cancelBtn) cancelBtn.classList.add('hidden');
-            renderTempPlayersAdmin();
-        }
-        function startEditTempPlayer(i) {
-            const p = tempPlayers[i]; if (!p) return;
-            editingPlayerIndex = i;
-            document.getElementById('temp-player-pseudo').value = p.pseudo || '';
-            document.getElementById('temp-player-name').value = p.name || '';
-            document.getElementById('temp-player-age').value = p.age || '';
-            document.getElementById('temp-player-country').value = p.country || '🇫🇷';
-            document.getElementById('temp-player-number').value = p.number || '';
-            document.getElementById('player-avatar-preview').src = p.avatar || defaultAvatar;
-            tempPlayerAvatar = null;
-            const btn = document.getElementById('temp-player-submit-btn');
-            if (btn) btn.innerText = currentLang==='en'?'Save changes':'Enregistrer les modifications';
-            const cancelBtn = document.getElementById('temp-player-cancel-btn');
-            if (cancelBtn) cancelBtn.classList.remove('hidden');
-            document.getElementById('temp-player-pseudo').scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-        function renderTempPlayersAdmin() { document.getElementById('temp-players-list').innerHTML = tempPlayers.map((p, i) => `<div class="flex items-center justify-between glass-panel p-3 rounded-xl border border-white/10 ${editingPlayerIndex === i ? 'border-aerix-purple/60' : ''}"><div class="flex items-center gap-3 cursor-pointer" onclick="startEditTempPlayer(${i})"><img src="${p.avatar}" class="w-10 h-12 rounded bg-black object-cover object-top-custom border border-white/10"><div><div class="text-white font-bold text-sm uppercase">${p.pseudo||p.name}</div><div class="text-gray-400 text-xs">${p.country||'🌍'} | #${p.number||'-'}</div></div></div><div class="flex gap-2"><button type="button" onclick="startEditTempPlayer(${i})" class="text-white bg-white/10 px-2 py-1 rounded text-xs hover:bg-aerix-purple transition">${currentLang==='en'?'Edit':'Éditer'}</button><button type="button" onclick="if(editingPlayerIndex===${i}) resetTempPlayerForm(); tempPlayers.splice(${i}, 1); renderTempPlayersAdmin()" class="text-red-400 bg-red-500/10 px-2 py-1 rounded text-xs hover:bg-red-500/20 transition">Retirer</button></div></div>`).join(''); }
-        
-        document.getElementById('palm-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 16/9, b => { tempPalmImage = b; document.getElementById('palm-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('palm-img-preview').classList.remove('hidden'); }); e.target.value=''; });
-        document.getElementById('partner-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], NaN, b => { tempPartnerImage = b; document.getElementById('partner-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('partner-img-preview').classList.remove('hidden'); }); e.target.value=''; });
-        document.getElementById('announcement-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 16/9, b => { tempAnnouncementImage = b; document.getElementById('announcement-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('announcement-img-preview').classList.remove('hidden'); }); e.target.value=''; });
-        document.getElementById('gallery-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 1/1, b => { tempGalleryImage = b; document.getElementById('gallery-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('gallery-img-preview').classList.remove('hidden'); }); e.target.value=''; });
-
-        // Affiche/masque le widget assistant IA en fonction de l'état de la console
-        // d'administration. Centralisé ici car la modale admin peut être ouverte/fermée
-        // depuis plusieurs endroits (toggleAdmin, openAdminLogin, checkAdminPwd, expireAdminSession...).
-        function setAssistantHiddenForAdmin(hidden) {
-            const assistantWidget = document.getElementById('aerix-assistant');
-            if (!assistantWidget) return;
-            if (hidden) {
-                if (aerixAssistantOpen) toggleAerixAssistant(false);
-                assistantWidget.style.display = 'none';
-            } else {
-                assistantWidget.style.display = '';
-            }
-        }
-        function toggleAdmin() {
-            if (!hasAdminAccess()) {
-                openAdminLogin();
-                return;
-            }
-            applyAdminTabVisibility();
-            const modal = document.getElementById('admin-modal');
-            if (!modal) return;
-            const willOpen = modal.classList.contains('hidden');
-            modal.classList.toggle('hidden');
-            if (willOpen) {
-                renderAdminLists();
-                startAdminSession();
-            } else {
-                stopAdminSession();
-            }
-            setAssistantHiddenForAdmin(willOpen);
-        }
-        function updateAdminTabPill(activeBtn) {
-            const pill = document.getElementById('admin-tab-pill');
-            const container = document.getElementById('admin-tabs-container');
-            if(!activeBtn || !pill || !container) return;
-            const rect = activeBtn.getBoundingClientRect();
-            const parentRect = container.getBoundingClientRect();
-            pill.style.left = `${rect.left - parentRect.left}px`;
-            pill.style.top = `${rect.top - parentRect.top}px`;
-            pill.style.width = `${rect.width}px`;
-            pill.style.height = `${rect.height}px`;
-        }
-        function refreshAdminTabPill() {
-            const active = document.querySelector('#admin-tabs-container .admin-tab-btn.active');
-            if(!active) return;
-            requestAnimationFrame(() => requestAnimationFrame(() => updateAdminTabPill(active)));
-        }
-        // L'onglet "Comptes" (demandes de compte + gestion des rôles) est réservé au Owner.
-        // Un admin classique ne doit pas voir ni les demandes de compte ni la liste des comptes.
-        function applyAdminTabVisibility() {
-            const comptesBtn = document.getElementById('tab-btn-comptes');
-            const contactBtn = document.getElementById('tab-btn-contact');
-            const coachingBtn = document.getElementById('tab-btn-coaching');
-            const avisBtn = document.getElementById('tab-btn-avis');
-            const boutiqueBtn = document.getElementById('tab-btn-boutique');
-            const partenairesBtn = document.getElementById('tab-btn-partenaires');
-            if (comptesBtn) comptesBtn.classList.toggle('hidden', !isOwner());
-            if (contactBtn) contactBtn.classList.toggle('hidden', !hasAdminAccess());
-            if (coachingBtn) coachingBtn.classList.toggle('hidden', !hasAdminAccess());
-            if (avisBtn) avisBtn.classList.toggle('hidden', !hasAdminAccess());
-            // Boutique & Sponsors : réservés au rôle Owner, masqués pour les Admin.
-            if (boutiqueBtn) boutiqueBtn.classList.toggle('hidden', !isOwner());
-            if (partenairesBtn) partenairesBtn.classList.toggle('hidden', !isOwner());
-        }
-        function switchAdminTab(tab) {
-            if (tab === 'comptes' && !isOwner()) tab = 'effectifs';
-            if ((tab === 'boutique' || tab === 'partenaires') && !isOwner()) tab = 'effectifs';
-            if ((tab === 'contact' || tab === 'coaching' || tab === 'avis') && !hasAdminAccess()) tab = 'effectifs';
-            const target = document.getElementById('admin-tab-' + tab);
-            if(!target) return;
-            document.querySelectorAll('.admin-tab').forEach(t => {
-                t.classList.add('hidden');
-                t.classList.remove('animate-tab-change');
-            });
-            target.classList.remove('hidden');
-            void target.offsetWidth;
-            target.classList.add('animate-tab-change');
-            if (tab === 'coaching') renderAdminCoachingCalendar();
-            if (tab === 'contact' || tab === 'coaching' || tab === 'avis') markAdminTicketsAsRead(tab);
-            ['comptes', 'boutique', 'effectifs', 'palmares', 'partenaires', 'annonces', 'contact', 'coaching', 'avis'].forEach(t => {
-                const btn = document.getElementById('tab-btn-' + t);
-                if(btn) {
-                    btn.classList.remove('active', 'text-white');
-                    btn.classList.add('text-gray-400');
-                }
-            });
-            const activeTabBtn = document.getElementById('tab-btn-' + tab);
-            if(activeTabBtn) {
-                activeTabBtn.classList.add('active', 'text-white');
-                activeTabBtn.classList.remove('text-gray-400');
-                updateAdminTabPill(activeTabBtn);
-                refreshAdminTabPill();
-            }
-        }
+        window.addEventListener('hashchange', navigateFromHash);
+        window.addEventListener('popstate', navigateFromHash);
         window.addEventListener('resize', refreshAdminTabPill, { passive: true });
 
         // SLIDER PRODUIT
         let currentModalImages = [], currentModalImgIndex = 0;
-        function openProductModal(index) { const item = globalShop[index]; if(!item) return; document.getElementById('modal-product-title').innerText = item.name; document.getElementById('modal-product-price').innerText = item.price + " €"; document.getElementById('modal-product-desc').innerText = item.desc || ""; const sizesDiv = document.getElementById('modal-product-sizes'); const sizesArray = item.sizes ? String(item.sizes).split(',').map(s => s.trim()).filter(Boolean) : []; if(!sizesArray.length) sizesArray.push("Unique"); sizesDiv.innerHTML = sizesArray.map(size => `<button class="min-w-[3rem] h-12 px-3 rounded-xl border border-white/20 text-white text-sm font-bold flex items-center justify-center hover:border-aerix-purple hover:bg-aerix-purple/10 transition shadow-sm">${escapeHtml(size)}</button>`).join(''); currentModalImages = Array.isArray(item.images) && item.images.length > 0 ? item.images : (item.image ? [item.image] : []); const btnPrev = document.getElementById('slider-prev'), btnNext = document.getElementById('slider-next'); if(currentModalImages.length > 0) { currentModalImgIndex = 0; document.getElementById('modal-product-img').style.display = 'block'; updateSliderView(); if(currentModalImages.length > 1) { btnPrev.classList.remove('hidden'); btnNext.classList.remove('hidden'); } else { btnPrev.classList.add('hidden'); btnNext.classList.add('hidden'); } } else { document.getElementById('modal-product-img').style.display = 'none'; btnPrev.classList.add('hidden'); btnNext.classList.add('hidden'); document.getElementById('slider-dots').innerHTML = ''; } document.getElementById('product-modal').classList.remove('hidden'); }
+        function openProductModal(index) {
+            const item = globalShop[index]; if(!item) return;
+            window.currentOrderProduct = item;
+            window.currentOrderSize = '';
+            document.getElementById('modal-product-title').innerText = item.name;
+            document.getElementById('modal-product-price').innerText = item.price + " €";
+            document.getElementById('modal-product-desc').innerText = item.desc || "";
+            const sizesDiv = document.getElementById('modal-product-sizes');
+            const sizesArray = item.sizes ? String(item.sizes).split(',').map(s => s.trim()).filter(Boolean) : [];
+            if(!sizesArray.length) sizesArray.push("Unique");
+            sizesDiv.innerHTML = sizesArray.map(size => `<button type="button" data-size="${escapeHtml(size)}" onclick="selectProductSize(this)" class="product-size-btn min-w-[3rem] h-12 px-3 rounded-xl border border-white/20 text-white text-sm font-bold flex items-center justify-center hover:border-aerix-purple hover:bg-aerix-purple/10 transition shadow-sm">${escapeHtml(size)}</button>`).join('');
+            document.getElementById('modal-product-order').disabled = true;
+            currentModalImages = Array.isArray(item.images) && item.images.length > 0 ? item.images : (item.image ? [item.image] : []);
+            const btnPrev = document.getElementById('slider-prev'), btnNext = document.getElementById('slider-next');
+            if(currentModalImages.length > 0) {
+                currentModalImgIndex = 0; document.getElementById('modal-product-img').style.display = 'block'; updateSliderView();
+                btnPrev.classList.toggle('hidden', currentModalImages.length <= 1);
+                btnNext.classList.toggle('hidden', currentModalImages.length <= 1);
+            } else {
+                document.getElementById('modal-product-img').style.display = 'none';
+                btnPrev.classList.add('hidden'); btnNext.classList.add('hidden'); document.getElementById('slider-dots').innerHTML = '';
+            }
+            document.getElementById('product-modal').classList.remove('hidden');
+        }
+        function selectProductSize(button) {
+            window.currentOrderSize = button.dataset.size || '';
+            document.querySelectorAll('.product-size-btn').forEach(b => b.classList.remove('bg-aerix-purple','border-aerix-purple','shadow-[0_0_15px_rgba(139,92,246,0.35)]'));
+            button.classList.add('bg-aerix-purple','border-aerix-purple','shadow-[0_0_15px_rgba(139,92,246,0.35)]');
+            document.getElementById('modal-product-order').disabled = false;
+        }
+        function orderCurrentProduct() {
+            const product = window.currentOrderProduct;
+            if(!product || !window.currentOrderSize) return;
+            closeProductModal();
+            openContactModal();
+            openContactForm();
+            const subject = `Commande — ${product.name} — Taille ${window.currentOrderSize}`;
+            const message = `Bonjour,\n\nJe souhaite commander le produit « ${product.name} » en taille ${window.currentOrderSize}.\n\nMerci de me confirmer les modalités de commande.`;
+            document.getElementById('contact-category').value = 'Boutique';
+            document.getElementById('contact-subject').value = subject;
+            document.getElementById('contact-message').value = message;
+        }
         function updateSliderView() { document.getElementById('modal-product-img').src = currentModalImages[currentModalImgIndex]; const dotsContainer = document.getElementById('slider-dots'); dotsContainer.innerHTML = currentModalImages.length > 1 ? currentModalImages.map((_, i) => `<div class="h-2 rounded-full transition-all duration-300 ${i === currentModalImgIndex ? 'bg-aerix-purple w-8 shadow-[0_0_10px_#8B5CF6]' : 'bg-white/30 w-2'}"></div>`).join('') : ''; }
         function nextProductImg() { if(!currentModalImages.length) return; currentModalImgIndex = (currentModalImgIndex + 1) % currentModalImages.length; updateSliderView(); }
         function prevProductImg() { if(!currentModalImages.length) return; currentModalImgIndex = (currentModalImgIndex - 1 + currentModalImages.length) % currentModalImages.length; updateSliderView(); }
@@ -4127,6 +4030,9 @@ function checkAdminSessionTimeout() {
         setLang(currentLang);
         renderAccountArea();
         startSync();
+        // Hash routing : ouverture directe d'une section et conservation de l'historique navigateur.
+        if (window.location.hash) navigateFromHash(); else navigate('home', false);
+
         navigate('home');
         requestAnimationFrame(() => updateNavPill(document.getElementById('nav-home')));
         togglePalmaresFields();
