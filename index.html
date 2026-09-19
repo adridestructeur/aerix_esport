@@ -3809,6 +3809,250 @@ function checkAdminSessionTimeout() {
             setTimeout(revealActiveElements, 20);
         }
 
+        // Le site est une SPA (aucun rechargement de page) : GA4 ne détecte donc pas
+        // automatiquement les changements d'onglet. On envoie un page_view virtuel
+        // à chaque navigation, uniquement si l'utilisateur a consenti et que GA est chargé.
+        function trackPageView(pageId) {
+            if (typeof gtag !== 'function') return;
+            gtag('event', 'page_view', {
+                page_title: document.title,
+                page_path: '/' + (pageId === 'home' ? '' : pageId)
+            });
+        }
+
+        let mouseRaf = 0, mouseX = 0, mouseY = 0;
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX; mouseY = e.clientY;
+            if(mouseRaf) return;
+            mouseRaf = requestAnimationFrame(() => {
+                document.documentElement.style.setProperty('--mouse-x', `${mouseX}px`);
+                document.documentElement.style.setProperty('--mouse-y', `${mouseY}px`);
+                mouseRaf = 0;
+            });
+        }, { passive: true });
+
+        window.addEventListener('resize', refreshNavPill, { passive: true });
+        if (window.ResizeObserver) { const navResizeObserver = new ResizeObserver(() => refreshNavPill()); const navContainer = document.getElementById('nav-container'); if(navContainer) navResizeObserver.observe(navContainer); }
+
+        // CROP STUDIO
+        let cropper = null, cropCallback = null, cropMaxDim = 8192;
+        function openCropper(file, ratio, callback, maxDim) { const reader = new FileReader(); reader.onload = (e) => { const image = document.getElementById('crop-image'); image.src = e.target.result; document.getElementById('crop-modal').classList.remove('hidden'); if (cropper) cropper.destroy(); cropper = new Cropper(image, { aspectRatio: ratio, viewMode: 1, background: false, autoCropArea: 1 }); cropCallback = callback; cropMaxDim = maxDim || 8192; }; reader.readAsDataURL(file); }
+        // Qualité WebP maximale (1.0) partout. La résolution de sortie est plafonnée par
+        // cropMaxDim : élevée par défaut (8192px) pour les visuels affichés en grand
+        // (boutique, palmarès, annonces...), mais réduite pour les avatars de joueurs
+        // (affichés en petit format) afin d'éviter de dépasser la limite de 1 Mo par
+        // document Firestore quand un roster contient plusieurs joueurs.
+        function confirmCrop() { if (!cropper) return; const canvas = cropper.getCroppedCanvas({ maxWidth: cropMaxDim, maxHeight: cropMaxDim, imageSmoothingEnabled: true, imageSmoothingQuality: 'high', fillColor: 'transparent' }); document.getElementById('crop-modal').classList.add('hidden'); cropper.destroy(); cropper = null; if (cropCallback) cropCallback(canvas.toDataURL('image/webp', 1)); }
+        function cancelCrop() { document.getElementById('crop-modal').classList.add('hidden'); if (cropper) cropper.destroy(); cropper = null; }
+
+        // DRAG & DROP GÉNÉRIQUE POUR LES ZONES D'UPLOAD ADMIN (boutique, effectifs, palmarès,
+        // annonces, galerie, partenaires) : permet de glisser-déposer une image directement sur
+        // la zone au lieu de systématiquement ouvrir l'explorateur de fichiers. Le fichier déposé
+        // est ensuite traité exactement comme un fichier choisi via l'input (même recadrage,
+        // même export WebP qualité maximale), donc aucune perte de qualité supplémentaire.
+        function enableImageDropZone(zoneEl, inputId) {
+            if (!zoneEl || zoneEl.dataset.dropEnabled) return;
+            zoneEl.dataset.dropEnabled = 'true';
+            const input = document.getElementById(inputId);
+            if (!input) return;
+            ['dragenter', 'dragover'].forEach(evt => zoneEl.addEventListener(evt, e => {
+                e.preventDefault(); e.stopPropagation();
+                zoneEl.classList.add('drop-zone-active');
+            }));
+            ['dragleave', 'dragend'].forEach(evt => zoneEl.addEventListener(evt, e => {
+                e.preventDefault(); e.stopPropagation();
+                zoneEl.classList.remove('drop-zone-active');
+            }));
+            zoneEl.addEventListener('drop', e => {
+                e.preventDefault(); e.stopPropagation();
+                zoneEl.classList.remove('drop-zone-active');
+                const file = e.dataTransfer?.files?.[0];
+                if (!file || !file.type.startsWith('image/')) return;
+                // Réutilise le même DataTransfer que l'input pour déclencher son event 'change'
+                // existant (et donc le même pipeline de recadrage / compression déjà en place).
+                const dt = new DataTransfer();
+                dt.items.add(file);
+                input.files = dt.files;
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+            });
+        }
+        function initImageDropZones() {
+            [
+                ['shop-drop-zone', 'shop-img-input'],
+                ['player-drop-zone', 'player-avatar-input'],
+                ['palm-drop-zone', 'palm-img-input'],
+                ['announcement-drop-zone', 'announcement-img-input'],
+                ['gallery-drop-zone', 'gallery-img-input'],
+                ['partner-drop-zone', 'partner-img-input']
+            ].forEach(([zoneId, inputId]) => enableImageDropZone(document.getElementById(zoneId), inputId));
+        }
+
+        let tempShopImages = [], tempPlayerAvatar = null, tempPlayers = [], tempPartnerImage = null, tempAnnouncementImage = null, tempPalmImage = null, tempGalleryImage = null;
+        const defaultAvatar = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E";
+        
+        document.getElementById('shop-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 4/5, b => { tempShopImages.push(b); renderShopPreviews(); }); e.target.value=''; });
+        function renderShopPreviews() { document.getElementById('shop-img-previews').innerHTML = tempShopImages.map((src, i) => `<div class="relative w-16 h-20 rounded-lg overflow-hidden border border-white/20"><img src="${src}" class="w-full h-full object-cover"><button type="button" onclick="tempShopImages.splice(${i}, 1); renderShopPreviews()" class="absolute top-0 right-0 bg-red-500/90 text-white text-[10px] w-5 h-5">✕</button></div>`).join(''); }
+        
+        document.getElementById('player-avatar-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 3/4, b => { tempPlayerAvatar = b; document.getElementById('player-avatar-preview').src = b; }, 700); e.target.value=''; });
+        document.getElementById('profile-avatar-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 1/1, b => updateProfileAvatar(b)); e.target.value=''; });
+        async function updateProfileAvatar(dataUrl) {
+            if(!currentUser) return;
+            try {
+                await db.collection('accounts').doc(currentUser.uid).set({ avatar: dataUrl }, { merge: true });
+                currentAccount = { ...(currentAccount || {}), avatar: dataUrl };
+                renderAccountArea();
+                showToast(currentLang==='en'?'Profile photo updated.':'Photo de profil mise à jour.');
+            } catch(e) { console.error(e); showToast(currentLang==='en'?'Failed to update photo.':'Échec de la mise à jour de la photo.','error'); }
+        }
+        let editingPlayerIndex = null;
+        function addTempPlayer() { 
+            const pseudo = document.getElementById('temp-player-pseudo').value;
+            const name = document.getElementById('temp-player-name').value; 
+            const age = document.getElementById('temp-player-age').value; 
+            const country = document.getElementById('temp-player-country').value; 
+            const number = document.getElementById('temp-player-number').value; 
+            if(!pseudo && !name) return showToast("Pseudo ou Nom requis.", "error"); 
+            const playerData = { pseudo, name, age, country, number, avatar: tempPlayerAvatar || (editingPlayerIndex !== null ? tempPlayers[editingPlayerIndex].avatar : defaultAvatar) };
+
+            if (editingPlayerIndex !== null) {
+                tempPlayers[editingPlayerIndex] = playerData;
+                showToast(currentLang==='en'?'Player updated.':'Joueur modifié.');
+            } else {
+                tempPlayers.push(playerData);
+                showToast(currentLang==='en'?'Player added to draft.':'Joueur ajouté au brouillon.');
+            }
+            resetTempPlayerForm();
+        }
+        function resetTempPlayerForm() {
+            editingPlayerIndex = null;
+            document.getElementById('temp-player-pseudo').value = ''; document.getElementById('temp-player-name').value = ''; document.getElementById('temp-player-age').value = ''; document.getElementById('temp-player-country').value = '🇫🇷'; document.getElementById('temp-player-number').value = '';
+            document.getElementById('player-avatar-preview').src = defaultAvatar; tempPlayerAvatar = null;
+            const btn = document.getElementById('temp-player-submit-btn');
+            if (btn) btn.innerText = currentLang==='en'?'Add this player to the roster':'Ajouter ce joueur au roster';
+            const cancelBtn = document.getElementById('temp-player-cancel-btn');
+            if (cancelBtn) cancelBtn.classList.add('hidden');
+            renderTempPlayersAdmin();
+        }
+        function startEditTempPlayer(i) {
+            const p = tempPlayers[i]; if (!p) return;
+            editingPlayerIndex = i;
+            document.getElementById('temp-player-pseudo').value = p.pseudo || '';
+            document.getElementById('temp-player-name').value = p.name || '';
+            document.getElementById('temp-player-age').value = p.age || '';
+            document.getElementById('temp-player-country').value = p.country || '🇫🇷';
+            document.getElementById('temp-player-number').value = p.number || '';
+            document.getElementById('player-avatar-preview').src = p.avatar || defaultAvatar;
+            tempPlayerAvatar = null;
+            const btn = document.getElementById('temp-player-submit-btn');
+            if (btn) btn.innerText = currentLang==='en'?'Save changes':'Enregistrer les modifications';
+            const cancelBtn = document.getElementById('temp-player-cancel-btn');
+            if (cancelBtn) cancelBtn.classList.remove('hidden');
+            document.getElementById('temp-player-pseudo').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        function renderTempPlayersAdmin() { document.getElementById('temp-players-list').innerHTML = tempPlayers.map((p, i) => `<div class="flex items-center justify-between glass-panel p-3 rounded-xl border border-white/10 ${editingPlayerIndex === i ? 'border-aerix-purple/60' : ''}"><div class="flex items-center gap-3 cursor-pointer" onclick="startEditTempPlayer(${i})"><img src="${p.avatar}" class="w-10 h-12 rounded bg-black object-cover object-top-custom border border-white/10"><div><div class="text-white font-bold text-sm uppercase">${p.pseudo||p.name}</div><div class="text-gray-400 text-xs">${p.country||'🌍'} | #${p.number||'-'}</div></div></div><div class="flex gap-2"><button type="button" onclick="startEditTempPlayer(${i})" class="text-white bg-white/10 px-2 py-1 rounded text-xs hover:bg-aerix-purple transition">${currentLang==='en'?'Edit':'Éditer'}</button><button type="button" onclick="if(editingPlayerIndex===${i}) resetTempPlayerForm(); tempPlayers.splice(${i}, 1); renderTempPlayersAdmin()" class="text-red-400 bg-red-500/10 px-2 py-1 rounded text-xs hover:bg-red-500/20 transition">Retirer</button></div></div>`).join(''); }
+        
+        document.getElementById('palm-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 16/9, b => { tempPalmImage = b; document.getElementById('palm-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('palm-img-preview').classList.remove('hidden'); }); e.target.value=''; });
+        document.getElementById('partner-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], NaN, b => { tempPartnerImage = b; document.getElementById('partner-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('partner-img-preview').classList.remove('hidden'); }); e.target.value=''; });
+        document.getElementById('announcement-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 16/9, b => { tempAnnouncementImage = b; document.getElementById('announcement-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('announcement-img-preview').classList.remove('hidden'); }); e.target.value=''; });
+        document.getElementById('gallery-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 1/1, b => { tempGalleryImage = b; document.getElementById('gallery-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('gallery-img-preview').classList.remove('hidden'); }); e.target.value=''; });
+
+        // Affiche/masque le widget assistant IA en fonction de l'état de la console
+        // d'administration. Centralisé ici car la modale admin peut être ouverte/fermée
+        // depuis plusieurs endroits (toggleAdmin, openAdminLogin, checkAdminPwd, expireAdminSession...).
+        function setAssistantHiddenForAdmin(hidden) {
+            const assistantWidget = document.getElementById('aerix-assistant');
+            if (!assistantWidget) return;
+            if (hidden) {
+                if (aerixAssistantOpen) toggleAerixAssistant(false);
+                assistantWidget.style.display = 'none';
+            } else {
+                assistantWidget.style.display = '';
+            }
+        }
+        function toggleAdmin() {
+            if (!hasAdminAccess()) {
+                openAdminLogin();
+                return;
+            }
+            applyAdminTabVisibility();
+            const modal = document.getElementById('admin-modal');
+            if (!modal) return;
+            const willOpen = modal.classList.contains('hidden');
+            modal.classList.toggle('hidden');
+            if (willOpen) {
+                renderAdminLists();
+                startAdminSession();
+            } else {
+                stopAdminSession();
+            }
+            setAssistantHiddenForAdmin(willOpen);
+        }
+        function updateAdminTabPill(activeBtn) {
+            const pill = document.getElementById('admin-tab-pill');
+            const container = document.getElementById('admin-tabs-container');
+            if(!activeBtn || !pill || !container) return;
+            const rect = activeBtn.getBoundingClientRect();
+            const parentRect = container.getBoundingClientRect();
+            pill.style.left = `${rect.left - parentRect.left}px`;
+            pill.style.top = `${rect.top - parentRect.top}px`;
+            pill.style.width = `${rect.width}px`;
+            pill.style.height = `${rect.height}px`;
+        }
+        function refreshAdminTabPill() {
+            const active = document.querySelector('#admin-tabs-container .admin-tab-btn.active');
+            if(!active) return;
+            requestAnimationFrame(() => requestAnimationFrame(() => updateAdminTabPill(active)));
+        }
+        // L'onglet "Comptes" (demandes de compte + gestion des rôles) est réservé au Owner.
+        // Un admin classique ne doit pas voir ni les demandes de compte ni la liste des comptes.
+        function applyAdminTabVisibility() {
+            const comptesBtn = document.getElementById('tab-btn-comptes');
+            const contactBtn = document.getElementById('tab-btn-contact');
+            const coachingBtn = document.getElementById('tab-btn-coaching');
+            const avisBtn = document.getElementById('tab-btn-avis');
+            const boutiqueBtn = document.getElementById('tab-btn-boutique');
+            const partenairesBtn = document.getElementById('tab-btn-partenaires');
+            if (comptesBtn) comptesBtn.classList.toggle('hidden', !isOwner());
+            if (contactBtn) contactBtn.classList.toggle('hidden', !hasAdminAccess());
+            if (coachingBtn) coachingBtn.classList.toggle('hidden', !hasAdminAccess());
+            if (avisBtn) avisBtn.classList.toggle('hidden', !hasAdminAccess());
+            // Boutique & Sponsors : réservés au rôle Owner, masqués pour les Admin.
+            if (boutiqueBtn) boutiqueBtn.classList.toggle('hidden', !isOwner());
+            if (partenairesBtn) partenairesBtn.classList.toggle('hidden', !isOwner());
+        }
+        function switchAdminTab(tab) {
+            if (tab === 'comptes' && !isOwner()) tab = 'effectifs';
+            if ((tab === 'boutique' || tab === 'partenaires') && !isOwner()) tab = 'effectifs';
+            if ((tab === 'contact' || tab === 'coaching' || tab === 'avis') && !hasAdminAccess()) tab = 'effectifs';
+            const target = document.getElementById('admin-tab-' + tab);
+            if(!target) return;
+            document.querySelectorAll('.admin-tab').forEach(t => {
+                t.classList.add('hidden');
+                t.classList.remove('animate-tab-change');
+            });
+            target.classList.remove('hidden');
+            void target.offsetWidth;
+            target.classList.add('animate-tab-change');
+            if (tab === 'coaching') renderAdminCoachingCalendar();
+            if (tab === 'contact' || tab === 'coaching' || tab === 'avis') markAdminTicketsAsRead(tab);
+            ['comptes', 'boutique', 'effectifs', 'palmares', 'partenaires', 'annonces', 'contact', 'coaching', 'avis'].forEach(t => {
+                const btn = document.getElementById('tab-btn-' + t);
+                if(btn) {
+                    btn.classList.remove('active', 'text-white');
+                    btn.classList.add('text-gray-400');
+                }
+            });
+            const activeTabBtn = document.getElementById('tab-btn-' + tab);
+            if(activeTabBtn) {
+                activeTabBtn.classList.add('active', 'text-white');
+                activeTabBtn.classList.remove('text-gray-400');
+                updateAdminTabPill(activeTabBtn);
+                refreshAdminTabPill();
+            }
+        }
+        window.addEventListener('resize', refreshAdminTabPill, { passive: true });
+
+
         function navigateFromHash() {
             const pageId = (window.location.hash || '#home').slice(1) || 'home';
             navigate(document.getElementById('page-' + pageId) ? pageId : 'home', false);
