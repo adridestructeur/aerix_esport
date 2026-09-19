@@ -1386,6 +1386,12 @@
         const db = firebase.firestore();
         const auth = firebase.auth();
 
+        // Firebase Auth : conserver la session du compte entre les visites.
+        // Cette persistance est indépendante du consentement analytics/cookies.
+        auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(err => {
+            console.warn('Firebase Auth persistence:', err);
+        });
+
         // ACCOUNT CONFIGURATION
         // Replace OWNER_EMAIL with the email of the AERIX owner account.
         // Firebase Authentication + Firestore rules are required for real security.
@@ -1421,7 +1427,7 @@
         // accepté la mesure d'audience lors d'une visite précédente, on charge GA
         // directement sans réafficher la bannière (voir checkCookies()).
         function loadAnalyticsIfConsented() {
-            if (getPersistedValue('aerix_cookies_analytics') === 'true') loadGoogleAnalytics();
+            if (getPersistedValue(COOKIE_ANALYTICS_KEY) === 'true') loadGoogleAnalytics();
         }
 
         // Session console d'administration :
@@ -4136,26 +4142,44 @@ function checkAdminSessionTimeout() {
             b.classList.add('translate-y-full');
             setTimeout(() => b.classList.add('hidden'), 450);
         }
-        // Persistance du consentement cookies : LocalStorage en priorité, avec un
-        // cookie de secours (1 an) en complément pour les navigateurs qui bloquent
-        // ou effacent le LocalStorage (ex. Safari iOS en navigation privée stricte).
+        // Persistance du consentement cookies : stockage local persistant + cookie
+        // de secours. Le consentement ne doit jamais dépendre de Firebase Auth.
+        const COOKIE_CONSENT_KEY = 'aerix_cookie_consent_v3';
+        const COOKIE_ANALYTICS_KEY = 'aerix_cookies_analytics_v3';
+
         function setPersistedValue(key, value) {
-            try { localStorage.setItem(key, value); } catch(e) {}
-            try { document.cookie = `${key}=${encodeURIComponent(value)}; max-age=31536000; path=/; SameSite=Lax`; } catch(e) {}
+            try {
+                localStorage.setItem(key, String(value));
+            } catch(e) {
+                console.warn('localStorage indisponible:', e);
+            }
+            try {
+                const secure = location.protocol === 'https:' ? '; Secure' : '';
+                const domain = location.hostname.endsWith('aerix-esport.com') ? '; Domain=.aerix-esport.com' : '';
+                document.cookie = `${key}=${encodeURIComponent(String(value))}; Max-Age=31536000; Path=/; SameSite=Lax${secure}${domain}`;
+            } catch(e) {}
         }
+
         function getPersistedValue(key) {
             try {
                 const fromStorage = localStorage.getItem(key);
                 if (fromStorage !== null) return fromStorage;
             } catch(e) {}
             try {
-                const match = document.cookie.match(new RegExp('(?:^|; )' + key + '=([^;]*)'));
+                const escaped = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                const match = document.cookie.match(new RegExp('(?:^|;\\s*)' + escaped + '=([^;]*)'));
                 if (match) return decodeURIComponent(match[1]);
             } catch(e) {}
             return null;
         }
+
+        function hasCookieConsent() {
+            // Compatibilité avec l'ancienne clé déjà enregistrée sur certains navigateurs.
+            return !!(getPersistedValue(COOKIE_CONSENT_KEY) || getPersistedValue('aerix_cookie_consent_v2'));
+        }
+
         function checkCookies() {
-            if(getPersistedValue('aerix_cookie_consent_v2')) return;
+            if (hasCookieConsent()) return;
             setTimeout(() => {
                 const b = document.getElementById('cookie-banner');
                 if(!b) return;
@@ -4164,7 +4188,7 @@ function checkAdminSessionTimeout() {
             }, 900);
         }
         function applyCookieConsent(analytics) {
-            setPersistedValue('aerix_cookies_analytics', analytics ? 'true' : 'false');
+            setPersistedValue(COOKIE_ANALYTICS_KEY, analytics ? 'true' : 'false');
             // Charge Google Analytics uniquement si l'utilisateur a donné son accord.
             // GA ne se décharge pas dynamiquement si le consentement est retiré après coup
             // (limite technique du SDK gtag.js) : un rechargement de page est nécessaire
@@ -4173,19 +4197,19 @@ function checkAdminSessionTimeout() {
         }
         function acceptCookies(all) {
             applyCookieConsent(!!all);
-            setPersistedValue('aerix_cookie_consent_v2', 'true');
+            setPersistedValue(COOKIE_CONSENT_KEY, 'true');
             hideCookieBanner();
             showToast(currentLang==='en'?'Preferences saved':'Préférences enregistrées');
         }
         function openCookieSettings() {
             document.getElementById('cookie-settings-modal').classList.remove('hidden');
-            document.getElementById('cookie-analytics').checked = getPersistedValue('aerix_cookies_analytics') === 'true';
+            document.getElementById('cookie-analytics').checked = getPersistedValue(COOKIE_ANALYTICS_KEY) === 'true';
         }
         function closeCookieSettings() { document.getElementById('cookie-settings-modal').classList.add('hidden'); }
         function saveCookieSettings() {
             const analytics = document.getElementById('cookie-analytics').checked;
             applyCookieConsent(analytics);
-            setPersistedValue('aerix_cookie_consent_v2', 'true');
+            setPersistedValue(COOKIE_CONSENT_KEY, 'true');
             closeCookieSettings();
             hideCookieBanner();
             showToast(currentLang==='en'?'Preferences saved':'Préférences enregistrées');
