@@ -4428,9 +4428,10 @@ function checkAdminSessionTimeout() {
         startSync();
         // Hash routing : ouverture directe d'une section et conservation de l'historique navigateur.
         if (window.location.hash) navigateFromHash(); else navigate('home', false);
-
-        navigate('home');
-        requestAnimationFrame(() => updateNavPill(document.getElementById('nav-home')));
+        requestAnimationFrame(() => {
+            const active = document.querySelector('.page-view.active');
+            updateNavPill(document.getElementById('nav-' + (active ? active.id.replace('page-', '') : 'home')));
+        });
         togglePalmaresFields();
         setPalmaresView('resultats');
         initImageDropZones();
