@@ -990,6 +990,7 @@
                 <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('boutique')" id="tab-btn-boutique" class="admin-tab-btn active flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-white transition cursor-pointer relative z-10">Boutique</button>
                 <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('effectifs')" id="tab-btn-effectifs" class="admin-tab-btn flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10">Effectifs</button>
                 <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('palmares')" id="tab-btn-palmares" class="admin-tab-btn flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10">Résultats</button>
+                <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('evenements')" id="tab-btn-evenements" class="admin-tab-btn flex-1 min-w-[120px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10">Événements</button>
                 <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('annonces')" id="tab-btn-annonces" class="admin-tab-btn flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10">Actualités</button>
                 <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('partenaires')" id="tab-btn-partenaires" class="admin-tab-btn flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10">Sponsors</button>
                 <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('contact')" id="tab-btn-contact" class="admin-tab-btn flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10" data-i18n="contact_form">Contact</button>
@@ -1233,6 +1234,31 @@
                         <button type="button" onclick="resetAchievementForm()" class="px-6 py-3.5 bg-white/5 border border-white/10 hover:bg-white/10 text-white rounded-xl text-sm font-bold transition">Annuler</button>
                         <button type="button" onclick="saveAchievement()" class="flex-1 bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition shadow-[0_0_15px_rgba(139,92,246,0.3)]">Enregistrer le palmarès</button>
                     </div>
+                </div>
+            </div>
+
+            <!-- TAB: ÉVÉNEMENTS À VENIR -->
+            <div id="admin-tab-evenements" class="admin-tab hidden space-y-8">
+                <div>
+                    <h4 class="text-lg font-bold text-white mb-2">Prochains matchs & courses</h4>
+                    <p class="text-xs text-gray-500 mb-5">Crée et gère les événements qui apparaissent sur la page d'accueil dans la section des prochaines compétitions.</p>
+                    <div id="admin-list-evenements" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                </div>
+                <div class="glass-panel glass-panel-form p-6 rounded-2xl border border-white/5">
+                    <h4 id="event-form-title" class="text-lg font-bold text-white mb-6 border-b border-white/10 pb-2">Ajouter un événement</h4>
+                    <input type="hidden" id="edit-event-id" value="">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <input type="text" id="add-event-title" placeholder="Nom (ex: RLCS — AERIX vs Équipe X)" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple transition font-bold">
+                        <select id="add-event-type" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple transition"><option value="Match">Match</option><option value="Course">Course</option><option value="Événement">Événement</option></select>
+                        <select id="add-event-game" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple transition"><option value="Rocket League">Rocket League</option><option value="Le Mans Ultimate">Le Mans Ultimate</option><option value="RBR">RBR (Richard Burns Rally)</option><option value="iRacing">iRacing</option><option value="Autre">Autre</option></select>
+                        <input type="text" id="add-event-competition" placeholder="Compétition / championnat (optionnel)" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple transition">
+                        <input type="text" id="add-event-opponent" placeholder="Adversaire / circuit (optionnel)" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple transition">
+                        <input type="date" id="add-event-date" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple transition">
+                        <input type="time" id="add-event-time" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple transition">
+                        <input type="url" id="add-event-link" placeholder="Lien (optionnel)" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple transition">
+                    </div>
+                    <textarea id="add-event-description" placeholder="Description / informations complémentaires (optionnel)" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm h-24 mb-6 outline-none focus:border-aerix-purple transition resize-y"></textarea>
+                    <div class="flex gap-3"><button id="event-cancel-btn" type="button" onclick="resetEventForm()" class="hidden px-6 py-3.5 bg-white/5 border border-white/10 hover:bg-white/10 text-white rounded-xl text-sm font-bold transition">Annuler</button><button type="button" onclick="saveEvent()" class="flex-1 bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition shadow-[0_0_15px_rgba(139,92,246,0.3)]">Enregistrer l'événement</button></div>
                 </div>
             </div>
 
@@ -2698,12 +2724,20 @@ function checkAdminSessionTimeout() {
         function renderUpcomingEvents() {
             const el = document.getElementById('upcoming-events');
             if (!el) return;
-            const events = (globalEvents || []).filter(e => e.date || e.datetime).sort((a,b) => String(a.datetime || a.date).localeCompare(String(b.datetime || b.date))).slice(0,5);
+            const now = Date.now();
+            const events = (globalEvents || []).filter(e => { const ts = parseAERIXDate(e.datetime || e.date); return ts > now; }).sort((a,b) => parseAERIXDate(a.datetime || a.date) - parseAERIXDate(b.datetime || b.date)).slice(0,5);
             if (!events.length) {
                 el.innerHTML = '<p class="text-sm text-gray-500">Aucun événement à venir pour le moment.</p>';
                 return;
             }
-            el.innerHTML = events.map(e => `<div class="rounded-2xl border border-white/10 bg-white/[.03] p-4 flex items-center justify-between gap-4"><div><div class="text-white font-bold text-sm">${escapeHtml(e.title || e.name || 'Événement')}</div><div class="text-xs text-gray-500 mt-1">${escapeHtml(e.game || 'AERIX')} · ${escapeHtml(e.date || e.datetime || '')}</div></div><span class="text-aerix-purple text-xs font-bold">${escapeHtml(e.opponent || '')}</span></div>`).join('');
+            el.innerHTML = events.map(e => {
+                const dateText = e.date ? e.date.split('-').reverse().join('/') : (e.datetime || '');
+                const when = `${dateText}${e.time ? ' · ' + e.time : ''}`;
+                const typeIcon = e.type === 'Course' ? '🏁' : e.type === 'Match' ? '⚔️' : '📅';
+                const extra = [e.competition, e.opponent].filter(Boolean).join(' · ');
+                const link = e.link && safeUrl(e.link) ? `<a href="${escapeHtml(safeUrl(e.link))}" target="_blank" rel="noopener noreferrer" class="text-aerix-purple text-xs font-bold hover:text-white transition">Voir</a>` : '';
+                return `<div class="rounded-2xl border border-white/10 bg-white/[.03] p-4 flex items-center justify-between gap-4"><div class="min-w-0"><div class="flex items-center gap-2"><span>${typeIcon}</span><div class="text-white font-bold text-sm truncate">${escapeHtml(e.title || e.name || 'Événement')}</div></div><div class="text-xs text-gray-500 mt-1">${escapeHtml(e.game || 'AERIX')} · ${escapeHtml(when)}</div>${extra ? `<div class="text-xs text-gray-500 mt-1 truncate">${escapeHtml(extra)}</div>` : ''}</div><div class="flex items-center gap-3 shrink-0"><span class="text-aerix-purple text-xs font-bold">${escapeHtml(e.type || 'Événement')}</span>${link}</div></div>`;
+            }).join('');
         }
 
         function openContactModal() {
@@ -3273,6 +3307,16 @@ function checkAdminSessionTimeout() {
             const sortedAdminEffectifs = [...globalEffectifs].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
             document.getElementById('admin-list-effectifs').innerHTML = sortedAdminEffectifs.map((r, idx) => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center effectif-row" draggable="true" data-id="${r.id}" ondragstart="dragEffectifStart(event)" ondragend="dragEffectifEnd(event)" ondragover="dragEffectifOver(event)" ondrop="dropEffectif(event)"><div class="flex items-center gap-2"><div class="effectif-drag-handle cursor-grab active:cursor-grabbing text-gray-500 hover:text-white transition px-1" title="Glisser pour réordonner"><svg width="10" height="16" viewBox="0 0 10 16" fill="currentColor"><circle cx="2" cy="2" r="1.5"/><circle cx="8" cy="2" r="1.5"/><circle cx="2" cy="8" r="1.5"/><circle cx="8" cy="8" r="1.5"/><circle cx="2" cy="14" r="1.5"/><circle cx="8" cy="14" r="1.5"/></svg></div><div class="flex flex-col gap-1"><button onclick="moveEffectif('${r.id}', -1)" ${idx === 0 ? 'disabled' : ''} class="w-6 h-6 flex items-center justify-center rounded-md bg-white/10 hover:bg-aerix-purple text-white text-xs transition disabled:opacity-20 disabled:cursor-not-allowed" title="Monter">▲</button><button onclick="moveEffectif('${r.id}', 1)" ${idx === sortedAdminEffectifs.length - 1 ? 'disabled' : ''} class="w-6 h-6 flex items-center justify-center rounded-md bg-white/10 hover:bg-aerix-purple text-white text-xs transition disabled:opacity-20 disabled:cursor-not-allowed" title="Descendre">▼</button></div><div><div class="text-white font-bold text-sm flex items-center gap-2">${r.name} <span class="bg-white/10 text-[9px] px-2 py-0.5 rounded-full">${r.players?.length||0} j.</span></div><div class="text-xs text-gray-500">${r.game || 'Général'}</div></div></div><div class="flex gap-2"><button onclick="startEditEffectif('${r.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('effectifs', '${r.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
             document.getElementById('admin-list-palmares').innerHTML = sortByDateDesc(globalPalmares).map(p => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm truncate max-w-[150px]">${p.title}</div><div class="text-xs text-gray-500">${p.game || 'Général'}</div></div><div class="flex gap-2"><button onclick="startEditPalmares('${p.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('palmares', '${p.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
+            const eventsEl = document.getElementById('admin-list-evenements');
+            if (eventsEl) {
+                const sortedEvents = [...(globalEvents || [])].sort((a, b) => parseAERIXDate(a.datetime || a.date || '') - parseAERIXDate(b.datetime || b.date || ''));
+                eventsEl.innerHTML = sortedEvents.length ? sortedEvents.map(e => {
+                    const type = e.type || 'Événement';
+                    const dateText = e.date ? e.date.split('-').reverse().join('/') : 'Date non renseignée';
+                    const timeText = e.time ? ` · ${e.time}` : '';
+                    return `<div class="glass-panel p-5 rounded-2xl flex flex-col gap-4"><div class="flex items-start justify-between gap-3"><div class="min-w-0"><div class="flex flex-wrap items-center gap-2 mb-2"><span class="text-aerix-purple text-xs font-bold">${escapeHtml(type)}</span><span class="text-gray-500 text-xs">${escapeHtml(e.game || 'Autre')}</span></div><div class="text-white font-bold text-sm break-words">${escapeHtml(e.title || 'Événement')}</div><div class="text-xs text-gray-400 mt-2">📅 ${escapeHtml(dateText + timeText)}</div>${e.opponent ? `<div class="text-xs text-gray-500 mt-1">${type === 'Course' ? '🏁' : '⚔️'} ${escapeHtml(e.opponent)}</div>` : ''}${e.competition ? `<div class="text-xs text-gray-500 mt-1">${escapeHtml(e.competition)}</div>` : ''}</div><div class="flex gap-2 shrink-0"><button onclick="startEditEvent('${e.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('events', '${e.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 rounded-lg px-3 py-1.5 transition">Suppr</button></div></div>${e.description ? `<div class="text-xs text-gray-400 bg-black/25 border border-white/5 rounded-xl p-3 whitespace-pre-wrap">${escapeHtml(e.description)}</div>` : ''}</div>`;
+                }).join('') : `<p class="text-gray-500 text-sm italic col-span-full">Aucun événement à venir.</p>`;
+            }
             const achievementsEl = document.getElementById('admin-list-achievements');
             if (achievementsEl) {
                 achievementsEl.innerHTML = (globalAchievements || []).map(a => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center gap-3"><div class="min-w-0"><div class="text-white font-bold text-sm truncate">${escapeHtml(a.icon || '🏆')} ${escapeHtml(a.title || 'Palmarès')}</div><div class="text-aerix-purple text-sm font-black mt-1">${escapeHtml(a.value || '—')}</div><div class="text-xs text-gray-500 mt-1">${escapeHtml(a.category || 'AERIX')}</div></div><div class="flex gap-2 shrink-0"><button onclick="startEditAchievement('${a.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('achievements', '${a.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('') || `<p class="text-gray-500 text-sm italic col-span-full">${currentLang==='en'?'No achievements yet.':'Aucun palmarès ajouté.'}</p>`;
@@ -3679,6 +3723,61 @@ function checkAdminSessionTimeout() {
             } catch(e) { showToast("Erreur", "error"); }
         }
 
+        // --- ÉDITION ÉVÉNEMENTS ---
+        function startEditEvent(id) {
+            const item = (globalEvents || []).find(e => e.id === id);
+            if (!item) return;
+            document.getElementById('edit-event-id').value = item.id;
+            document.getElementById('add-event-title').value = item.title || item.name || '';
+            document.getElementById('add-event-type').value = item.type || 'Match';
+            document.getElementById('add-event-game').value = item.game || 'Rocket League';
+            document.getElementById('add-event-competition').value = item.competition || '';
+            document.getElementById('add-event-opponent').value = item.opponent || '';
+            document.getElementById('add-event-date').value = item.date || '';
+            document.getElementById('add-event-time').value = item.time || '';
+            document.getElementById('add-event-link').value = item.link || '';
+            document.getElementById('add-event-description').value = item.description || '';
+            document.getElementById('event-form-title').innerText = 'Modifier l’événement';
+            document.getElementById('event-cancel-btn').classList.remove('hidden');
+            switchAdminTab('evenements');
+        }
+        function resetEventForm() {
+            document.getElementById('edit-event-id').value = '';
+            document.getElementById('add-event-title').value = '';
+            document.getElementById('add-event-type').value = 'Match';
+            document.getElementById('add-event-game').value = 'Rocket League';
+            document.getElementById('add-event-competition').value = '';
+            document.getElementById('add-event-opponent').value = '';
+            document.getElementById('add-event-date').value = '';
+            document.getElementById('add-event-time').value = '';
+            document.getElementById('add-event-link').value = '';
+            document.getElementById('add-event-description').value = '';
+            document.getElementById('event-form-title').innerText = 'Ajouter un événement';
+            document.getElementById('event-cancel-btn').classList.add('hidden');
+        }
+        async function saveEvent() {
+            if (!hasAdminAccess()) return showToast('Accès administration requis.', 'error');
+            const id = document.getElementById('edit-event-id').value.trim();
+            const title = document.getElementById('add-event-title').value.trim();
+            const type = document.getElementById('add-event-type').value;
+            const game = document.getElementById('add-event-game').value;
+            const competition = document.getElementById('add-event-competition').value.trim();
+            const opponent = document.getElementById('add-event-opponent').value.trim();
+            const date = document.getElementById('add-event-date').value;
+            const time = document.getElementById('add-event-time').value;
+            const link = document.getElementById('add-event-link').value.trim();
+            const description = document.getElementById('add-event-description').value.trim();
+            if (!title || !date) return showToast('Nom et date obligatoires.', 'error');
+            if (link && !safeUrl(link)) return showToast('Le lien fourni n’est pas valide.', 'error');
+            const data = { title, type, game, competition, opponent, date, time, link, description, datetime: `${date}${time ? 'T' + time : 'T23:59'}`, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
+            try {
+                if (id) { await db.collection('events').doc(id).update(data); showToast('Événement mis à jour.'); }
+                else { data.createdAt = firebase.firestore.FieldValue.serverTimestamp(); await db.collection('events').add(data); showToast('Événement ajouté.'); }
+                resetEventForm();
+                switchAdminTab('evenements');
+            } catch (e) { console.error(e); showToast('Erreur lors de l’enregistrement de l’événement.', 'error'); }
+        }
+
         // --- EDITION ANNONCES (TEXTE RICHE) — éditeur générique, réutilisé aussi par le Palmarès ---
         function formatText(command, value = null, targetId = 'add-announcement-desc') { document.execCommand(command, false, value); document.getElementById(targetId).focus(); }
         function insertEmoji(emoji, targetId = 'add-announcement-desc', pickerId = 'emoji-picker') { document.execCommand('insertText', false, emoji); document.getElementById(pickerId).classList.add('hidden'); document.getElementById(targetId).focus(); }
@@ -4034,12 +4133,14 @@ function checkAdminSessionTimeout() {
             const contactBtn = document.getElementById('tab-btn-contact');
             const coachingBtn = document.getElementById('tab-btn-coaching');
             const avisBtn = document.getElementById('tab-btn-avis');
+            const evenementsBtn = document.getElementById('tab-btn-evenements');
             const boutiqueBtn = document.getElementById('tab-btn-boutique');
             const partenairesBtn = document.getElementById('tab-btn-partenaires');
             if (comptesBtn) comptesBtn.classList.toggle('hidden', !isOwner());
             if (contactBtn) contactBtn.classList.toggle('hidden', !hasAdminAccess());
             if (coachingBtn) coachingBtn.classList.toggle('hidden', !hasAdminAccess());
             if (avisBtn) avisBtn.classList.toggle('hidden', !hasAdminAccess());
+            if (evenementsBtn) evenementsBtn.classList.toggle('hidden', !hasAdminAccess());
             // Boutique & Sponsors : réservés au rôle Owner, masqués pour les Admin.
             if (boutiqueBtn) boutiqueBtn.classList.toggle('hidden', !isOwner());
             if (partenairesBtn) partenairesBtn.classList.toggle('hidden', !isOwner());
@@ -4047,7 +4148,7 @@ function checkAdminSessionTimeout() {
         function switchAdminTab(tab) {
             if (tab === 'comptes' && !isOwner()) tab = 'effectifs';
             if ((tab === 'boutique' || tab === 'partenaires') && !isOwner()) tab = 'effectifs';
-            if ((tab === 'contact' || tab === 'coaching' || tab === 'avis') && !hasAdminAccess()) tab = 'effectifs';
+            if ((tab === 'evenements' || tab === 'contact' || tab === 'coaching' || tab === 'avis') && !hasAdminAccess()) tab = 'effectifs';
             const target = document.getElementById('admin-tab-' + tab);
             if(!target) return;
             document.querySelectorAll('.admin-tab').forEach(t => {
@@ -4059,7 +4160,7 @@ function checkAdminSessionTimeout() {
             target.classList.add('animate-tab-change');
             if (tab === 'coaching') renderAdminCoachingCalendar();
             if (tab === 'contact' || tab === 'coaching' || tab === 'avis') markAdminTicketsAsRead(tab);
-            ['comptes', 'boutique', 'effectifs', 'palmares', 'partenaires', 'annonces', 'contact', 'coaching', 'avis'].forEach(t => {
+            ['comptes', 'boutique', 'effectifs', 'palmares', 'evenements', 'partenaires', 'annonces', 'contact', 'coaching', 'avis'].forEach(t => {
                 const btn = document.getElementById('tab-btn-' + t);
                 if(btn) {
                     btn.classList.remove('active', 'text-white');
