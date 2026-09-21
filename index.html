@@ -196,13 +196,97 @@
 
     .filter-btn { padding: 0.5rem 1.2rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: #9ca3af; cursor: pointer; }
 
-    /* ROSTER : CARROUSEL JOUEURS (4 visibles max, défilement horizontal) */
-    .roster-track { display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - 4 * 1.25rem) / 5); align-items: stretch; gap: 1.25rem; overflow-x: auto; scroll-behavior: smooth; scroll-snap-type: x mandatory; padding-bottom: .25rem; -ms-overflow-style: none; scrollbar-width: none; }
+    /* ROSTER : CARROUSEL JOUEURS */
+    .roster-track {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: calc((100% - 4 * 1.25rem) / 5);
+        align-items: stretch;
+        gap: 1.25rem;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-behavior: smooth;
+        scroll-snap-type: x mandatory;
+        padding: .5rem .35rem .75rem;
+        margin: -.5rem -.35rem 0;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
     .roster-track::-webkit-scrollbar { display: none; }
-    .roster-track > * { scroll-snap-align: start; }
-    @media (max-width: 1024px) { .roster-track { grid-auto-columns: calc((100% - 2 * 1.5rem) / 3); } }
-    @media (max-width: 768px) { .roster-track { grid-auto-columns: calc((100% - 1 * 1rem) / 2); gap: 1rem; } }
-    @media (max-width: 480px) { .roster-track { grid-auto-columns: 78%; } }
+    .roster-track > * {
+        scroll-snap-align: start;
+        min-width: 0;
+    }
+
+    /* Les cartes joueurs ne doivent pas être transformées par le hover global
+       de .glass-panel : le carrousel les clippe alors à ses extrémités. */
+    .effectif-player-card {
+        min-width: 0;
+        isolation: isolate;
+        contain: paint;
+        transform: none !important;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+    }
+    .effectif-player-card:hover {
+        transform: none !important;
+    }
+
+    /* Le cadre de photo est la seule zone qui clippe le zoom.
+       Cela évite les artefacts rectangulaires sur les bords de l'image. */
+    .effectif-avatar-frame {
+        position: relative;
+        isolation: isolate;
+        contain: paint;
+        overflow: hidden;
+        border-radius: 1rem;
+        transform: translateZ(0);
+        -webkit-transform: translateZ(0);
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+    }
+    .effectif-avatar-frame > img {
+        transform: translateZ(0) scale(1);
+        -webkit-transform: translateZ(0) scale(1);
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        will-change: transform, filter;
+    }
+    .effectif-player-card:hover .effectif-avatar-frame > img {
+        transform: translateZ(0) scale(1.05);
+        -webkit-transform: translateZ(0) scale(1.05);
+    }
+
+    /* Les métadonnées restent visibles même si le nom est long :
+       le nom peut se réduire, l'âge ne peut plus être mangé par truncate. */
+    .effectif-player-meta {
+        min-width: 0;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+    }
+    .effectif-player-meta .player-name {
+        min-width: 0;
+        flex: 1 1 auto;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .effectif-player-meta .player-age {
+        flex: 0 0 auto;
+        white-space: nowrap;
+    }
+
+    @media (max-width: 1024px) {
+        .roster-track { grid-auto-columns: calc((100% - 2 * 1.5rem) / 3); }
+    }
+    @media (max-width: 768px) {
+        .roster-track { grid-auto-columns: calc((100% - 1 * 1rem) / 2); gap: 1rem; }
+    }
+    @media (max-width: 480px) {
+        .roster-track { grid-auto-columns: 78%; }
+    }
     .filter-btn.active { background: #8B5CF6; color: white; border-color: #8B5CF6; box-shadow: 0 0 20px rgba(139,92,246,0.6); transform: scale(1.05); }
     .filter-btn:hover:not(.active) { background: rgba(255,255,255,0.1); color: white; transform: translateY(-2px); }
     
@@ -1905,19 +1989,19 @@
                         // et cassait la fiche d'un joueur nommé D'Artagnan / O'Neil. On l'encode explicitement.
                         const escapedPlayer = encodeURIComponent(JSON.stringify({...p, game: r.game})).replace(/'/g, '%27');
                         playersHTML += `
-                        <div class="glass-panel p-4 flex flex-col items-center rounded-3xl cursor-pointer group hover:border-aerix-purple/50 transition-all duration-300 overflow-hidden" onclick="openPlayerModal('${escapedPlayer}')">
-                            <div class="relative w-full aspect-[3/4] rounded-2xl overflow-hidden mb-4 border border-white/10 group-hover:border-aerix-purple/30 bg-[#050505]">
-                                <img src="${escapeHtml(p.avatar || defaultAvatar)}" loading="lazy" alt="" class="w-full h-full object-cover object-top-custom transition duration-500 group-hover:scale-105 group-hover:brightness-110">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80"></div>
+                        <div class="glass-panel effectif-player-card p-4 flex flex-col items-center rounded-3xl cursor-pointer group hover:border-aerix-purple/50 transition-all duration-300" onclick="openPlayerModal('${escapedPlayer}')">
+                            <div class="effectif-avatar-frame relative w-full aspect-[3/4] mb-4 border border-white/10 group-hover:border-aerix-purple/30 bg-[#050505]">
+                                <img src="${escapeHtml(p.avatar || defaultAvatar)}" loading="lazy" alt="" class="w-full h-full object-cover object-top-custom transition duration-500 group-hover:brightness-110">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80 pointer-events-none"></div>
                                 <div class="absolute bottom-3 left-3 flex gap-2 z-10">
                                     <span class="bg-black/60 backdrop-blur-md text-white text-sm px-2 py-1 rounded-lg border border-white/20 filter drop-shadow-md">${escapeHtml(p.country || '🌍')}</span>
                                     ${p.number ? `<span class="bg-aerix-purple text-white text-xs font-black px-2 py-1 rounded-lg border border-purple-400 shadow-[0_0_10px_rgba(139,92,246,0.5)] flex items-center">#${escapeHtml(p.number)}</span>` : ''}
                                 </div>
                             </div>
                             <h5 class="text-xl font-black text-white uppercase tracking-tighter w-full text-left truncate">${escapeHtml(p.pseudo || p.name)}</h5>
-                            <p class="text-xs font-medium text-gray-500 w-full text-left truncate flex items-center gap-2">
-                                <span>${escapeHtml(p.name)}</span>
-                                ${p.age ? `<span class="w-1 h-1 rounded-full bg-gray-600"></span> <span>${escapeHtml(p.age)} ${currentLang==='en'?'y.o.':'ans'}</span>` : ''}
+                            <p class="effectif-player-meta text-xs font-medium text-gray-500 text-left">
+                                <span class="player-name">${escapeHtml(p.name)}</span>
+                                ${p.age ? `<span class="w-1 h-1 rounded-full bg-gray-600 shrink-0"></span><span class="player-age">${escapeHtml(p.age)} ${currentLang==='en'?'y.o.':'ans'}</span>` : ''}
                             </p>
                         </div>`;
                     });
