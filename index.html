@@ -732,7 +732,6 @@
                 <button id="nav-palmares" onclick="navigate('palmares')" class="nav-btn hover:text-white" data-i18n="nav_palmares">Palmarès</button>
                 <button id="nav-annonces" onclick="navigate('annonces')" class="nav-btn hover:text-white" data-i18n="nav_annonces">Annonces</button>
                 <button id="nav-boutique" onclick="navigate('boutique')" class="nav-btn hover:text-white" data-i18n="nav_boutique">Boutique</button>
-                <button id="nav-partenaires" onclick="navigate('partenaires')" class="nav-btn hover:text-white" data-i18n="nav_partenaires">Partenaires</button>
                 <button id="nav-coaching" onclick="openCoachingModal()" class="nav-btn hover:text-white" data-i18n="nav_coaching">Coaching</button>
                 <button id="nav-recruit" onclick="openRecruitmentModal()" class="nav-btn hover:text-white" data-i18n="nav_recruit">Rejoindre</button>
                  <button id="nav-review" onclick="openReviewModal()" class="nav-btn hover:text-white" data-i18n="nav_review">Avis</button>
@@ -756,31 +755,30 @@
             </div>
 
             <!-- Bouton Burger Mobile -->
-            <button onclick="toggleMobileMenu()" class="md:hidden text-white p-2.5 focus:outline-none bg-white/5 border border-white/10 rounded-xl">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            <button id="mobile-menu-toggle" type="button" onclick="toggleMobileMenu(event)" aria-controls="mobile-menu" aria-expanded="false" aria-label="Ouvrir le menu" class="md:hidden text-white p-2.5 focus:outline-none bg-white/5 border border-white/10 rounded-xl">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
             </button>
         </div>
 
         <!-- Menu Déroulant Mobile -->
         <div id="mobile-menu" class="hidden md:hidden bg-[#080808]/98 backdrop-blur-2xl border-b border-white/10 px-6 py-6 flex flex-col gap-3 shadow-2xl">
-            <button onclick="navigate('home'); toggleMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-white bg-white/5 border border-white/5" data-i18n="nav_home">Accueil</button>
-            <button onclick="navigate('histoire'); toggleMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_histoire">Histoire</button>
-            <button onclick="navigate('effectifs'); toggleMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_effectifs">Effectifs</button>
-            <button onclick="navigate('palmares'); toggleMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_palmares">Palmarès</button>
-            <button onclick="navigate('annonces'); toggleMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_annonces">Annonces</button>
-            <button onclick="navigate('boutique'); toggleMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_boutique">Boutique</button>
-            <button onclick="navigate('partenaires'); toggleMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_partenaires">Partenaires</button>
-            <button onclick="openCoachingModal(); toggleMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_coaching">Coaching</button>
-            <button onclick="openRecruitmentModal(); toggleMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition">Rejoindre AERIX</button>
-             <button onclick="openReviewModal(); toggleMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_review">Laisser un avis</button>
+            <button onclick="navigate('home'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-white bg-white/5 border border-white/5" data-i18n="nav_home">Accueil</button>
+            <button onclick="navigate('histoire'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_histoire">Histoire</button>
+            <button onclick="navigate('effectifs'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_effectifs">Effectifs</button>
+            <button onclick="navigate('palmares'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_palmares">Palmarès</button>
+            <button onclick="navigate('annonces'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_annonces">Annonces</button>
+            <button onclick="navigate('boutique'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_boutique">Boutique</button>
+            <button onclick="openCoachingModal(); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_coaching">Coaching</button>
+            <button onclick="openRecruitmentModal(); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition">Rejoindre AERIX</button>
+             <button onclick="openReviewModal(); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_review">Laisser un avis</button>
             <div id="mobile-account-area"></div>
             <a href="https://discord.gg/dJcHwYT4HY" target="_blank" rel="noopener noreferrer" class="text-center text-xs text-white py-3.5 rounded-xl border border-aerix-purple/40 bg-aerix-purple/20 font-bold flex items-center justify-center gap-2">
                 <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.927 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
                 Rejoindre le Discord
             </a>
             <div class="flex gap-2 mt-1">
-                <button onclick="setLang('fr'); toggleMobileMenu();" class="flex-1 py-3 bg-white/5 border border-white/10 rounded-xl text-xs font-bold text-white flex justify-center items-center gap-2"><img src="https://flagcdn.com/w20/fr.png" class="w-4 h-3 rounded-sm" alt="Image AERIX"> FR</button>
-                <button onclick="setLang('en'); toggleMobileMenu();" class="flex-1 py-3 bg-white/5 border border-white/10 rounded-xl text-xs font-bold text-white flex justify-center items-center gap-2"><img src="https://flagcdn.com/w20/gb.png" class="w-4 h-3 rounded-sm" alt="Image AERIX"> EN</button>
+                <button onclick="setLang('fr'); closeMobileMenu();" class="flex-1 py-3 bg-white/5 border border-white/10 rounded-xl text-xs font-bold text-white flex justify-center items-center gap-2"><img src="https://flagcdn.com/w20/fr.png" class="w-4 h-3 rounded-sm" alt="Image AERIX"> FR</button>
+                <button onclick="setLang('en'); closeMobileMenu();" class="flex-1 py-3 bg-white/5 border border-white/10 rounded-xl text-xs font-bold text-white flex justify-center items-center gap-2"><img src="https://flagcdn.com/w20/gb.png" class="w-4 h-3 rounded-sm" alt="Image AERIX"> EN</button>
             </div>
         </div>
     </nav>
@@ -2806,13 +2804,42 @@ function checkAdminSessionTimeout() {
         
         document.addEventListener('visibilitychange', () => {
             if (!document.hidden) checkAdminSessionTimeout();
-        });
-        function toggleMobileMenu() {
+        });\n\n        // État initial du menu mobile : fermé, même si un navigateur conserve un état DOM précédent.\n        document.addEventListener('DOMContentLoaded', () => {\n            closeMobileMenu();\n        });\n\n        window.addEventListener('resize', () => {\n            if (window.innerWidth >= 768) closeMobileMenu();\n        });
+        function toggleMobileMenu(event) {
+            if (event) event.stopPropagation();
+
             const menu = document.getElementById('mobile-menu');
+            const button = document.getElementById('mobile-menu-toggle');
             if (!menu) return;
-            const willOpen = menu.classList.contains('hidden');
-            if (!willOpen) document.querySelectorAll('.account-menu').forEach(m => m.classList.add('hidden'));
-            menu.classList.toggle('hidden');
+
+            const willOpen = menu.getAttribute('data-mobile-open') !== 'true';
+
+            if (willOpen) {
+                document.querySelectorAll('.account-menu').forEach(m => m.classList.add('hidden'));
+                menu.setAttribute('data-mobile-open', 'true');
+                menu.classList.remove('hidden');
+                // Force l'affichage inline : le menu ne dépend plus de l'ordre des utilitaires Tailwind.
+                menu.style.display = 'flex';
+                button?.setAttribute('aria-expanded', 'true');
+                button?.setAttribute('aria-label', 'Fermer le menu');
+            } else {
+                menu.setAttribute('data-mobile-open', 'false');
+                menu.classList.add('hidden');
+                menu.style.display = 'none';
+                button?.setAttribute('aria-expanded', 'false');
+                button?.setAttribute('aria-label', 'Ouvrir le menu');
+            }
+        }
+
+        function closeMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const button = document.getElementById('mobile-menu-toggle');
+            if (!menu) return;
+            menu.setAttribute('data-mobile-open', 'false');
+            menu.classList.add('hidden');
+            menu.style.display = 'none';
+            button?.setAttribute('aria-expanded', 'false');
+            button?.setAttribute('aria-label', 'Ouvrir le menu');
         }
 
         // Refuse tout schéma autre que http(s) (javascript:, data:...) pour les liens saisis en admin.
