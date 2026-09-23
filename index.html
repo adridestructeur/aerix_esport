@@ -2979,7 +2979,7 @@ function checkAdminSessionTimeout() {
         function hasAdminAccess() {
             return isOwner()
                 || !!(currentAccount
-                    && currentAccount.status !== 'revoked'
+                    && currentAccount.status === 'active'
                     && ['owner','admin'].includes(currentAccount.role));
         }
         function renderAccountArea() {
