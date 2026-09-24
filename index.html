@@ -181,7 +181,57 @@
     .news-card-animated:hover .news-img { transform: scale(1.08); }
 
     /* NAVIGATION & FILTRES */
-    .nav-btn { padding: .48rem .82rem; border-radius: 9999px; font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: #9ca3af; transition: color .25s ease, text-shadow .25s ease; position: relative; z-index: 2; background: transparent; border: none; cursor: pointer; white-space: nowrap; }
+    .desktop-nav-shell {
+        display:flex; align-items:center; justify-content:center; min-width:0;
+        flex:1 1 auto;
+    }
+    .desktop-nav-primary {
+        display:flex; align-items:center; gap:.03rem; min-width:0;
+    }
+    .nav-more-wrap { position:relative; flex:0 0 auto; }
+    .nav-more-btn {
+        display:inline-flex; align-items:center; gap:.30rem;
+        padding:.46rem .62rem; border-radius:9999px; font-size:.66rem; font-weight:700;
+        text-transform:uppercase; letter-spacing:.07em; color:#9ca3af;
+        background:transparent; border:0; cursor:pointer; white-space:nowrap;
+        transition:color .25s ease, background .25s ease, text-shadow .25s ease; position:relative; z-index:2;
+    }
+    .nav-more-btn:hover, .nav-more-btn.active { color:#fff; text-shadow:0 0 10px rgba(255,255,255,.55); }
+    .nav-more-chevron { font-size:.65rem; opacity:.75; transition:transform .25s ease; }
+    .nav-more-wrap.open .nav-more-chevron { transform:rotate(180deg); }
+    .nav-more-menu {
+        position:absolute; right:0; top:calc(100% + .65rem); width:235px; padding:.5rem;
+        border:1px solid rgba(255,255,255,.10); border-radius:16px;
+        background:rgba(10,10,10,.96); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px);
+        box-shadow:0 20px 55px rgba(0,0,0,.55), 0 0 25px rgba(139,92,246,.10);
+        opacity:0; visibility:hidden; transform:translateY(-7px) scale(.98);
+        transform-origin:top right; transition:opacity .2s ease, transform .2s ease, visibility .2s ease; z-index:80;
+    }
+    .nav-more-wrap.open .nav-more-menu { opacity:1; visibility:visible; transform:translateY(0) scale(1); }
+    .nav-more-menu::before {
+        content:""; position:absolute; top:-6px; right:24px; width:11px; height:11px;
+        background:rgba(10,10,10,.96); border-left:1px solid rgba(255,255,255,.10); border-top:1px solid rgba(255,255,255,.10); transform:rotate(45deg);
+    }
+    .nav-more-item {
+        width:100%; display:flex; align-items:center; justify-content:space-between; gap:.75rem;
+        padding:.72rem .8rem; border-radius:11px; border:1px solid transparent; background:transparent;
+        color:#9ca3af; font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.055em; cursor:pointer; text-align:left;
+        transition:background .2s ease, border-color .2s ease, color .2s ease, transform .2s ease;
+    }
+    .nav-more-item:hover, .nav-more-item.active { color:#fff; background:rgba(139,92,246,.12); border-color:rgba(139,92,246,.35); }
+    .nav-more-item.active::after { content:""; width:5px; height:5px; border-radius:50%; background:#8B5CF6; box-shadow:0 0 9px rgba(139,92,246,.9); }
+    .desktop-header-actions { flex:0 0 auto; }
+    @media (max-width: 1500px) and (min-width: 768px) {
+        .nav-btn, .nav-more-btn { padding-left:.58rem; padding-right:.58rem; font-size:.65rem; letter-spacing:.045em; }
+        .desktop-discord-btn { padding-left:.7rem !important; padding-right:.7rem !important; }
+        .desktop-header-actions { gap:.4rem !important; }
+    }
+    @media (max-width: 1180px) and (min-width: 768px) {
+        .desktop-header-actions #account-area { max-width:145px; overflow:hidden; }
+        .nav-btn, .nav-more-btn { padding-left:.45rem; padding-right:.45rem; font-size:.61rem; }
+        .desktop-language-btn { padding-left:.55rem !important; padding-right:.55rem !important; }
+    }
+    .nav-btn { padding: .46rem .60rem; border-radius: 9999px; font-size: .66rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: #9ca3af; transition: color .25s ease, text-shadow .25s ease; position: relative; z-index: 2; background: transparent; border: none; cursor: pointer; white-space: nowrap; }
     .nav-btn.active { color: #fff; text-shadow: 0 0 10px rgba(255,255,255,.55); }
     .nav-btn:hover { color: #fff; }
     
@@ -844,21 +894,32 @@
             </div>
             
             <!-- Menu Desktop -->
-            <div class="hidden md:flex space-x-0.5 text-xs font-medium text-gray-400 uppercase tracking-widest items-center relative bg-[#0c0c0c]/80 p-1 rounded-full border border-white/10 overflow-hidden shadow-inner shrink-0" id="nav-container">
-                <div id="nav-pill" class="absolute h-8 rounded-full bg-aerix-purple/20 transition-all duration-300 ease-out z-0 pointer-events-none backdrop-blur-md border border-aerix-purple/60 shadow-[0_0_25px_rgba(139,92,246,0.7)]"></div>
-                <button id="nav-home" onclick="navigate('home')" class="nav-btn hover:text-white active" data-i18n="nav_home">Accueil</button>
-                <button id="nav-histoire" onclick="navigate('histoire')" class="nav-btn hover:text-white" data-i18n="nav_histoire">Histoire</button>
-                <button id="nav-effectifs" onclick="navigate('effectifs')" class="nav-btn hover:text-white" data-i18n="nav_effectifs">Effectifs</button>
-                <button id="nav-palmares" onclick="navigate('palmares')" class="nav-btn hover:text-white" data-i18n="nav_palmares">Palmarès</button>
-                <button id="nav-competition" onclick="navigate('competition')" class="nav-btn hover:text-white" data-i18n="nav_competition">Compétition</button>
-                <button id="nav-performance" onclick="navigate('performance')" class="nav-btn hover:text-white" data-i18n="nav_performance">Performance</button>
-                <button id="nav-media" onclick="navigate('media')" class="nav-btn hover:text-white" data-i18n="nav_media">Média</button>
-                <button id="nav-annonces" onclick="navigate('annonces')" class="nav-btn hover:text-white" data-i18n="nav_annonces">Annonces</button>
-                <button id="nav-boutique" onclick="navigate('boutique')" class="nav-btn hover:text-white" data-i18n="nav_boutique">Boutique</button>
-                <button id="nav-partenaires" onclick="navigate('partenaires')" class="nav-btn hover:text-white" data-i18n="nav_partenaires">Partenaires</button>
-                <button id="nav-coaching" onclick="openCoachingModal()" class="nav-btn hover:text-white" data-i18n="nav_coaching">Coaching</button>
-                <button id="nav-recruit" onclick="openRecruitmentModal()" class="nav-btn hover:text-white" data-i18n="nav_recruit">Rejoindre</button>
-                 <button id="nav-review" onclick="openReviewModal()" class="nav-btn hover:text-white" data-i18n="nav_review">Avis</button>
+            <div class="desktop-nav-shell hidden md:flex">
+                <div class="relative flex items-center bg-[#0c0c0c]/80 p-1 rounded-full border border-white/10 shadow-inner" id="nav-container">
+                    <div id="nav-pill" class="absolute h-8 rounded-full bg-aerix-purple/20 transition-all duration-300 ease-out z-0 pointer-events-none backdrop-blur-md border border-aerix-purple/60 shadow-[0_0_25px_rgba(139,92,246,0.7)]"></div>
+                    <div class="desktop-nav-primary">
+                        <button id="nav-home" onclick="navigate('home')" class="nav-btn hover:text-white active" data-i18n="nav_home">Accueil</button>
+                        <button id="nav-histoire" onclick="navigate('histoire')" class="nav-btn hover:text-white" data-i18n="nav_histoire">Histoire</button>
+                        <button id="nav-effectifs" onclick="navigate('effectifs')" class="nav-btn hover:text-white" data-i18n="nav_effectifs">Effectifs</button>
+                        <button id="nav-palmares" onclick="navigate('palmares')" class="nav-btn hover:text-white" data-i18n="nav_palmares">Palmarès</button>
+                        <button id="nav-competition" onclick="navigate('competition')" class="nav-btn hover:text-white" data-i18n="nav_competition">Compétition</button>
+                        <button id="nav-performance" onclick="navigate('performance')" class="nav-btn hover:text-white" data-i18n="nav_performance">Performance</button>
+                        <button id="nav-partenaires" onclick="navigate('partenaires')" class="nav-btn hover:text-white" data-i18n="nav_partenaires">Partenaires</button>
+                        <button id="nav-boutique" onclick="navigate('boutique')" class="nav-btn hover:text-white" data-i18n="nav_boutique">Boutique</button>
+                        <button id="nav-coaching" onclick="openCoachingModal()" class="nav-btn hover:text-white" data-i18n="nav_coaching">Coaching</button>
+                    </div>
+                    <div id="nav-more-wrap" class="nav-more-wrap">
+                        <button id="nav-more" type="button" onclick="toggleMoreNav(event)" class="nav-more-btn" aria-haspopup="true" aria-expanded="false">
+                            <span data-i18n="nav_more">Plus</span><span class="nav-more-chevron">▾</span>
+                        </button>
+                        <div id="nav-more-menu" class="nav-more-menu">
+                            <button id="nav-media" onclick="navigate('media'); closeMoreNav();" class="nav-more-item" data-i18n="nav_media">Média</button>
+                            <button id="nav-annonces" onclick="navigate('annonces'); closeMoreNav();" class="nav-more-item" data-i18n="nav_annonces">Annonces</button>
+                            <button id="nav-recruit" onclick="openRecruitmentModal(); closeMoreNav();" class="nav-more-item" data-i18n="nav_recruit">Rejoindre</button>
+                            <button id="nav-review" onclick="openReviewModal(); closeMoreNav();" class="nav-more-item" data-i18n="nav_review">Avis</button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="desktop-header-actions hidden md:flex items-center gap-2.5">
@@ -890,10 +951,14 @@
             <button onclick="navigate('histoire'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_histoire">Histoire</button>
             <button onclick="navigate('effectifs'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_effectifs">Effectifs</button>
             <button onclick="navigate('palmares'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_palmares">Palmarès</button>
-            <button onclick="navigate('annonces'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_annonces">Annonces</button>
-            <button onclick="navigate('boutique'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_boutique">Boutique</button>
+            <button onclick="navigate('competition'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_competition">Compétition</button>
+            <button onclick="navigate('performance'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_performance">Performance</button>
             <button onclick="navigate('partenaires'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_partenaires">Partenaires</button>
+            <button onclick="navigate('boutique'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_boutique">Boutique</button>
             <button onclick="openCoachingModal(); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_coaching">Coaching</button>
+            <div class="h-px bg-white/10 my-1"></div>
+            <button onclick="navigate('media'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-400 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_media">Média</button>
+            <button onclick="navigate('annonces'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-400 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_annonces">Annonces</button>
             <button onclick="openRecruitmentModal(); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition">Rejoindre AERIX</button>
              <button onclick="openReviewModal(); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_review">Laisser un avis</button>
             <div id="mobile-account-area"></div>
@@ -4439,6 +4504,26 @@ function checkAdminSessionTimeout() {
             if(activePage) activePage.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
         };
 
+        function toggleMoreNav(event) {
+            if (event) event.stopPropagation();
+            const wrap = document.getElementById('nav-more-wrap');
+            const btn = document.getElementById('nav-more');
+            if (!wrap || !btn) return;
+            const open = wrap.classList.toggle('open');
+            btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        }
+        function closeMoreNav() {
+            const wrap = document.getElementById('nav-more-wrap');
+            const btn = document.getElementById('nav-more');
+            if (!wrap || !btn) return;
+            wrap.classList.remove('open');
+            btn.setAttribute('aria-expanded', 'false');
+        }
+        document.addEventListener('click', (event) => {
+            const wrap = document.getElementById('nav-more-wrap');
+            if (wrap && !wrap.contains(event.target)) closeMoreNav();
+        });
+
         function updateNavPill(activeBtn) {
             const pill = document.getElementById('nav-pill');
             const container = document.getElementById('nav-container');
@@ -4450,13 +4535,23 @@ function checkAdminSessionTimeout() {
             pill.style.width = `${rect.width}px`;
             pill.style.height = `${rect.height}px`;
         }
-        function refreshNavPill() { const active=document.querySelector('#nav-container .nav-btn.active'); if(!active) return; requestAnimationFrame(()=>requestAnimationFrame(()=>updateNavPill(active))); }
+        function refreshNavPill() {
+            const active = document.querySelector('#nav-container .nav-btn.active, #nav-container .nav-more-btn.active');
+            if(!active) return;
+            requestAnimationFrame(()=>requestAnimationFrame(()=>updateNavPill(active)));
+        }
 
         function renderNavbar() {
             const activePage = document.querySelector('.page-view.active');
             const activeId = activePage ? activePage.id.replace('page-', '') : 'home';
+            const primaryIds = ['home','histoire','effectifs','palmares','competition','performance','partenaires','boutique','coaching'];
+            const moreIds = ['media','annonces','recruit','review'];
             document.querySelectorAll('#nav-container .nav-btn').forEach(btn => btn.classList.toggle('active', btn.id === 'nav-' + activeId));
-            updateNavPill(document.getElementById('nav-' + activeId));
+            document.querySelectorAll('#nav-container .nav-more-item').forEach(btn => btn.classList.toggle('active', btn.id === 'nav-' + activeId));
+            const moreActive = moreIds.includes(activeId);
+            const moreBtn = document.getElementById('nav-more');
+            if (moreBtn) moreBtn.classList.toggle('active', moreActive);
+            updateNavPill(document.getElementById(moreActive ? 'nav-more' : 'nav-' + activeId));
         }
 
         function navigate(pageId, pushHistory = true) {
@@ -4471,10 +4566,17 @@ function checkAdminSessionTimeout() {
             void targetPage.offsetWidth;
             targetPage.classList.add('animate-tab-change');
 
+            const moreIds = ['media','annonces','recruit','review'];
             document.querySelectorAll('#nav-container .nav-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.id === 'nav-' + pageId);
             });
-            updateNavPill(document.getElementById('nav-' + pageId));
+            document.querySelectorAll('#nav-container .nav-more-item').forEach(btn => {
+                btn.classList.toggle('active', btn.id === 'nav-' + pageId);
+            });
+            const moreBtn = document.getElementById('nav-more');
+            const moreActive = moreIds.includes(pageId);
+            if (moreBtn) moreBtn.classList.toggle('active', moreActive);
+            updateNavPill(document.getElementById(moreActive ? 'nav-more' : 'nav-' + pageId));
             refreshNavPill();
 
             document.querySelectorAll('.animate-fade-up').forEach(el => {
