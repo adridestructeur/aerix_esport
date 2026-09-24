@@ -318,6 +318,12 @@
     }
     @media (max-width: 768px) {
         #admin-tabs-container .admin-tab-btn { min-width: 108px; padding: 0.72rem 0.9rem; }
+        #filters-effectifs .filter-btn { min-width: 112px; }
+        #filters-effectifs { row-gap: 0.6rem; }
+    }
+    @media (max-width: 420px) {
+        #filters-effectifs .filter-btn { min-width: 0; flex: 1 1 calc(50% - 0.4rem); }
+        #filters-effectifs { width: 100%; }
     }
     #media-lightbox img {
         max-width: min(94vw, 1500px);
@@ -1648,6 +1654,8 @@
                             <option value="Tous">Jeu / Catégorie Générale</option>
                             <option value="Rocket League">Rocket League</option>
                             <option value="Le Mans Ultimate">Le Mans Ultimate</option>
+                            <option value="RBR">RBR (Richard Burns Rally)</option>
+                            <option value="iRacing">iRacing</option>
                         </select>
                     </div>
                     <textarea id="add-roster-desc" placeholder="Description du roster..." class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm h-16 mb-6 outline-none focus:border-aerix-purple transition custom-scrollbar"></textarea>
@@ -4877,6 +4885,8 @@ function checkAdminSessionTimeout() {
             if (coachingBtn) coachingBtn.classList.toggle('hidden', !hasAdminAccess());
             if (avisBtn) avisBtn.classList.toggle('hidden', !hasAdminAccess());
             if (evenementsBtn) evenementsBtn.classList.toggle('hidden', !hasAdminAccess());
+            if (performanceBtn) performanceBtn.classList.toggle('hidden', !hasAdminAccess());
+            if (mediaBtn) mediaBtn.classList.toggle('hidden', !hasAdminAccess());
             // Boutique & Sponsors : réservés au rôle Owner, masqués pour les Admin.
             if (boutiqueBtn) boutiqueBtn.classList.toggle('hidden', !isOwner());
             if (partenairesBtn) partenairesBtn.classList.toggle('hidden', !isOwner());
@@ -4897,11 +4907,14 @@ function checkAdminSessionTimeout() {
                 [results.length, 'Résultats'],
                 [events.length, 'Événements']
             ].map(([v,l]) => `<div class="glass-panel p-5 rounded-2xl text-center border border-white/5"><div class="text-3xl font-black text-white">${v}</div><div class="text-[10px] text-gray-500 uppercase tracking-widest mt-2">${l}</div></div>`).join('');
-            const rlR = rosters.filter(r => /rocket league|rl/i.test(r.game || r.category || ''));
-            const simR = rosters.filter(r => !/rocket league|rl/i.test(r.game || r.category || ''));
-            const list = (arr) => arr.length ? arr.map(r => `<div class="flex justify-between gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/5"><span class="text-gray-300">${escapeHtml(r.name || 'Division')}</span><span class="text-aerix-purple font-bold">${Array.isArray(r.players) ? r.players.length : 0}</span></div>`).join('') : '<p class="text-gray-500 italic">Aucune donnée.</p>';
+            const gameOf = r => String(r.game || r.category || '').trim();
+            const rlR = rosters.filter(r => gameOf(r).toLowerCase() === 'rocket league');
+            const simR = rosters.filter(r => ['le mans ultimate', 'rbr', 'iracing'].includes(gameOf(r).toLowerCase()));
+            const otherR = rosters.filter(r => !['rocket league', 'le mans ultimate', 'rbr', 'iracing'].includes(gameOf(r).toLowerCase()));
+            const list = (arr) => arr.length ? arr.map(r => `<div class="flex justify-between gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/5"><span class="text-gray-300">${escapeHtml(r.name || 'Division')}<span class="block text-[10px] text-gray-500 mt-0.5">${escapeHtml(gameOf(r) || 'Catégorie générale')}</span></span><span class="text-aerix-purple font-bold">${Array.isArray(r.players) ? r.players.length : 0}</span></div>`).join('') : '<p class="text-gray-500 italic">Aucune donnée.</p>';
             rl.innerHTML = list(rlR);
             sim.innerHTML = list(simR);
+            if (otherR.length) sim.innerHTML += `<div class="pt-3 mt-3 border-t border-white/5"><div class="text-[10px] text-gray-500 uppercase tracking-widest mb-2">Autres catégories</div>${list(otherR)}</div>`;
             void achievements;
         }
 
