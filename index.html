@@ -4772,14 +4772,12 @@ function checkAdminSessionTimeout() {
         if (window.ResizeObserver) { const navResizeObserver = new ResizeObserver(() => refreshNavPill()); const navContainer = document.getElementById('nav-container'); if(navContainer) navResizeObserver.observe(navContainer); }
 
         // CROP STUDIO
-        let cropper = null, cropCallback = null, cropMaxDim = 8192;
-        function openCropper(file, ratio, callback, maxDim) { const reader = new FileReader(); reader.onload = (e) => { const image = document.getElementById('crop-image'); image.src = e.target.result; document.getElementById('crop-modal').classList.remove('hidden'); if (cropper) cropper.destroy(); cropper = new Cropper(image, { aspectRatio: ratio, viewMode: 1, background: false, autoCropArea: 1 }); cropCallback = callback; cropMaxDim = maxDim || 8192; }; reader.readAsDataURL(file); }
-        // Qualité WebP maximale (1.0) partout. La résolution de sortie est plafonnée par
-        // cropMaxDim : élevée par défaut (8192px) pour les visuels affichés en grand
-        // (boutique, palmarès, annonces...), mais réduite pour les avatars de joueurs
-        // (affichés en petit format) afin d'éviter de dépasser la limite de 1 Mo par
-        // document Firestore quand un roster contient plusieurs joueurs.
-        function confirmCrop() { if (!cropper) return; const canvas = cropper.getCroppedCanvas({ maxWidth: cropMaxDim, maxHeight: cropMaxDim, imageSmoothingEnabled: true, imageSmoothingQuality: 'high', fillColor: 'transparent' }); document.getElementById('crop-modal').classList.add('hidden'); cropper.destroy(); cropper = null; if (cropCallback) cropCallback(canvas.toDataURL('image/webp', 1)); }
+        let cropper = null, cropCallback = null, cropMaxDim = 8192, cropQuality = 1;
+        function openCropper(file, ratio, callback, maxDim, quality) { const reader = new FileReader(); reader.onload = (e) => { const image = document.getElementById('crop-image'); image.src = e.target.result; document.getElementById('crop-modal').classList.remove('hidden'); if (cropper) cropper.destroy(); cropper = new Cropper(image, { aspectRatio: ratio, viewMode: 1, background: false, autoCropArea: 1 }); cropCallback = callback; cropMaxDim = maxDim || 8192; cropQuality = typeof quality === 'number' ? quality : 1; }; reader.readAsDataURL(file); }
+        // Les images des événements sont stockées directement dans Firestore : elles doivent
+        // rester sous la limite de taille d'un document. Les autres usages conservent leur
+        // qualité/résolution habituelles.
+        function confirmCrop() { if (!cropper) return; const canvas = cropper.getCroppedCanvas({ maxWidth: cropMaxDim, maxHeight: cropMaxDim, imageSmoothingEnabled: true, imageSmoothingQuality: 'high', fillColor: 'transparent' }); document.getElementById('crop-modal').classList.add('hidden'); cropper.destroy(); cropper = null; if (cropCallback) cropCallback(canvas.toDataURL('image/webp', cropQuality)); cropQuality = 1; }
         function cancelCrop() { document.getElementById('crop-modal').classList.add('hidden'); if (cropper) cropper.destroy(); cropper = null; }
 
         // DRAG & DROP GÉNÉRIQUE POUR LES ZONES D'UPLOAD ADMIN (boutique, effectifs, palmarès,
@@ -4896,7 +4894,7 @@ function checkAdminSessionTimeout() {
         document.getElementById('partner-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], NaN, b => { tempPartnerImage = b; document.getElementById('partner-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('partner-img-preview').classList.remove('hidden'); }); e.target.value=''; });
         document.getElementById('announcement-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 16/9, b => { tempAnnouncementImage = b; document.getElementById('announcement-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('announcement-img-preview').classList.remove('hidden'); }); e.target.value=''; });
         document.getElementById('gallery-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 1/1, b => { tempGalleryImage = b; document.getElementById('gallery-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('gallery-img-preview').classList.remove('hidden'); }); e.target.value=''; });
-        document.getElementById('event-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 16/9, b => { tempEventImage = b; document.getElementById('event-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('event-img-preview').classList.remove('hidden'); }, 1600); e.target.value=''; });
+        document.getElementById('event-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 16/9, b => { tempEventImage = b; document.getElementById('event-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('event-img-preview').classList.remove('hidden'); }, 1200, 0.78); e.target.value=''; });
 
         // Affiche/masque le widget assistant IA en fonction de l'état de la console
         // d'administration. Centralisé ici car la modale admin peut être ouverte/fermée
