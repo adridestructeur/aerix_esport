@@ -181,58 +181,7 @@
     .news-card-animated:hover .news-img { transform: scale(1.08); }
 
     /* NAVIGATION & FILTRES */
-    .desktop-nav-shell {
-        display:flex; align-items:center; justify-content:center; min-width:0;
-        flex:1 1 auto;
-        padding: 0 .35rem;
-    }
-    .desktop-nav-primary {
-        display:flex; align-items:center; gap:.08rem; min-width:0;
-    }
-    .nav-more-wrap { position:relative; flex:0 0 auto; }
-    .nav-more-btn {
-        display:inline-flex; align-items:center; gap:.30rem;
-        padding:.55rem .76rem; border-radius:9999px; font-size:.72rem; font-weight:700;
-        text-transform:uppercase; letter-spacing:.07em; color:#9ca3af;
-        background:transparent; border:0; cursor:pointer; white-space:nowrap;
-        transition:color .25s ease, background .25s ease, text-shadow .25s ease; position:relative; z-index:2;
-    }
-    .nav-more-btn:hover, .nav-more-btn.active { color:#fff; text-shadow:0 0 10px rgba(255,255,255,.55); }
-    .nav-more-chevron { font-size:.65rem; opacity:.75; transition:transform .25s ease; }
-    .nav-more-wrap.open .nav-more-chevron { transform:rotate(180deg); }
-    .nav-more-menu {
-        position:absolute; right:0; top:calc(100% + .65rem); width:235px; padding:.5rem;
-        border:1px solid rgba(255,255,255,.10); border-radius:16px;
-        background:rgba(10,10,10,.96); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px);
-        box-shadow:0 20px 55px rgba(0,0,0,.55), 0 0 25px rgba(139,92,246,.10);
-        opacity:0; visibility:hidden; transform:translateY(-7px) scale(.98);
-        transform-origin:top right; transition:opacity .2s ease, transform .2s ease, visibility .2s ease; z-index:80;
-    }
-    .nav-more-wrap.open .nav-more-menu { opacity:1; visibility:visible; transform:translateY(0) scale(1); }
-    .nav-more-menu::before {
-        content:""; position:absolute; top:-6px; right:24px; width:11px; height:11px;
-        background:rgba(10,10,10,.96); border-left:1px solid rgba(255,255,255,.10); border-top:1px solid rgba(255,255,255,.10); transform:rotate(45deg);
-    }
-    .nav-more-item {
-        width:100%; display:flex; align-items:center; justify-content:space-between; gap:.75rem;
-        padding:.72rem .8rem; border-radius:11px; border:1px solid transparent; background:transparent;
-        color:#9ca3af; font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.055em; cursor:pointer; text-align:left;
-        transition:background .2s ease, border-color .2s ease, color .2s ease, transform .2s ease;
-    }
-    .nav-more-item:hover, .nav-more-item.active { color:#fff; background:rgba(139,92,246,.12); border-color:rgba(139,92,246,.35); }
-    .nav-more-item.active::after { content:""; width:5px; height:5px; border-radius:50%; background:#8B5CF6; box-shadow:0 0 9px rgba(139,92,246,.9); }
-    .desktop-header-actions { flex:0 0 auto; }
-    @media (max-width: 1500px) and (min-width: 768px) {
-        .nav-btn, .nav-more-btn { padding-left:.64rem; padding-right:.64rem; font-size:.69rem; letter-spacing:.05em; }
-        .desktop-discord-btn { padding-left:.7rem !important; padding-right:.7rem !important; }
-        .desktop-header-actions { gap:.4rem !important; }
-    }
-    @media (max-width: 1180px) and (min-width: 768px) {
-        .desktop-header-actions #account-area { max-width:145px; overflow:hidden; }
-        .nav-btn, .nav-more-btn { padding-left:.50rem; padding-right:.50rem; font-size:.64rem; }
-        .desktop-language-btn { padding-left:.55rem !important; padding-right:.55rem !important; }
-    }
-    .nav-btn { padding: .55rem .74rem; border-radius: 9999px; font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: #9ca3af; transition: color .25s ease, text-shadow .25s ease; position: relative; z-index: 2; background: transparent; border: none; cursor: pointer; white-space: nowrap; }
+    .nav-btn { padding: .58rem .98rem; border-radius: 9999px; font-size: .73rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: #9ca3af; transition: color .25s ease, text-shadow .25s ease; position: relative; z-index: 2; background: transparent; border: none; cursor: pointer; white-space: nowrap; }
     .nav-btn.active { color: #fff; text-shadow: 0 0 10px rgba(255,255,255,.55); }
     .nav-btn:hover { color: #fff; }
     
@@ -895,32 +844,24 @@
             </div>
             
             <!-- Menu Desktop -->
-            <div class="desktop-nav-shell hidden md:flex">
-                <div class="relative flex items-center bg-[#0c0c0c]/80 p-1 rounded-full border border-white/10 shadow-inner" id="nav-container">
-                    <div id="nav-pill" class="absolute h-8 rounded-full bg-aerix-purple/20 transition-all duration-300 ease-out z-0 pointer-events-none backdrop-blur-md border border-aerix-purple/60 shadow-[0_0_25px_rgba(139,92,246,0.7)]"></div>
-                    <div class="desktop-nav-primary">
-                        <button id="nav-home" onclick="navigate('home')" class="nav-btn hover:text-white active" data-i18n="nav_home">Accueil</button>
-                        <button id="nav-histoire" onclick="navigate('histoire')" class="nav-btn hover:text-white" data-i18n="nav_histoire">Histoire</button>
-                        <button id="nav-effectifs" onclick="navigate('effectifs')" class="nav-btn hover:text-white" data-i18n="nav_effectifs">Effectifs</button>
-                        <button id="nav-palmares" onclick="navigate('palmares')" class="nav-btn hover:text-white" data-i18n="nav_palmares">Palmarès</button>
-                        <button id="nav-competition" onclick="navigate('competition')" class="nav-btn hover:text-white" data-i18n="nav_competition">Compétition</button>
-                        <button id="nav-performance" onclick="navigate('performance')" class="nav-btn hover:text-white" data-i18n="nav_performance">Performance</button>
-                        <button id="nav-partenaires" onclick="navigate('partenaires')" class="nav-btn hover:text-white" data-i18n="nav_partenaires">Partenaires</button>
-                        <button id="nav-boutique" onclick="navigate('boutique')" class="nav-btn hover:text-white" data-i18n="nav_boutique">Boutique</button>
-                        <button id="nav-coaching" onclick="openCoachingModal()" class="nav-btn hover:text-white" data-i18n="nav_coaching">Coaching</button>
-                    </div>
-                    <div id="nav-more-wrap" class="nav-more-wrap">
-                        <button id="nav-more" type="button" onclick="toggleMoreNav(event)" class="nav-more-btn" aria-haspopup="true" aria-expanded="false">
-                            <span data-i18n="nav_more">Plus</span><span class="nav-more-chevron">▾</span>
-                        </button>
-                        <div id="nav-more-menu" class="nav-more-menu">
-                            <button id="nav-media" onclick="navigate('media'); closeMoreNav();" class="nav-more-item" data-i18n="nav_media">Média</button>
-                            <button id="nav-annonces" onclick="navigate('annonces'); closeMoreNav();" class="nav-more-item" data-i18n="nav_annonces">Annonces</button>
-                            <button id="nav-recruit" onclick="openRecruitmentModal(); closeMoreNav();" class="nav-more-item" data-i18n="nav_recruit">Rejoindre</button>
-                            <button id="nav-review" onclick="openReviewModal(); closeMoreNav();" class="nav-more-item" data-i18n="nav_review">Avis</button>
-                        </div>
-                    </div>
-                </div>
+            <div class="hidden md:flex space-x-0.5 text-xs font-medium text-gray-400 uppercase tracking-widest items-center relative bg-[#0c0c0c]/80 p-1 rounded-full border border-white/10 overflow-hidden shadow-inner shrink-0" id="nav-container">
+                <div id="nav-pill" class="absolute h-8 rounded-full bg-aerix-purple/20 transition-all duration-300 ease-out z-0 pointer-events-none backdrop-blur-md border border-aerix-purple/60 shadow-[0_0_25px_rgba(139,92,246,0.7)]"></div>
+                <button id="nav-home" onclick="navigate('home')" class="nav-btn hover:text-white active" data-i18n="nav_home">Accueil</button>
+                <button id="nav-histoire" onclick="navigate('histoire')" class="nav-btn hover:text-white" data-i18n="nav_histoire">Histoire</button>
+                <button id="nav-effectifs" onclick="navigate('effectifs')" class="nav-btn hover:text-white" data-i18n="nav_effectifs">Effectifs</button>
+                <button id="nav-palmares" onclick="navigate('palmares')" class="nav-btn hover:text-white" data-i18n="nav_palmares">Palmarès</button>
+                <button id="nav-competition" onclick="navigate('competition')" class="nav-btn hover:text-white" data-i18n="nav_competition">Compétition</button>
+                <button id="nav-performance" onclick="navigate('performance')" class="nav-btn hover:text-white" data-i18n="nav_performance">Performance</button>
+                <button id="nav-partenaires" onclick="navigate('partenaires')" class="nav-btn hover:text-white" data-i18n="nav_partenaires">Partenaires</button>
+                <button id="nav-boutique" onclick="navigate('boutique')" class="nav-btn hover:text-white" data-i18n="nav_boutique">Boutique</button>
+                <button id="nav-coaching" onclick="openCoachingModal()" class="nav-btn hover:text-white" data-i18n="nav_coaching">Coaching</button>
+                <button id="nav-more" type="button" onclick="toggleMoreMenu(event)" class="nav-btn hover:text-white flex items-center gap-1" aria-haspopup="true" aria-expanded="false"><span>Plus</span><span class="text-[10px]">▾</span></button>
+            </div>
+            <div id="nav-more-menu" class="hidden absolute left-1/2 -translate-x-1/2 top-[calc(100%+10px)] w-64 glass-panel-no-hover rounded-2xl p-2 border border-white/10 shadow-2xl z-[70]">
+                <button onclick="navigate('annonces'); closeMoreMenu();" class="w-full text-left px-4 py-3 rounded-xl text-sm font-bold text-gray-300 hover:text-white hover:bg-white/10 transition" data-i18n="nav_annonces">Annonces</button>
+                <button onclick="navigate('media'); closeMoreMenu();" class="w-full text-left px-4 py-3 rounded-xl text-sm font-bold text-gray-300 hover:text-white hover:bg-white/10 transition" data-i18n="nav_media">Média</button>
+                <button onclick="openRecruitmentModal(); closeMoreMenu();" class="w-full text-left px-4 py-3 rounded-xl text-sm font-bold text-gray-300 hover:text-white hover:bg-white/10 transition" data-i18n="nav_recruit">Rejoindre</button>
+                <button onclick="openReviewModal(); closeMoreMenu();" class="w-full text-left px-4 py-3 rounded-xl text-sm font-bold text-gray-300 hover:text-white hover:bg-white/10 transition" data-i18n="nav_review">Avis</button>
             </div>
 
             <div class="desktop-header-actions hidden md:flex items-center gap-2.5">
@@ -957,11 +898,11 @@
             <button onclick="navigate('partenaires'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_partenaires">Partenaires</button>
             <button onclick="navigate('boutique'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_boutique">Boutique</button>
             <button onclick="openCoachingModal(); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_coaching">Coaching</button>
-            <div class="h-px bg-white/10 my-1"></div>
-            <button onclick="navigate('media'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-400 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_media">Média</button>
-            <button onclick="navigate('annonces'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-400 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_annonces">Annonces</button>
-            <button onclick="openRecruitmentModal(); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition">Rejoindre AERIX</button>
-             <button onclick="openReviewModal(); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_review">Laisser un avis</button>
+            <div class="border-t border-white/10 pt-3 mt-1 text-[10px] uppercase tracking-widest text-gray-500 font-bold">Plus</div>
+            <button onclick="navigate('annonces'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_annonces">Annonces</button>
+            <button onclick="navigate('media'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_media">Média</button>
+            <button onclick="openRecruitmentModal(); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_recruit">Rejoindre AERIX</button>
+            <button onclick="openReviewModal(); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_review">Laisser un avis</button>
             <div id="mobile-account-area"></div>
             <a href="https://discord.gg/dJcHwYT4HY" target="_blank" rel="noopener noreferrer" class="text-center text-xs text-white py-3.5 rounded-xl border border-aerix-purple/40 bg-aerix-purple/20 font-bold flex items-center justify-center gap-2">
                 <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.927 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
@@ -1043,33 +984,7 @@
             </div>
         </main>
 
-        <!-- 2. COMPÉTITION -->
-        <main id="page-competition" class="page-view px-6 max-w-7xl mx-auto">
-            <div class="mb-14 text-center animate-fade-up opacity-0">
-                <h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2" data-i18n="competition_subtitle">Calendrier</h2>
-                <h3 class="text-4xl font-black text-white mb-4" data-i18n="competition_title">Compétition</h3>
-                <p class="text-gray-400 max-w-2xl mx-auto text-sm leading-relaxed" data-i18n="competition_desc">Retrouve les prochains matchs, courses et derniers résultats d'AERIX.</p>
-            </div>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <section class="glass-panel p-7 rounded-3xl"><div class="flex items-center justify-between mb-6"><div><div class="text-xs font-bold text-aerix-purple uppercase tracking-widest" data-i18n="competition_next_label">À venir</div><h4 class="text-2xl font-black text-white mt-1" data-i18n="competition_next_title">Prochains rendez-vous</h4></div><span class="text-2xl">◷</span></div><div id="competition-upcoming" class="space-y-3"></div></section>
-                <section class="glass-panel p-7 rounded-3xl"><div class="flex items-center justify-between mb-6"><div><div class="text-xs font-bold text-aerix-purple uppercase tracking-widest" data-i18n="competition_recent_label">Historique</div><h4 class="text-2xl font-black text-white mt-1" data-i18n="competition_recent_title">Derniers résultats</h4></div><span class="text-2xl">↗</span></div><div id="competition-recent" class="space-y-3"></div></section>
-            </div>
-        </main>
-
-        <!-- 3. PERFORMANCE -->
-        <main id="page-performance" class="page-view px-6 max-w-7xl mx-auto">
-            <div class="mb-14 text-center animate-fade-up opacity-0"><h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2" data-i18n="performance_subtitle">Chiffres clés</h2><h3 class="text-4xl font-black text-white mb-4" data-i18n="performance_title">Performance AERIX</h3><p class="text-gray-400 max-w-2xl mx-auto text-sm leading-relaxed" data-i18n="performance_desc">Une vue synthétique de l'activité compétitive affichée sur le site.</p></div>
-            <div id="performance-stats" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8"></div>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8"><section class="glass-panel p-7 rounded-3xl"><div class="text-xs font-bold text-aerix-purple uppercase tracking-widest mb-2" data-i18n="performance_rl_label">Rocket League</div><h4 class="text-2xl font-black text-white mb-6" data-i18n="performance_rl_title">Activité compétitive</h4><div id="performance-rl" class="space-y-3"></div></section><section class="glass-panel p-7 rounded-3xl"><div class="text-xs font-bold text-aerix-purple uppercase tracking-widest mb-2" data-i18n="performance_sim_label">Simracing</div><h4 class="text-2xl font-black text-white mb-6" data-i18n="performance_sim_title">Pôle Motorsport</h4><div id="performance-sim" class="space-y-3"></div></section></div>
-        </main>
-
-        <!-- 4. MÉDIA -->
-        <main id="page-media" class="page-view px-6 max-w-7xl mx-auto">
-            <div class="mb-14 text-center animate-fade-up opacity-0"><h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2" data-i18n="media_subtitle">Contenu</h2><h3 class="text-4xl font-black text-white mb-4" data-i18n="media_title">AERIX Media</h3><p class="text-gray-400 max-w-2xl mx-auto text-sm leading-relaxed" data-i18n="media_desc">Photos, moments de compétition et contenus publiés par AERIX.</p></div>
-            <div id="media-gallery" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
-        </main>
-
-        <!-- 5. EFFECTIFS -->
+        <!-- 2. EFFECTIFS -->
         <main id="page-effectifs" class="page-view px-6 max-w-7xl mx-auto">
             <div class="mb-14 text-center animate-fade-up opacity-0">
                 <h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2" data-i18n="roster_subtitle">Divisions</h2>
@@ -1104,7 +1019,46 @@
             <div id="achievements-container" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </main>
 
-        <!-- 4. HISTOIRE -->
+        <!-- 4. COMPÉTITION -->
+        <main id="page-competition" class="page-view px-6 max-w-7xl mx-auto">
+            <div class="mb-14 text-center animate-fade-up opacity-0">
+                <h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2">AERIX COMPETITION</h2>
+                <h3 class="text-4xl font-black text-white mb-4">Compétition</h3>
+                <p class="text-gray-400 max-w-2xl mx-auto">Retrouve les prochains matchs et courses ainsi que les dernières performances enregistrées par AERIX.</p>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <section class="glass-panel p-7 rounded-3xl">
+                    <div class="flex items-center justify-between mb-6"><div><div class="text-xs font-bold text-aerix-purple uppercase tracking-widest">À venir</div><h4 class="text-2xl font-black text-white mt-1">Prochains événements</h4></div><span class="text-xs text-gray-500">Live Firebase</span></div>
+                    <div id="competition-upcoming" class="space-y-4"></div>
+                </section>
+                <section class="glass-panel p-7 rounded-3xl">
+                    <div class="flex items-center justify-between mb-6"><div><div class="text-xs font-bold text-aerix-purple uppercase tracking-widest">Historique</div><h4 class="text-2xl font-black text-white mt-1">Derniers résultats</h4></div></div>
+                    <div id="competition-results" class="space-y-4"></div>
+                </section>
+            </div>
+        </main>
+
+        <!-- 5. PERFORMANCE -->
+        <main id="page-performance" class="page-view px-6 max-w-7xl mx-auto">
+            <div class="mb-14 text-center animate-fade-up opacity-0">
+                <h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2">AERIX PERFORMANCE</h2>
+                <h3 class="text-4xl font-black text-white mb-4">Performance</h3>
+                <p class="text-gray-400 max-w-2xl mx-auto">Une vue synthétique des effectifs, compétitions et résultats actuellement enregistrés.</p>
+            </div>
+            <div id="performance-stats" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10"></div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <section class="glass-panel p-7 rounded-3xl"><div class="text-xs font-bold text-aerix-purple uppercase tracking-widest mb-2">Rocket League</div><h4 class="text-2xl font-black text-white mb-5">Effectif compétition</h4><div id="performance-rl" class="space-y-3"></div></section>
+                <section class="glass-panel p-7 rounded-3xl"><div class="text-xs font-bold text-aerix-purple uppercase tracking-widest mb-2">Simracing</div><h4 class="text-2xl font-black text-white mb-5">Divisions & pilotes</h4><div id="performance-sim" class="space-y-3"></div></section>
+            </div>
+        </main>
+
+        <!-- 6. MÉDIA -->
+        <main id="page-media" class="page-view px-6 max-w-7xl mx-auto">
+            <div class="mb-14 text-center animate-fade-up opacity-0"><h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2">AERIX MEDIA</h2><h3 class="text-4xl font-black text-white mb-4">Média</h3><p class="text-gray-400 max-w-2xl mx-auto">Photos et contenus visuels publiés depuis les annonces et la galerie AERIX.</p></div>
+            <div id="media-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5"></div>
+        </main>
+
+        <!-- 7. HISTOIRE -->
         <main id="page-histoire" class="page-view px-6 max-w-5xl mx-auto">
             <div class="text-center mb-20 animate-fade-up opacity-0">
                 <h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2" data-i18n="history_subtitle">L'Héritage</h2>
@@ -2071,7 +2025,7 @@
         // I18N (LANGUES)
         const i18n = {
             fr: { 
-                nav_home: "Accueil", nav_effectifs: "Effectifs", nav_palmares: "Palmarès", nav_competition: "Compétition", nav_performance: "Performance", nav_media: "Média", nav_histoire: "Histoire", nav_boutique: "Boutique", nav_partenaires: "Partenaires", nav_annonces: "Annonces",
+                nav_home: "Accueil", nav_effectifs: "Effectifs", nav_palmares: "Palmarès", nav_histoire: "Histoire", nav_boutique: "Boutique", nav_partenaires: "Partenaires", nav_annonces: "Annonces",
                 hero_title_1: "L'avenir", hero_title_2: "de", hero_title_3: "la", hero_title_4: "Compétition.",
                 hero_desc: "Structure indépendante rassemblant l'élite sur Rocket League et les circuits virtuels. Performance, précision, et ambition.",
                 hero_btn_1: "Découvrir les équipes", hero_btn_2: "Notre Palmarès",
@@ -2093,7 +2047,7 @@
                 username_placeholder: "Pseudo", email_placeholder: "Adresse email", already_account_signin: "J'ai déjà un compte — Se connecter",
                 account_login_desc: "Connecte-toi avec ton compte AERIX.", password_placeholder: "Mot de passe", forgot_password: "Mot de passe oublié ?",
                 account_register_desc: "Crée directement ton compte AERIX avec ton pseudo, ton email et ton mot de passe.", password_min_placeholder: "Mot de passe (8 caractères min.)", create_account: "Créer le compte", registered_accounts_title: "Comptes enregistrés", registered_accounts_desc: "Tous les comptes créés sur le site. Le Owner peut attribuer ou retirer le rôle Admin.", contact_admin_title: "Demandes de contact", contact_admin_desc: "Consulte et gère les tickets envoyés par les utilisateurs.", contact_title: "Contact AERIX", contact_desc: "Choisis Discord ou ouvre un ticket directement depuis le site.", contact_discord: "Contacter sur Discord", contact_form: "Formulaire de contact", contact_login_required: "Tu dois être connecté pour ouvrir un ticket.", ticket: "Tickets", no_tickets: "Aucun ticket en cours.", ticket_status: "Statut", ticket_category: "Catégorie", ticket_subject: "Sujet", ticket_message: "Message", ticket_send: "Envoyer le ticket", ticket_close: "Fermer", ticket_reply: "Réponse AERIX", ticket_created: "Ticket créé.", ticket_updated: "Ticket mis à jour.", ticket_required: "Sujet et message obligatoires.", contact_category_partnership: "Partenariat", contact_category_question: "Question", contact_category_other: "Autre demande", contact_status_new: "Nouveau", contact_status_progress: "En cours", contact_status_done: "Traité", contact_status_archived: "Archivé", role_user: "Utilisateur", role_admin: "Admin", role_owner: "Owner",
-                nav_coaching: "Coaching", coaching_title: "Réserver un coaching", coaching_subtitle: "Le Mans Ultimate & iRacing — coaching individuel ou en groupe.",
+                nav_competition: "Compétition", nav_performance: "Performance", nav_media: "Média", nav_competition: "Competition", nav_performance: "Performance", nav_media: "Media", nav_coaching: "Coaching", coaching_title: "Réserver un coaching", coaching_subtitle: "Le Mans Ultimate & iRacing — coaching individuel ou en groupe.",
                 coaching_step_infos: "1. Informations", coaching_step_profile: "2. Profil Simracing", coaching_step_format: "3. Format & Tarifs", coaching_step_calendar: "4. Choisis une date",
                 coaching_discord_placeholder: "Pseudo Discord", coaching_level_beginner: "Débutant", coaching_level_intermediate: "Intermédiaire", coaching_level_advanced: "Confirmé", coaching_level_competition: "Compétition",
                 coaching_format_solo: "Solo", coaching_format_group: "Groupe",
@@ -2104,10 +2058,10 @@
                 nav_review: "Avis", review_title: "Laisser un avis", review_subtitle: "Partage ton expérience avec la communauté AERIX.", review_select_rating: "Sélectionne une note", review_comment_placeholder: "Ton commentaire...", review_submit: "Publier mon avis",
                 review_admin_title: "Avis publiés", review_admin_desc: "Tous les avis laissés par les membres. Supprime les avis abusifs ou hors sujet.", no_reviews: "Aucun avis pour le moment.",
                 filter_gallery: "Galerie",
-                assistant_quick_about: "Qui est AERIX ?", assistant_quick_join: "Rejoindre AERIX", assistant_quick_contact: "Contacter l'administration", assistant_quick_coaching: "Coaching", assistant_action_contact: "Contacter les administrateurs", assistant_action_coaching: "Demander un coaching", assistant_action_discord: "Rejoindre le Discord", competition_subtitle:"Calendrier", competition_title:"Compétition", competition_desc:"Retrouve les prochains matchs, courses et derniers résultats d’AERIX.", competition_next_label:"À venir", competition_next_title:"Prochains rendez-vous", competition_recent_label:"Historique", competition_recent_title:"Derniers résultats", performance_subtitle:"Chiffres clés", performance_title:"Performance AERIX", performance_desc:"Une vue synthétique de l’activité compétitive affichée sur le site.", performance_rl_label:"Rocket League", performance_rl_title:"Activité compétitive", performance_sim_label:"Simracing", performance_sim_title:"Pôle Motorsport", media_subtitle:"Contenu", media_title:"AERIX Media", media_desc:"Photos, moments de compétition et contenus publiés par AERIX."
+                assistant_quick_about: "Qui est AERIX ?", assistant_quick_join: "Rejoindre AERIX", assistant_quick_contact: "Contacter l'administration", assistant_quick_coaching: "Coaching", assistant_action_contact: "Contacter les administrateurs", assistant_action_coaching: "Demander un coaching", assistant_action_discord: "Rejoindre le Discord"
             },
             en: {
-                nav_home: "Home", nav_effectifs: "Rosters", nav_palmares: "Results", nav_competition: "Competition", nav_performance: "Performance", nav_media: "Media", nav_histoire: "History", nav_boutique: "Shop", nav_partenaires: "Partners", nav_annonces: "News",
+                nav_home: "Home", nav_effectifs: "Rosters", nav_palmares: "Results", nav_histoire: "History", nav_boutique: "Shop", nav_partenaires: "Partners", nav_annonces: "News",
                 hero_title_1: "The future", hero_title_2: "of", hero_title_3: "Esports", hero_title_4: "Competition.",
                 hero_desc: "Independent structure gathering the elite on Rocket League and virtual circuits. Performance, precision, and ambition.",
                 hero_btn_1: "Discover Rosters", hero_btn_2: "Our Achievements",
@@ -2141,7 +2095,7 @@
                 nav_review: "Reviews", review_title: "Leave a review", review_subtitle: "Share your experience with the AERIX community.", review_select_rating: "Select a rating", review_comment_placeholder: "Your comment...", review_submit: "Publish my review",
                 review_admin_title: "Published reviews", review_admin_desc: "All reviews left by members. Delete abusive or off-topic reviews.", no_reviews: "No reviews yet.",
                 filter_gallery: "Gallery",
-                assistant_quick_about: "Who is AERIX?", assistant_quick_join: "Join AERIX", assistant_quick_contact: "Contact administration", assistant_quick_coaching: "Coaching", assistant_action_contact: "Contact administration", assistant_action_coaching: "Request coaching", assistant_action_discord: "Join the Discord", competition_subtitle:"Schedule", competition_title:"Competition", competition_desc:"Upcoming matches, races and latest AERIX results.", competition_next_label:"Upcoming", competition_next_title:"Next events", competition_recent_label:"History", competition_recent_title:"Latest results", performance_subtitle:"Key figures", performance_title:"AERIX Performance", performance_desc:"A concise overview of competitive activity displayed on the website.", performance_rl_label:"Rocket League", performance_rl_title:"Competitive activity", performance_sim_label:"Simracing", performance_sim_title:"Motorsport division", media_subtitle:"Content", media_title:"AERIX Media", media_desc:"Photos, competition moments and content published by AERIX."
+                assistant_quick_about: "Who is AERIX?", assistant_quick_join: "Join AERIX", assistant_quick_contact: "Contact administration", assistant_quick_coaching: "Coaching", assistant_action_contact: "Contact administration", assistant_action_coaching: "Request coaching", assistant_action_discord: "Join the Discord"
             }
         };
         let currentLang = localStorage.getItem('aerix_lang') || ((navigator.language || '').toLowerCase().startsWith('en') ? 'en' : 'fr');
@@ -2251,7 +2205,6 @@
             if (typeof globalEffectifs !== 'undefined') renderEffectifs();
             if (typeof globalPalmares !== 'undefined') renderPalmares();
             if (typeof globalAnnonces !== 'undefined') renderAnnonces();
-            if (typeof renderNewAERIXPages === 'function') renderNewAERIXPages();
              if (typeof renderUserTickets === 'function' && document.getElementById('tickets-modal') && !document.getElementById('tickets-modal').classList.contains('hidden')) renderUserTickets();
         }
 
@@ -2293,12 +2246,12 @@
 
         // INITIALISATION BDD
         function startSync() {
-            db.collection("events").onSnapshot((snapshot) => { globalEvents = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderUpcomingEvents(); renderNewAERIXPages(); }, () => { globalEvents = []; renderUpcomingEvents(); renderNewAERIXPages(); });
+            db.collection("events").onSnapshot((snapshot) => { globalEvents = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderUpcomingEvents(); renderCompetitionPage(); renderPerformancePage(); }, () => { globalEvents = []; renderUpcomingEvents(); renderCompetitionPage(); renderPerformancePage(); });
             db.collection("shop").onSnapshot((snapshot) => { globalShop = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); scheduleRender(renderShop); scheduleAdminRender(); }, (e) => console.error('shop', e));
-            db.collection("effectifs").onSnapshot((snapshot) => { globalEffectifs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); scheduleRender(renderEffectifs); scheduleRender(renderPerformancePage); scheduleAdminRender(); }, (e) => console.error('effectifs', e));
-            db.collection("palmares").onSnapshot((snapshot) => { globalPalmares = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); scheduleRender(renderPalmares); scheduleRender(renderCompetitionPage); scheduleRender(renderPerformancePage); scheduleAdminRender(); }, (e) => console.error('palmares', e));
+            db.collection("effectifs").onSnapshot((snapshot) => { globalEffectifs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); scheduleRender(renderEffectifs); renderPerformancePage(); scheduleAdminRender(); }, (e) => console.error('effectifs', e));
+            db.collection("palmares").onSnapshot((snapshot) => { globalPalmares = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); scheduleRender(renderPalmares); renderCompetitionPage(); renderPerformancePage(); scheduleAdminRender(); }, (e) => console.error('palmares', e));
             db.collection("achievements").onSnapshot((snapshot) => { globalAchievements = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); scheduleRender(renderAchievements); scheduleAdminRender(); }, () => { globalAchievements = []; scheduleRender(renderAchievements); scheduleAdminRender(); });
-            db.collection("annonces").onSnapshot((snapshot) => { globalAnnonces = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); globalAnnonces = sortByDateDesc(globalAnnonces); scheduleRender(renderAnnonces); scheduleAdminRender(); }, error => { globalAnnonces = []; db.collection("annonces").get().then(s => { globalAnnonces = s.docs.map(doc => ({ id: doc.id, ...doc.data() })); globalAnnonces = sortByDateDesc(globalAnnonces); scheduleRender(renderAnnonces); scheduleAdminRender(); }).catch(e => console.error('annonces fallback', e)); });
+            db.collection("annonces").onSnapshot((snapshot) => { globalAnnonces = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); globalAnnonces = sortByDateDesc(globalAnnonces); scheduleRender(renderAnnonces); renderMediaPage(); scheduleAdminRender(); }, error => { globalAnnonces = []; db.collection("annonces").get().then(s => { globalAnnonces = s.docs.map(doc => ({ id: doc.id, ...doc.data() })); globalAnnonces = sortByDateDesc(globalAnnonces); scheduleRender(renderAnnonces); scheduleAdminRender(); }).catch(e => console.error('annonces fallback', e)); });
             db.collection("partners").onSnapshot((snapshot) => { globalPartners = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); scheduleRender(renderPartners); scheduleAdminRender(); }, (e) => console.error('partners', e));
             db.collection("accounts").onSnapshot((snapshot) => { globalAccounts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); scheduleAdminRender(); }, () => { globalAccounts = []; scheduleAdminRender(); });
             db.collection("contactRequests").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
@@ -2321,7 +2274,7 @@
                 renderMediaPage();
                 scheduleAdminRender();
                 if (annoncesView === 'galerie') scheduleRender(renderAnnonces);
-            }, () => { globalGallery = []; scheduleAdminRender(); renderMediaPage(); });
+            }, () => { globalGallery = []; renderMediaPage(); scheduleAdminRender(); });
             checkCookies();
             loadAnalyticsIfConsented();
         }
@@ -2992,16 +2945,29 @@ function checkAdminSessionTimeout() {
                 showToast(currentLang==='en'?'Administration access denied.':'Accès à l’administration refusé.', 'error');
                 return;
             }
-
             const password = document.getElementById('admin-pwd-input')?.value || '';
-            if (!password) {
-                showToast(currentLang==='en'?'Enter your Firebase account password.':'Entre le mot de passe de ton compte Firebase.', 'error');
-                return;
-            }
-
+            const providerIds = (currentUser.providerData || []).map(p => p.providerId);
             try {
-                const credential = firebase.auth.EmailAuthProvider.credential(currentUser.email, password);
-                await currentUser.reauthenticateWithCredential(credential);
+                // Email/password accounts keep the explicit password reauthentication.
+                if (providerIds.includes('password')) {
+                    if (!password) {
+                        showToast(currentLang==='en'?'Enter your Firebase account password.':'Entre le mot de passe de ton compte Firebase.', 'error');
+                        return;
+                    }
+                    const credential = firebase.auth.EmailAuthProvider.credential(currentUser.email, password);
+                    await currentUser.reauthenticateWithCredential(credential);
+                } else if (providerIds.includes('google.com')) {
+                    // Google-authenticated admins cannot be reauthenticated with a password that
+                    // does not belong to that provider. Use the provider's own reauthentication flow.
+                    const provider = new firebase.auth.GoogleAuthProvider();
+                    await currentUser.reauthenticateWithPopup(provider);
+                } else {
+                    // Refresh the authenticated user and explicitly require a recent login for
+                    // providers not supported by the site. This never grants admin access by itself.
+                    await currentUser.reload();
+                    const token = await currentUser.getIdTokenResult(true);
+                    if (!token || !token.auth_time) throw new Error('auth/recent-login-required');
+                }
 
                 document.getElementById('admin-login-modal').classList.add('hidden');
                 document.getElementById('admin-modal').classList.remove('hidden');
@@ -3012,10 +2978,22 @@ function checkAdminSessionTimeout() {
                 setAssistantHiddenForAdmin(true);
                 showToast(currentLang==='en'?'Admin access confirmed.':'Accès administrateur confirmé.', 'success');
             } catch (e) {
-                console.error(e);
-                const message = e && (e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential')
-                    ? (currentLang==='en'?'Incorrect password.':'Mot de passe incorrect.')
-                    : (currentLang==='en'?'Unable to confirm your identity.':'Impossible de confirmer ton identité.');
+                console.error('Admin reauthentication failed:', e);
+                const code = e?.code || '';
+                let message;
+                if (code === 'auth/wrong-password' || code === 'auth/invalid-credential') {
+                    message = currentLang==='en'?'Incorrect password.':'Mot de passe incorrect.';
+                } else if (code === 'auth/popup-closed-by-user') {
+                    message = currentLang==='en'?'Google verification was cancelled.':'La vérification Google a été annulée.';
+                } else if (code === 'auth/popup-blocked') {
+                    message = currentLang==='en'?'The verification popup was blocked by the browser. Allow popups for AERIX and try again.':'La fenêtre de vérification a été bloquée par le navigateur. Autorise les fenêtres pop-up pour AERIX puis réessaie.';
+                } else if (code === 'auth/network-request-failed') {
+                    message = currentLang==='en'?'Network error while confirming your identity.':'Erreur réseau pendant la confirmation de ton identité.';
+                } else if (code === 'auth/too-many-requests') {
+                    message = currentLang==='en'?'Too many attempts. Wait a moment before trying again.':'Trop de tentatives. Attends un moment avant de réessayer.';
+                } else {
+                    message = currentLang==='en'?'Identity verification failed. Check your sign-in method and try again.':'La vérification de ton identité a échoué. Vérifie ton mode de connexion puis réessaie.';
+                }
                 showToast(message, 'error');
             }
         }
@@ -3334,19 +3312,6 @@ function checkAdminSessionTimeout() {
                 showToast('Candidature envoyée. Elle sera traitée via les tickets.');
             } catch(e) { console.error(e); showToast('Impossible d’envoyer la candidature.', 'error'); }
         }
-
-        function renderCompetitionPage() {
-            const u=document.getElementById('competition-upcoming'), r=document.getElementById('competition-recent'); if(!u||!r)return; const now=Date.now(); const empty=currentLang==='en'?'No data available yet.':'Aucune donnée disponible pour le moment.';
-            const upcoming=(globalEvents||[]).filter(e=>parseAERIXDate(e.datetime||e.date)>now).sort((a,b)=>parseAERIXDate(a.datetime||a.date)-parseAERIXDate(b.datetime||b.date)).slice(0,8);
-            const recent=sortByDateDesc(globalPalmares||[]).slice(0,8);
-            u.innerHTML=upcoming.length?upcoming.map(e=>{const d=e.date?e.date.split('-').reverse().join('/'):'—'; const x=[e.competition,e.opponent].filter(Boolean).join(' · '); return `<div class="rounded-2xl border border-white/10 bg-white/[.03] p-4 flex items-center justify-between gap-4"><div class="min-w-0"><div class="text-white font-bold text-sm truncate">${escapeHtml(e.title||e.name||'Événement')}</div><div class="text-xs text-gray-500 mt-1">${escapeHtml(e.game||'AERIX')} · ${escapeHtml(d)}${e.time?' · '+escapeHtml(e.time):''}</div>${x?`<div class="text-xs text-gray-500 mt-1 truncate">${escapeHtml(x)}</div>`:''}</div><span class="text-aerix-purple text-xs font-bold">${escapeHtml(e.type||'Event')}</span></div>`}).join(''):`<p class="text-sm text-gray-500">${empty}</p>`;
-            r.innerHTML=recent.length?recent.map(p=>`<div class="rounded-2xl border border-white/10 bg-white/[.03] p-4 flex items-center justify-between gap-4"><div class="min-w-0"><div class="text-white font-bold text-sm truncate">${escapeHtml(p.title||'Résultat')}</div><div class="text-xs text-gray-500 mt-1">${escapeHtml(p.game||'AERIX')} · ${escapeHtml(p.date||'—')}</div></div><span class="text-white text-xs font-bold">${escapeHtml(p.result||p.position||'—')}</span></div>`).join(''):`<p class="text-sm text-gray-500">${empty}</p>`;
-        }
-        function renderPerformancePage(){
-            const s=document.getElementById('performance-stats'), rl=document.getElementById('performance-rl'), sim=document.getElementById('performance-sim'); if(!s||!rl||!sim)return; const rosters=globalEffectifs||[], results=globalPalmares||[]; const players=rosters.reduce((n,r)=>n+(Array.isArray(r.players)?r.players.length:0),0); const simResults=results.filter(p=>p.game!=='Rocket League').length; const wins=results.filter(p=>p.game==='Rocket League'&&String(p.result||'').toLowerCase().includes('victoire')).length; const card=(v,l)=>`<div class="glass-panel p-6 rounded-3xl text-center"><div class="text-3xl md:text-4xl font-black text-white">${v}</div><div class="text-[10px] text-gray-500 uppercase tracking-widest mt-2">${l}</div></div>`; s.innerHTML=[card(rosters.length,'Rosters'),card(players,currentLang==='en'?'Members':'Membres'),card(results.length,currentLang==='en'?'Results':'Résultats'),card(simResults,currentLang==='en'?'Simracing results':'Résultats simracing')].join(''); const row=(l,v)=>`<div class="flex items-center justify-between rounded-xl bg-white/[.03] border border-white/10 p-4"><span class="text-sm text-gray-400">${l}</span><span class="text-sm font-black text-white">${v}</span></div>`; rl.innerHTML=[row(currentLang==='en'?'Rocket League rosters':'Rosters Rocket League',rosters.filter(r=>r.game==='Rocket League').length),row(currentLang==='en'?'Rocket League results':'Résultats Rocket League',results.filter(p=>p.game==='Rocket League').length),row(currentLang==='en'?'Recorded wins':'Victoires enregistrées',wins)].join(''); sim.innerHTML=[row(currentLang==='en'?'Simracing rosters':'Rosters simracing',rosters.filter(r=>r.game!=='Rocket League').length),row(currentLang==='en'?'Simracing results':'Résultats simracing',simResults),row(currentLang==='en'?'Games represented':'Jeux représentés',new Set(rosters.filter(r=>r.game!=='Rocket League').map(r=>r.game)).size)].join('');
-        }
-        function renderMediaPage(){ const el=document.getElementById('media-gallery'); if(!el)return; const items=globalGallery||[]; el.innerHTML=items.length?items.map(g=>`<div class="group relative aspect-square overflow-hidden rounded-3xl border border-white/10 bg-black"><img src="${escapeHtml(g.image||'')}" loading="lazy" alt="AERIX Media" class="w-full h-full object-cover transition duration-500 group-hover:scale-105 group-hover:brightness-110"><div class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 to-transparent"><span class="text-[10px] text-white/70 uppercase tracking-widest">${escapeHtml(g.game||'AERIX')}</span></div></div>`).join(''):`<div class="col-span-full glass-panel rounded-3xl p-12 text-center text-gray-500 text-sm">${currentLang==='en'?'No media has been published yet.':'Aucun média n’a encore été publié.'}</div>`; }
-        function renderNewAERIXPages(){renderCompetitionPage();renderPerformancePage();renderMediaPage();}
 
         function renderUpcomingEvents() {
             const el = document.getElementById('upcoming-events');
@@ -4505,26 +4470,6 @@ function checkAdminSessionTimeout() {
             if(activePage) activePage.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
         };
 
-        function toggleMoreNav(event) {
-            if (event) event.stopPropagation();
-            const wrap = document.getElementById('nav-more-wrap');
-            const btn = document.getElementById('nav-more');
-            if (!wrap || !btn) return;
-            const open = wrap.classList.toggle('open');
-            btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-        }
-        function closeMoreNav() {
-            const wrap = document.getElementById('nav-more-wrap');
-            const btn = document.getElementById('nav-more');
-            if (!wrap || !btn) return;
-            wrap.classList.remove('open');
-            btn.setAttribute('aria-expanded', 'false');
-        }
-        document.addEventListener('click', (event) => {
-            const wrap = document.getElementById('nav-more-wrap');
-            if (wrap && !wrap.contains(event.target)) closeMoreNav();
-        });
-
         function updateNavPill(activeBtn) {
             const pill = document.getElementById('nav-pill');
             const container = document.getElementById('nav-container');
@@ -4536,23 +4481,78 @@ function checkAdminSessionTimeout() {
             pill.style.width = `${rect.width}px`;
             pill.style.height = `${rect.height}px`;
         }
-        function refreshNavPill() {
-            const active = document.querySelector('#nav-container .nav-btn.active, #nav-container .nav-more-btn.active');
-            if(!active) return;
-            requestAnimationFrame(()=>requestAnimationFrame(()=>updateNavPill(active)));
-        }
+        function refreshNavPill() { const active=document.querySelector('#nav-container .nav-btn.active'); if(!active) return; requestAnimationFrame(()=>requestAnimationFrame(()=>updateNavPill(active))); }
 
         function renderNavbar() {
             const activePage = document.querySelector('.page-view.active');
             const activeId = activePage ? activePage.id.replace('page-', '') : 'home';
-            const primaryIds = ['home','histoire','effectifs','palmares','competition','performance','partenaires','boutique','coaching'];
-            const moreIds = ['media','annonces','recruit','review'];
             document.querySelectorAll('#nav-container .nav-btn').forEach(btn => btn.classList.toggle('active', btn.id === 'nav-' + activeId));
-            document.querySelectorAll('#nav-container .nav-more-item').forEach(btn => btn.classList.toggle('active', btn.id === 'nav-' + activeId));
-            const moreActive = moreIds.includes(activeId);
-            const moreBtn = document.getElementById('nav-more');
-            if (moreBtn) moreBtn.classList.toggle('active', moreActive);
-            updateNavPill(document.getElementById(moreActive ? 'nav-more' : 'nav-' + activeId));
+            updateNavPill(document.getElementById('nav-' + activeId));
+            if (!['home','histoire','effectifs','palmares','competition','performance','partenaires','boutique','coaching'].includes(activeId)) { document.getElementById('nav-more')?.classList.add('active'); }
+        }
+
+        function toggleMoreMenu(event) {
+            if (event) event.stopPropagation();
+            const menu = document.getElementById('nav-more-menu');
+            const btn = document.getElementById('nav-more');
+            if (!menu || !btn) return;
+            const open = !menu.classList.contains('hidden');
+            menu.classList.toggle('hidden', open);
+            btn.setAttribute('aria-expanded', String(!open));
+        }
+        function closeMoreMenu() {
+            const menu = document.getElementById('nav-more-menu');
+            const btn = document.getElementById('nav-more');
+            if (menu) menu.classList.add('hidden');
+            if (btn) btn.setAttribute('aria-expanded', 'false');
+        }
+        document.addEventListener('click', (e) => {
+            const menu = document.getElementById('nav-more-menu');
+            const btn = document.getElementById('nav-more');
+            if (menu && btn && !menu.contains(e.target) && !btn.contains(e.target)) closeMoreMenu();
+        });
+
+        function renderCompetitionPage() {
+            const up = document.getElementById('competition-upcoming');
+            const res = document.getElementById('competition-results');
+            if (!up || !res) return;
+            const now = Date.now();
+            const upcoming = [...(globalEvents || [])].sort((a,b) => parseAERIXDate(a.datetime || a.date || '') - parseAERIXDate(b.datetime || b.date || '')).filter(e => {
+                const d = parseAERIXDate(e.datetime || e.date || ''); return !Number.isNaN(d) && d >= now;
+            }).slice(0,6);
+            up.innerHTML = upcoming.length ? upcoming.map(e => `<div class="glass-panel p-4 rounded-2xl border border-white/10"><div class="flex items-start justify-between gap-3"><div><div class="text-xs text-aerix-purple font-bold uppercase">${escapeHtml(e.game || e.type || 'Événement')}</div><div class="text-white font-bold mt-1">${escapeHtml(e.title || 'Événement')}</div><div class="text-xs text-gray-500 mt-2">${escapeHtml(e.date || '')}${e.time ? ' · '+escapeHtml(e.time) : ''}</div></div>${e.opponent ? `<span class="text-xs text-gray-400 text-right">${escapeHtml(e.opponent)}</span>` : ''}</div></div>`).join('') : `<p class="text-gray-500 text-sm italic">Aucun événement à venir.</p>`;
+            const results = sortByDateDesc([...(globalPalmares || [])]).slice(0,6);
+            res.innerHTML = results.length ? results.map(p => `<div class="glass-panel p-4 rounded-2xl border border-white/10 flex items-center justify-between gap-4"><div><div class="text-white font-bold">${escapeHtml(p.title || 'Résultat')}</div><div class="text-xs text-gray-500 mt-1">${escapeHtml(p.game || 'Général')} ${p.date ? '· '+escapeHtml(p.date) : ''}</div></div><span class="text-xs font-bold text-aerix-purple">${escapeHtml(p.result || p.position || '')}</span></div>`).join('') : `<p class="text-gray-500 text-sm italic">Aucun résultat enregistré.</p>`;
+        }
+        function renderPerformancePage() {
+            const stats = document.getElementById('performance-stats');
+            const rl = document.getElementById('performance-rl');
+            const sim = document.getElementById('performance-sim');
+            if (!stats || !rl || !sim) return;
+            const rosters = globalEffectifs || [];
+            const players = rosters.reduce((n,r) => n + (Array.isArray(r.players) ? r.players.length : 0), 0);
+            const results = (globalPalmares || []).length;
+            const events = (globalEvents || []).length;
+            stats.innerHTML = [[rosters.length,'Divisions'],[players,'Membres / pilotes'],[results,'Résultats'],[events,'Événements']].map(([v,l]) => `<div class="glass-panel p-6 rounded-2xl text-center"><div class="text-3xl font-black text-white">${v}</div><div class="text-xs text-gray-500 uppercase tracking-widest mt-2">${l}</div></div>`).join('');
+            const rlR = rosters.filter(r => /rocket league|rl/i.test(r.game || r.category || ''));
+            const simR = rosters.filter(r => !/rocket league|rl/i.test(r.game || r.category || ''));
+            const rosterHTML = (arr, empty) => arr.length ? arr.map(r => `<div class="flex items-center justify-between p-4 rounded-xl bg-white/[0.03] border border-white/5"><div><div class="text-white font-bold">${escapeHtml(r.name || 'Division')}</div><div class="text-xs text-gray-500 mt-1">${escapeHtml(r.game || 'Général')}</div></div><span class="text-xs text-aerix-purple font-bold">${Array.isArray(r.players) ? r.players.length : 0} membre(s)</span></div>`).join('') : `<p class="text-gray-500 text-sm italic">${empty}</p>`;
+            rl.innerHTML = rosterHTML(rlR, 'Aucun roster Rocket League enregistré.');
+            sim.innerHTML = rosterHTML(simR, 'Aucun roster simracing enregistré.');
+        }
+        function openImageViewer(url) {
+            if (!url) return;
+            const win = window.open('', '_blank', 'noopener,noreferrer');
+            if (!win) return;
+            win.document.write(`<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>AERIX Media</title><style>html,body{margin:0;background:#050505;height:100%;display:grid;place-items:center}img{max-width:96vw;max-height:94vh;object-fit:contain}</style></head><body><img src="${escapeHtml(url)}" alt="AERIX Media"></body></html>`);
+            win.document.close();
+        }
+        function renderMediaPage() {
+            const c = document.getElementById('media-container'); if (!c) return;
+            const items = [];
+            (globalGallery || []).forEach(g => { if (g.image) items.push(g); });
+            (globalAnnonces || []).forEach(a => { if (a.image) items.push({image:a.image, caption:a.title, game:a.game}); });
+            c.innerHTML = items.length ? items.slice(0,32).map((m,i) => `<button type="button" onclick="openImageViewer('${escapeHtml(m.image)}')" class="group aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 bg-black/40"><img src="${escapeHtml(m.image)}" alt="${escapeHtml(m.caption || 'AERIX Media')}" class="w-full h-full object-cover transition duration-500 group-hover:scale-105"><div class="absolute"></div></button>`).join('') : `<div class="col-span-full glass-panel p-10 rounded-3xl text-center text-gray-500">Aucun média disponible pour le moment.</div>`;
         }
 
         function navigate(pageId, pushHistory = true) {
@@ -4567,17 +4567,10 @@ function checkAdminSessionTimeout() {
             void targetPage.offsetWidth;
             targetPage.classList.add('animate-tab-change');
 
-            const moreIds = ['media','annonces','recruit','review'];
             document.querySelectorAll('#nav-container .nav-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.id === 'nav-' + pageId);
             });
-            document.querySelectorAll('#nav-container .nav-more-item').forEach(btn => {
-                btn.classList.toggle('active', btn.id === 'nav-' + pageId);
-            });
-            const moreBtn = document.getElementById('nav-more');
-            const moreActive = moreIds.includes(pageId);
-            if (moreBtn) moreBtn.classList.toggle('active', moreActive);
-            updateNavPill(document.getElementById(moreActive ? 'nav-more' : 'nav-' + pageId));
+            updateNavPill(document.getElementById('nav-' + pageId));
             refreshNavPill();
 
             document.querySelectorAll('.animate-fade-up').forEach(el => {
@@ -4590,6 +4583,9 @@ function checkAdminSessionTimeout() {
                 history.pushState({ page: pageId }, '', '#' + pageId);
             }
             window.scrollTo({ top: 0, behavior: 'smooth' });
+            if (pageId === 'competition') renderCompetitionPage();
+            if (pageId === 'performance') renderPerformancePage();
+            if (pageId === 'media') renderMediaPage();
             setTimeout(revealActiveElements, 20);
         }
 
