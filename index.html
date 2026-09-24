@@ -1238,6 +1238,23 @@
         </div>
     </div>
 
+    <!-- MODAL : ARTICLE ÉVÉNEMENT / COMPÉTITION -->
+    <div id="event-article-modal" class="fixed inset-0 z-[120] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl" role="dialog" aria-modal="true" aria-label="Détail de l'événement">
+        <div class="glass-panel-no-hover w-full max-w-5xl max-h-[94vh] overflow-y-auto rounded-[2rem] shadow-2xl relative">
+            <button onclick="closeEventArticle()" class="absolute top-6 right-6 text-white hover:text-aerix-purple z-50 bg-black/60 w-10 h-10 rounded-full flex items-center justify-center border border-white/20 backdrop-blur-md transition">✕</button>
+            <div id="event-article-img-wrap" class="w-full aspect-video bg-[#050505] overflow-hidden border-b border-white/10 hidden">
+                <img id="event-article-img" src="" class="w-full h-full object-cover" alt="Image de l'événement AERIX">
+            </div>
+            <div class="p-6 md:p-10">
+                <div id="event-article-badges" class="flex flex-wrap gap-3 items-center mb-4"></div>
+                <h3 id="event-article-title" class="text-3xl md:text-5xl font-black text-white mb-6 leading-tight tracking-tight"></h3>
+                <div id="event-article-meta" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-8"></div>
+                <div id="event-article-link-wrap" class="hidden mb-8"></div>
+                <div id="event-article-desc" class="text-sm md:text-base text-gray-300 leading-relaxed rich-editor-content"></div>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL : ARTICLE RÉSULTAT (PALMARÈS) -->
     <div id="palmares-article-modal" class="fixed inset-0 z-[120] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl" role="dialog" aria-modal="true" aria-label="Fenêtre de dialogue">
         <div class="glass-panel-no-hover w-full max-w-3xl max-h-[92vh] overflow-y-auto rounded-[2rem] shadow-2xl relative">
@@ -1830,7 +1847,12 @@
                         <input type="time" id="add-event-time" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple transition">
                         <input type="url" id="add-event-link" placeholder="Lien (optionnel)" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple transition">
                     </div>
-                    <textarea id="add-event-description" placeholder="Description / informations complémentaires (optionnel)" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm h-24 mb-6 outline-none focus:border-aerix-purple transition resize-y"></textarea>
+                    <textarea id="add-event-description" placeholder="Description / informations complémentaires (optionnel)" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm h-24 mb-4 outline-none focus:border-aerix-purple transition resize-y"></textarea>
+                    <div id="event-img-preview" class="w-full h-44 bg-white/5 rounded-xl mb-4 hidden bg-cover bg-center border border-white/10 relative overflow-hidden">
+                        <button type="button" onclick="tempEventImage=null; this.parentElement.style.backgroundImage=''; this.parentElement.classList.add('hidden')" class="absolute top-2 right-2 bg-red-500 text-white text-[10px] w-7 h-7 rounded-full font-bold z-10">✕</button>
+                    </div>
+                    <button type="button" id="event-drop-zone" onclick="document.getElementById('event-img-input').click()" class="bg-white/5 border border-dashed border-white/20 text-gray-400 hover:text-white hover:border-white/40 text-xs font-bold px-4 py-4 rounded-xl w-full mb-6 transition">+ Ajouter une image de l'événement (16:9) — ou glisser-déposer ici</button>
+                    <input type="file" id="event-img-input" accept="image/*" class="hidden">
                     <div class="flex gap-3"><button id="event-cancel-btn" type="button" onclick="resetEventForm()" class="hidden px-6 py-3.5 bg-white/5 border border-white/10 hover:bg-white/10 text-white rounded-xl text-sm font-bold transition">Annuler</button><button type="button" onclick="saveEvent()" class="flex-1 bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition shadow-[0_0_15px_rgba(139,92,246,0.3)]">Enregistrer l'événement</button></div>
                 </div>
             </div>
@@ -3970,7 +3992,7 @@ function checkAdminSessionTimeout() {
                     const type = e.type || 'Événement';
                     const dateText = e.date ? e.date.split('-').reverse().join('/') : 'Date non renseignée';
                     const timeText = e.time ? ` · ${e.time}` : '';
-                    return `<div class="glass-panel p-5 rounded-2xl flex flex-col gap-4"><div class="flex items-start justify-between gap-3"><div class="min-w-0"><div class="flex flex-wrap items-center gap-2 mb-2"><span class="text-aerix-purple text-xs font-bold">${escapeHtml(type)}</span><span class="text-gray-500 text-xs">${escapeHtml(e.game || 'Autre')}</span></div><div class="text-white font-bold text-sm break-words">${escapeHtml(e.title || 'Événement')}</div><div class="text-xs text-gray-400 mt-2">📅 ${escapeHtml(dateText + timeText)}</div>${e.opponent ? `<div class="text-xs text-gray-500 mt-1">${type === 'Course' ? '🏁' : '⚔️'} ${escapeHtml(e.opponent)}</div>` : ''}${e.competition ? `<div class="text-xs text-gray-500 mt-1">${escapeHtml(e.competition)}</div>` : ''}</div><div class="flex gap-2 shrink-0"><button onclick="startEditEvent('${e.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('events', '${e.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 rounded-lg px-3 py-1.5 transition">Suppr</button></div></div>${e.description ? `<div class="text-xs text-gray-400 bg-black/25 border border-white/5 rounded-xl p-3 whitespace-pre-wrap">${escapeHtml(e.description)}</div>` : ''}</div>`;
+                    return `<div class="glass-panel p-5 rounded-2xl flex flex-col gap-4">${e.image ? `<button type="button" onclick="openEventArticle('${e.id}')" class="w-full aspect-video rounded-xl overflow-hidden border border-white/10 bg-black group"><img src="${escapeHtml(e.image)}" class="w-full h-full object-cover group-hover:scale-[1.02] transition duration-300" alt="" loading="lazy"></button>` : ''}<div class="flex items-start justify-between gap-3"><button type="button" onclick="openEventArticle('${e.id}')" class="min-w-0 text-left flex-1"><div class="flex flex-wrap items-center gap-2 mb-2"><span class="text-aerix-purple text-xs font-bold">${escapeHtml(type)}</span><span class="text-gray-500 text-xs">${escapeHtml(e.game || 'Autre')}</span></div><div class="text-white font-bold text-sm break-words hover:text-aerix-purple transition">${escapeHtml(e.title || 'Événement')}</div><div class="text-xs text-gray-400 mt-2">📅 ${escapeHtml(dateText + timeText)}</div>${e.opponent ? `<div class="text-xs text-gray-500 mt-1">${type === 'Course' ? '🏁' : '⚔️'} ${escapeHtml(e.opponent)}</div>` : ''}${e.competition ? `<div class="text-xs text-gray-500 mt-1">${escapeHtml(e.competition)}</div>` : ''}</button><div class="flex gap-2 shrink-0"><button onclick="startEditEvent('${e.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('events', '${e.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 rounded-lg px-3 py-1.5 transition">Suppr</button></div></div>${e.description ? `<div class="text-xs text-gray-400 bg-black/25 border border-white/5 rounded-xl p-3 whitespace-pre-wrap">${escapeHtml(e.description)}</div>` : ''}</div>`;
                 }).join('') : `<p class="text-gray-500 text-sm italic col-span-full">Aucun événement à venir.</p>`;
             }
             const achievementsEl = document.getElementById('admin-list-achievements');
@@ -4397,6 +4419,9 @@ function checkAdminSessionTimeout() {
             document.getElementById('add-event-time').value = item.time || '';
             document.getElementById('add-event-link').value = item.link || '';
             document.getElementById('add-event-description').value = item.description || '';
+            tempEventImage = item.image || null;
+            const eventPreview = document.getElementById('event-img-preview');
+            if (eventPreview) { eventPreview.style.backgroundImage = tempEventImage ? `url(${tempEventImage})` : ''; eventPreview.classList.toggle('hidden', !tempEventImage); }
             document.getElementById('event-form-title').innerText = 'Modifier l’événement';
             document.getElementById('event-cancel-btn').classList.remove('hidden');
             switchAdminTab('evenements');
@@ -4412,6 +4437,9 @@ function checkAdminSessionTimeout() {
             document.getElementById('add-event-time').value = '';
             document.getElementById('add-event-link').value = '';
             document.getElementById('add-event-description').value = '';
+            tempEventImage = null;
+            const eventPreview = document.getElementById('event-img-preview');
+            if (eventPreview) { eventPreview.style.backgroundImage = ''; eventPreview.classList.add('hidden'); }
             document.getElementById('event-form-title').innerText = 'Ajouter un événement';
             document.getElementById('event-cancel-btn').classList.add('hidden');
         }
@@ -4429,7 +4457,7 @@ function checkAdminSessionTimeout() {
             const description = document.getElementById('add-event-description').value.trim();
             if (!title || !date) return showToast('Nom et date obligatoires.', 'error');
             if (link && !safeUrl(link)) return showToast('Le lien fourni n’est pas valide.', 'error');
-            const data = { title, type, game, competition, opponent, date, time, link, description, datetime: `${date}${time ? 'T' + time : 'T23:59'}`, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
+            const data = { title, type, game, competition, opponent, date, time, link, description, image: tempEventImage || '', datetime: `${date}${time ? 'T' + time : 'T23:59'}`, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
             try {
                 if (id) { await db.collection('events').doc(id).update(data); showToast('Événement mis à jour.'); }
                 else { data.createdAt = firebase.firestore.FieldValue.serverTimestamp(); await db.collection('events').add(data); showToast('Événement ajouté.'); }
@@ -4588,9 +4616,56 @@ function checkAdminSessionTimeout() {
             const upcoming = [...(globalEvents || [])].sort((a,b) => parseAERIXDate(a.datetime || a.date || '') - parseAERIXDate(b.datetime || b.date || '')).filter(e => {
                 const d = parseAERIXDate(e.datetime || e.date || ''); return !Number.isNaN(d) && d >= now;
             }).slice(0,6);
-            up.innerHTML = upcoming.length ? upcoming.map(e => `<div class="glass-panel p-4 rounded-2xl border border-white/10"><div class="flex items-start justify-between gap-3"><div><div class="text-xs text-aerix-purple font-bold uppercase">${escapeHtml(e.game || e.type || 'Événement')}</div><div class="text-white font-bold mt-1">${escapeHtml(e.title || 'Événement')}</div><div class="text-xs text-gray-500 mt-2">${escapeHtml(e.date || '')}${e.time ? ' · '+escapeHtml(e.time) : ''}</div></div>${e.opponent ? `<span class="text-xs text-gray-400 text-right">${escapeHtml(e.opponent)}</span>` : ''}</div></div>`).join('') : `<p class="text-gray-500 text-sm italic">Aucun événement à venir.</p>`;
+            up.innerHTML = upcoming.length ? upcoming.map(e => {
+                const dateText = e.date ? e.date.split('-').reverse().join('/') : 'Date non renseignée';
+                return `<button type="button" onclick="openEventArticle('${e.id}')" class="glass-panel p-0 rounded-2xl border border-white/10 overflow-hidden text-left w-full group hover:border-aerix-purple/50 transition duration-300">${e.image ? `<div class="w-full aspect-video bg-black overflow-hidden"><img src="${escapeHtml(e.image)}" class="w-full h-full object-cover group-hover:scale-[1.025] transition duration-500" alt="" loading="lazy"></div>` : ''}<div class="p-5"><div class="flex items-start justify-between gap-3"><div class="min-w-0"><div class="flex flex-wrap items-center gap-2"><span class="text-xs text-aerix-purple font-bold uppercase">${escapeHtml(e.game || e.type || 'Événement')}</span>${e.type ? `<span class="text-[10px] text-gray-500 uppercase tracking-widest">${escapeHtml(e.type)}</span>` : ''}</div><div class="text-white font-bold text-lg mt-2">${escapeHtml(e.title || 'Événement')}</div><div class="text-xs text-gray-500 mt-2">📅 ${escapeHtml(dateText)}${e.time ? ' · ' + escapeHtml(e.time) : ''}</div></div>${e.opponent ? `<span class="text-xs text-gray-400 text-right shrink-0">${escapeHtml(e.opponent)}</span>` : ''}</div>${e.competition ? `<div class="text-xs text-gray-500 mt-3">${escapeHtml(e.competition)}</div>` : ''}<div class="text-xs text-aerix-purple font-bold mt-4">Voir les détails →</div></div></button>`;
+            }).join('') : `<p class="text-gray-500 text-sm italic">Aucun événement à venir.</p>`;
             const results = sortByDateDesc([...(globalPalmares || [])]).slice(0,6);
             res.innerHTML = results.length ? results.map(p => `<div class="glass-panel p-4 rounded-2xl border border-white/10 flex items-center justify-between gap-4"><div><div class="text-white font-bold">${escapeHtml(p.title || 'Résultat')}</div><div class="text-xs text-gray-500 mt-1">${escapeHtml(p.game || 'Général')} ${p.date ? '· '+escapeHtml(p.date) : ''}</div></div><span class="text-xs font-bold text-aerix-purple">${escapeHtml(p.result || p.position || '')}</span></div>`).join('') : `<p class="text-gray-500 text-sm italic">Aucun résultat enregistré.</p>`;
+        }
+
+        function openEventArticle(id) {
+            const item = (globalEvents || []).find(e => e.id === id);
+            if (!item) return;
+            const modal = document.getElementById('event-article-modal');
+            if (!modal) return;
+            const imgWrap = document.getElementById('event-article-img-wrap');
+            const img = document.getElementById('event-article-img');
+            const badges = document.getElementById('event-article-badges');
+            const meta = document.getElementById('event-article-meta');
+            const desc = document.getElementById('event-article-desc');
+            const linkWrap = document.getElementById('event-article-link-wrap');
+            const dateText = item.date ? item.date.split('-').reverse().join('/') : 'Date non renseignée';
+            const type = item.type || 'Événement';
+            if (item.image) {
+                img.src = item.image;
+                imgWrap.classList.remove('hidden');
+            } else {
+                img.src = '';
+                imgWrap.classList.add('hidden');
+            }
+            badges.innerHTML = `<span class="text-xs font-bold px-3 py-1.5 rounded-full bg-aerix-purple/15 text-aerix-purple border border-aerix-purple/30">${escapeHtml(item.game || 'AERIX')}</span><span class="text-xs font-bold px-3 py-1.5 rounded-full bg-white/5 text-gray-300 border border-white/10">${escapeHtml(type)}</span>`;
+            document.getElementById('event-article-title').textContent = item.title || 'Événement AERIX';
+            const metaItems = [
+                ['Date', dateText + (item.time ? ' · ' + item.time : '')],
+                item.competition ? ['Compétition', item.competition] : null,
+                item.opponent ? [type === 'Course' ? 'Circuit' : 'Adversaire', item.opponent] : null
+            ].filter(Boolean);
+            meta.innerHTML = metaItems.map(([label, value]) => `<div class="bg-black/50 rounded-xl p-4 border border-white/5"><span class="block text-[10px] text-gray-500 uppercase font-bold tracking-widest mb-1">${escapeHtml(label)}</span><span class="text-sm text-white font-bold break-words">${escapeHtml(value)}</span></div>`).join('');
+            if (item.link && safeUrl(item.link)) {
+                linkWrap.classList.remove('hidden');
+                linkWrap.innerHTML = `<a href="${escapeHtml(safeUrl(item.link))}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white/5 border border-white/10 text-white text-sm font-bold hover:bg-aerix-purple hover:border-aerix-purple transition">Voir la compétition / le match ↗</a>`;
+            } else {
+                linkWrap.classList.add('hidden');
+                linkWrap.innerHTML = '';
+            }
+            desc.innerHTML = item.description ? escapeHtml(item.description).replace(/\n/g, '<br>') : '<p class="text-gray-500 italic">Aucune description disponible pour cet événement.</p>';
+            modal.classList.remove('hidden');
+            translateDynamicContent();
+        }
+        function closeEventArticle() {
+            const modal = document.getElementById('event-article-modal');
+            if (modal) modal.classList.add('hidden');
         }
         function renderPerformancePage() {
             const stats = document.getElementById('performance-stats');
@@ -4745,11 +4820,12 @@ function checkAdminSessionTimeout() {
                 ['palm-drop-zone', 'palm-img-input'],
                 ['announcement-drop-zone', 'announcement-img-input'],
                 ['gallery-drop-zone', 'gallery-img-input'],
-                ['partner-drop-zone', 'partner-img-input']
+                ['partner-drop-zone', 'partner-img-input'],
+                ['event-drop-zone', 'event-img-input']
             ].forEach(([zoneId, inputId]) => enableImageDropZone(document.getElementById(zoneId), inputId));
         }
 
-        let tempShopImages = [], tempPlayerAvatar = null, tempPlayers = [], tempPartnerImage = null, tempAnnouncementImage = null, tempPalmImage = null, tempGalleryImage = null;
+        let tempShopImages = [], tempPlayerAvatar = null, tempPlayers = [], tempPartnerImage = null, tempAnnouncementImage = null, tempPalmImage = null, tempGalleryImage = null, tempEventImage = null;
         const defaultAvatar = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E";
         
         document.getElementById('shop-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 4/5, b => { tempShopImages.push(b); renderShopPreviews(); }); e.target.value=''; });
@@ -4820,6 +4896,7 @@ function checkAdminSessionTimeout() {
         document.getElementById('partner-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], NaN, b => { tempPartnerImage = b; document.getElementById('partner-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('partner-img-preview').classList.remove('hidden'); }); e.target.value=''; });
         document.getElementById('announcement-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 16/9, b => { tempAnnouncementImage = b; document.getElementById('announcement-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('announcement-img-preview').classList.remove('hidden'); }); e.target.value=''; });
         document.getElementById('gallery-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 1/1, b => { tempGalleryImage = b; document.getElementById('gallery-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('gallery-img-preview').classList.remove('hidden'); }); e.target.value=''; });
+        document.getElementById('event-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 16/9, b => { tempEventImage = b; document.getElementById('event-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('event-img-preview').classList.remove('hidden'); }, 1600); e.target.value=''; });
 
         // Affiche/masque le widget assistant IA en fonction de l'état de la console
         // d'administration. Centralisé ici car la modale admin peut être ouverte/fermée
@@ -5158,6 +5235,7 @@ function checkAdminSessionTimeout() {
             'player-modal': () => closePlayerModal(),
             'product-modal': () => closeProductModal(),
             'palmares-article-modal': () => closePalmaresArticle(),
+            'event-article-modal': () => closeEventArticle(),
             'cookie-settings-modal': () => closeCookieSettings(),
             'contact-modal': () => closeContactModal(),
             'tickets-modal': () => closeTicketsModal(),
