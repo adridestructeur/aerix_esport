@@ -850,6 +850,9 @@
                 <button id="nav-histoire" onclick="navigate('histoire')" class="nav-btn hover:text-white" data-i18n="nav_histoire">Histoire</button>
                 <button id="nav-effectifs" onclick="navigate('effectifs')" class="nav-btn hover:text-white" data-i18n="nav_effectifs">Effectifs</button>
                 <button id="nav-palmares" onclick="navigate('palmares')" class="nav-btn hover:text-white" data-i18n="nav_palmares">Palmarès</button>
+                <button id="nav-competition" onclick="navigate('competition')" class="nav-btn hover:text-white" data-i18n="nav_competition">Compétition</button>
+                <button id="nav-performance" onclick="navigate('performance')" class="nav-btn hover:text-white" data-i18n="nav_performance">Performance</button>
+                <button id="nav-media" onclick="navigate('media')" class="nav-btn hover:text-white" data-i18n="nav_media">Média</button>
                 <button id="nav-annonces" onclick="navigate('annonces')" class="nav-btn hover:text-white" data-i18n="nav_annonces">Annonces</button>
                 <button id="nav-boutique" onclick="navigate('boutique')" class="nav-btn hover:text-white" data-i18n="nav_boutique">Boutique</button>
                 <button id="nav-partenaires" onclick="navigate('partenaires')" class="nav-btn hover:text-white" data-i18n="nav_partenaires">Partenaires</button>
@@ -974,7 +977,33 @@
             </div>
         </main>
 
-        <!-- 2. EFFECTIFS -->
+        <!-- 2. COMPÉTITION -->
+        <main id="page-competition" class="page-view px-6 max-w-7xl mx-auto">
+            <div class="mb-14 text-center animate-fade-up opacity-0">
+                <h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2" data-i18n="competition_subtitle">Calendrier</h2>
+                <h3 class="text-4xl font-black text-white mb-4" data-i18n="competition_title">Compétition</h3>
+                <p class="text-gray-400 max-w-2xl mx-auto text-sm leading-relaxed" data-i18n="competition_desc">Retrouve les prochains matchs, courses et derniers résultats d'AERIX.</p>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <section class="glass-panel p-7 rounded-3xl"><div class="flex items-center justify-between mb-6"><div><div class="text-xs font-bold text-aerix-purple uppercase tracking-widest" data-i18n="competition_next_label">À venir</div><h4 class="text-2xl font-black text-white mt-1" data-i18n="competition_next_title">Prochains rendez-vous</h4></div><span class="text-2xl">◷</span></div><div id="competition-upcoming" class="space-y-3"></div></section>
+                <section class="glass-panel p-7 rounded-3xl"><div class="flex items-center justify-between mb-6"><div><div class="text-xs font-bold text-aerix-purple uppercase tracking-widest" data-i18n="competition_recent_label">Historique</div><h4 class="text-2xl font-black text-white mt-1" data-i18n="competition_recent_title">Derniers résultats</h4></div><span class="text-2xl">↗</span></div><div id="competition-recent" class="space-y-3"></div></section>
+            </div>
+        </main>
+
+        <!-- 3. PERFORMANCE -->
+        <main id="page-performance" class="page-view px-6 max-w-7xl mx-auto">
+            <div class="mb-14 text-center animate-fade-up opacity-0"><h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2" data-i18n="performance_subtitle">Chiffres clés</h2><h3 class="text-4xl font-black text-white mb-4" data-i18n="performance_title">Performance AERIX</h3><p class="text-gray-400 max-w-2xl mx-auto text-sm leading-relaxed" data-i18n="performance_desc">Une vue synthétique de l'activité compétitive affichée sur le site.</p></div>
+            <div id="performance-stats" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8"></div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8"><section class="glass-panel p-7 rounded-3xl"><div class="text-xs font-bold text-aerix-purple uppercase tracking-widest mb-2" data-i18n="performance_rl_label">Rocket League</div><h4 class="text-2xl font-black text-white mb-6" data-i18n="performance_rl_title">Activité compétitive</h4><div id="performance-rl" class="space-y-3"></div></section><section class="glass-panel p-7 rounded-3xl"><div class="text-xs font-bold text-aerix-purple uppercase tracking-widest mb-2" data-i18n="performance_sim_label">Simracing</div><h4 class="text-2xl font-black text-white mb-6" data-i18n="performance_sim_title">Pôle Motorsport</h4><div id="performance-sim" class="space-y-3"></div></section></div>
+        </main>
+
+        <!-- 4. MÉDIA -->
+        <main id="page-media" class="page-view px-6 max-w-7xl mx-auto">
+            <div class="mb-14 text-center animate-fade-up opacity-0"><h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2" data-i18n="media_subtitle">Contenu</h2><h3 class="text-4xl font-black text-white mb-4" data-i18n="media_title">AERIX Media</h3><p class="text-gray-400 max-w-2xl mx-auto text-sm leading-relaxed" data-i18n="media_desc">Photos, moments de compétition et contenus publiés par AERIX.</p></div>
+            <div id="media-gallery" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+        </main>
+
+        <!-- 5. EFFECTIFS -->
         <main id="page-effectifs" class="page-view px-6 max-w-7xl mx-auto">
             <div class="mb-14 text-center animate-fade-up opacity-0">
                 <h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2" data-i18n="roster_subtitle">Divisions</h2>
@@ -1976,7 +2005,7 @@
         // I18N (LANGUES)
         const i18n = {
             fr: { 
-                nav_home: "Accueil", nav_effectifs: "Effectifs", nav_palmares: "Palmarès", nav_histoire: "Histoire", nav_boutique: "Boutique", nav_partenaires: "Partenaires", nav_annonces: "Annonces",
+                nav_home: "Accueil", nav_effectifs: "Effectifs", nav_palmares: "Palmarès", nav_competition: "Compétition", nav_performance: "Performance", nav_media: "Média", nav_histoire: "Histoire", nav_boutique: "Boutique", nav_partenaires: "Partenaires", nav_annonces: "Annonces",
                 hero_title_1: "L'avenir", hero_title_2: "de", hero_title_3: "la", hero_title_4: "Compétition.",
                 hero_desc: "Structure indépendante rassemblant l'élite sur Rocket League et les circuits virtuels. Performance, précision, et ambition.",
                 hero_btn_1: "Découvrir les équipes", hero_btn_2: "Notre Palmarès",
@@ -2009,10 +2038,10 @@
                 nav_review: "Avis", review_title: "Laisser un avis", review_subtitle: "Partage ton expérience avec la communauté AERIX.", review_select_rating: "Sélectionne une note", review_comment_placeholder: "Ton commentaire...", review_submit: "Publier mon avis",
                 review_admin_title: "Avis publiés", review_admin_desc: "Tous les avis laissés par les membres. Supprime les avis abusifs ou hors sujet.", no_reviews: "Aucun avis pour le moment.",
                 filter_gallery: "Galerie",
-                assistant_quick_about: "Qui est AERIX ?", assistant_quick_join: "Rejoindre AERIX", assistant_quick_contact: "Contacter l'administration", assistant_quick_coaching: "Coaching", assistant_action_contact: "Contacter les administrateurs", assistant_action_coaching: "Demander un coaching", assistant_action_discord: "Rejoindre le Discord"
+                assistant_quick_about: "Qui est AERIX ?", assistant_quick_join: "Rejoindre AERIX", assistant_quick_contact: "Contacter l'administration", assistant_quick_coaching: "Coaching", assistant_action_contact: "Contacter les administrateurs", assistant_action_coaching: "Demander un coaching", assistant_action_discord: "Rejoindre le Discord", competition_subtitle:"Calendrier", competition_title:"Compétition", competition_desc:"Retrouve les prochains matchs, courses et derniers résultats d’AERIX.", competition_next_label:"À venir", competition_next_title:"Prochains rendez-vous", competition_recent_label:"Historique", competition_recent_title:"Derniers résultats", performance_subtitle:"Chiffres clés", performance_title:"Performance AERIX", performance_desc:"Une vue synthétique de l’activité compétitive affichée sur le site.", performance_rl_label:"Rocket League", performance_rl_title:"Activité compétitive", performance_sim_label:"Simracing", performance_sim_title:"Pôle Motorsport", media_subtitle:"Contenu", media_title:"AERIX Media", media_desc:"Photos, moments de compétition et contenus publiés par AERIX."
             },
             en: {
-                nav_home: "Home", nav_effectifs: "Rosters", nav_palmares: "Results", nav_histoire: "History", nav_boutique: "Shop", nav_partenaires: "Partners", nav_annonces: "News",
+                nav_home: "Home", nav_effectifs: "Rosters", nav_palmares: "Results", nav_competition: "Competition", nav_performance: "Performance", nav_media: "Media", nav_histoire: "History", nav_boutique: "Shop", nav_partenaires: "Partners", nav_annonces: "News",
                 hero_title_1: "The future", hero_title_2: "of", hero_title_3: "Esports", hero_title_4: "Competition.",
                 hero_desc: "Independent structure gathering the elite on Rocket League and virtual circuits. Performance, precision, and ambition.",
                 hero_btn_1: "Discover Rosters", hero_btn_2: "Our Achievements",
@@ -2046,7 +2075,7 @@
                 nav_review: "Reviews", review_title: "Leave a review", review_subtitle: "Share your experience with the AERIX community.", review_select_rating: "Select a rating", review_comment_placeholder: "Your comment...", review_submit: "Publish my review",
                 review_admin_title: "Published reviews", review_admin_desc: "All reviews left by members. Delete abusive or off-topic reviews.", no_reviews: "No reviews yet.",
                 filter_gallery: "Gallery",
-                assistant_quick_about: "Who is AERIX?", assistant_quick_join: "Join AERIX", assistant_quick_contact: "Contact administration", assistant_quick_coaching: "Coaching", assistant_action_contact: "Contact administration", assistant_action_coaching: "Request coaching", assistant_action_discord: "Join the Discord"
+                assistant_quick_about: "Who is AERIX?", assistant_quick_join: "Join AERIX", assistant_quick_contact: "Contact administration", assistant_quick_coaching: "Coaching", assistant_action_contact: "Contact administration", assistant_action_coaching: "Request coaching", assistant_action_discord: "Join the Discord", competition_subtitle:"Schedule", competition_title:"Competition", competition_desc:"Upcoming matches, races and latest AERIX results.", competition_next_label:"Upcoming", competition_next_title:"Next events", competition_recent_label:"History", competition_recent_title:"Latest results", performance_subtitle:"Key figures", performance_title:"AERIX Performance", performance_desc:"A concise overview of competitive activity displayed on the website.", performance_rl_label:"Rocket League", performance_rl_title:"Competitive activity", performance_sim_label:"Simracing", performance_sim_title:"Motorsport division", media_subtitle:"Content", media_title:"AERIX Media", media_desc:"Photos, competition moments and content published by AERIX."
             }
         };
         let currentLang = localStorage.getItem('aerix_lang') || ((navigator.language || '').toLowerCase().startsWith('en') ? 'en' : 'fr');
@@ -2156,6 +2185,7 @@
             if (typeof globalEffectifs !== 'undefined') renderEffectifs();
             if (typeof globalPalmares !== 'undefined') renderPalmares();
             if (typeof globalAnnonces !== 'undefined') renderAnnonces();
+            if (typeof renderNewAERIXPages === 'function') renderNewAERIXPages();
              if (typeof renderUserTickets === 'function' && document.getElementById('tickets-modal') && !document.getElementById('tickets-modal').classList.contains('hidden')) renderUserTickets();
         }
 
@@ -2197,10 +2227,10 @@
 
         // INITIALISATION BDD
         function startSync() {
-            db.collection("events").onSnapshot((snapshot) => { globalEvents = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderUpcomingEvents(); }, () => { globalEvents = []; renderUpcomingEvents(); });
+            db.collection("events").onSnapshot((snapshot) => { globalEvents = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderUpcomingEvents(); renderNewAERIXPages(); }, () => { globalEvents = []; renderUpcomingEvents(); renderNewAERIXPages(); });
             db.collection("shop").onSnapshot((snapshot) => { globalShop = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); scheduleRender(renderShop); scheduleAdminRender(); }, (e) => console.error('shop', e));
-            db.collection("effectifs").onSnapshot((snapshot) => { globalEffectifs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); scheduleRender(renderEffectifs); scheduleAdminRender(); }, (e) => console.error('effectifs', e));
-            db.collection("palmares").onSnapshot((snapshot) => { globalPalmares = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); scheduleRender(renderPalmares); scheduleAdminRender(); }, (e) => console.error('palmares', e));
+            db.collection("effectifs").onSnapshot((snapshot) => { globalEffectifs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); scheduleRender(renderEffectifs); scheduleRender(renderPerformancePage); scheduleAdminRender(); }, (e) => console.error('effectifs', e));
+            db.collection("palmares").onSnapshot((snapshot) => { globalPalmares = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); scheduleRender(renderPalmares); scheduleRender(renderCompetitionPage); scheduleRender(renderPerformancePage); scheduleAdminRender(); }, (e) => console.error('palmares', e));
             db.collection("achievements").onSnapshot((snapshot) => { globalAchievements = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); scheduleRender(renderAchievements); scheduleAdminRender(); }, () => { globalAchievements = []; scheduleRender(renderAchievements); scheduleAdminRender(); });
             db.collection("annonces").onSnapshot((snapshot) => { globalAnnonces = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); globalAnnonces = sortByDateDesc(globalAnnonces); scheduleRender(renderAnnonces); scheduleAdminRender(); }, error => { globalAnnonces = []; db.collection("annonces").get().then(s => { globalAnnonces = s.docs.map(doc => ({ id: doc.id, ...doc.data() })); globalAnnonces = sortByDateDesc(globalAnnonces); scheduleRender(renderAnnonces); scheduleAdminRender(); }).catch(e => console.error('annonces fallback', e)); });
             db.collection("partners").onSnapshot((snapshot) => { globalPartners = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); scheduleRender(renderPartners); scheduleAdminRender(); }, (e) => console.error('partners', e));
@@ -2222,9 +2252,10 @@
             }, () => { globalReviews = []; scheduleAdminRender(); });
             db.collection("gallery").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
                 globalGallery = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderMediaPage();
                 scheduleAdminRender();
                 if (annoncesView === 'galerie') scheduleRender(renderAnnonces);
-            }, () => { globalGallery = []; scheduleAdminRender(); });
+            }, () => { globalGallery = []; scheduleAdminRender(); renderMediaPage(); });
             checkCookies();
             loadAnalyticsIfConsented();
         }
@@ -3237,6 +3268,19 @@ function checkAdminSessionTimeout() {
                 showToast('Candidature envoyée. Elle sera traitée via les tickets.');
             } catch(e) { console.error(e); showToast('Impossible d’envoyer la candidature.', 'error'); }
         }
+
+        function renderCompetitionPage() {
+            const u=document.getElementById('competition-upcoming'), r=document.getElementById('competition-recent'); if(!u||!r)return; const now=Date.now(); const empty=currentLang==='en'?'No data available yet.':'Aucune donnée disponible pour le moment.';
+            const upcoming=(globalEvents||[]).filter(e=>parseAERIXDate(e.datetime||e.date)>now).sort((a,b)=>parseAERIXDate(a.datetime||a.date)-parseAERIXDate(b.datetime||b.date)).slice(0,8);
+            const recent=sortByDateDesc(globalPalmares||[]).slice(0,8);
+            u.innerHTML=upcoming.length?upcoming.map(e=>{const d=e.date?e.date.split('-').reverse().join('/'):'—'; const x=[e.competition,e.opponent].filter(Boolean).join(' · '); return `<div class="rounded-2xl border border-white/10 bg-white/[.03] p-4 flex items-center justify-between gap-4"><div class="min-w-0"><div class="text-white font-bold text-sm truncate">${escapeHtml(e.title||e.name||'Événement')}</div><div class="text-xs text-gray-500 mt-1">${escapeHtml(e.game||'AERIX')} · ${escapeHtml(d)}${e.time?' · '+escapeHtml(e.time):''}</div>${x?`<div class="text-xs text-gray-500 mt-1 truncate">${escapeHtml(x)}</div>`:''}</div><span class="text-aerix-purple text-xs font-bold">${escapeHtml(e.type||'Event')}</span></div>`}).join(''):`<p class="text-sm text-gray-500">${empty}</p>`;
+            r.innerHTML=recent.length?recent.map(p=>`<div class="rounded-2xl border border-white/10 bg-white/[.03] p-4 flex items-center justify-between gap-4"><div class="min-w-0"><div class="text-white font-bold text-sm truncate">${escapeHtml(p.title||'Résultat')}</div><div class="text-xs text-gray-500 mt-1">${escapeHtml(p.game||'AERIX')} · ${escapeHtml(p.date||'—')}</div></div><span class="text-white text-xs font-bold">${escapeHtml(p.result||p.position||'—')}</span></div>`).join(''):`<p class="text-sm text-gray-500">${empty}</p>`;
+        }
+        function renderPerformancePage(){
+            const s=document.getElementById('performance-stats'), rl=document.getElementById('performance-rl'), sim=document.getElementById('performance-sim'); if(!s||!rl||!sim)return; const rosters=globalEffectifs||[], results=globalPalmares||[]; const players=rosters.reduce((n,r)=>n+(Array.isArray(r.players)?r.players.length:0),0); const simResults=results.filter(p=>p.game!=='Rocket League').length; const wins=results.filter(p=>p.game==='Rocket League'&&String(p.result||'').toLowerCase().includes('victoire')).length; const card=(v,l)=>`<div class="glass-panel p-6 rounded-3xl text-center"><div class="text-3xl md:text-4xl font-black text-white">${v}</div><div class="text-[10px] text-gray-500 uppercase tracking-widest mt-2">${l}</div></div>`; s.innerHTML=[card(rosters.length,'Rosters'),card(players,currentLang==='en'?'Members':'Membres'),card(results.length,currentLang==='en'?'Results':'Résultats'),card(simResults,currentLang==='en'?'Simracing results':'Résultats simracing')].join(''); const row=(l,v)=>`<div class="flex items-center justify-between rounded-xl bg-white/[.03] border border-white/10 p-4"><span class="text-sm text-gray-400">${l}</span><span class="text-sm font-black text-white">${v}</span></div>`; rl.innerHTML=[row(currentLang==='en'?'Rocket League rosters':'Rosters Rocket League',rosters.filter(r=>r.game==='Rocket League').length),row(currentLang==='en'?'Rocket League results':'Résultats Rocket League',results.filter(p=>p.game==='Rocket League').length),row(currentLang==='en'?'Recorded wins':'Victoires enregistrées',wins)].join(''); sim.innerHTML=[row(currentLang==='en'?'Simracing rosters':'Rosters simracing',rosters.filter(r=>r.game!=='Rocket League').length),row(currentLang==='en'?'Simracing results':'Résultats simracing',simResults),row(currentLang==='en'?'Games represented':'Jeux représentés',new Set(rosters.filter(r=>r.game!=='Rocket League').map(r=>r.game)).size)].join('');
+        }
+        function renderMediaPage(){ const el=document.getElementById('media-gallery'); if(!el)return; const items=globalGallery||[]; el.innerHTML=items.length?items.map(g=>`<div class="group relative aspect-square overflow-hidden rounded-3xl border border-white/10 bg-black"><img src="${escapeHtml(g.image||'')}" loading="lazy" alt="AERIX Media" class="w-full h-full object-cover transition duration-500 group-hover:scale-105 group-hover:brightness-110"><div class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 to-transparent"><span class="text-[10px] text-white/70 uppercase tracking-widest">${escapeHtml(g.game||'AERIX')}</span></div></div>`).join(''):`<div class="col-span-full glass-panel rounded-3xl p-12 text-center text-gray-500 text-sm">${currentLang==='en'?'No media has been published yet.':'Aucun média n’a encore été publié.'}</div>`; }
+        function renderNewAERIXPages(){renderCompetitionPage();renderPerformancePage();renderMediaPage();}
 
         function renderUpcomingEvents() {
             const el = document.getElementById('upcoming-events');
