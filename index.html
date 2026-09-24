@@ -310,6 +310,21 @@
 
     /* PILL & LOGO GLOW */
     #nav-container, #admin-tabs-container { isolation: isolate; }
+    #admin-tabs-container .admin-tab-btn {
+        flex: 0 0 auto !important;
+        min-width: 118px;
+        padding: 0.8rem 1.05rem;
+        white-space: nowrap;
+    }
+    @media (max-width: 768px) {
+        #admin-tabs-container .admin-tab-btn { min-width: 108px; padding: 0.72rem 0.9rem; }
+    }
+    #media-lightbox img {
+        max-width: min(94vw, 1500px);
+        max-height: 86vh;
+        width: auto; height: auto;
+        object-fit: contain;
+    }
     #nav-pill, #admin-tab-pill {
         background: linear-gradient(135deg, rgba(139,92,246,.30), rgba(139,92,246,.10));
         border: 1px solid rgba(167,139,250,.55);
@@ -993,6 +1008,8 @@
                     <button onclick="setFilter('effectifs', 'Tous')" data-filter="Tous" class="filter-btn active">Tous</button>
                     <button onclick="setFilter('effectifs', 'Rocket League')" data-filter="Rocket League" class="filter-btn">Rocket League</button>
                     <button onclick="setFilter('effectifs', 'Le Mans Ultimate')" data-filter="Le Mans Ultimate" class="filter-btn">Le Mans Ultimate</button>
+                    <button onclick="setFilter('effectifs', 'RBR')" data-filter="RBR" class="filter-btn">RBR</button>
+                    <button onclick="setFilter('effectifs', 'iRacing')" data-filter="iRacing" class="filter-btn">iRacing</button>
                 </div>
             </div>
             <div id="effectifs-container" class="space-y-16"></div>
@@ -1507,6 +1524,15 @@
         </div>
     </div>
 
+    <!-- VISIONNEUSE MEDIA -->
+    <div id="media-lightbox" class="fixed inset-0 z-[300] hidden items-center justify-center p-4 bg-black/95 backdrop-blur-xl" onclick="if(event.target===this) closeImageViewer()" role="dialog" aria-modal="true" aria-label="Aperçu du média">
+        <button type="button" onclick="closeImageViewer()" class="absolute top-5 right-5 z-10 w-11 h-11 rounded-full bg-white/10 border border-white/15 text-white text-xl hover:bg-white/20 transition">✕</button>
+        <div class="relative max-w-[96vw] max-h-[92vh] flex flex-col items-center">
+            <img id="media-lightbox-img" src="" alt="AERIX Media" class="rounded-xl shadow-2xl border border-white/10">
+            <div id="media-lightbox-caption" class="mt-4 text-sm text-gray-300 text-center max-w-3xl"></div>
+        </div>
+    </div>
+
     <!-- MODAL ADMIN -->
     <div id="admin-modal" class="fixed inset-0 z-[110] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl" role="dialog" aria-modal="true" aria-label="Fenêtre de dialogue">
         <div class="glass-panel-no-hover w-full max-w-6xl max-h-[95vh] overflow-y-auto rounded-[2rem] p-6 md:p-10 border border-white/10 shadow-2xl">
@@ -1527,7 +1553,9 @@
                 <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('boutique')" id="tab-btn-boutique" class="admin-tab-btn active flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-white transition cursor-pointer relative z-10">Boutique</button>
                 <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('effectifs')" id="tab-btn-effectifs" class="admin-tab-btn flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10">Effectifs</button>
                 <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('palmares')" id="tab-btn-palmares" class="admin-tab-btn flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10">Résultats</button>
-                <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('evenements')" id="tab-btn-evenements" class="admin-tab-btn flex-1 min-w-[120px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10">Événements</button>
+                <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('evenements')" id="tab-btn-evenements" class="admin-tab-btn flex-1 min-w-[120px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10">Compétition</button>
+                <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('performance')" id="tab-btn-performance" class="admin-tab-btn flex-1 min-w-[118px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10">Performance</button>
+                <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('media')" id="tab-btn-media" class="admin-tab-btn flex-1 min-w-[118px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10">Média</button>
                 <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('annonces')" id="tab-btn-annonces" class="admin-tab-btn flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10">Actualités</button>
                 <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('partenaires')" id="tab-btn-partenaires" class="admin-tab-btn flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10">Sponsors</button>
                 <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('contact')" id="tab-btn-contact" class="admin-tab-btn flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10" data-i18n="contact_form">Contact</button>
@@ -1796,6 +1824,34 @@
                     </div>
                     <textarea id="add-event-description" placeholder="Description / informations complémentaires (optionnel)" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm h-24 mb-6 outline-none focus:border-aerix-purple transition resize-y"></textarea>
                     <div class="flex gap-3"><button id="event-cancel-btn" type="button" onclick="resetEventForm()" class="hidden px-6 py-3.5 bg-white/5 border border-white/10 hover:bg-white/10 text-white rounded-xl text-sm font-bold transition">Annuler</button><button type="button" onclick="saveEvent()" class="flex-1 bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition shadow-[0_0_15px_rgba(139,92,246,0.3)]">Enregistrer l'événement</button></div>
+                </div>
+            </div>
+
+            <!-- TAB: PERFORMANCE -->
+            <div id="admin-tab-performance" class="admin-tab hidden space-y-8">
+                <div>
+                    <h4 class="text-lg font-bold text-white mb-2">Performance AERIX</h4>
+                    <p class="text-xs text-gray-500 mb-5">Vue synthétique des données actuellement enregistrées dans les effectifs, résultats, palmarès et compétitions.</p>
+                    <div id="admin-performance-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div class="glass-panel p-6 rounded-2xl border border-white/5">
+                        <h5 class="text-sm font-bold text-white mb-4">Rocket League</h5>
+                        <div id="admin-performance-rl" class="space-y-3 text-sm"></div>
+                    </div>
+                    <div class="glass-panel p-6 rounded-2xl border border-white/5">
+                        <h5 class="text-sm font-bold text-white mb-4">Simracing</h5>
+                        <div id="admin-performance-sim" class="space-y-3 text-sm"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: MEDIA -->
+            <div id="admin-tab-media" class="admin-tab hidden space-y-8">
+                <div>
+                    <h4 class="text-lg font-bold text-white mb-2">Média & Galerie</h4>
+                    <p class="text-xs text-gray-500 mb-5">Gère les photos actuellement publiées dans la galerie AERIX. Pour ajouter une photo, utilise le bloc Galerie dans Actualités.</p>
+                    <div id="admin-list-gallery-media" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
                 </div>
             </div>
 
@@ -3935,6 +3991,10 @@ function checkAdminSessionTimeout() {
             if (galleryEl) {
                 galleryEl.innerHTML = globalGallery.length ? globalGallery.map(g => `<div class="relative group rounded-xl overflow-hidden aspect-square border border-white/10"><img src="${g.image}" class="w-full h-full object-cover" alt="Image AERIX"><button onclick="deleteItem('gallery', '${g.id}')" class="absolute top-1.5 right-1.5 bg-red-500 text-white text-[10px] w-6 h-6 rounded-full font-bold opacity-0 group-hover:opacity-100 transition">✕</button></div>`).join('') : `<p class="text-gray-500 text-sm italic col-span-full">Aucune photo dans la galerie.</p>`;
             }
+            const galleryMediaEl = document.getElementById('admin-list-gallery-media');
+            if (galleryMediaEl) {
+                galleryMediaEl.innerHTML = globalGallery.length ? globalGallery.map(g => `<div class="relative group rounded-2xl overflow-hidden aspect-square border border-white/10 bg-black/40 cursor-pointer" onclick="openImageViewer('${escapeHtml(g.image)}', '${escapeHtml(g.caption || '')}')"><img src="${escapeHtml(g.image)}" class="w-full h-full object-cover transition duration-500 group-hover:scale-105" alt="${escapeHtml(g.caption || 'Image AERIX')}"><button type="button" onclick="event.stopPropagation(); deleteItem('gallery', '${g.id}')" class="absolute top-2 right-2 bg-red-500/90 text-white text-[10px] w-7 h-7 rounded-full font-bold opacity-0 group-hover:opacity-100 transition">✕</button></div>`).join('') : `<p class="text-gray-500 text-sm italic col-span-full">Aucune photo dans la galerie.</p>`;
+            }
         }
         // Carte d'avis affichée dans l'onglet admin "Avis" : note en étoiles, auteur,
         // commentaire, et bouton de suppression pour modérer les avis abusifs/hors sujet.
@@ -4540,19 +4600,33 @@ function checkAdminSessionTimeout() {
             rl.innerHTML = rosterHTML(rlR, 'Aucun roster Rocket League enregistré.');
             sim.innerHTML = rosterHTML(simR, 'Aucun roster simracing enregistré.');
         }
-        function openImageViewer(url) {
+        function openImageViewer(url, caption = '') {
             if (!url) return;
-            const win = window.open('', '_blank', 'noopener,noreferrer');
-            if (!win) return;
-            win.document.write(`<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>AERIX Media</title><style>html,body{margin:0;background:#050505;height:100%;display:grid;place-items:center}img{max-width:96vw;max-height:94vh;object-fit:contain}</style></head><body><img src="${escapeHtml(url)}" alt="AERIX Media"></body></html>`);
-            win.document.close();
+            const modal = document.getElementById('media-lightbox');
+            const img = document.getElementById('media-lightbox-img');
+            const cap = document.getElementById('media-lightbox-caption');
+            if (!modal || !img) return;
+            img.src = url;
+            img.alt = caption || 'AERIX Media';
+            if (cap) cap.textContent = caption || '';
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.classList.add('overflow-hidden');
         }
+        function closeImageViewer() {
+            const modal = document.getElementById('media-lightbox');
+            const img = document.getElementById('media-lightbox-img');
+            if (modal) { modal.classList.add('hidden'); modal.classList.remove('flex'); }
+            if (img) img.src = '';
+            document.body.classList.remove('overflow-hidden');
+        }
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeImageViewer(); });
         function renderMediaPage() {
             const c = document.getElementById('media-container'); if (!c) return;
             const items = [];
             (globalGallery || []).forEach(g => { if (g.image) items.push(g); });
             (globalAnnonces || []).forEach(a => { if (a.image) items.push({image:a.image, caption:a.title, game:a.game}); });
-            c.innerHTML = items.length ? items.slice(0,32).map((m,i) => `<button type="button" onclick="openImageViewer('${escapeHtml(m.image)}')" class="group aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 bg-black/40"><img src="${escapeHtml(m.image)}" alt="${escapeHtml(m.caption || 'AERIX Media')}" class="w-full h-full object-cover transition duration-500 group-hover:scale-105"><div class="absolute"></div></button>`).join('') : `<div class="col-span-full glass-panel p-10 rounded-3xl text-center text-gray-500">Aucun média disponible pour le moment.</div>`;
+            c.innerHTML = items.length ? items.slice(0,32).map((m,i) => `<button type="button" onclick="openImageViewer('${escapeHtml(m.image).replace(/'/g, '&#39;')}', '${escapeHtml(m.caption || '').replace(/'/g, '&#39;')}')" class="group aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 bg-black/40"><img src="${escapeHtml(m.image)}" alt="${escapeHtml(m.caption || 'AERIX Media')}" class="w-full h-full object-cover transition duration-500 group-hover:scale-105"><div class="absolute"></div></button>`).join('') : `<div class="col-span-full glass-panel p-10 rounded-3xl text-center text-gray-500">Aucun média disponible pour le moment.</div>`;
         }
 
         function navigate(pageId, pushHistory = true) {
@@ -4796,6 +4870,8 @@ function checkAdminSessionTimeout() {
             const evenementsBtn = document.getElementById('tab-btn-evenements');
             const boutiqueBtn = document.getElementById('tab-btn-boutique');
             const partenairesBtn = document.getElementById('tab-btn-partenaires');
+            const performanceBtn = document.getElementById('tab-btn-performance');
+            const mediaBtn = document.getElementById('tab-btn-media');
             if (comptesBtn) comptesBtn.classList.toggle('hidden', !isOwner());
             if (contactBtn) contactBtn.classList.toggle('hidden', !hasAdminAccess());
             if (coachingBtn) coachingBtn.classList.toggle('hidden', !hasAdminAccess());
@@ -4805,10 +4881,35 @@ function checkAdminSessionTimeout() {
             if (boutiqueBtn) boutiqueBtn.classList.toggle('hidden', !isOwner());
             if (partenairesBtn) partenairesBtn.classList.toggle('hidden', !isOwner());
         }
+        function renderAdminPerformance() {
+            const grid = document.getElementById('admin-performance-grid');
+            const rl = document.getElementById('admin-performance-rl');
+            const sim = document.getElementById('admin-performance-sim');
+            if (!grid || !rl || !sim) return;
+            const rosters = Array.isArray(globalEffectifs) ? globalEffectifs : [];
+            const results = Array.isArray(globalPalmares) ? globalPalmares : [];
+            const events = Array.isArray(globalEvents) ? globalEvents : [];
+            const achievements = Array.isArray(globalAchievements) ? globalAchievements : [];
+            const players = rosters.reduce((n, r) => n + (Array.isArray(r.players) ? r.players.length : 0), 0);
+            grid.innerHTML = [
+                [rosters.length, 'Rosters'],
+                [players, 'Membres / pilotes'],
+                [results.length, 'Résultats'],
+                [events.length, 'Événements']
+            ].map(([v,l]) => `<div class="glass-panel p-5 rounded-2xl text-center border border-white/5"><div class="text-3xl font-black text-white">${v}</div><div class="text-[10px] text-gray-500 uppercase tracking-widest mt-2">${l}</div></div>`).join('');
+            const rlR = rosters.filter(r => /rocket league|rl/i.test(r.game || r.category || ''));
+            const simR = rosters.filter(r => !/rocket league|rl/i.test(r.game || r.category || ''));
+            const list = (arr) => arr.length ? arr.map(r => `<div class="flex justify-between gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/5"><span class="text-gray-300">${escapeHtml(r.name || 'Division')}</span><span class="text-aerix-purple font-bold">${Array.isArray(r.players) ? r.players.length : 0}</span></div>`).join('') : '<p class="text-gray-500 italic">Aucune donnée.</p>';
+            rl.innerHTML = list(rlR);
+            sim.innerHTML = list(simR);
+            void achievements;
+        }
+
         function switchAdminTab(tab) {
             if (tab === 'comptes' && !isOwner()) tab = 'effectifs';
             if ((tab === 'boutique' || tab === 'partenaires') && !isOwner()) tab = 'effectifs';
             if ((tab === 'evenements' || tab === 'contact' || tab === 'coaching' || tab === 'avis') && !hasAdminAccess()) tab = 'effectifs';
+            if ((tab === 'performance' || tab === 'media') && !hasAdminAccess()) tab = 'effectifs';
             const target = document.getElementById('admin-tab-' + tab);
             if(!target) return;
             document.querySelectorAll('.admin-tab').forEach(t => {
@@ -4819,8 +4920,10 @@ function checkAdminSessionTimeout() {
             void target.offsetWidth;
             target.classList.add('animate-tab-change');
             if (tab === 'coaching') renderAdminCoachingCalendar();
+            if (tab === 'performance') renderAdminPerformance();
+            if (tab === 'media') renderAdminLists();
             if (tab === 'contact' || tab === 'coaching' || tab === 'avis') markAdminTicketsAsRead(tab);
-            ['comptes', 'boutique', 'effectifs', 'palmares', 'evenements', 'partenaires', 'annonces', 'contact', 'coaching', 'avis'].forEach(t => {
+            ['comptes', 'boutique', 'effectifs', 'palmares', 'evenements', 'performance', 'media', 'partenaires', 'annonces', 'contact', 'coaching', 'avis'].forEach(t => {
                 const btn = document.getElementById('tab-btn-' + t);
                 if(btn) {
                     btn.classList.remove('active', 'text-white');
