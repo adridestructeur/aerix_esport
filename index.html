@@ -4601,7 +4601,7 @@ function checkAdminSessionTimeout() {
             const players = rosters.reduce((n,r) => n + (Array.isArray(r.players) ? r.players.length : 0), 0);
             const results = (globalPalmares || []).length;
             const events = (globalEvents || []).length;
-            stats.innerHTML = [[rosters.length,'Divisions'],[players,'Membres / pilotes'],[results,'Résultats'],[events,'Événements']].map(([v,l]) => `<div class="glass-panel p-6 rounded-2xl text-center"><div class="text-3xl font-black text-white">${v}</div><div class="text-xs text-gray-500 uppercase tracking-widest mt-2">${l}</div></div>`).join('');
+            stats.innerHTML = [[rosters.length,'Divisions'],[players,' / pilotes'],[results,'Résultats'],[events,'Événements']].map(([v,l]) => `<div class="glass-panel p-6 rounded-2xl text-center"><div class="text-3xl font-black text-white">${v}</div><div class="text-xs text-gray-500 uppercase tracking-widest mt-2">${l}</div></div>`).join('');
             const rlR = rosters.filter(r => /rocket league|rl/i.test(r.game || r.category || ''));
             const simR = rosters.filter(r => !/rocket league|rl/i.test(r.game || r.category || ''));
             const rosterHTML = (arr, empty) => arr.length ? arr.map(r => `<div class="flex items-center justify-between p-4 rounded-xl bg-white/[0.03] border border-white/5"><div><div class="text-white font-bold">${escapeHtml(r.name || 'Division')}</div><div class="text-xs text-gray-500 mt-1">${escapeHtml(r.game || 'Général')}</div></div><span class="text-xs text-aerix-purple font-bold">${Array.isArray(r.players) ? r.players.length : 0} membre(s)</span></div>`).join('') : `<p class="text-gray-500 text-sm italic">${empty}</p>`;
@@ -4903,7 +4903,7 @@ function checkAdminSessionTimeout() {
             const players = rosters.reduce((n, r) => n + (Array.isArray(r.players) ? r.players.length : 0), 0);
             grid.innerHTML = [
                 [rosters.length, 'Rosters'],
-                [players, 'Membres / pilotes'],
+                [players, 'Joueurs / pilotes'],
                 [results.length, 'Résultats'],
                 [events.length, 'Événements']
             ].map(([v,l]) => `<div class="glass-panel p-5 rounded-2xl text-center border border-white/5"><div class="text-3xl font-black text-white">${v}</div><div class="text-[10px] text-gray-500 uppercase tracking-widest mt-2">${l}</div></div>`).join('');
