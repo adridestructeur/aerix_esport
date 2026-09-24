@@ -184,14 +184,15 @@
     .desktop-nav-shell {
         display:flex; align-items:center; justify-content:center; min-width:0;
         flex:1 1 auto;
+        padding: 0 .35rem;
     }
     .desktop-nav-primary {
-        display:flex; align-items:center; gap:.03rem; min-width:0;
+        display:flex; align-items:center; gap:.08rem; min-width:0;
     }
     .nav-more-wrap { position:relative; flex:0 0 auto; }
     .nav-more-btn {
         display:inline-flex; align-items:center; gap:.30rem;
-        padding:.46rem .62rem; border-radius:9999px; font-size:.66rem; font-weight:700;
+        padding:.55rem .76rem; border-radius:9999px; font-size:.72rem; font-weight:700;
         text-transform:uppercase; letter-spacing:.07em; color:#9ca3af;
         background:transparent; border:0; cursor:pointer; white-space:nowrap;
         transition:color .25s ease, background .25s ease, text-shadow .25s ease; position:relative; z-index:2;
@@ -222,16 +223,16 @@
     .nav-more-item.active::after { content:""; width:5px; height:5px; border-radius:50%; background:#8B5CF6; box-shadow:0 0 9px rgba(139,92,246,.9); }
     .desktop-header-actions { flex:0 0 auto; }
     @media (max-width: 1500px) and (min-width: 768px) {
-        .nav-btn, .nav-more-btn { padding-left:.58rem; padding-right:.58rem; font-size:.65rem; letter-spacing:.045em; }
+        .nav-btn, .nav-more-btn { padding-left:.64rem; padding-right:.64rem; font-size:.69rem; letter-spacing:.05em; }
         .desktop-discord-btn { padding-left:.7rem !important; padding-right:.7rem !important; }
         .desktop-header-actions { gap:.4rem !important; }
     }
     @media (max-width: 1180px) and (min-width: 768px) {
         .desktop-header-actions #account-area { max-width:145px; overflow:hidden; }
-        .nav-btn, .nav-more-btn { padding-left:.45rem; padding-right:.45rem; font-size:.61rem; }
+        .nav-btn, .nav-more-btn { padding-left:.50rem; padding-right:.50rem; font-size:.64rem; }
         .desktop-language-btn { padding-left:.55rem !important; padding-right:.55rem !important; }
     }
-    .nav-btn { padding: .46rem .60rem; border-radius: 9999px; font-size: .66rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: #9ca3af; transition: color .25s ease, text-shadow .25s ease; position: relative; z-index: 2; background: transparent; border: none; cursor: pointer; white-space: nowrap; }
+    .nav-btn { padding: .55rem .74rem; border-radius: 9999px; font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: #9ca3af; transition: color .25s ease, text-shadow .25s ease; position: relative; z-index: 2; background: transparent; border: none; cursor: pointer; white-space: nowrap; }
     .nav-btn.active { color: #fff; text-shadow: 0 0 10px rgba(255,255,255,.55); }
     .nav-btn:hover { color: #fff; }
     
