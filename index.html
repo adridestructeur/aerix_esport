@@ -1618,6 +1618,11 @@
                 <input id="account-register-email" type="email" placeholder="Adresse email" data-i18n-placeholder="email_placeholder" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
                 <input id="account-register-password" type="password" minlength="8" placeholder="Mot de passe (8 caractères min.)" data-i18n-placeholder="password_min_placeholder" onkeypress="if(event.key==='Enter') createAccount()" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
                 <button onclick="createAccount()" class="w-full bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition shadow-[0_0_15px_rgba(139,92,246,.3)]" data-i18n="create_account">Créer le compte</button>
+                <div class="flex items-center gap-3 py-1"><div class="flex-1 h-px bg-white/10"></div><span class="text-[10px] uppercase tracking-widest text-gray-500" data-i18n="or_divider">ou</span><div class="flex-1 h-px bg-white/10"></div></div>
+                <button type="button" onclick="signInWithGoogle()" class="w-full flex items-center justify-center gap-3 bg-white/5 border border-white/10 text-white font-bold py-3 rounded-xl hover:bg-white/10 transition text-sm">
+                    <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/><path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/><path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238C29.211 35.091 26.715 36 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/><path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 01-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/></svg>
+                    <span data-i18n="continue_with_google">Continuer avec Google</span>
+                </button>
                 <button onclick="showAccountLogin()" class="w-full bg-white/5 border border-white/10 text-white font-bold py-3 rounded-xl hover:bg-white/10 transition text-sm" data-i18n="already_account_signin">J'ai déjà un compte — Se connecter</button>
             </div>
             <div id="account-login-form" class="space-y-4 hidden">
@@ -1626,6 +1631,11 @@
                 <input id="account-login-password" type="password" placeholder="Mot de passe" data-i18n-placeholder="password_placeholder" onkeypress="if(event.key==='Enter') loginAccount()" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
                 <button onclick="loginAccount()" class="w-full bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition" data-i18n="account_login">Connexion</button>
                 <button type="button" onclick="resetAccountPassword()" class="w-full text-xs font-bold text-aerix-purple hover:text-white transition py-1" data-i18n="forgot_password">Mot de passe oublié ?</button>
+                <div class="flex items-center gap-3 py-1"><div class="flex-1 h-px bg-white/10"></div><span class="text-[10px] uppercase tracking-widest text-gray-500" data-i18n="or_divider">ou</span><div class="flex-1 h-px bg-white/10"></div></div>
+                <button type="button" onclick="signInWithGoogle()" class="w-full flex items-center justify-center gap-3 bg-white/5 border border-white/10 text-white font-bold py-3 rounded-xl hover:bg-white/10 transition text-sm">
+                    <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/><path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/><path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238C29.211 35.091 26.715 36 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/><path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 01-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/></svg>
+                    <span data-i18n="continue_with_google">Continuer avec Google</span>
+                </button>
                 <button onclick="showAccountRegistration()" class="w-full bg-white/5 border border-white/10 text-white font-bold py-3 rounded-xl hover:bg-white/10 transition text-sm" data-i18n="create_account">Créer un compte</button>
             </div>
         </div>
@@ -2267,7 +2277,7 @@
                 partners_subtitle: "Sponsors & Affiliés", partners_title: "Partenaires Techniques", partners_desc: "Des collaborations qui accompagnent AERIX dans son développement compétitif, son équipement et sa communauté.", partners_cta_kicker: "Collaboration", partners_cta_title: "Vous souhaitez collaborer avec AERIX ?", partners_cta_desc: "Présentez-nous votre projet et échangeons sur une collaboration adaptée à votre marque.", partners_cta_btn: "Nous contacter",
                 news_subtitle: "Actualités", news_title: "Annonces & Mises à jour", account_create: "Créer un compte", account_profile: "Mon compte", account_login: "Connexion", account_logout: "Déconnexion", admin_access: "Administration",
                 admin_secure_title: "Accès Sécurisé", admin_secure_desc: "Confirme ton mot de passe pour accéder au panel d'administration", admin_secure_placeholder: "Mot de passe...", cancel: "Annuler", confirm: "Confirmer",
-                username_placeholder: "Pseudo", email_placeholder: "Adresse email", already_account_signin: "J'ai déjà un compte — Se connecter",
+                username_placeholder: "Pseudo", email_placeholder: "Adresse email", already_account_signin: "J'ai déjà un compte — Se connecter", or_divider: "ou", continue_with_google: "Continuer avec Google",
                 account_login_desc: "Connecte-toi avec ton compte AERIX.", password_placeholder: "Mot de passe", forgot_password: "Mot de passe oublié ?",
                 account_register_desc: "Crée directement ton compte AERIX avec ton pseudo, ton email et ton mot de passe.", password_min_placeholder: "Mot de passe (8 caractères min.)", create_account: "Créer le compte", registered_accounts_title: "Comptes enregistrés", registered_accounts_desc: "Tous les comptes créés sur le site. Le Owner peut attribuer ou retirer le rôle Admin.", contact_admin_title: "Demandes de contact", contact_admin_desc: "Consulte et gère les tickets envoyés par les utilisateurs.", contact_title: "Contact AERIX", contact_desc: "Choisis Discord ou ouvre un ticket directement depuis le site.", contact_discord: "Contacter sur Discord", contact_form: "Formulaire de contact", contact_login_required: "Tu dois être connecté pour ouvrir un ticket.", ticket: "Tickets", no_tickets: "Aucun ticket en cours.", ticket_status: "Statut", ticket_category: "Catégorie", ticket_subject: "Sujet", ticket_message: "Message", ticket_send: "Envoyer le ticket", ticket_close: "Fermer", ticket_reply: "Réponse AERIX", ticket_created: "Ticket créé.", ticket_updated: "Ticket mis à jour.", ticket_required: "Sujet et message obligatoires.", contact_category_partnership: "Partenariat", contact_category_question: "Question", contact_category_other: "Autre demande", contact_status_new: "Nouveau", contact_status_progress: "En cours", contact_status_done: "Traité", contact_status_archived: "Archivé", role_user: "Utilisateur", role_admin: "Admin", role_owner: "Owner",
                 nav_competition: "Compétition", nav_more: "Plus", nav_more_main: "Navigation", nav_more_performance: "Performance & services", nav_more_content: "Contenu", nav_more_community: "Communauté", nav_performance: "Performance", nav_media: "Média", nav_recruit: "Rejoindre AERIX", nav_review: "Laisser un avis", nav_coaching: "Coaching", coaching_title: "Réserver un coaching", coaching_subtitle: "Le Mans Ultimate & iRacing — coaching individuel ou en groupe.",
@@ -2303,7 +2313,7 @@
                 partners_subtitle: "Sponsors & Affiliates", partners_title: "Technical Partners", partners_desc: "Collaborations supporting AERIX across competitive development, equipment and community.", partners_cta_kicker: "Collaboration", partners_cta_title: "Want to work with AERIX?", partners_cta_desc: "Tell us about your project and let’s discuss a collaboration adapted to your brand.", partners_cta_btn: "Contact us",
                 news_subtitle: "News", news_title: "Announcements & Updates", account_create: "Create account", account_profile: "My account", account_login: "Sign in", account_logout: "Sign out", admin_access: "Admin panel",
                 admin_secure_title: "Secure Access", admin_secure_desc: "Confirm your password to access the administration panel", admin_secure_placeholder: "Password...", cancel: "Cancel", confirm: "Confirm",
-                username_placeholder: "Username", email_placeholder: "Email address", already_account_signin: "Already have an account — Sign in",
+                username_placeholder: "Username", email_placeholder: "Email address", already_account_signin: "Already have an account — Sign in", or_divider: "or", continue_with_google: "Continue with Google",
                 account_login_desc: "Sign in with your AERIX account.", password_placeholder: "Password", forgot_password: "Forgot your password?",
                 account_register_desc: "Create your AERIX account directly with your username, email and password.", password_min_placeholder: "Password (8+ characters)", create_account: "Create account", registered_accounts_title: "Registered accounts", registered_accounts_desc: "All accounts created on the website. The Owner can grant or revoke the Admin role.",
                 contact_admin_title: "Contact requests", contact_admin_desc: "Review and manage tickets sent by users.", contact_title: "Contact AERIX", contact_desc: "Choose Discord or open a ticket directly from the website.", contact_discord: "Contact on Discord", contact_form: "Contact form", contact_login_required: "Sign in to open a ticket.", ticket: "Tickets", no_tickets: "No active tickets.", ticket_status: "Status", ticket_category: "Category", ticket_subject: "Subject", ticket_message: "Message", ticket_send: "Send the ticket", ticket_close: "Close", ticket_reply: "AERIX reply", ticket_created: "Ticket created.", ticket_updated: "Ticket updated.", ticket_required: "Subject and message are required.", contact_category_partnership: "Partnership", contact_category_question: "Question", contact_category_other: "Other request", contact_status_new: "New", contact_status_progress: "In progress", contact_status_done: "Resolved", contact_status_archived: "Archived", role_user: "User", role_admin: "Admin", role_owner: "Owner",
@@ -3557,6 +3567,40 @@ function checkAdminSessionTimeout() {
             }
         }
         async function loginAccount() { const email=document.getElementById('account-login-email').value.trim(); const password=document.getElementById('account-login-password').value; if(!email||!password) return showToast(currentLang==='en'?'Email and password are required.':'Email et mot de passe obligatoires.','error'); try { await auth.signInWithEmailAndPassword(email,password); closeAccountModal(); showToast(currentLang==='en'?'Signed in.':'Connexion réussie.'); } catch(e){ showToast(currentLang==='en'?'Invalid email or password.':'Email ou mot de passe incorrect.','error'); } }
+
+        async function signInWithGoogle() {
+            if (currentUser) return showToast(currentLang==='en'?'You are already signed in.':'Tu es déjà connecté.','error');
+            try {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                const cred = await auth.signInWithPopup(provider);
+                const user = cred.user;
+                // Si c'est la toute première connexion Google, on crée le document de compte
+                // AERIX correspondant (role 'user'), sauf s'il s'agit du Owner (géré ailleurs).
+                if (user.email?.toLowerCase() !== OWNER_EMAIL.toLowerCase()) {
+                    const ref = db.collection('accounts').doc(user.uid);
+                    const snap = await ref.get();
+                    if (!snap.exists) {
+                        const fallbackUsername = (user.displayName || user.email?.split('@')[0] || 'Joueur').slice(0, 30);
+                        await ref.set({
+                            uid: user.uid,
+                            username: fallbackUsername,
+                            email: user.email,
+                            role: 'user',
+                            status: 'active',
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                    }
+                }
+                closeAccountModal();
+                showToast(currentLang==='en'?'Signed in.':'Connexion réussie.');
+            } catch(e) {
+                console.error('Google sign-in failed:', e);
+                if (e.code === 'auth/popup-closed-by-user' || e.code === 'auth/cancelled-popup-request') return;
+                let msg = currentLang==='en'?'Google sign-in failed.':'Échec de la connexion avec Google.';
+                if (e.code === 'auth/popup-blocked') msg = currentLang==='en'?'Popup blocked by your browser.':'Fenêtre pop-up bloquée par le navigateur.';
+                showToast(msg,'error');
+            }
+        }
 
         async function resetAccountPassword() {
             const email = document.getElementById('account-login-email')?.value.trim().toLowerCase();
