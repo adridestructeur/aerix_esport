@@ -179,21 +179,23 @@
         55% { opacity: .88; filter: blur(1.5px); }
         to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); filter: blur(0); }
     }
+    /* TRANSITION LANGUE — volontairement plus longue pour laisser le temps de lire */
     #page-transition-overlay {
         position: fixed; inset: 0; z-index: 200;
         pointer-events: none; opacity: 0;
-        background: radial-gradient(circle at 50% 42%, rgba(139,92,246,.16), rgba(5,5,8,.78) 48%, rgba(5,5,8,.96));
+        background: radial-gradient(circle at 50% 42%, rgba(139,92,246,.18), rgba(5,5,8,.80) 48%, rgba(5,5,8,.97));
         backdrop-filter: blur(0); -webkit-backdrop-filter: blur(0);
-        transition: opacity .34s cubic-bezier(.16,1,.3,1), backdrop-filter .34s ease, -webkit-backdrop-filter .34s ease;
+        transition: opacity .48s cubic-bezier(.16,1,.3,1), backdrop-filter .48s ease, -webkit-backdrop-filter .48s ease;
         display: flex; align-items: center; justify-content: center;
     }
-    #page-transition-overlay.is-active { opacity: 1; backdrop-filter: blur(9px); -webkit-backdrop-filter: blur(9px); }
-    #page-transition-overlay .transition-core { transform: translateY(10px) scale(.94); opacity: 0; transition: opacity .28s ease, transform .32s cubic-bezier(.16,1,.3,1); text-align:center; }
+    #page-transition-overlay.is-active { opacity: 1; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    #page-transition-overlay .transition-core { transform: translateY(14px) scale(.92); opacity: 0; transition: opacity .42s ease, transform .5s cubic-bezier(.16,1,.3,1); text-align:center; }
     #page-transition-overlay.is-active .transition-core { opacity: 1; transform: translateY(0) scale(1); }
-    #page-transition-overlay .transition-mark { width: 42px; height: 42px; margin: 0 auto 12px; border-radius: 14px; border: 1px solid rgba(139,92,246,.55); background: rgba(139,92,246,.12); box-shadow: 0 0 35px rgba(139,92,246,.28); display:flex; align-items:center; justify-content:center; }
-    #page-transition-overlay .transition-mark img { width: 26px; height: 26px; object-fit: contain; }
-    #page-transition-overlay .transition-label { font-size: 10px; font-weight: 800; letter-spacing: .22em; text-transform: uppercase; color: rgba(255,255,255,.72); }
-    body.language-changing .site-main, body.language-changing nav { animation: languageSwap .42s cubic-bezier(.16,1,.3,1) both; }
+    #page-transition-overlay .transition-mark { width: 56px; height: 56px; margin: 0 auto 16px; border-radius: 17px; border: 1px solid rgba(139,92,246,.62); background: rgba(139,92,246,.13); box-shadow: 0 0 45px rgba(139,92,246,.34); display:flex; align-items:center; justify-content:center; }
+    #page-transition-overlay .transition-mark img { width: 32px; height: 32px; object-fit: contain; }
+    #page-transition-overlay .transition-label { font-size: 13px; font-weight: 900; letter-spacing: .28em; text-transform: uppercase; color: rgba(255,255,255,.94); text-shadow: 0 0 18px rgba(255,255,255,.14); }
+    #page-transition-overlay .transition-sub { margin-top: 9px; font-size: 9px; font-weight: 700; letter-spacing: .3em; text-transform: uppercase; color: rgba(255,255,255,.38); }
+    body.language-changing .site-main, body.language-changing nav { animation: languageSwap .55s cubic-bezier(.16,1,.3,1) both; }
     @keyframes languageSwap { 0% { opacity: .35; filter: blur(7px); transform: translateY(5px); } 100% { opacity: 1; filter: blur(0); transform: translateY(0); } }
     @media (prefers-reduced-motion: reduce) {
         .animate-tab-change, body.language-changing .site-main, body.language-changing nav { animation: none !important; }
@@ -227,6 +229,65 @@
     .review-star-display.empty { color: rgba(255,255,255,0.15); text-shadow: none; }
 
     .filter-btn { padding: 0.5rem 1.2rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: #9ca3af; cursor: pointer; }
+
+    /* AERIX MEMBER CARDS 2026 */
+    .effectif-player-card {
+        position: relative;
+        overflow: hidden;
+        min-height: 390px;
+        padding: 0 !important;
+        border: 1px solid rgba(255,255,255,.09) !important;
+        background: linear-gradient(145deg, rgba(20,20,24,.96), rgba(5,5,7,.98)) !important;
+        box-shadow: 0 18px 50px rgba(0,0,0,.28);
+    }
+    .effectif-player-card::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(180deg, transparent 36%, rgba(0,0,0,.18) 48%, rgba(0,0,0,.94) 100%);
+        z-index: 3;
+    }
+    .effectif-player-card:hover {
+        border-color: rgba(139,92,246,.48) !important;
+        box-shadow: 0 24px 70px rgba(0,0,0,.46), 0 0 32px rgba(139,92,246,.10);
+    }
+    .member-card-media { position:absolute; inset:0; z-index:1; }
+    .member-card-media img { width:100%; height:100%; object-fit:cover; object-position:top center; transition: transform .8s cubic-bezier(.16,1,.3,1), filter .5s ease; }
+    .effectif-player-card:hover .member-card-media img { transform:scale(1.055); filter:saturate(1.06) brightness(1.04); }
+    .member-card-glow { position:absolute; inset:auto -15% 20% -15%; height:42%; background:radial-gradient(circle, rgba(139,92,246,.18), transparent 68%); filter:blur(24px); z-index:2; pointer-events:none; }
+    .member-card-top { position:absolute; top:16px; left:16px; right:16px; z-index:5; display:flex; justify-content:space-between; align-items:center; }
+    .member-role-badge { display:inline-flex; align-items:center; gap:.45rem; padding:.42rem .68rem; border:1px solid rgba(255,255,255,.14); border-radius:999px; background:rgba(0,0,0,.48); backdrop-filter:blur(14px); color:#fff; font-size:.62rem; font-weight:900; letter-spacing:.12em; text-transform:uppercase; }
+    .member-role-dot { width:.38rem; height:.38rem; border-radius:999px; background:#a78bfa; box-shadow:0 0 12px rgba(167,139,250,.85); }
+    .member-number { font-size:1.35rem; font-weight:950; font-style:italic; color:rgba(255,255,255,.82); text-shadow:0 0 18px rgba(255,255,255,.16); }
+    .member-card-content { position:absolute; left:20px; right:20px; bottom:18px; z-index:5; }
+    .member-card-game { font-size:.62rem; font-weight:800; color:#a1a1aa; text-transform:uppercase; letter-spacing:.16em; margin-bottom:.35rem; }
+    .member-card-pseudo { font-size:2rem; line-height:.92; font-weight:950; letter-spacing:-.06em; text-transform:uppercase; color:#fff; }
+    .member-card-name { margin-top:.42rem; color:#a1a1aa; font-size:.72rem; font-weight:600; }
+    .member-card-meta { display:flex; flex-wrap:wrap; gap:.45rem; margin-top:.8rem; align-items:center; }
+    .member-card-meta span { color:#d4d4d8; font-size:.68rem; }
+    .member-card-separator { width:3px; height:3px; border-radius:999px; background:#52525b; }
+    .member-card-logo { position:absolute; right:18px; bottom:20px; z-index:4; width:42px; height:42px; opacity:.12; background:url('') center/contain no-repeat; pointer-events:none; }
+
+    /* MEMBER PROFILE MODAL */
+    #player-modal .member-profile-shell { opacity:0; transform:translateY(18px) scale(.985); transition:opacity .35s ease, transform .45s cubic-bezier(.16,1,.3,1); }
+    #player-modal .member-profile-shell.member-profile-open { opacity:1; transform:none; }
+    #player-modal .member-profile-shell { border:1px solid rgba(139,92,246,.38); background:#050505; box-shadow:0 30px 100px rgba(0,0,0,.72), 0 0 55px rgba(139,92,246,.08); }
+    #player-modal .member-profile-photo { position:relative; min-height:520px; }
+    #player-modal .member-profile-photo img { object-position:top center; }
+    #player-modal .member-profile-info { background:linear-gradient(145deg, rgba(12,12,14,.98), rgba(4,4,5,.99)); }
+    .member-profile-role { display:inline-flex; align-items:center; gap:.55rem; width:max-content; padding:.48rem .72rem; border-radius:999px; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.045); color:#c4b5fd; font-size:.65rem; font-weight:900; letter-spacing:.16em; text-transform:uppercase; }
+    .member-profile-role-dot { width:.42rem; height:.42rem; border-radius:999px; background:#a78bfa; box-shadow:0 0 12px rgba(167,139,250,.9); }
+    .member-profile-line { height:2px; width:66px; background:linear-gradient(90deg,#8b5cf6,transparent); box-shadow:0 0 14px rgba(139,92,246,.55); }
+    .member-profile-stat { padding:.85rem 0; border-bottom:1px solid rgba(255,255,255,.07); }
+    .member-profile-stat:last-child { border-bottom:0; }
+    .member-profile-label { display:block; color:#71717a; font-size:.62rem; text-transform:uppercase; letter-spacing:.18em; font-weight:800; margin-bottom:.25rem; }
+    .member-profile-value { color:#fff; font-size:.96rem; font-weight:750; }
+    @media (max-width: 767px) {
+        .effectif-player-card { min-height:360px; }
+        .member-card-pseudo { font-size:1.7rem; }
+        #player-modal .member-profile-photo { min-height:390px; }
+    }
 
     /* ROSTER : CARROUSEL JOUEURS */
     .roster-track {
@@ -973,6 +1034,7 @@
         <div class="transition-core">
             <div class="transition-mark"><img src="transparent-blanc.png" alt="AERIX"></div>
             <div id="transition-label" class="transition-label">AERIX</div>
+            <div class="transition-sub">Language</div>
         </div>
     </div>
 
@@ -1237,26 +1299,34 @@
         </div>
     </footer>
 
-    <!-- MODAL : FICHE JOUEUR -->
-    <div id="player-modal" class="fixed inset-0 z-[120] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl" role="dialog" aria-modal="true" aria-label="Fenêtre de dialogue">
-        <div class="glass-panel w-full max-w-4xl max-h-[90vh] rounded-[2rem] flex flex-col md:flex-row overflow-hidden relative shadow-2xl">
-            <button onclick="closePlayerModal()" class="absolute top-6 right-6 text-white hover:text-aerix-purple z-50 bg-black/50 w-10 h-10 rounded-full flex items-center justify-center border border-white/20 backdrop-blur-md transition">✕</button>
-            <div class="w-full md:w-1/2 h-64 md:h-auto bg-[#050505] relative border-b md:border-b-0 md:border-r border-white/10">
-                <img id="pm-img" src="" class="w-full h-full object-cover object-top-custom" alt="Image AERIX">
-                <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent md:bg-gradient-to-r md:from-transparent md:to-[#050505]"></div>
-                <div class="absolute bottom-6 left-6 flex items-center gap-3">
-                    <span id="pm-flag" class="text-3xl filter drop-shadow-lg">🇫🇷</span>
-                    <span id="pm-number" class="text-4xl font-black italic text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-500 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">#00</span>
+    <!-- MODAL : FICHE MEMBRE AERIX -->
+    <div id="player-modal" class="fixed inset-0 z-[120] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl" role="dialog" aria-modal="true" aria-label="Profil membre AERIX">
+        <div class="member-profile-shell w-full max-w-5xl max-h-[92vh] rounded-[2rem] flex flex-col md:flex-row overflow-hidden relative">
+            <button onclick="closePlayerModal()" aria-label="Fermer" class="absolute top-5 right-5 text-white hover:text-aerix-purple z-50 bg-black/55 w-10 h-10 rounded-full flex items-center justify-center border border-white/15 backdrop-blur-md transition">✕</button>
+            <div class="member-profile-photo w-full md:w-[54%] bg-[#050505] overflow-hidden relative">
+                <img id="pm-img" src="" class="w-full h-full object-cover" alt="Membre AERIX">
+                <div class="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent"></div>
+                <div class="absolute inset-y-0 right-0 w-1/2 bg-gradient-to-r from-transparent to-[#050505]/85 hidden md:block"></div>
+                <div class="absolute top-6 left-6 z-10 flex items-center gap-3">
+                    <span id="pm-flag" class="text-2xl filter drop-shadow-lg">🇫🇷</span>
+                    <span id="pm-number" class="text-2xl font-black italic text-white/80"></span>
+                </div>
+                <div class="absolute bottom-6 left-6 right-6 z-10 md:hidden">
+                    <div id="pm-mobile-role" class="member-profile-role mb-3"><span class="member-profile-role-dot"></span><span>PLAYER</span></div>
+                    <h3 id="pm-mobile-pseudo" class="text-4xl font-black text-white uppercase tracking-tighter"></h3>
                 </div>
             </div>
-            <div class="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center overflow-y-auto bg-black/40">
+            <div class="member-profile-info w-full md:w-[46%] p-7 md:p-11 flex flex-col justify-center overflow-y-auto">
+                <div id="pm-role" class="member-profile-role mb-5"><span class="member-profile-role-dot"></span><span>PLAYER</span></div>
                 <div id="pm-game-badge" class="mb-4"></div>
-                <h3 id="pm-pseudo" class="text-5xl md:text-6xl font-black text-white mb-2 uppercase tracking-tighter drop-shadow-md">PSEUDO</h3>
-                <div class="h-1 w-16 bg-aerix-purple rounded-full mb-6 shadow-[0_0_10px_#8b5cf6]"></div>
-                <div class="space-y-4">
-                    <div><span class="block text-xs text-gray-500 uppercase tracking-widest mb-1">Nom Complet</span><p id="pm-name" class="text-lg text-white font-medium">Nom</p></div>
-                    <div><span class="block text-xs text-gray-500 uppercase tracking-widest mb-1">Âge</span><p id="pm-age" class="text-lg text-white font-medium">0 ans</p></div>
-                    <div><span class="block text-xs text-gray-500 uppercase tracking-widest mb-1">Nationalité</span><p id="pm-country" class="text-lg text-white font-medium">Pays</p></div>
+                <h3 id="pm-pseudo" class="text-5xl md:text-6xl font-black text-white uppercase tracking-tighter leading-none">PSEUDO</h3>
+                <p id="pm-name" class="text-sm text-gray-500 font-medium mt-3">Nom</p>
+                <div class="member-profile-line my-6"></div>
+                <div class="space-y-0">
+                    <div class="member-profile-stat"><span class="member-profile-label">Fonction</span><p id="pm-role-detail" class="member-profile-value">Player</p></div>
+                    <div class="member-profile-stat"><span class="member-profile-label">Nationalité</span><p id="pm-country" class="member-profile-value">🇫🇷 France</p></div>
+                    <div class="member-profile-stat"><span class="member-profile-label">Âge</span><p id="pm-age" class="member-profile-value">0 ans</p></div>
+                    <div class="member-profile-stat" id="pm-division-row"><span class="member-profile-label">Division</span><p id="pm-division" class="member-profile-value">—</p></div>
                 </div>
             </div>
         </div>
@@ -1743,6 +1813,14 @@
                                 
                                 <div class="flex-1 grid grid-cols-2 gap-3 w-full">
                                     <input type="text" id="temp-player-pseudo" placeholder="PSEUDO" class="col-span-2 bg-black/50 border border-white/10 rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-aerix-purple font-bold uppercase">
+                                    <select id="temp-player-role" class="col-span-2 bg-black/50 border border-white/10 rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-aerix-purple appearance-none cursor-pointer">
+                                        <option value="Player">Joueur / Player</option>
+                                        <option value="Coach">Coach</option>
+                                        <option value="Manager">Manager</option>
+                                        <option value="Analyst">Analyste / Analyst</option>
+                                        <option value="Staff">Staff</option>
+                                        <option value="Founder">Fondateur / Founder</option>
+                                    </select>
                                     <input type="text" id="temp-player-name" placeholder="Prénom Nom" class="bg-black/50 border border-white/10 rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-aerix-purple">
                                     <input type="number" id="temp-player-age" placeholder="Âge" class="bg-black/50 border border-white/10 rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-aerix-purple">
                                     <select id="temp-player-country" class="bg-black/50 border border-white/10 rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-aerix-purple appearance-none cursor-pointer">
@@ -2316,6 +2394,7 @@
         }
 
         let languageTransitionTimer = null;
+        let languageTransitionCloseTimer = null;
         function setLang(lang) {
             if (!i18n[lang]) lang = 'fr';
             if (lang === currentLang) { closeLanguageMenu(); return; }
@@ -2335,6 +2414,11 @@
             void document.body.offsetWidth;
 
             clearTimeout(languageTransitionTimer);
+            clearTimeout(languageTransitionCloseTimer);
+
+            // On laisse volontairement l'écran de langue visible ~1 seconde avant
+            // d'appliquer les traductions, puis encore ~0,7 s pour que le changement
+            // soit lisible avant la disparition de l'overlay.
             languageTransitionTimer = setTimeout(() => {
                 currentLang = lang;
                 localStorage.setItem('aerix_lang', lang);
@@ -2371,11 +2455,13 @@
                 document.body.classList.add('language-changing');
                 requestAnimationFrame(() => {
                     requestAnimationFrame(() => {
-                        if (overlay) overlay.classList.remove('is-active');
-                        setTimeout(() => document.body.classList.remove('language-changing'), 430);
+                        languageTransitionCloseTimer = setTimeout(() => {
+                            if (overlay) overlay.classList.remove('is-active');
+                            setTimeout(() => document.body.classList.remove('language-changing'), 560);
+                        }, 700);
                     });
                 });
-            }, 120);
+            }, 950);
         }
 
         // TOAST NOTIFICATIONS
@@ -2599,6 +2685,23 @@
             });
         }
 
+        function getMemberRoleKey(role) {
+            const raw = String(role || 'Player').trim().toLowerCase();
+            const aliases = { joueur:'player', player:'player', coach:'coach', entraîneur:'coach', entraineur:'coach', manager:'manager', analyste:'analyst', analyst:'analyst', staff:'staff', fondateur:'founder', founder:'founder' };
+            return aliases[raw] || raw || 'player';
+        }
+        function getMemberRoleLabel(role) {
+            const key = getMemberRoleKey(role);
+            const labels = currentLang === 'en'
+                ? {player:'Player', coach:'Coach', manager:'Manager', analyst:'Analyst', staff:'Staff', founder:'Founder'}
+                : {player:'Joueur', coach:'Coach', manager:'Manager', analyst:'Analyste', staff:'Staff', founder:'Fondateur'};
+            return labels[key] || String(role || (currentLang==='en'?'Player':'Joueur'));
+        }
+        function getMemberRoleIcon(role) {
+            const key = getMemberRoleKey(role);
+            return {player:'◈', coach:'◆', manager:'◇', analyst:'△', staff:'✦', founder:'✧'}[key] || '•';
+        }
+
         function renderEffectifs() {
             const sortedEffectifs = [...globalEffectifs].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
             let filtered = currentFilters.effectifs === 'Tous' ? sortedEffectifs : sortedEffectifs.filter(e => (e.game || 'Tous') === currentFilters.effectifs);
@@ -2612,21 +2715,27 @@
                         // encodeURIComponent laisse passer l'apostrophe ('), ce qui fermait la chaîne du onclick
                         // et cassait la fiche d'un joueur nommé D'Artagnan / O'Neil. On l'encode explicitement.
                         const escapedPlayer = encodeURIComponent(JSON.stringify({...p, game: r.game})).replace(/'/g, '%27');
+                        const roleLabel = getMemberRoleLabel(p.role);
+                        const roleIcon = getMemberRoleIcon(p.role);
                         playersHTML += `
-                        <div class="glass-panel effectif-player-card p-4 flex flex-col items-center rounded-3xl cursor-pointer group hover:border-aerix-purple/50 transition-all duration-300" onclick="openPlayerModal('${escapedPlayer}')">
-                            <div class="effectif-avatar-frame relative w-full aspect-[3/4] mb-4 border border-white/10 group-hover:border-aerix-purple/30 bg-[#050505]">
-                                <img src="${escapeHtml(p.avatar || defaultAvatar)}" loading="lazy" alt="" class="w-full h-full object-cover object-top-custom transition duration-500 group-hover:brightness-110">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80 pointer-events-none"></div>
-                                <div class="absolute bottom-3 left-3 flex gap-2 z-10">
-                                    <span class="bg-black/60 backdrop-blur-md text-white text-sm px-2 py-1 rounded-lg border border-white/20 filter drop-shadow-md">${escapeHtml(p.country || '🌍')}</span>
-                                    ${p.number ? `<span class="bg-aerix-purple text-white text-xs font-black px-2 py-1 rounded-lg border border-purple-400 shadow-[0_0_10px_rgba(139,92,246,0.5)] flex items-center">#${escapeHtml(p.number)}</span>` : ''}
+                        <div class="glass-panel effectif-player-card rounded-3xl cursor-pointer group transition-all duration-500" onclick="openPlayerModal('${escapedPlayer}')">
+                            <div class="member-card-media">
+                                <img src="${escapeHtml(p.avatar || defaultAvatar)}" loading="lazy" alt="${escapeHtml(p.pseudo || p.name || 'AERIX Member')}" class="object-top-custom">
+                                <div class="member-card-glow"></div>
+                            </div>
+                            <div class="member-card-top">
+                                <span class="member-role-badge"><span class="member-role-dot"></span>${escapeHtml(roleIcon)} ${escapeHtml(roleLabel)}</span>
+                                ${p.number ? `<span class="member-number">#${escapeHtml(p.number)}</span>` : ''}
+                            </div>
+                            <div class="member-card-content">
+                                <div class="member-card-game">${escapeHtml(r.game || 'AERIX Esports')}</div>
+                                <div class="member-card-pseudo">${escapeHtml(p.pseudo || p.name)}</div>
+                                <div class="member-card-name">${escapeHtml(p.name || '')}</div>
+                                <div class="member-card-meta">
+                                    <span>${escapeHtml(p.country || '🌍')}</span>
+                                    ${p.age ? `<span class="member-card-separator"></span><span>${escapeHtml(p.age)} ${currentLang==='en'?'y.o.':'ans'}</span>` : ''}
                                 </div>
                             </div>
-                            <h5 class="text-xl font-black text-white uppercase tracking-tighter w-full text-left truncate">${escapeHtml(p.pseudo || p.name)}</h5>
-                            <p class="effectif-player-meta text-xs font-medium text-gray-500 text-left">
-                                <span class="player-name">${escapeHtml(p.name)}</span>
-                                ${p.age ? `<span class="w-1 h-1 rounded-full bg-gray-600 shrink-0"></span><span class="player-age">${escapeHtml(p.age)} ${currentLang==='en'?'y.o.':'ans'}</span>` : ''}
-                            </p>
                         </div>`;
                     });
                 } else {
@@ -2656,16 +2765,24 @@
         function openPlayerModal(playerDataStr) {
             let p;
             try { p = JSON.parse(decodeURIComponent(playerDataStr)); } catch(e) { console.error('openPlayerModal', e); return; }
+            const roleLabel = getMemberRoleLabel(p.role);
+            const roleIcon = getMemberRoleIcon(p.role);
+            const roleHTML = `<span class="member-profile-role-dot"></span><span>${escapeHtml(roleIcon)} ${escapeHtml(roleLabel)}</span>`;
             document.getElementById('pm-img').src = p.avatar || defaultAvatar;
             document.getElementById('pm-flag').innerText = p.country || '🌍';
             document.getElementById('pm-number').innerText = p.number ? `#${p.number}` : '';
-            document.getElementById('pm-pseudo').innerText = p.pseudo || p.name;
+            document.getElementById('pm-pseudo').innerText = p.pseudo || p.name || 'AERIX';
+            document.getElementById('pm-mobile-pseudo').innerText = p.pseudo || p.name || 'AERIX';
             document.getElementById('pm-name').innerText = p.name || (currentLang==='en'?'Not provided':'Non renseigné');
             document.getElementById('pm-age').innerText = p.age ? `${p.age} ${currentLang==='en'?'y.o.':'ans'}` : 'N/A';
             document.getElementById('pm-country').innerText = p.country || 'N/A';
             document.getElementById('pm-game-badge').innerHTML = getGameBadge(p.game);
-            
+            document.getElementById('pm-role').innerHTML = roleHTML;
+            document.getElementById('pm-mobile-role').innerHTML = roleHTML;
+            document.getElementById('pm-role-detail').innerText = roleLabel;
+            document.getElementById('pm-division').innerText = p.division || p.game || '—';
             document.getElementById('player-modal').classList.remove('hidden');
+            requestAnimationFrame(() => document.getElementById('player-modal').querySelector('.member-profile-shell')?.classList.add('member-profile-open'));
         }
         function closePlayerModal() { document.getElementById('player-modal').classList.add('hidden'); }
 
@@ -4975,9 +5092,10 @@ function checkAdminSessionTimeout() {
             const name = document.getElementById('temp-player-name').value; 
             const age = document.getElementById('temp-player-age').value; 
             const country = document.getElementById('temp-player-country').value; 
-            const number = document.getElementById('temp-player-number').value; 
+            const number = document.getElementById('temp-player-number').value;
+            const role = document.getElementById('temp-player-role')?.value || 'Player';
             if(!pseudo && !name) return showToast("Pseudo ou Nom requis.", "error"); 
-            const playerData = { pseudo, name, age, country, number, avatar: tempPlayerAvatar || (editingPlayerIndex !== null ? tempPlayers[editingPlayerIndex].avatar : defaultAvatar) };
+            const playerData = { pseudo, name, age, country, number, role, avatar: tempPlayerAvatar || (editingPlayerIndex !== null ? tempPlayers[editingPlayerIndex].avatar : defaultAvatar) };
 
             if (editingPlayerIndex !== null) {
                 tempPlayers[editingPlayerIndex] = playerData;
@@ -4990,7 +5108,7 @@ function checkAdminSessionTimeout() {
         }
         function resetTempPlayerForm() {
             editingPlayerIndex = null;
-            document.getElementById('temp-player-pseudo').value = ''; document.getElementById('temp-player-name').value = ''; document.getElementById('temp-player-age').value = ''; document.getElementById('temp-player-country').value = '🇫🇷'; document.getElementById('temp-player-number').value = '';
+            document.getElementById('temp-player-pseudo').value = ''; document.getElementById('temp-player-role').value = 'Player'; document.getElementById('temp-player-name').value = ''; document.getElementById('temp-player-age').value = ''; document.getElementById('temp-player-country').value = '🇫🇷'; document.getElementById('temp-player-number').value = '';
             document.getElementById('player-avatar-preview').src = defaultAvatar; tempPlayerAvatar = null;
             const btn = document.getElementById('temp-player-submit-btn');
             if (btn) btn.innerText = currentLang==='en'?'Add this player to the roster':'Ajouter ce joueur au roster';
@@ -5002,6 +5120,7 @@ function checkAdminSessionTimeout() {
             const p = tempPlayers[i]; if (!p) return;
             editingPlayerIndex = i;
             document.getElementById('temp-player-pseudo').value = p.pseudo || '';
+            document.getElementById('temp-player-role').value = p.role || 'Player';
             document.getElementById('temp-player-name').value = p.name || '';
             document.getElementById('temp-player-age').value = p.age || '';
             document.getElementById('temp-player-country').value = p.country || '🇫🇷';
