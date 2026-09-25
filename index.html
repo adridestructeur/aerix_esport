@@ -232,6 +232,19 @@
         transform: none !important;
     }
 
+    /* Cartes membres : les effets décoratifs globaux de .glass-panel ne doivent
+       jamais se superposer à la photo et créer un rectangle sombre/opaque. */
+    .effectif-player-card::before,
+    .effectif-player-card::after {
+        display: none !important;
+        content: none !important;
+    }
+    .effectif-player-card {
+        background: rgba(10,10,10,.72);
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+    }
+
     /* Le cadre de photo est la seule zone qui clippe le zoom.
        Cela évite les artefacts rectangulaires sur les bords de l'image. */
     .effectif-avatar-frame {
@@ -817,29 +830,6 @@
         }
     }
 
-
-/* AERIX — MEMBER CARDS V2 */
-.effectif-player-card{position:relative;overflow:hidden!important;padding:0!important;background:#050505!important;border:1px solid rgba(255,255,255,.10)!important;box-shadow:0 18px 50px rgba(0,0,0,.35);isolation:isolate;transition:transform .45s cubic-bezier(.2,.8,.2,1),border-color .35s ease,box-shadow .45s ease!important}
-.effectif-player-card::before,.effectif-player-card::after{display:none!important;content:none!important}
-.effectif-player-card:hover{transform:translateY(-7px);border-color:rgba(139,92,246,.7)!important;box-shadow:0 24px 70px rgba(0,0,0,.55),0 0 35px rgba(139,92,246,.14)!important}
-.effectif-avatar-frame{position:relative!important;width:100%!important;aspect-ratio:3/4!important;margin:0!important;border:0!important;border-radius:0!important;overflow:hidden!important;background:#050505!important}
-.effectif-avatar-frame::after{content:"";position:absolute;inset:35% 0 0;background:linear-gradient(to bottom,transparent 0%,rgba(0,0,0,.18) 25%,rgba(0,0,0,.82) 100%);z-index:2;pointer-events:none}
-.effectif-avatar-frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover!important;object-position:center top!important;transition:transform .7s cubic-bezier(.2,.8,.2,1),filter .5s ease!important}
-.effectif-player-card:hover .effectif-avatar-frame img{transform:scale(1.055);filter:brightness(1.06) saturate(1.05)}
-.member-role-badge{position:absolute;top:14px;left:14px;z-index:8;display:inline-flex;align-items:center;gap:6px;padding:7px 11px;border:1px solid rgba(255,255,255,.2);border-radius:999px;background:rgba(5,5,5,.68);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);font-size:10px;font-weight:900;letter-spacing:.08em;color:#fff;text-transform:uppercase;box-shadow:0 8px 25px rgba(0,0,0,.3)}
-.member-role-dot{width:6px;height:6px;border-radius:999px;background:#a78bfa;box-shadow:0 0 10px rgba(167,139,250,.9)}
-.member-card-info{position:absolute;left:18px;right:18px;bottom:17px;z-index:7;text-align:left}
-.member-card-kicker{font-size:9px;line-height:1;text-transform:uppercase;letter-spacing:.18em;color:rgba(255,255,255,.58);font-weight:800;margin-bottom:5px}
-.member-card-name{font-size:clamp(22px,2vw,31px);line-height:.95;font-weight:950;letter-spacing:-.055em;color:#fff;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.member-card-meta{margin-top:8px;display:flex;align-items:center;gap:8px;font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.65)}
-.member-card-meta .sep{width:3px;height:3px;border-radius:50%;background:rgba(255,255,255,.4)}
-.member-card-number{position:absolute;right:14px;top:14px;z-index:8;font-size:11px;font-weight:950;color:rgba(255,255,255,.72);letter-spacing:.05em}
-.member-modal-role{display:inline-flex;align-items:center;gap:7px;padding:8px 12px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);border-radius:999px;color:#fff;font-size:10px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
-.member-modal-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.member-modal-stat{padding:13px 14px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.025);border-radius:14px}
-.member-modal-stat span{display:block;font-size:9px;text-transform:uppercase;letter-spacing:.15em;color:#6b7280;font-weight:800;margin-bottom:5px}.member-modal-stat strong{font-size:14px;color:#fff;font-weight:800}
-@media(max-width:767px){.member-card-name{font-size:24px}.member-card-info{left:15px;right:15px;bottom:15px}.member-modal-grid{grid-template-columns:1fr}}
-
 </style>
 </head>
 <body class="antialiased selection:bg-purple-500 selection:text-white min-h-screen flex flex-col relative">
@@ -1210,31 +1200,25 @@
     </footer>
 
     <!-- MODAL : FICHE JOUEUR -->
-    <div id="player-modal" class="fixed inset-0 z-[120] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl" role="dialog" aria-modal="true" aria-label="Profil membre AERIX">
-        <div class="w-full max-w-5xl max-h-[92vh] rounded-[2rem] flex flex-col md:flex-row overflow-hidden relative bg-[#050505] border border-white/10 shadow-2xl">
-            <button onclick="closePlayerModal()" class="absolute top-5 right-5 text-white hover:text-aerix-purple z-50 bg-black/55 w-10 h-10 rounded-full flex items-center justify-center border border-white/15 backdrop-blur-md transition">✕</button>
-            <div class="w-full md:w-[52%] h-[52vh] md:h-auto min-h-[520px] bg-[#050505] relative overflow-hidden">
-                <img id="pm-img" src="" class="absolute inset-0 w-full h-full object-cover object-top" alt="Image AERIX">
-                <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
-                <div class="absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-[#050505] to-transparent hidden md:block"></div>
-                <div class="absolute top-6 left-6 z-10" id="pm-role"></div>
-                <div class="absolute bottom-7 left-7 z-10 flex items-center gap-3">
-                    <span id="pm-flag" class="text-2xl filter drop-shadow-lg">🇫🇷</span>
-                    <span id="pm-number" class="text-2xl font-black italic text-white/80">#00</span>
+    <div id="player-modal" class="fixed inset-0 z-[120] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl" role="dialog" aria-modal="true" aria-label="Fenêtre de dialogue">
+        <div class="glass-panel w-full max-w-4xl max-h-[90vh] rounded-[2rem] flex flex-col md:flex-row overflow-hidden relative shadow-2xl">
+            <button onclick="closePlayerModal()" class="absolute top-6 right-6 text-white hover:text-aerix-purple z-50 bg-black/50 w-10 h-10 rounded-full flex items-center justify-center border border-white/20 backdrop-blur-md transition">✕</button>
+            <div class="w-full md:w-1/2 h-64 md:h-auto bg-[#050505] relative border-b md:border-b-0 md:border-r border-white/10">
+                <img id="pm-img" src="" class="w-full h-full object-cover object-top-custom" alt="Image AERIX">
+                <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent md:bg-gradient-to-r md:from-transparent md:to-[#050505]"></div>
+                <div class="absolute bottom-6 left-6 flex items-center gap-3">
+                    <span id="pm-flag" class="text-3xl filter drop-shadow-lg">🇫🇷</span>
+                    <span id="pm-number" class="text-4xl font-black italic text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-500 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">#00</span>
                 </div>
             </div>
-            <div class="w-full md:w-[48%] p-7 md:p-11 flex flex-col justify-center overflow-y-auto bg-[#050505]">
-                <div id="pm-game-badge" class="mb-5"></div>
-                <p id="pm-kicker" class="text-[10px] uppercase tracking-[.22em] text-gray-500 font-bold mb-2">AERIX ESPORTS</p>
-                <h3 id="pm-pseudo" class="text-5xl md:text-6xl font-black text-white mb-3 uppercase tracking-tighter">PSEUDO</h3>
-                <div class="h-1 w-16 bg-aerix-purple rounded-full mb-7 shadow-[0_0_15px_rgba(139,92,246,.7)]"></div>
-                <div class="member-modal-grid">
-                    <div class="member-modal-stat"><span>Nom complet</span><strong id="pm-name">Nom</strong></div>
-                    <div class="member-modal-stat"><span>Rôle</span><strong id="pm-role-text">Player</strong></div>
-                    <div class="member-modal-stat"><span>Âge</span><strong id="pm-age">N/A</strong></div>
-                    <div class="member-modal-stat"><span>Nationalité</span><strong id="pm-country">N/A</strong></div>
-                    <div class="member-modal-stat"><span>Division</span><strong id="pm-division">AERIX</strong></div>
-                    <div class="member-modal-stat"><span>Jeu</span><strong id="pm-game">N/A</strong></div>
+            <div class="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center overflow-y-auto bg-black/40">
+                <div id="pm-game-badge" class="mb-4"></div>
+                <h3 id="pm-pseudo" class="text-5xl md:text-6xl font-black text-white mb-2 uppercase tracking-tighter drop-shadow-md">PSEUDO</h3>
+                <div class="h-1 w-16 bg-aerix-purple rounded-full mb-6 shadow-[0_0_10px_#8b5cf6]"></div>
+                <div class="space-y-4">
+                    <div><span class="block text-xs text-gray-500 uppercase tracking-widest mb-1">Nom Complet</span><p id="pm-name" class="text-lg text-white font-medium">Nom</p></div>
+                    <div><span class="block text-xs text-gray-500 uppercase tracking-widest mb-1">Âge</span><p id="pm-age" class="text-lg text-white font-medium">0 ans</p></div>
+                    <div><span class="block text-xs text-gray-500 uppercase tracking-widest mb-1">Nationalité</span><p id="pm-country" class="text-lg text-white font-medium">Pays</p></div>
                 </div>
             </div>
         </div>
@@ -2544,57 +2528,54 @@
             });
         }
 
-        function getMemberRole(p, roster) {
-            const raw = p?.role || p?.memberRole || p?.type || roster?.role || '';
-            if (raw) return String(raw);
-            return 'Player';
-        }
-        function getRoleLabel(role) {
-            const key = String(role || 'Player').trim().toLowerCase();
-            const map = { player:'PLAYER', joueur:'PLAYER', coach:'COACH', manager:'MANAGER', analyst:'ANALYST', analyste:'ANALYST', staff:'STAFF', founder:'FOUNDER', fondateur:'FOUNDER', graphiste:'GRAPHISTE', designer:'DESIGNER', content:'CONTENT', 'content creator':'CONTENT' };
-            return map[key] || String(role || 'PLAYER').toUpperCase();
-        }
         function renderEffectifs() {
             const sortedEffectifs = [...globalEffectifs].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
             let filtered = currentFilters.effectifs === 'Tous' ? sortedEffectifs : sortedEffectifs.filter(e => (e.game || 'Tous') === currentFilters.effectifs);
             const container = document.getElementById('effectifs-container');
             let __html = '';
+            
             filtered.forEach((r, index) => {
                 let playersHTML = '';
                 if(r.players && r.players.length > 0) {
                     r.players.forEach(p => {
-                        const escapedPlayer = encodeURIComponent(JSON.stringify({...p, game: r.game, division: r.name})).replace(/'/g, '%27');
-                        const role = getMemberRole(p, r);
-                        const roleLabel = getRoleLabel(role);
-                        const displayName = p.pseudo || p.name || 'AERIX';
-                        const country = p.country || '🌍';
+                        // encodeURIComponent laisse passer l'apostrophe ('), ce qui fermait la chaîne du onclick
+                        // et cassait la fiche d'un joueur nommé D'Artagnan / O'Neil. On l'encode explicitement.
+                        const escapedPlayer = encodeURIComponent(JSON.stringify({...p, game: r.game})).replace(/'/g, '%27');
                         playersHTML += `
-                        <div class="effectif-player-card rounded-[1.35rem] cursor-pointer group" onclick="openPlayerModal('${escapedPlayer}')">
-                            <div class="effectif-avatar-frame">
-                                <img src="${escapeHtml(p.avatar || defaultAvatar)}" loading="lazy" alt="${escapeHtml(displayName)}">
-                                <span class="member-role-badge"><span class="member-role-dot"></span>${escapeHtml(roleLabel)}</span>
-                                ${p.number ? `<span class="member-card-number">#${escapeHtml(p.number)}</span>` : ''}
-                                <div class="member-card-info">
-                                    <div class="member-card-kicker">${escapeHtml(country)} · ${escapeHtml(r.name || r.game || 'AERIX')}</div>
-                                    <div class="member-card-name">${escapeHtml(displayName)}</div>
-                                    <div class="member-card-meta">
-                                        <span>${escapeHtml(roleLabel)}</span>
-                                        ${p.age ? `<span class="sep"></span><span>${escapeHtml(p.age)} ${currentLang==='en'?'Y.O.':'ANS'}</span>` : ''}
-                                    </div>
+                        <div class="glass-panel effectif-player-card p-4 flex flex-col items-center rounded-3xl cursor-pointer group hover:border-aerix-purple/50 transition-all duration-300" onclick="openPlayerModal('${escapedPlayer}')">
+                            <div class="effectif-avatar-frame relative w-full aspect-[3/4] mb-4 border border-white/10 group-hover:border-aerix-purple/30 bg-[#050505]">
+                                <img src="${escapeHtml(p.avatar || defaultAvatar)}" loading="lazy" alt="" class="w-full h-full object-cover object-top-custom transition duration-500 group-hover:brightness-110">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80 pointer-events-none"></div>
+                                <div class="absolute bottom-3 left-3 flex gap-2 z-10">
+                                    <span class="bg-black/60 backdrop-blur-md text-white text-sm px-2 py-1 rounded-lg border border-white/20 filter drop-shadow-md">${escapeHtml(p.country || '🌍')}</span>
+                                    ${p.number ? `<span class="bg-aerix-purple text-white text-xs font-black px-2 py-1 rounded-lg border border-purple-400 shadow-[0_0_10px_rgba(139,92,246,0.5)] flex items-center">#${escapeHtml(p.number)}</span>` : ''}
                                 </div>
                             </div>
+                            <h5 class="text-xl font-black text-white uppercase tracking-tighter w-full text-left truncate">${escapeHtml(p.pseudo || p.name)}</h5>
+                            <p class="effectif-player-meta text-xs font-medium text-gray-500 text-left">
+                                <span class="player-name">${escapeHtml(p.name)}</span>
+                                ${p.age ? `<span class="w-1 h-1 rounded-full bg-gray-600 shrink-0"></span><span class="player-age">${escapeHtml(p.age)} ${currentLang==='en'?'y.o.':'ans'}</span>` : ''}
+                            </p>
                         </div>`;
                     });
                 } else {
                     playersHTML = `<p class="text-gray-500 text-sm italic col-span-full">Aucun joueur dans ce roster.</p>`;
                 }
+
                 __html += `
                     <div class="reveal delay-${(index%2)*100} mb-12">
                         <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 border-b border-white/10 pb-4 gap-4">
-                            <div><div class="mb-2">${getGameBadge(r.game)}</div><h4 class="text-3xl font-black text-white">${escapeHtml(r.name)}</h4></div>
+                            <div>
+                                <div class="mb-2">${getGameBadge(r.game)}</div>
+                                <h4 class="text-3xl font-black text-white">${escapeHtml(r.name)}</h4>
+                            </div>
                             ${r.desc ? `<p class="text-gray-400 text-sm md:max-w-md text-left md:text-right leading-relaxed" data-translate-src="${escapeHtml(r.desc)}">${r.desc}</p>` : ''}
                         </div>
-                        <div class="relative"><div class="roster-track" id="roster-track-${index}">${playersHTML}</div></div>
+                        <div class="relative">
+                            <div class="roster-track" id="roster-track-${index}">
+                                ${playersHTML}
+                            </div>
+                        </div>
                     </div>`;
             });
             container.innerHTML = filtered.length ? __html : '<p class="text-gray-500 text-sm italic text-center">Aucun effectif pour cette catégorie.</p>';
@@ -2604,24 +2585,19 @@
         function openPlayerModal(playerDataStr) {
             let p;
             try { p = JSON.parse(decodeURIComponent(playerDataStr)); } catch(e) { console.error('openPlayerModal', e); return; }
-            const role = getMemberRole(p, {name:p.division});
-            const roleLabel = getRoleLabel(role);
-            const gameNames = { 'Rocket League':'Rocket League', 'Assetto Corsa Competizione':'ACC', 'Le Mans Ultimate':'LMU', 'iRacing':'iRacing', 'Richard Burns Rally':'RBR' };
             document.getElementById('pm-img').src = p.avatar || defaultAvatar;
             document.getElementById('pm-flag').innerText = p.country || '🌍';
             document.getElementById('pm-number').innerText = p.number ? `#${p.number}` : '';
-            document.getElementById('pm-pseudo').innerText = p.pseudo || p.name || 'AERIX';
+            document.getElementById('pm-pseudo').innerText = p.pseudo || p.name;
             document.getElementById('pm-name').innerText = p.name || (currentLang==='en'?'Not provided':'Non renseigné');
-            document.getElementById('pm-role-text').innerText = roleLabel;
-            document.getElementById('pm-role').innerHTML = `<span class="member-modal-role"><span class="member-role-dot"></span>${escapeHtml(roleLabel)}</span>`;
             document.getElementById('pm-age').innerText = p.age ? `${p.age} ${currentLang==='en'?'y.o.':'ans'}` : 'N/A';
             document.getElementById('pm-country').innerText = p.country || 'N/A';
-            document.getElementById('pm-division').innerText = p.division || 'AERIX';
-            document.getElementById('pm-game').innerText = gameNames[p.game] || p.game || 'N/A';
             document.getElementById('pm-game-badge').innerHTML = getGameBadge(p.game);
+            
             document.getElementById('player-modal').classList.remove('hidden');
         }
         function closePlayerModal() { document.getElementById('player-modal').classList.add('hidden'); }
+
 
         // ===============================
         // TRI CHRONOLOGIQUE AERIX
