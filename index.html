@@ -5104,8 +5104,18 @@ function checkAdminSessionTimeout() {
         // Les images des événements sont stockées directement dans Firestore : elles doivent
         // rester sous la limite de taille d'un document. Les autres usages conservent leur
         // qualité/résolution habituelles.
-        function confirmCrop() { if (!cropper) return; const canvas = cropper.getCroppedCanvas({ maxWidth: cropMaxDim, maxHeight: cropMaxDim, imageSmoothingEnabled: true, imageSmoothingQuality: 'high', fillColor: 'transparent' }); document.getElementById('crop-modal').classList.add('hidden'); cropper.destroy(); cropper = null; if (cropCallback) cropCallback(canvas.toDataURL('image/webp', cropQuality)); cropQuality = 1; }
-        function cancelCrop() { document.getElementById('crop-modal').classList.add('hidden'); if (cropper) cropper.destroy(); cropper = null; }
+        function confirmCrop() {
+            if (!cropper) return;
+            const canvas = cropper.getCroppedCanvas({ maxWidth: cropMaxDim, maxHeight: cropMaxDim, imageSmoothingEnabled: true, imageSmoothingQuality: 'high', fillColor: 'transparent' });
+            if (!canvas) { showToast(currentLang==='en'?'Could not process the image.':'Impossible de traiter cette image.', 'error'); return; }
+            const callback = cropCallback;
+            document.getElementById('crop-modal').classList.add('hidden');
+            cropper.destroy(); cropper = null; cropCallback = null;
+            const img = document.getElementById('crop-image'); if (img) img.src = '';
+            if (callback) callback(canvas.toDataURL('image/webp', cropQuality));
+            cropQuality = 1;
+        }
+        function cancelCrop() { document.getElementById('crop-modal').classList.add('hidden'); if (cropper) cropper.destroy(); cropper = null; cropCallback = null; const img = document.getElementById('crop-image'); if (img) img.src = ''; }
 
         // DRAG & DROP GÉNÉRIQUE POUR LES ZONES D'UPLOAD ADMIN (boutique, effectifs, palmarès,
         // annonces, galerie, partenaires) : permet de glisser-déposer une image directement sur
@@ -5156,7 +5166,7 @@ function checkAdminSessionTimeout() {
         document.getElementById('shop-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 4/5, b => { tempShopImages.push(b); renderShopPreviews(); }); e.target.value=''; });
         function renderShopPreviews() { document.getElementById('shop-img-previews').innerHTML = tempShopImages.map((src, i) => `<div class="relative w-16 h-20 rounded-lg overflow-hidden border border-white/20"><img src="${src}" class="w-full h-full object-cover"><button type="button" onclick="tempShopImages.splice(${i}, 1); renderShopPreviews()" class="absolute top-0 right-0 bg-red-500/90 text-white text-[10px] w-5 h-5">✕</button></div>`).join(''); }
         
-        document.getElementById('player-avatar-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 3/4, b => { tempPlayerAvatar = b; document.getElementById('player-avatar-preview').src = b; }, 700); e.target.value=''; });
+        document.getElementById('player-avatar-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 3/4, b => { tempPlayerAvatar = b; document.getElementById('player-avatar-preview').src = b; }, 1200, 0.9); e.target.value=''; });
         document.getElementById('profile-avatar-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 1/1, b => updateProfileAvatar(b)); e.target.value=''; });
         async function updateProfileAvatar(dataUrl) {
             if(!currentUser || !isOwner()) {
