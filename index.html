@@ -864,25 +864,32 @@
                 <img src="transparent-blanc.png" alt="AERIX Logo" class="aerix-logo h-14 md:h-16 w-auto object-contain transition-transform duration-300 hover:scale-105">
             </div>
             
-            <!-- Menu Desktop -->
-            <div class="hidden md:flex space-x-0.5 text-xs font-medium text-gray-400 uppercase tracking-widest items-center relative bg-[#0c0c0c]/80 p-1 rounded-full border border-white/10 overflow-hidden shadow-inner shrink-0" id="nav-container">
+            <!-- Menu Desktop : navigation principale simplifiée -->
+            <div class="hidden md:flex space-x-0.5 text-xs font-medium text-gray-400 uppercase tracking-widest items-center relative bg-[#0c0c0c]/80 p-1 rounded-full border border-white/10 overflow-hidden shadow-inner shrink-0 nav-main-shell" id="nav-container">
                 <div id="nav-pill" class="absolute h-8 rounded-full bg-aerix-purple/20 transition-all duration-300 ease-out z-0 pointer-events-none backdrop-blur-md border border-aerix-purple/60 shadow-[0_0_25px_rgba(139,92,246,0.7)]"></div>
                 <button id="nav-home" onclick="navigate('home')" class="nav-btn hover:text-white active" data-i18n="nav_home">Accueil</button>
-                <button id="nav-histoire" onclick="navigate('histoire')" class="nav-btn hover:text-white" data-i18n="nav_histoire">Histoire</button>
                 <button id="nav-effectifs" onclick="navigate('effectifs')" class="nav-btn hover:text-white" data-i18n="nav_effectifs">Effectifs</button>
-                <button id="nav-palmares" onclick="navigate('palmares')" class="nav-btn hover:text-white" data-i18n="nav_palmares">Palmarès</button>
                 <button id="nav-competition" onclick="navigate('competition')" class="nav-btn hover:text-white" data-i18n="nav_competition">Compétition</button>
-                <button id="nav-performance" onclick="navigate('performance')" class="nav-btn hover:text-white" data-i18n="nav_performance">Performance</button>
+                <button id="nav-palmares" onclick="navigate('palmares')" class="nav-btn hover:text-white" data-i18n="nav_palmares">Palmarès</button>
                 <button id="nav-partenaires" onclick="navigate('partenaires')" class="nav-btn hover:text-white" data-i18n="nav_partenaires">Partenaires</button>
-                <button id="nav-boutique" onclick="navigate('boutique')" class="nav-btn hover:text-white" data-i18n="nav_boutique">Boutique</button>
-                <button id="nav-coaching" onclick="openCoachingModal()" class="nav-btn hover:text-white" data-i18n="nav_coaching">Coaching</button>
-                <button id="nav-more" type="button" onclick="toggleMoreMenu(event)" class="nav-btn hover:text-white flex items-center gap-1" aria-haspopup="true" aria-expanded="false"><span>Plus</span><span class="text-[10px]">▾</span></button>
+                <button id="nav-histoire" onclick="navigate('histoire')" class="nav-btn hover:text-white" data-i18n="nav_histoire">Histoire</button>
+                <button id="nav-more" type="button" onclick="toggleMoreMenu(event)" class="nav-btn hover:text-white flex items-center gap-1" aria-haspopup="true" aria-expanded="false"><span data-i18n="nav_more">Plus</span><span class="text-[10px]">▾</span></button>
             </div>
-            <div id="nav-more-menu" class="hidden absolute left-1/2 -translate-x-1/2 top-[calc(100%+10px)] w-64 glass-panel-no-hover rounded-2xl p-2 border border-white/10 shadow-2xl z-[70]">
-                <button onclick="navigate('annonces'); closeMoreMenu();" class="w-full text-left px-4 py-3 rounded-xl text-sm font-bold text-gray-300 hover:text-white hover:bg-white/10 transition" data-i18n="nav_annonces">Annonces</button>
-                <button onclick="navigate('media'); closeMoreMenu();" class="w-full text-left px-4 py-3 rounded-xl text-sm font-bold text-gray-300 hover:text-white hover:bg-white/10 transition" data-i18n="nav_media">Média</button>
-                <button onclick="openRecruitmentModal(); closeMoreMenu();" class="w-full text-left px-4 py-3 rounded-xl text-sm font-bold text-gray-300 hover:text-white hover:bg-white/10 transition" data-i18n="nav_recruit">Rejoindre</button>
-                <button onclick="openReviewModal(); closeMoreMenu();" class="w-full text-left px-4 py-3 rounded-xl text-sm font-bold text-gray-300 hover:text-white hover:bg-white/10 transition" data-i18n="nav_review">Avis</button>
+            <div id="nav-more-menu" class="hidden absolute left-1/2 -translate-x-1/2 top-[calc(100%+10px)] w-72 glass-panel-no-hover rounded-2xl p-2.5 border border-white/10 shadow-2xl z-[70] nav-more-menu-pro">
+                <div class="nav-more-label" data-i18n="nav_more_performance">Performance & services</div>
+                <button onclick="navigate('performance'); closeMoreMenu();" class="nav-more-link" data-i18n="nav_performance">Performance <span class="nav-arrow">→</span></button>
+                <button onclick="navigate('boutique'); closeMoreMenu();" class="nav-more-link" data-i18n="nav_boutique">Boutique <span class="nav-arrow">→</span></button>
+                <button onclick="openCoachingModal(); closeMoreMenu();" class="nav-more-link" data-i18n="nav_coaching">Coaching <span class="nav-arrow">↗</span></button>
+                <div class="nav-more-section">
+                    <div class="nav-more-label" data-i18n="nav_more_content">Contenu</div>
+                    <button onclick="navigate('annonces'); closeMoreMenu();" class="nav-more-link" data-i18n="nav_annonces">Annonces <span class="nav-arrow">→</span></button>
+                    <button onclick="navigate('media'); closeMoreMenu();" class="nav-more-link" data-i18n="nav_media">Média <span class="nav-arrow">→</span></button>
+                </div>
+                <div class="nav-more-section">
+                    <div class="nav-more-label" data-i18n="nav_more_community">Communauté</div>
+                    <button onclick="openRecruitmentModal(); closeMoreMenu();" class="nav-more-link" data-i18n="nav_recruit">Rejoindre <span class="nav-arrow">↗</span></button>
+                    <button onclick="openReviewModal(); closeMoreMenu();" class="nav-more-link" data-i18n="nav_review">Avis <span class="nav-arrow">↗</span></button>
+                </div>
             </div>
 
             <div class="desktop-header-actions hidden md:flex items-center gap-2.5">
@@ -910,23 +917,32 @@
 
         <!-- Menu Déroulant Mobile -->
         <div id="mobile-menu" class="hidden md:hidden bg-[#080808]/98 backdrop-blur-2xl border-b border-white/10 px-6 py-6 flex flex-col gap-3 shadow-2xl">
+            <div class="text-[10px] uppercase tracking-widest text-gray-500 font-bold px-1" data-i18n="nav_more_main">Navigation</div>
             <button onclick="navigate('home'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-white bg-white/5 border border-white/5" data-i18n="nav_home">Accueil</button>
-            <button onclick="navigate('histoire'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_histoire">Histoire</button>
             <button onclick="navigate('effectifs'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_effectifs">Effectifs</button>
-            <button onclick="navigate('palmares'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_palmares">Palmarès</button>
             <button onclick="navigate('competition'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_competition">Compétition</button>
-            <button onclick="navigate('performance'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_performance">Performance</button>
+            <button onclick="navigate('palmares'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_palmares">Palmarès</button>
             <button onclick="navigate('partenaires'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_partenaires">Partenaires</button>
-            <button onclick="navigate('boutique'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_boutique">Boutique</button>
-            <button onclick="openCoachingModal(); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_coaching">Coaching</button>
-            <div class="border-t border-white/10 pt-3 mt-1 text-[10px] uppercase tracking-widest text-gray-500 font-bold">Plus</div>
-            <button onclick="navigate('annonces'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_annonces">Annonces</button>
-            <button onclick="navigate('media'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_media">Média</button>
-            <button onclick="openRecruitmentModal(); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_recruit">Rejoindre AERIX</button>
-            <button onclick="openReviewModal(); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_review">Laisser un avis</button>
+            <button onclick="navigate('histoire'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_histoire">Histoire</button>
+            <div class="border-t border-white/10 pt-3 mt-1">
+                <div class="text-[10px] uppercase tracking-widest text-gray-500 font-bold px-1 mb-2" data-i18n="nav_more_performance">Performance & services</div>
+                <button onclick="navigate('performance'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition w-full" data-i18n="nav_performance">Performance</button>
+                <button onclick="navigate('boutique'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition w-full mt-2" data-i18n="nav_boutique">Boutique</button>
+                <button onclick="openCoachingModal(); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition w-full mt-2" data-i18n="nav_coaching">Coaching</button>
+            </div>
+            <div class="border-t border-white/10 pt-3 mt-1">
+                <div class="text-[10px] uppercase tracking-widest text-gray-500 font-bold px-1 mb-2" data-i18n="nav_more_content">Contenu</div>
+                <button onclick="navigate('annonces'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition w-full" data-i18n="nav_annonces">Annonces</button>
+                <button onclick="navigate('media'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition w-full mt-2" data-i18n="nav_media">Média</button>
+            </div>
+            <div class="border-t border-white/10 pt-3 mt-1">
+                <div class="text-[10px] uppercase tracking-widest text-gray-500 font-bold px-1 mb-2" data-i18n="nav_more_community">Communauté</div>
+                <button onclick="openRecruitmentModal(); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition w-full" data-i18n="nav_recruit">Rejoindre AERIX</button>
+                <button onclick="openReviewModal(); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition w-full mt-2" data-i18n="nav_review">Laisser un avis</button>
+            </div>
             <div id="mobile-account-area"></div>
             <a href="https://discord.gg/dJcHwYT4HY" target="_blank" rel="noopener noreferrer" class="text-center text-xs text-white py-3.5 rounded-xl border border-aerix-purple/40 bg-aerix-purple/20 font-bold flex items-center justify-center gap-2">
-                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.927 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
                 Rejoindre le Discord
             </a>
             <div class="flex gap-2 mt-1">
@@ -1133,11 +1149,22 @@
 
         <!-- 6. PARTENAIRES -->
         <main id="page-partenaires" class="page-view px-6 max-w-7xl mx-auto text-center mt-12">
-            <div class="animate-fade-up opacity-0 mb-14">
-                <h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2" data-i18n="partners_subtitle">Sponsors & Affiliés</h2>
-                <h3 class="text-4xl font-black text-white inline-block transition-transform duration-300 hover:scale-110 hover:text-aerix-purple cursor-default" data-i18n="partners_title">Partenaires Techniques</h3>
+            <div class="partners-hero glass-panel rounded-[2rem] p-7 md:p-10 mb-14 animate-fade-up opacity-0">
+                <div class="relative z-10">
+                    <div class="text-xs font-black text-aerix-purple uppercase tracking-[.22em] mb-3" data-i18n="partners_subtitle">Sponsors & Affiliés</div>
+                    <h3 class="text-4xl md:text-5xl font-black text-white tracking-tight" data-i18n="partners_title">Partenaires Techniques</h3>
+                    <p class="text-sm md:text-base text-gray-400 max-w-2xl mx-auto mt-5 leading-relaxed" data-i18n="partners_desc">Des collaborations qui accompagnent AERIX dans son développement compétitif, son équipement et sa communauté.</p>
+                    <div id="partners-stats" class="flex flex-wrap justify-center gap-3 md:gap-4 mt-8"></div>
+                </div>
             </div>
+            <div id="partners-featured"></div>
             <div id="partners-container" class="space-y-16"></div>
+            <div class="mt-14 glass-panel rounded-2xl p-7 md:p-9 border border-white/10">
+                <div class="text-xs font-black text-aerix-purple uppercase tracking-[.18em] mb-2" data-i18n="partners_cta_kicker">Collaboration</div>
+                <div class="text-xl md:text-2xl font-black text-white" data-i18n="partners_cta_title">Vous souhaitez collaborer avec AERIX ?</div>
+                <p class="text-sm text-gray-500 mt-2 max-w-xl mx-auto" data-i18n="partners_cta_desc">Présentez-nous votre projet et échangeons sur une collaboration adaptée à votre marque.</p>
+                <button onclick="openContactModal && openContactModal('Partenariat')" class="mt-5 px-5 py-3 rounded-xl bg-aerix-purple/15 border border-aerix-purple/40 text-white text-sm font-bold hover:bg-aerix-purple/25 transition" data-i18n="partners_cta_btn">Nous contacter</button>
+            </div>
         </main>
 
         <!-- 7. ANNONCES -->
@@ -2127,13 +2154,13 @@
                 history_date_4: "Juin 2026", history_title_4: "L'arrivée d'iRacing", history_text_4: "AERIX étend son pôle Motorsport avec l'arrivée d'<strong class=\"text-white\">iRacing</strong>, renforçant sa présence sur la scène sim-racing.",
                 history_date_5: "Août 2026", history_title_5: "L'arrivée de RBR", history_text_5: "Nouvelle division sur <strong class=\"text-white\">Richard Burns Rally</strong>, confirmant l'ambition d'AERIX sur le rallye virtuel.",
                 shop_subtitle: "Shop", shop_title: "Équipement Officiel",
-                partners_subtitle: "Sponsors & Affiliés", partners_title: "Partenaires Techniques",
+                partners_subtitle: "Sponsors & Affiliés", partners_title: "Partenaires Techniques", partners_desc: "Des collaborations qui accompagnent AERIX dans son développement compétitif, son équipement et sa communauté.", partners_cta_kicker: "Collaboration", partners_cta_title: "Vous souhaitez collaborer avec AERIX ?", partners_cta_desc: "Présentez-nous votre projet et échangeons sur une collaboration adaptée à votre marque.", partners_cta_btn: "Nous contacter",
                 news_subtitle: "Actualités", news_title: "Annonces & Mises à jour", account_create: "Créer un compte", account_profile: "Mon compte", account_login: "Connexion", account_logout: "Déconnexion", admin_access: "Administration",
                 admin_secure_title: "Accès Sécurisé", admin_secure_desc: "Confirme ton mot de passe pour accéder au panel d'administration", admin_secure_placeholder: "Mot de passe...", cancel: "Annuler", confirm: "Confirmer",
                 username_placeholder: "Pseudo", email_placeholder: "Adresse email", already_account_signin: "J'ai déjà un compte — Se connecter",
                 account_login_desc: "Connecte-toi avec ton compte AERIX.", password_placeholder: "Mot de passe", forgot_password: "Mot de passe oublié ?",
                 account_register_desc: "Crée directement ton compte AERIX avec ton pseudo, ton email et ton mot de passe.", password_min_placeholder: "Mot de passe (8 caractères min.)", create_account: "Créer le compte", registered_accounts_title: "Comptes enregistrés", registered_accounts_desc: "Tous les comptes créés sur le site. Le Owner peut attribuer ou retirer le rôle Admin.", contact_admin_title: "Demandes de contact", contact_admin_desc: "Consulte et gère les tickets envoyés par les utilisateurs.", contact_title: "Contact AERIX", contact_desc: "Choisis Discord ou ouvre un ticket directement depuis le site.", contact_discord: "Contacter sur Discord", contact_form: "Formulaire de contact", contact_login_required: "Tu dois être connecté pour ouvrir un ticket.", ticket: "Tickets", no_tickets: "Aucun ticket en cours.", ticket_status: "Statut", ticket_category: "Catégorie", ticket_subject: "Sujet", ticket_message: "Message", ticket_send: "Envoyer le ticket", ticket_close: "Fermer", ticket_reply: "Réponse AERIX", ticket_created: "Ticket créé.", ticket_updated: "Ticket mis à jour.", ticket_required: "Sujet et message obligatoires.", contact_category_partnership: "Partenariat", contact_category_question: "Question", contact_category_other: "Autre demande", contact_status_new: "Nouveau", contact_status_progress: "En cours", contact_status_done: "Traité", contact_status_archived: "Archivé", role_user: "Utilisateur", role_admin: "Admin", role_owner: "Owner",
-                nav_competition: "Compétition", nav_performance: "Performance", nav_media: "Média", nav_competition: "Competition", nav_performance: "Performance", nav_media: "Media", nav_recruit: "Join AERIX", nav_review: "Reviews", nav_coaching: "Coaching", coaching_title: "Réserver un coaching", coaching_subtitle: "Le Mans Ultimate & iRacing — coaching individuel ou en groupe.",
+                nav_competition: "Compétition", nav_more: "Plus", nav_more_main: "Navigation", nav_more_performance: "Performance & services", nav_more_content: "Contenu", nav_more_community: "Communauté", nav_performance: "Performance", nav_media: "Média", nav_competition: "Competition", nav_performance: "Performance", nav_media: "Media", nav_recruit: "Join AERIX", nav_review: "Reviews", nav_coaching: "Coaching", coaching_title: "Réserver un coaching", coaching_subtitle: "Le Mans Ultimate & iRacing — coaching individuel ou en groupe.",
                 coaching_step_infos: "1. Informations", coaching_step_profile: "2. Profil Simracing", coaching_step_format: "3. Format & Tarifs", coaching_step_calendar: "4. Choisis une date",
                 coaching_discord_placeholder: "Pseudo Discord", coaching_level_beginner: "Débutant", coaching_level_intermediate: "Intermédiaire", coaching_level_advanced: "Confirmé", coaching_level_competition: "Compétition",
                 coaching_format_solo: "Solo", coaching_format_group: "Groupe",
@@ -2147,7 +2174,7 @@
                 assistant_quick_about: "Qui est AERIX ?", assistant_quick_join: "Rejoindre AERIX", assistant_quick_contact: "Contacter l'administration", assistant_quick_coaching: "Coaching", assistant_action_contact: "Contacter les administrateurs", assistant_action_coaching: "Demander un coaching", assistant_action_discord: "Rejoindre le Discord"
             },
             en: {
-                nav_home: "Home", nav_effectifs: "Rosters", nav_palmares: "Results", nav_histoire: "History", nav_boutique: "Shop", nav_partenaires: "Partners", nav_annonces: "News",
+                nav_home: "Home", nav_more: "More", nav_more_main: "Navigation", nav_more_performance: "Performance & services", nav_more_content: "Content", nav_more_community: "Community", nav_effectifs: "Rosters", nav_palmares: "Results", nav_histoire: "History", nav_boutique: "Shop", nav_partenaires: "Partners", nav_annonces: "News",
                 hero_title_1: "The future", hero_title_2: "of", hero_title_3: "Esports", hero_title_4: "Competition.",
                 hero_desc: "Independent structure gathering the elite on Rocket League and virtual circuits. Performance, precision, and ambition.",
                 hero_btn_1: "Discover Rosters", hero_btn_2: "Our Achievements",
@@ -2163,7 +2190,7 @@
                 history_date_4: "June 2026", history_title_4: "iRacing joins", history_text_4: "AERIX expands its Motorsport division with the arrival of <strong class=\"text-white\">iRacing</strong>, strengthening its presence on the sim-racing scene.",
                 history_date_5: "August 2026", history_title_5: "RBR joins", history_text_5: "New division on <strong class=\"text-white\">Richard Burns Rally</strong>, confirming AERIX's ambition in virtual rally.",
                 shop_subtitle: "Shop", shop_title: "Official Merch",
-                partners_subtitle: "Sponsors & Affiliates", partners_title: "Technical Partners",
+                partners_subtitle: "Sponsors & Affiliates", partners_title: "Technical Partners", partners_desc: "Collaborations supporting AERIX across competitive development, equipment and community.", partners_cta_kicker: "Collaboration", partners_cta_title: "Want to work with AERIX?", partners_cta_desc: "Tell us about your project and let’s discuss a collaboration adapted to your brand.", partners_cta_btn: "Contact us",
                 news_subtitle: "News", news_title: "Announcements & Updates", account_create: "Create account", account_profile: "My account", account_login: "Sign in", account_logout: "Sign out", admin_access: "Admin panel",
                 admin_secure_title: "Secure Access", admin_secure_desc: "Confirm your password to access the administration panel", admin_secure_placeholder: "Password...", cancel: "Cancel", confirm: "Confirm",
                 username_placeholder: "Username", email_placeholder: "Email address", already_account_signin: "Already have an account — Sign in",
@@ -2266,6 +2293,9 @@
 
         function setLang(lang) {
             if(!i18n[lang]) lang = 'fr';
+            document.body.classList.remove('language-changing');
+            void document.body.offsetWidth;
+            document.body.classList.add('language-changing');
             currentLang = lang;
             localStorage.setItem('aerix_lang', lang);
             const flagMap = { fr: "https://flagcdn.com/w20/fr.png", en: "https://flagcdn.com/w20/gb.png" };
@@ -2902,24 +2932,65 @@
         // PARTENAIRES
         function renderPartners() {
             const container = document.getElementById('partners-container');
-            if(!globalPartners.length) { container.innerHTML = '<p class="text-gray-500 text-sm italic text-center">Aucun partenaire renseigné.</p>'; return; }
+            const featured = document.getElementById('partners-featured');
+            const stats = document.getElementById('partners-stats');
+            if(!container) return;
+
+            const partners = Array.isArray(globalPartners) ? globalPartners : [];
+            if (stats) {
+                const categories = new Set(partners.map(p => p.category || 'Partenaires & Affiliés'));
+                stats.innerHTML = [
+                    [partners.length, currentLang === 'en' ? 'Partners' : 'Partenaires'],
+                    [categories.size, currentLang === 'en' ? 'Categories' : 'Catégories'],
+                    [partners.filter(p => p.url).length, currentLang === 'en' ? 'Collaborations' : 'Collaborations']
+                ].map(([v,l]) => `<div class="partners-stat glass-panel-no-hover rounded-xl px-5 py-3 border border-white/10"><div class="text-xl font-black text-white">${v}</div><div class="text-[9px] text-gray-500 uppercase tracking-widest mt-1">${escapeHtml(l)}</div></div>`).join('');
+            }
+
+            if(!partners.length) {
+                if (featured) featured.innerHTML = '';
+                container.innerHTML = '<p class="text-gray-500 text-sm italic text-center">Aucun partenaire renseigné.</p>';
+                return;
+            }
+
+            const featuredPartner = partners.find(p => /nolt/i.test(p.name || '')) || partners.find(p => /équipement|equipment|official/i.test(p.category || ''));
+            if (featured && featuredPartner) {
+                const logo = featuredPartner.image
+                    ? `<img src="${escapeHtml(featuredPartner.image)}" alt="${escapeHtml(featuredPartner.name || 'AERIX Partner')}" loading="lazy" class="partner-featured-logo max-h-24 max-w-[260px] object-contain mx-auto">`
+                    : `<div class="partner-featured-logo flex items-center justify-center text-3xl font-black text-white">${escapeHtml(featuredPartner.name || 'Partenaire')}</div>`;
+                const link = featuredPartner.url && safeUrl(featuredPartner.url)
+                    ? `<a href="${escapeHtml(safeUrl(featuredPartner.url))}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs font-bold text-white hover:bg-aerix-purple/15 hover:border-aerix-purple/40 transition">${currentLang === 'en' ? 'Discover partner ↗' : 'Découvrir le partenaire ↗'}</a>`
+                    : '';
+                featured.innerHTML = `<div class="partner-featured glass-panel rounded-3xl p-7 md:p-9 mb-14 text-center">
+                    <div class="text-[10px] font-black text-aerix-purple uppercase tracking-[.2em] mb-4">${currentLang === 'en' ? 'Official partner' : 'Partenaire mis en avant'}</div>
+                    ${logo}
+                    <div class="text-sm text-gray-400 mt-4">${escapeHtml(featuredPartner.category || (currentLang === 'en' ? 'Partner' : 'Partenaire'))}</div>
+                    ${link ? `<div class="mt-5">${link}</div>` : ''}
+                </div>`;
+            } else if (featured) featured.innerHTML = '';
 
             const categories = {};
-            globalPartners.forEach(p => { const cat = p.category || 'Partenaires & Affiliés'; if(!categories[cat]) categories[cat] = []; categories[cat].push(p); });
+            partners.forEach(p => {
+                const cat = p.category || (currentLang === 'en' ? 'Partners & Affiliates' : 'Partenaires & Affiliés');
+                if(!categories[cat]) categories[cat] = [];
+                categories[cat].push(p);
+            });
 
-            let __html = '';
+            let html = '';
             Object.keys(categories).forEach(cat => {
-                let sectionHTML = `<div class="mb-14"><h4 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-6 border-b border-white/5 pb-3 text-left">${escapeHtml(cat)}</h4><div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6 items-center">`;
-                
+                let sectionHTML = `<div class="mb-14"><div class="flex items-end justify-between gap-4 border-b border-white/5 pb-3 mb-6"><h4 class="text-xs font-bold text-gray-500 uppercase tracking-widest text-left">${escapeHtml(cat)}</h4><span class="text-[10px] text-gray-600 font-bold">${categories[cat].length}</span></div><div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6 items-center">`;
                 categories[cat].forEach((p, index) => {
-                    const contentHTML = p.image ? `<img src="${escapeHtml(p.image)}" alt="${escapeHtml(p.name)}" loading="lazy" class="max-h-16 max-w-full object-contain filter drop-shadow-[0_0_10px_rgba(255,255,255,0.1)] group-hover:drop-shadow-[0_0_20px_rgba(139,92,246,0.6)] transition-all duration-500 group-hover:scale-110">` : `<span class="text-xl font-bold text-white tracking-tighter transition-all duration-500 group-hover:scale-110 inline-block">${escapeHtml(p.name)}</span>`;
-                    const wrapperHTML = p.url ? `<a href="${escapeHtml(safeUrl(p.url))}" target="_blank" rel="noopener noreferrer" class="partner-card-tile glass-panel p-6 rounded-2xl flex items-center justify-center min-h-[120px] group reveal delay-${(index%5)*100} hover:border-aerix-purple/50 bg-[#050505]/50">${contentHTML}</a>` : `<div class="partner-card-tile glass-panel p-6 rounded-2xl flex items-center justify-center min-h-[120px] group reveal delay-${(index%5)*100} bg-[#050505]/50">${contentHTML}</div>`;
+                    const contentHTML = p.image
+                        ? `<img src="${escapeHtml(p.image)}" alt="${escapeHtml(p.name)}" loading="lazy" class="max-h-16 max-w-full object-contain filter drop-shadow-[0_0_10px_rgba(255,255,255,0.1)] group-hover:drop-shadow-[0_0_20px_rgba(139,92,246,0.6)] transition-all duration-500 group-hover:scale-110">`
+                        : `<span class="text-xl font-bold text-white tracking-tighter transition-all duration-500 group-hover:scale-110 inline-block">${escapeHtml(p.name)}</span>`;
+                    const wrapperHTML = p.url && safeUrl(p.url)
+                        ? `<a href="${escapeHtml(safeUrl(p.url))}" target="_blank" rel="noopener noreferrer" class="partner-card-tile glass-panel p-6 rounded-2xl flex items-center justify-center min-h-[120px] group reveal delay-${(index%5)*100} hover:border-aerix-purple/50 bg-[#050505]/50">${contentHTML}</a>`
+                        : `<div class="partner-card-tile glass-panel p-6 rounded-2xl flex items-center justify-center min-h-[120px] group reveal delay-${(index%5)*100} bg-[#050505]/50">${contentHTML}</div>`;
                     sectionHTML += wrapperHTML;
                 });
                 sectionHTML += `</div></div>`;
-                __html += sectionHTML;
+                html += sectionHTML;
             });
-            container.innerHTML = __html;
+            container.innerHTML = html;
             setTimeout(revealActiveElements, 20);
         }
 
@@ -4743,6 +4814,7 @@ function checkAdminSessionTimeout() {
             if (pageId === 'competition') renderCompetitionPage();
             if (pageId === 'performance') renderPerformancePage();
             if (pageId === 'media') renderMediaPage();
+            if (pageId === 'partenaires') renderPartners();
             setTimeout(revealActiveElements, 20);
         }
 
