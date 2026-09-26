@@ -3597,10 +3597,15 @@ body.theme-white-red #player-modal .member-profile-role-dot {
         const auth = firebase.auth();
 
         // Firebase Auth : conserver la session du compte entre les visites.
-        // Cette persistance est indépendante du consentement analytics/cookies.
-        auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(err => {
-            console.warn('Firebase Auth persistence:', err);
-        });
+        // La persistance LOCAL est configurée AVANT toute connexion et avant
+        // l'écoute de l'état d'authentification afin d'éviter toute perte de session
+        // au rechargement ou après fermeture/réouverture du site.
+        let authPersistenceReady = auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+            .then(() => true)
+            .catch(err => {
+                console.error('Firebase Auth persistence LOCAL indisponible:', err);
+                return false;
+            });
 
         // ACCOUNT CONFIGURATION
         // Replace OWNER_EMAIL with the email of the AERIX owner account.
@@ -4996,11 +5001,13 @@ function checkAdminSessionTimeout() {
                 showToast(msg,'error');
             }
         }
-        async function loginAccount() { const email=document.getElementById('account-login-email').value.trim(); const password=document.getElementById('account-login-password').value; if(!email||!password) return showToast(currentLang==='en'?'Email and password are required.':'Email et mot de passe obligatoires.','error'); try { await auth.signInWithEmailAndPassword(email,password); closeAccountModal(); showToast(currentLang==='en'?'Signed in.':'Connexion réussie.'); } catch(e){ showToast(currentLang==='en'?'Invalid email or password.':'Email ou mot de passe incorrect.','error'); } }
+        async function loginAccount() { const email=document.getElementById('account-login-email').value.trim(); const password=document.getElementById('account-login-password').value; if(!email||!password) return showToast(currentLang==='en'?'Email and password are required.':'Email et mot de passe obligatoires.','error'); try { await authPersistenceReady; await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL); await auth.signInWithEmailAndPassword(email,password); closeAccountModal(); showToast(currentLang==='en'?'Signed in.':'Connexion réussie.'); } catch(e){ console.error('Connexion Firebase:',e); showToast(currentLang==='en'?'Invalid email or password.':'Email ou mot de passe incorrect.','error'); } }
 
         async function signInWithGoogle() {
             if (currentUser) return showToast(currentLang==='en'?'You are already signed in.':'Tu es déjà connecté.','error');
             try {
+                await authPersistenceReady;
+                await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
                 const provider = new firebase.auth.GoogleAuthProvider();
                 const cred = await auth.signInWithPopup(provider);
                 const user = cred.user;
@@ -5062,7 +5069,16 @@ function checkAdminSessionTimeout() {
             }
         }
 
-        async function logoutAccount() { try { await auth.signOut(); document.querySelectorAll('.account-menu').forEach(m => m.classList.add('hidden')); showToast(currentLang==='en'?'Signed out.':'Déconnexion réussie.'); } catch(e){ console.error(e); } }
+        // Déconnexion UNIQUEMENT sur action explicite de l'utilisateur.
+        // Aucun chargement, changement de page, changement de thème ou changement de langue
+        // ne doit appeler auth.signOut().
+        async function logoutAccount() {
+            try {
+                await auth.signOut();
+                document.querySelectorAll('.account-menu').forEach(m => m.classList.add('hidden'));
+                showToast(currentLang==='en'?'Signed out.':'Déconnexion réussie.');
+            } catch(e){ console.error('Déconnexion Firebase:', e); }
+        }
 
         let aerixAssistantOpen = false;
         function toggleAerixAssistant(force) {
@@ -5740,7 +5756,10 @@ function checkAdminSessionTimeout() {
             return created.data();
         }
 
-        auth.onAuthStateChanged(async user => {
+        // Ne démarre l'écoute qu'une fois la persistance locale configurée.
+        // Cela évite qu'un état initial 'null' transitoire soit interprété comme une déconnexion.
+        authPersistenceReady.then(() => {
+            auth.onAuthStateChanged(async user => {
             currentUser = user;
             currentAccount = null;
             if (user) {
@@ -5768,7 +5787,8 @@ function checkAdminSessionTimeout() {
             userTickets = user ? globalContactRequests.filter(t => t.uid === user.uid) : [];
             renderAccountArea();
             applyAdminTabVisibility();
-        });
+            });
+        }).catch(err => console.error('Initialisation de la session Firebase:', err));
 
         function renderAdminLists() {
             updateAdminNotifBadge();
