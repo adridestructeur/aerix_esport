@@ -1058,6 +1058,70 @@ body.theme-light {
        se retrouver collé au bord ni gêner d'autres éléments à droite de l'écran. */
     @media(max-width:640px){ #aerix-assistant{left:max(14px, env(safe-area-inset-left));right:auto;bottom:calc(80px + env(safe-area-inset-bottom));} #aerix-assistant-panel{width:calc(100vw - 20px);height:min(600px,calc(100dvh - 150px));transform-origin:bottom left;} #aerix-assistant-launcher{width:54px;height:54px;} }
 
+    /* MENU DES THÈMES — sélection visuelle comme le menu des langues */
+    #theme-menu { opacity:0; visibility:hidden; transform:translateY(-6px) scale(.98); pointer-events:none; transition:opacity .32s ease, transform .32s cubic-bezier(.16,1,.3,1), visibility .32s ease; }
+    #theme-menu.theme-menu-open { opacity:1; visibility:visible; transform:translateY(0) scale(1); pointer-events:auto; }
+    #theme-btn .theme-chevron { display:inline-block; transition:transform .32s cubic-bezier(.16,1,.3,1); }
+    #theme-btn.theme-open .theme-chevron { transform:rotate(180deg); }
+    .theme-option { transition:background .2s ease, border-color .2s ease, transform .2s ease; }
+    .theme-option:hover { transform:translateY(-1px); }
+    .theme-option .theme-swatch { width:18px; height:18px; border-radius:999px; flex:none; box-shadow:inset 0 0 0 1px rgba(255,255,255,.25), 0 0 10px rgba(0,0,0,.12); }
+    #theme-current-icon { display:inline-flex; align-items:center; justify-content:center; width:16px; height:16px; }
+    .theme-option[data-theme-option="dark"] .theme-swatch { background:linear-gradient(135deg,#050505 0 55%,#8b5cf6 56%); }
+    .theme-option[data-theme-option="light"] .theme-swatch { background:linear-gradient(135deg,#fff 0 55%,#f5bbd5 56%); }
+    .theme-option[data-theme-option="black-red"] .theme-swatch { background:linear-gradient(135deg,#050505 0 55%,#e53935 56%); }
+    .theme-option[data-theme-option="white-red"] .theme-swatch { background:linear-gradient(135deg,#fff 0 55%,#e53935 56%); }
+    .theme-option.is-selected { background:rgba(139,92,246,.13); border-color:rgba(139,92,246,.42) !important; }
+    .theme-black-red .theme-option.is-selected { background:rgba(229,57,53,.14); border-color:rgba(229,57,53,.55) !important; }
+    .theme-white-red .theme-option.is-selected { background:rgba(229,57,53,.10); border-color:rgba(229,57,53,.42) !important; }
+
+    /* Thème noir & rouge */
+    body.theme-black-red { color:#f5f5f5; }
+    .theme-black-red #page-bg-layer { background-image:linear-gradient(to bottom,rgba(4,4,4,.58),rgba(4,4,4,.86)),url('4571004.webp') !important; background-size:cover; background-position:center; }
+    .theme-black-red .text-aerix-purple { color:#ef5350 !important; }
+    .theme-black-red .bg-aerix-purple { background-color:#e53935 !important; }
+    .theme-black-red .border-aerix-purple { border-color:rgba(229,57,53,.65) !important; }
+    .theme-black-red .nav-btn.active, .theme-black-red .nav-btn:hover { color:#fff !important; }
+    .theme-black-red #nav-pill { background:rgba(229,57,53,.18) !important; border-color:rgba(229,57,53,.62) !important; box-shadow:0 0 25px rgba(229,57,53,.48) !important; }
+    .theme-black-red .glass-panel, .theme-black-red .glass-panel-no-hover { border-color:rgba(255,255,255,.10); }
+    .theme-black-red .filter-btn:hover:not(.active), .theme-black-red .filter-btn.active { border-color:#e53935 !important; box-shadow:0 0 22px rgba(229,57,53,.28) !important; }
+    .theme-black-red .filter-btn.active { background:#e53935 !important; color:#fff !important; }
+    .theme-black-red .partner-card-tile:hover, .theme-black-red .shop-detail-btn:hover { border-color:rgba(229,57,53,.75) !important; box-shadow:0 0 25px rgba(229,57,53,.22) !important; }
+    .theme-black-red #aerix-assistant-launcher { border-color:rgba(229,57,53,.60) !important; background:linear-gradient(145deg,rgba(229,57,53,.28),rgba(15,15,15,.94)) !important; box-shadow:0 10px 35px rgba(0,0,0,.5),0 0 28px rgba(229,57,53,.22) !important; }
+
+    /* Thème blanc & rouge */
+    body.theme-white-red { color:#151515; }
+    .theme-white-red #page-bg-layer { background-image:linear-gradient(to bottom,rgba(255,255,255,.76),rgba(255,255,255,.90)),url('fond-rouge-blanc-fond-blanc-rose_1293074-30376.avif') !important; background-size:cover; background-position:center; }
+    .theme-white-red .text-white { color:#151515 !important; }
+    .theme-white-red .text-gray-300 { color:#343434 !important; }
+    .theme-white-red .text-gray-400, .theme-white-red .text-gray-500 { color:#4b4b4b !important; }
+    .theme-white-red .text-aerix-purple { color:#c62828 !important; }
+    .theme-white-red .bg-aerix-purple { background-color:#e53935 !important; color:#fff !important; }
+    .theme-white-red .border-aerix-purple { border-color:rgba(229,57,53,.58) !important; }
+    .theme-white-red .glass-panel, .theme-white-red .glass-panel-no-hover { background:rgba(255,255,255,.56) !important; border-color:rgba(30,30,30,.10) !important; box-shadow:0 16px 45px rgba(30,30,30,.08) !important; backdrop-filter:blur(18px) saturate(130%) !important; }
+    .theme-white-red .nav-btn:hover, .theme-white-red .nav-btn.active { color:#171717 !important; }
+    .theme-white-red #nav-pill { background:rgba(229,57,53,.12) !important; border-color:rgba(229,57,53,.52) !important; box-shadow:0 0 25px rgba(229,57,53,.28) !important; }
+    .theme-white-red .filter-btn:hover:not(.active), .theme-white-red .filter-btn.active { border-color:#e53935 !important; }
+    .theme-white-red .filter-btn.active { background:#e53935 !important; color:#fff !important; box-shadow:0 0 24px rgba(229,57,53,.30) !important; }
+    .theme-white-red .partner-card-tile, .theme-white-red .partner-featured { background:rgba(255,255,255,.45) !important; border-color:rgba(229,57,53,.18) !important; box-shadow:0 12px 34px rgba(30,30,30,.07) !important; }
+    .theme-white-red .partner-card-tile img, .theme-white-red .partner-featured-logo { background:transparent !important; padding:0 !important; box-shadow:none !important; filter:drop-shadow(0 2px 2px rgba(0,0,0,.65)) drop-shadow(0 0 12px rgba(229,57,53,.18)) !important; }
+    .theme-white-red .partner-card-tile > span { color:#fff !important; text-shadow:0 2px 5px rgba(0,0,0,.95) !important; }
+    .theme-white-red #aerix-assistant-launcher { border-color:rgba(229,57,53,.50) !important; background:linear-gradient(145deg,rgba(229,57,53,.20),rgba(255,255,255,.86)) !important; color:#222 !important; box-shadow:0 10px 35px rgba(30,30,30,.16),0 0 28px rgba(229,57,53,.18) !important; }
+
+
+    .theme-white-red #theme-menu { background:rgba(255,255,255,.84) !important; border-color:rgba(30,30,30,.10) !important; box-shadow:0 20px 50px rgba(30,30,30,.14),0 0 24px rgba(229,57,53,.10) !important; }
+    .theme-white-red #theme-menu .theme-option { color:#171717 !important; }
+    .theme-white-red #theme-menu .theme-option:hover { background:rgba(229,57,53,.09) !important; }
+    .theme-white-red #theme-menu .theme-option.is-selected { background:rgba(229,57,53,.12) !important; border-color:rgba(229,57,53,.42) !important; }
+    .theme-black-red #theme-menu { background:rgba(8,8,8,.88) !important; border-color:rgba(229,57,53,.22) !important; }
+
+    @media(max-width:767px){
+        #theme-menu { right:0; left:auto; width:220px; }
+        .theme-black-red #mobile-menu { background:rgba(8,8,8,.90) !important; }
+        .theme-white-red #mobile-menu { background:rgba(255,255,255,.78) !important; color:#151515 !important; }
+        .theme-white-red #mobile-menu button { color:#171717 !important; }
+    }
+
     /* MENU LANGUE */
     #language-menu { opacity: 0; visibility: hidden; transform: translateY(-6px) scale(.98); pointer-events: none; transition: opacity .32s ease, transform .32s cubic-bezier(.16,1,.3,1), visibility .32s ease; }
     #language-menu.lang-menu-open { opacity: 1; visibility: visible; transform: translateY(0) scale(1); pointer-events: auto; }
@@ -1705,13 +1769,18 @@ body.theme-light {
     Discord
 </a>
 
-<!-- Bouton Thème Clair/Sombre -->
-<button type="button" onclick="toggleTheme()" class="h-9 w-9 flex items-center justify-center text-white hover:text-gray-300 transition rounded-full border border-white/10 bg-white/5 shrink-0 ml-1" aria-label="Changer le thème">
-    <!-- Icône Soleil (visible en mode sombre) -->
-    <svg id="theme-icon-light" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-    <!-- Icône Lune (visible en mode clair) -->
-    <svg id="theme-icon-dark" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-</button>
+<!-- Sélecteur de thème -->
+<div class="relative ml-1">
+    <button type="button" onclick="toggleThemeMenu(event)" class="desktop-theme-btn h-9 min-h-9 flex items-center gap-2 text-xs font-bold text-white hover:text-gray-300 transition px-3 rounded-full border border-white/10 bg-white/5" id="theme-btn" aria-haspopup="true" aria-expanded="false" aria-label="Choisir le thème">
+        <span id="theme-current-icon" class="text-sm leading-none">☾</span><span id="theme-current-text">Sombre</span><span class="theme-chevron">▾</span>
+    </button>
+    <div id="theme-menu" class="absolute right-0 mt-2 w-56 glass-panel-no-hover rounded-xl overflow-hidden flex flex-col p-2 shadow-xl border border-white/10 z-[90]">
+        <button type="button" onclick="setTheme('dark')" data-theme-option="dark" class="theme-option flex items-center gap-3 text-left px-3 py-2.5 text-xs font-bold text-white hover:bg-white/10 rounded-lg border border-transparent"><span class="theme-swatch"></span><span>Sombre</span></button>
+        <button type="button" onclick="setTheme('light')" data-theme-option="light" class="theme-option flex items-center gap-3 text-left px-3 py-2.5 text-xs font-bold text-white hover:bg-white/10 rounded-lg border border-transparent"><span class="theme-swatch"></span><span>Clair</span></button>
+        <button type="button" onclick="setTheme('black-red')" data-theme-option="black-red" class="theme-option flex items-center gap-3 text-left px-3 py-2.5 text-xs font-bold text-white hover:bg-white/10 rounded-lg border border-transparent"><span class="theme-swatch"></span><span>Noir &amp; Rouge</span></button>
+        <button type="button" onclick="setTheme('white-red')" data-theme-option="white-red" class="theme-option flex items-center gap-3 text-left px-3 py-2.5 text-xs font-bold text-white hover:bg-white/10 rounded-lg border border-transparent"><span class="theme-swatch"></span><span>Blanc &amp; Rouge</span></button>
+    </div>
+</div>
 
 <div class="relative ml-1">
     <button type="button" onclick="toggleLanguageMenu(event)" class="desktop-language-btn h-9 min-h-9 flex items-center gap-2 text-xs font-bold text-white hover:text-gray-300 transition px-3 rounded-full border border-white/10 bg-white/5" id="lang-btn" aria-haspopup="true" aria-expanded="false">
@@ -1746,9 +1815,17 @@ body.theme-light {
             <button onclick="navigate('media'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_media">Média</button>
             <button onclick="openRecruitmentModal(); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_recruit">Rejoindre AERIX</button>
             <div id="mobile-account-area"></div>
-            <button type="button" onclick="toggleTheme(); closeMobileMenu();" class="w-full text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition flex items-center justify-between" aria-label="Changer le thème">
-                <span>Thème</span><span class="text-xs">☀ / ☾</span>
-            </button>
+            <div class="relative">
+                <button type="button" onclick="toggleMobileThemeMenu(event)" id="mobile-theme-btn" class="w-full text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition flex items-center justify-between" aria-expanded="false" aria-label="Choisir le thème">
+                    <span>Thème</span><span class="text-xs" id="mobile-theme-current">Sombre ▾</span>
+                </button>
+                <div id="mobile-theme-menu" class="hidden mt-2 p-2 rounded-xl border border-white/10 bg-black/70 backdrop-blur-xl">
+                    <button type="button" onclick="setTheme('dark'); closeMobileMenu();" class="w-full text-left py-2.5 px-3 rounded-lg text-xs font-bold text-white hover:bg-white/10">● Sombre</button>
+                    <button type="button" onclick="setTheme('light'); closeMobileMenu();" class="w-full text-left py-2.5 px-3 rounded-lg text-xs font-bold text-white hover:bg-white/10">● Clair</button>
+                    <button type="button" onclick="setTheme('black-red'); closeMobileMenu();" class="w-full text-left py-2.5 px-3 rounded-lg text-xs font-bold text-white hover:bg-white/10">● Noir &amp; Rouge</button>
+                    <button type="button" onclick="setTheme('white-red'); closeMobileMenu();" class="w-full text-left py-2.5 px-3 rounded-lg text-xs font-bold text-white hover:bg-white/10">● Blanc &amp; Rouge</button>
+                </div>
+            </div>
             <a href="https://discord.gg/dJcHwYT4HY" target="_blank" rel="noopener noreferrer" class="text-center text-xs text-white py-3.5 rounded-xl border border-aerix-purple/40 bg-aerix-purple/20 font-bold flex items-center justify-center gap-2">
                 <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.927 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
                 Rejoindre le Discord
@@ -6466,75 +6543,85 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
-// --- GESTION DU THÈME CLAIR / SOMBRE ---
+// --- GESTION DES THÈMES ---
 let currentTheme = localStorage.getItem('aerix_theme') || 'dark';
+const THEME_META = {
+    dark: { label:'Sombre', icon:'☾', sub:'THÈME SOMBRE' },
+    light: { label:'Clair', icon:'☀', sub:'THÈME CLAIR' },
+    'black-red': { label:'Noir & Rouge', icon:'●', sub:'NOIR & ROUGE' },
+    'white-red': { label:'Blanc & Rouge', icon:'●', sub:'BLANC & ROUGE' }
+};
 
-function applyTheme(theme) {
-    const bgLayer = document.getElementById('page-bg-layer');
-    const iconDark = document.getElementById('theme-icon-dark');
-    const iconLight = document.getElementById('theme-icon-light');
-
-    if (theme === 'light') {
-        // Appliquer le fond d'écran clair
-        bgLayer.style.backgroundImage = "linear-gradient(to bottom, rgba(255,255,255,0.7), rgba(255,255,255,0.9)), url('peint-main-aquarelle-abstrait-aquarelle_23-2149007171.avif')";
-        document.body.classList.add('theme-light');
-        if(iconDark) iconDark.classList.remove('hidden');
-        if(iconLight) iconLight.classList.add('hidden');
-    } else {
-        // Appliquer le fond d'écran sombre
-        bgLayer.style.backgroundImage = "linear-gradient(to bottom, rgba(5,5,5,0.65), rgba(5,5,5,0.85)), url('abstract-black-violet-colors-background-design-flat_662214-314713.avif')";
-        document.body.classList.remove('theme-light');
-        if(iconDark) iconDark.classList.add('hidden');
-        if(iconLight) iconLight.classList.remove('hidden');
-    }
+function closeThemeMenu(){
+    const menu=document.getElementById('theme-menu'), btn=document.getElementById('theme-btn');
+    if(menu) menu.classList.remove('theme-menu-open');
+    if(btn) { btn.classList.remove('theme-open'); btn.setAttribute('aria-expanded','false'); }
 }
-
-let themeTransitionTimer = null;
-let themeTransitionCloseTimer = null;
-
-function toggleTheme() {
-    const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    const overlay = document.getElementById('page-transition-overlay');
-    const label = document.getElementById('transition-label');
-    const sub = document.getElementById('transition-sub');
-    const mark = overlay ? overlay.querySelector('.transition-mark') : null;
-
-    clearTimeout(themeTransitionTimer);
-    clearTimeout(themeTransitionCloseTimer);
-
-    if (label) label.textContent = nextTheme === 'light' ? 'THÈME CLAIR' : 'THÈME SOMBRE';
-    if (sub) sub.textContent = 'THÈME';
-    if (mark) {
-        mark.innerHTML = nextTheme === 'light'
-            ? '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"></path></svg>'
-            : '<svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.354 15.354A9 9 0 0 1 8.646 3.646 9.003 9.003 0 0 0 12 21a9.003 9.003 0 0 0 8.354-5.646Z"></path></svg>';
-    }
-
-    if (overlay) {
-        overlay.classList.remove('is-active', 'theme-switching');
-        void overlay.offsetWidth;
-        overlay.classList.add('theme-switching', 'is-active');
-    }
-    document.body.classList.remove('theme-changing');
-    void document.body.offsetWidth;
-    document.body.classList.add('theme-changing');
-
-    themeTransitionTimer = setTimeout(() => {
-        currentTheme = nextTheme;
-        localStorage.setItem('aerix_theme', currentTheme);
-        applyTheme(currentTheme);
-    }, 330);
-
-    themeTransitionCloseTimer = setTimeout(() => {
-        document.body.classList.remove('theme-changing');
-        if (overlay) overlay.classList.remove('is-active', 'theme-switching');
-    }, 820);
+function toggleThemeMenu(e){
+    if(e) e.stopPropagation();
+    const menu=document.getElementById('theme-menu'), btn=document.getElementById('theme-btn');
+    if(!menu || !btn) return;
+    const open=menu.classList.toggle('theme-menu-open');
+    btn.classList.toggle('theme-open',open); btn.setAttribute('aria-expanded',open?'true':'false');
+    if(open) document.getElementById('mobile-theme-menu')?.classList.add('hidden');
 }
-
-// Initialiser le thème au chargement
-document.addEventListener('DOMContentLoaded', () => {
-    applyTheme(currentTheme);
+function toggleMobileThemeMenu(e){
+    if(e) e.stopPropagation();
+    document.getElementById('mobile-theme-menu')?.classList.toggle('hidden');
+}
+function updateThemeMenuUI(theme){
+    const meta=THEME_META[theme] || THEME_META.dark;
+    const text=document.getElementById('theme-current-text');
+    const icon=document.getElementById('theme-current-icon');
+    const mobile=document.getElementById('mobile-theme-current');
+    if(text) text.textContent=meta.label;
+    if(icon) icon.textContent=meta.icon;
+    if(mobile) mobile.textContent=meta.label+' ▾';
+    document.querySelectorAll('#theme-menu [data-theme-option]').forEach(el=>el.classList.toggle('is-selected',el.dataset.themeOption===theme));
+}
+function applyTheme(theme){
+    const bgLayer=document.getElementById('page-bg-layer');
+    const allThemeClasses=['theme-light','theme-black-red','theme-white-red'];
+    document.body.classList.remove(...allThemeClasses);
+    if(theme==='light') document.body.classList.add('theme-light');
+    if(theme==='black-red') document.body.classList.add('theme-black-red');
+    if(theme==='white-red') document.body.classList.add('theme-white-red');
+    const backgrounds={
+        dark:"linear-gradient(to bottom, rgba(5,5,5,0.65), rgba(5,5,5,0.85)), url('abstract-black-violet-colors-background-design-flat_662214-314713.avif')",
+        light:"linear-gradient(to bottom, rgba(255,255,255,0.7), rgba(255,255,255,0.9)), url('peint-main-aquarelle-abstrait-aquarelle_23-2149007171.avif')",
+        'black-red':"linear-gradient(to bottom, rgba(4,4,4,0.58), rgba(4,4,4,0.86)), url('4571004.webp')",
+        'white-red':"linear-gradient(to bottom, rgba(255,255,255,0.76), rgba(255,255,255,0.90)), url('fond-rouge-blanc-fond-blanc-rose_1293074-30376.avif')"
+    };
+    if(bgLayer) bgLayer.style.backgroundImage=backgrounds[theme] || backgrounds.dark;
+    updateThemeMenuUI(theme);
+}
+function setTheme(theme){
+    if(!THEME_META[theme]) return;
+    const overlay=document.getElementById('page-transition-overlay');
+    const label=document.getElementById('transition-label');
+    const sub=document.getElementById('transition-sub');
+    const mark=overlay ? overlay.querySelector('.transition-mark') : null;
+    clearTimeout(themeTransitionTimer); clearTimeout(themeTransitionCloseTimer);
+    const meta=THEME_META[theme];
+    if(label) label.textContent=meta.label.toUpperCase();
+    if(sub) sub.textContent='THÈME';
+    if(mark) mark.innerHTML=`<span style="display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:999px;font-size:24px;font-weight:900;color:${theme.includes('red')?'#e53935':'#fff'}">${meta.icon}</span>`;
+    if(overlay){ overlay.classList.remove('is-active','theme-switching'); void overlay.offsetWidth; overlay.classList.add('theme-switching','is-active'); }
+    document.body.classList.remove('theme-changing'); void document.body.offsetWidth; document.body.classList.add('theme-changing');
+    themeTransitionTimer=setTimeout(()=>{ currentTheme=theme; localStorage.setItem('aerix_theme',theme); applyTheme(theme); },330);
+    themeTransitionCloseTimer=setTimeout(()=>{ document.body.classList.remove('theme-changing'); if(overlay) overlay.classList.remove('is-active','theme-switching'); },820);
+    closeThemeMenu();
+}
+function toggleTheme(){
+    const order=['dark','light','black-red','white-red'];
+    const next=order[(order.indexOf(currentTheme)+1)%order.length];
+    setTheme(next);
+}
+document.addEventListener('click',(e)=>{
+    const wrap=document.getElementById('theme-btn')?.parentElement;
+    if(wrap && !wrap.contains(e.target)) closeThemeMenu();
 });
+document.addEventListener('DOMContentLoaded',()=>applyTheme(currentTheme));
     </script>
 </body>
 </html>
