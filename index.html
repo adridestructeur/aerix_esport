@@ -476,6 +476,93 @@ body.theme-light {
     color: #111827 !important;
 }
 
+/* =========================================================
+   AERIX — AJUSTEMENTS FINAUX DU THÈME CLAIR
+   ========================================================= */
+
+/* Cartes joueurs : les noms restent blancs pour rester lisibles sur les visuels. */
+.theme-light .member-card-pseudo,
+.theme-light .member-card-name {
+    color: #ffffff !important;
+    text-shadow: 0 2px 12px rgba(0,0,0,.85) !important;
+}
+
+/* Assistant AERIX : texte principal et boutons lisibles en noir. */
+.theme-light #aerix-assistant-panel .assistant-bot,
+.theme-light #aerix-assistant-panel .assistant-quick,
+.theme-light #aerix-assistant-panel .text-gray-300,
+.theme-light #aerix-assistant-panel .text-gray-400,
+.theme-light #aerix-assistant-panel .text-gray-500 {
+    color: #111827 !important;
+}
+
+.theme-light #aerix-assistant-panel .assistant-quick {
+    background: rgba(255,255,255,.78) !important;
+    border-color: rgba(17,24,39,.14) !important;
+}
+
+.theme-light #aerix-assistant-panel .assistant-quick:hover {
+    color: #111827 !important;
+    background: rgba(var(--aerix-light-pink-rgb), .22) !important;
+    border-color: rgba(var(--aerix-light-pink-rgb), .72) !important;
+}
+
+.theme-light #aerix-assistant-panel .assistant-bot {
+    background: rgba(255,255,255,.82) !important;
+    border-color: rgba(17,24,39,.12) !important;
+}
+
+.theme-light #aerix-assistant-panel .assistant-user {
+    color: #111827 !important;
+}
+
+.theme-light #aerix-assistant-panel input {
+    color: #111827 !important;
+}
+
+/* Partenaires : ajouter un contour sombre aux logos pour que les écritures
+   blanches d'origine restent visibles sur le fond clair, sans recolorer les logos. */
+.theme-light .partner-card-tile img,
+.theme-light .partner-featured-logo {
+    filter:
+        drop-shadow(0 0 1px rgba(17,24,39,.95))
+        drop-shadow(0 0 4px rgba(17,24,39,.65)) !important;
+}
+
+.theme-light .partner-card-tile > span {
+    color: #111827 !important;
+    text-shadow: 0 1px 5px rgba(255,255,255,.95) !important;
+}
+
+/* Étoiles du formulaire "Laisser un avis" : même les étoiles non sélectionnées
+   doivent rester visibles sur le fond blanc. */
+.theme-light .review-star {
+    color: rgba(17,24,39,.28) !important;
+    text-shadow: none !important;
+}
+
+.theme-light .review-star:hover {
+    color: #d66f9e !important;
+    text-shadow: 0 0 10px rgba(var(--aerix-light-pink-rgb), .65) !important;
+}
+
+.theme-light .review-star.filled {
+    color: #d66f9e !important;
+    text-shadow:
+        0 0 3px rgba(255,255,255,.95),
+        0 0 14px rgba(var(--aerix-light-pink-rgb), .85) !important;
+}
+
+.theme-light .review-star-display.empty {
+    color: rgba(17,24,39,.25) !important;
+    text-shadow: none !important;
+}
+
+.theme-light .review-star-display:not(.empty) {
+    color: #d66f9e !important;
+    text-shadow: 0 0 10px rgba(var(--aerix-light-pink-rgb), .70) !important;
+}
+
     body { background-color: #050505; color: #f3f4f6; overflow-x: hidden; scroll-behavior: smooth; user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; }
     input, textarea, select, [contenteditable] { user-select: text; -webkit-user-select: text; }
     
