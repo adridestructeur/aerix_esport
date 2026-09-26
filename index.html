@@ -2304,6 +2304,133 @@ body.theme-white-red .desktop-header-actions > .relative > .desktop-theme-btn,
 body.theme-white-red .desktop-header-actions > .relative > .desktop-language-btn { background:rgba(255,255,255,.34) !important; border-color:rgba(30,30,30,.12) !important; box-shadow:none !important; }
 body.theme-white-red #account-area > * { background:rgba(255,255,255,.34) !important; border-color:rgba(30,30,30,.12) !important; box-shadow:none !important; }
 </style>
+
+<style id="aerix-v21-white-red-admin-fix">
+/* V21 — Blanc & Rouge : suppression du cadre fantôme autour du compte */
+body.theme-white-red .desktop-header-actions > #account-area,
+body.theme-white-red #account-area,
+body.theme-white-red #account-area.flex,
+body.theme-white-red #account-area > .relative,
+body.theme-white-red #account-area > div {
+    background: transparent !important;
+    background-color: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    outline: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+body.theme-white-red #account-area .account-trigger,
+body.theme-white-red #account-area .account-trigger:hover {
+    background: rgba(255,255,255,.38) !important;
+    border: 1px solid rgba(229,57,53,.20) !important;
+    box-shadow: 0 5px 18px rgba(80,20,20,.08) !important;
+}
+
+/* V21 — Console d'administration : vrai rendu glass Blanc & Rouge */
+body.theme-white-red #admin-modal {
+    background: rgba(255,255,255,.42) !important;
+    backdrop-filter: blur(28px) saturate(145%) !important;
+    -webkit-backdrop-filter: blur(28px) saturate(145%) !important;
+}
+body.theme-white-red #admin-modal > .glass-panel-no-hover {
+    background: linear-gradient(145deg,rgba(255,255,255,.90),rgba(255,255,255,.72)) !important;
+    color: #171717 !important;
+    border: 1px solid rgba(229,57,53,.18) !important;
+    box-shadow: 0 30px 90px rgba(80,20,20,.14), 0 0 45px rgba(229,57,53,.10) !important;
+    backdrop-filter: blur(24px) saturate(140%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(140%) !important;
+}
+body.theme-white-red #admin-modal h3,
+body.theme-white-red #admin-modal h4,
+body.theme-white-red #admin-modal h5,
+body.theme-white-red #admin-modal label,
+body.theme-white-red #admin-modal .font-bold,
+body.theme-white-red #admin-modal .font-black {
+    color: #171717 !important;
+}
+body.theme-white-red #admin-modal .text-white { color:#171717 !important; }
+body.theme-white-red #admin-modal .text-gray-300 { color:#3f3f46 !important; }
+body.theme-white-red #admin-modal .text-gray-400,
+body.theme-white-red #admin-modal .text-gray-500 { color:#626262 !important; }
+body.theme-white-red #admin-modal .border-white\/10,
+body.theme-white-red #admin-modal .border-white\/5 {
+    border-color: rgba(80,20,20,.12) !important;
+}
+body.theme-white-red #admin-tabs-container {
+    background: rgba(255,255,255,.52) !important;
+    border: 1px solid rgba(229,57,53,.14) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.85), 0 10px 28px rgba(80,20,20,.06) !important;
+    backdrop-filter: blur(18px) !important;
+}
+body.theme-white-red #admin-tab-pill {
+    background: linear-gradient(135deg,rgba(229,57,53,.92),rgba(198,40,40,.84)) !important;
+    border-color: rgba(255,255,255,.72) !important;
+    box-shadow: 0 7px 22px rgba(229,57,53,.28) !important;
+}
+body.theme-white-red #admin-tabs-container .admin-tab-btn {
+    color:#686868 !important;
+}
+body.theme-white-red #admin-tabs-container .admin-tab-btn:hover {
+    color:#b71c1c !important;
+}
+body.theme-white-red #admin-tabs-container .admin-tab-btn.active {
+    color:#fff !important;
+}
+/* Champs admin : suppression des gros blocs gris */
+body.theme-white-red #admin-modal input,
+body.theme-white-red #admin-modal textarea,
+body.theme-white-red #admin-modal select {
+    background: rgba(255,255,255,.78) !important;
+    color:#171717 !important;
+    border-color: rgba(229,57,53,.28) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.90), 0 5px 16px rgba(80,20,20,.04) !important;
+}
+body.theme-white-red #admin-modal input::placeholder,
+body.theme-white-red #admin-modal textarea::placeholder {
+    color:#858585 !important;
+}
+body.theme-white-red #admin-modal input:focus,
+body.theme-white-red #admin-modal textarea:focus,
+body.theme-white-red #admin-modal select:focus {
+    border-color:#e53935 !important;
+    box-shadow: 0 0 0 3px rgba(229,57,53,.12), 0 8px 20px rgba(80,20,20,.05) !important;
+}
+/* Cartes et listes de la console */
+body.theme-white-red #admin-modal .glass-panel,
+body.theme-white-red #admin-modal .glass-panel-no-hover {
+    background: rgba(255,255,255,.62) !important;
+    border-color: rgba(229,57,53,.13) !important;
+    box-shadow: 0 10px 28px rgba(80,20,20,.06) !important;
+}
+body.theme-white-red #admin-modal .bg-black\/60,
+body.theme-white-red #admin-modal .bg-black\/50,
+body.theme-white-red #admin-modal .bg-black\/40,
+body.theme-white-red #admin-modal .bg-black\/30,
+body.theme-white-red #admin-modal .bg-white\/5,
+body.theme-white-red #admin-modal .bg-white\/10 {
+    background: rgba(255,255,255,.48) !important;
+}
+body.theme-white-red #admin-modal .hover\:bg-white\/10:hover {
+    background: rgba(229,57,53,.08) !important;
+}
+body.theme-white-red #admin-modal button:not(.admin-tab-btn) {
+    transition: background .2s ease, border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+body.theme-white-red #admin-modal button.bg-aerix-purple,
+body.theme-white-red #admin-modal .bg-aerix-purple {
+    background:#e53935 !important;
+    color:#fff !important;
+}
+body.theme-white-red #admin-modal button.bg-aerix-purple:hover,
+body.theme-white-red #admin-modal .bg-aerix-purple:hover {
+    background:#c62828 !important;
+    box-shadow:0 8px 22px rgba(229,57,53,.22) !important;
+}
+body.theme-white-red #admin-modal .text-aerix-purple { color:#c62828 !important; }
+body.theme-white-red #admin-modal .text-red-400 { color:#c62828 !important; }
+</style>
+
 </head>
 <body class="antialiased selection:bg-purple-500 selection:text-white min-h-screen flex flex-col relative">
 
