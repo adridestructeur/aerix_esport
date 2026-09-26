@@ -2269,6 +2269,31 @@ body.theme-white-red .effectif-player-card .member-card-pseudo {
 }
 </style>
 
+
+<style id="aerix-white-red-modal-final">
+/* Blanc & Rouge — uniquement les derniers éléments demandés. */
+body.theme-white-red #player-modal #pm-pseudo,
+body.theme-white-red #player-modal #pm-mobile-pseudo,
+body.theme-white-red #player-modal #pm-name {
+    color:#fff !important;
+    -webkit-text-fill-color:#fff !important;
+    text-shadow:0 3px 16px rgba(0,0,0,.92),0 0 22px rgba(0,0,0,.70) !important;
+}
+
+/* Retire les carrés/fonds gris des badges du profil joueur en Blanc & Rouge, sans toucher au reste. */
+body.theme-white-red #player-modal .member-profile-role,
+body.theme-white-red #player-modal #pm-game-badge > span {
+    background:transparent !important;
+    background-color:transparent !important;
+    border-color:rgba(229,57,53,.42) !important;
+    color:#c62828 !important;
+    box-shadow:none !important;
+}
+body.theme-white-red #player-modal .member-profile-role-dot {
+    background:#e53935 !important;
+    box-shadow:0 0 10px rgba(229,57,53,.55) !important;
+}
+</style>
 </head>
 <body class="antialiased selection:bg-purple-500 selection:text-white min-h-screen flex flex-col relative">
 
