@@ -171,7 +171,8 @@ body.theme-light {
     color: #111111 !important;
     text-shadow: none !important;
 }
-.theme-light .logo-equipe {
+.theme-light .logo-equipe,
+.theme-light .aerix-logo {
     content: url('transparent-noir.png') !important;
 }
 
@@ -180,6 +181,301 @@ body.theme-light {
 .theme-light .bg-aerix-purple .text-white {
     color: #ffffff !important;
 }
+
+/* =========================================================
+   AERIX — THÈME CLAIR : CONTRASTE + ACCENT ROSE
+   Accent néon clair : #f5bbd5
+   ========================================================= */
+
+body.theme-light {
+    --aerix-light-pink: #f5bbd5;
+    --aerix-light-pink-rgb: 245, 187, 213;
+    --aerix-light-text: #111827;
+    --aerix-light-muted: #374151;
+}
+
+/* Logo : le fichier noir existe dans le dossier et remplace
+   réellement le logo blanc de la navbar en thème clair. */
+.theme-light .aerix-logo,
+.theme-light .logo-equipe {
+    content: url('transparent-noir.png') !important;
+}
+
+/* Contraste général : éviter les gris trop faibles sur fond clair. */
+.theme-light,
+.theme-light body,
+.theme-light .nav-btn,
+.theme-light .filter-btn,
+.theme-light .text-gray-300,
+.theme-light .text-gray-400,
+.theme-light .text-gray-500 {
+    color: var(--aerix-light-text) !important;
+}
+
+.theme-light .text-gray-300,
+.theme-light .text-gray-400,
+.theme-light .text-gray-500,
+.theme-light .member-card-game,
+.theme-light .member-card-name,
+.theme-light .member-card-meta span {
+    color: var(--aerix-light-muted) !important;
+}
+
+/* Navigation / filtres : ne plus repasser en blanc au survol. */
+.theme-light .nav-btn:hover,
+.theme-light .nav-btn.active,
+.theme-light .filter-btn:hover:not(.active) {
+    color: var(--aerix-light-text) !important;
+}
+
+/* Accent rose pour les éléments actifs. */
+.theme-light .filter-btn.active {
+    background: var(--aerix-light-pink) !important;
+    border-color: var(--aerix-light-pink) !important;
+    color: #111827 !important;
+    box-shadow: 0 0 20px rgba(var(--aerix-light-pink-rgb), .60) !important;
+}
+
+/* Glow souris. */
+.theme-light #mouse-glow {
+    background: radial-gradient(
+        400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(var(--aerix-light-pink-rgb), .22),
+        transparent 80%
+    ) !important;
+}
+
+/* Liquid glass : bordures, reflets et glow roses. */
+.theme-light .glass-panel {
+    background: linear-gradient(
+        135deg,
+        rgba(255,255,255,.72) 0%,
+        rgba(255,255,255,.48) 52%,
+        rgba(var(--aerix-light-pink-rgb),.10) 100%
+    ) !important;
+}
+
+.theme-light .glass-panel::before {
+    background: linear-gradient(
+        120deg,
+        rgba(255,255,255,.72),
+        rgba(255,255,255,0) 34%,
+        rgba(var(--aerix-light-pink-rgb),.65) 100%
+    ) border-box !important;
+}
+
+.theme-light .glass-panel:hover {
+    border-color: rgba(var(--aerix-light-pink-rgb), .75) !important;
+    box-shadow:
+        0 16px 42px rgba(0,0,0,.08),
+        0 0 26px rgba(var(--aerix-light-pink-rgb), .30) !important;
+}
+
+/* Menus / interactions néon. */
+.theme-light .account-menu-item:hover {
+    background: rgba(var(--aerix-light-pink-rgb), .18) !important;
+    border-color: rgba(var(--aerix-light-pink-rgb), .72) !important;
+    box-shadow:
+        0 0 10px rgba(var(--aerix-light-pink-rgb), .55),
+        0 0 22px rgba(var(--aerix-light-pink-rgb), .35),
+        inset 0 0 10px rgba(var(--aerix-light-pink-rgb), .18) !important;
+    color: #111827 !important;
+}
+
+.theme-light .drop-zone-active {
+    border-color: var(--aerix-light-pink) !important;
+    background: rgba(var(--aerix-light-pink-rgb), .16) !important;
+    box-shadow: 0 0 20px rgba(var(--aerix-light-pink-rgb), .45) !important;
+}
+
+.theme-light .effectif-row.dragging {
+    box-shadow:
+        0 10px 30px rgba(0,0,0,.18),
+        0 0 0 1px rgba(var(--aerix-light-pink-rgb), .65) !important;
+}
+
+.theme-light .effectif-row.drag-over-top {
+    box-shadow: inset 0 2px 0 0 var(--aerix-light-pink) !important;
+}
+
+.theme-light .effectif-row.drag-over-bottom {
+    box-shadow: inset 0 -2px 0 0 var(--aerix-light-pink) !important;
+}
+
+/* Étoiles / évaluations. */
+.theme-light .review-star.filled,
+.theme-light .review-star-display {
+    color: #d66f9e !important;
+    text-shadow: 0 0 14px rgba(var(--aerix-light-pink-rgb), .85) !important;
+}
+
+/* Cartes joueurs. */
+.theme-light .effectif-player-card:hover {
+    border-color: rgba(var(--aerix-light-pink-rgb), .70) !important;
+    box-shadow:
+        0 24px 70px rgba(0,0,0,.14),
+        0 0 32px rgba(var(--aerix-light-pink-rgb), .22) !important;
+}
+
+.theme-light .member-card-glow {
+    background: radial-gradient(
+        circle,
+        rgba(var(--aerix-light-pink-rgb), .34),
+        transparent 68%
+    ) !important;
+}
+
+.theme-light .member-role-dot {
+    background: #e79ab9 !important;
+    box-shadow: 0 0 12px rgba(var(--aerix-light-pink-rgb), .95) !important;
+}
+
+/* Profil joueur. */
+.theme-light #player-modal .member-profile-shell {
+    border-color: rgba(var(--aerix-light-pink-rgb), .65) !important;
+    box-shadow:
+        0 30px 100px rgba(0,0,0,.18),
+        0 0 55px rgba(var(--aerix-light-pink-rgb), .20) !important;
+}
+
+.theme-light .member-profile-role {
+    color: #b85f87 !important;
+    border-color: rgba(var(--aerix-light-pink-rgb), .50) !important;
+}
+
+.theme-light .member-profile-role-dot {
+    background: #e79ab9 !important;
+    box-shadow: 0 0 12px rgba(var(--aerix-light-pink-rgb), .95) !important;
+}
+
+.theme-light .member-profile-line {
+    background: linear-gradient(90deg, #f5bbd5, transparent) !important;
+    box-shadow: 0 0 14px rgba(var(--aerix-light-pink-rgb), .70) !important;
+}
+
+/* Pilules de navigation / admin. */
+.theme-light #nav-pill,
+.theme-light #admin-tab-pill {
+    background: linear-gradient(
+        135deg,
+        rgba(var(--aerix-light-pink-rgb), .38),
+        rgba(var(--aerix-light-pink-rgb), .14)
+    ) !important;
+    border-color: rgba(var(--aerix-light-pink-rgb), .75) !important;
+    box-shadow:
+        0 0 18px rgba(var(--aerix-light-pink-rgb), .42),
+        inset 0 1px 0 rgba(255,255,255,.55) !important;
+}
+
+/* Logo AERIX : glow rose en thème clair. */
+.theme-light .aerix-logo-wrap::before {
+    background: radial-gradient(
+        ellipse,
+        rgba(var(--aerix-light-pink-rgb), .72) 0%,
+        rgba(var(--aerix-light-pink-rgb), .28) 38%,
+        transparent 72%
+    ) !important;
+}
+
+.theme-light .aerix-logo-wrap:hover .aerix-logo {
+    filter:
+        drop-shadow(0 0 9px rgba(var(--aerix-light-pink-rgb), .95))
+        drop-shadow(0 0 24px rgba(var(--aerix-light-pink-rgb), .50)) !important;
+}
+
+/* Transition de page. */
+.theme-light #page-transition-overlay {
+    background: radial-gradient(
+        circle at 50% 42%,
+        rgba(var(--aerix-light-pink-rgb), .25),
+        rgba(255,255,255,.80) 48%,
+        rgba(255,255,255,.97)
+    ) !important;
+}
+
+.theme-light #page-transition-overlay .transition-mark {
+    border-color: rgba(var(--aerix-light-pink-rgb), .78) !important;
+    background: rgba(var(--aerix-light-pink-rgb), .18) !important;
+    box-shadow: 0 0 45px rgba(var(--aerix-light-pink-rgb), .38) !important;
+}
+
+.theme-light #page-transition-overlay .transition-label {
+    color: #111827 !important;
+    text-shadow: 0 0 18px rgba(var(--aerix-light-pink-rgb), .35) !important;
+}
+
+.theme-light #page-transition-overlay .transition-sub {
+    color: #4b5563 !important;
+}
+
+/* Timeline / éléments utilisant directement la couleur violette. */
+.theme-light .text-aerix-purple {
+    color: #c46d93 !important;
+}
+
+.theme-light .bg-aerix-purple {
+    background-color: var(--aerix-light-pink) !important;
+}
+
+.theme-light .border-aerix-purple {
+    border-color: var(--aerix-light-pink) !important;
+}
+
+/* Liens/accents de l'éditeur riche. */
+.theme-light .rich-editor blockquote {
+    border-left-color: var(--aerix-light-pink) !important;
+    color: #374151 !important;
+}
+
+/* Scrollbar. */
+.theme-light ::-webkit-scrollbar-track {
+    background: #f3f4f6 !important;
+}
+
+.theme-light ::-webkit-scrollbar-thumb:hover {
+    background: #f5bbd5 !important;
+}
+
+/* Assistant AERIX. */
+.theme-light #aerix-assistant-launcher {
+    border-color: rgba(var(--aerix-light-pink-rgb), .75) !important;
+    background: linear-gradient(
+        145deg,
+        rgba(var(--aerix-light-pink-rgb), .42),
+        rgba(255,255,255,.92)
+    ) !important;
+    box-shadow:
+        0 10px 35px rgba(0,0,0,.16),
+        0 0 28px rgba(var(--aerix-light-pink-rgb), .30),
+        inset 0 1px 0 rgba(255,255,255,.70) !important;
+    color: #111827 !important;
+}
+
+.theme-light #aerix-assistant-launcher:hover {
+    box-shadow:
+        0 14px 40px rgba(0,0,0,.18),
+        0 0 35px rgba(var(--aerix-light-pink-rgb), .48),
+        inset 0 1px 0 rgba(255,255,255,.78) !important;
+}
+
+.theme-light .assistant-user {
+    background: rgba(var(--aerix-light-pink-rgb), .30) !important;
+    border-color: rgba(var(--aerix-light-pink-rgb), .55) !important;
+    color: #111827 !important;
+}
+
+.theme-light .assistant-bot {
+    background: rgba(255,255,255,.72) !important;
+    border-color: rgba(0,0,0,.10) !important;
+    color: #1f2937 !important;
+}
+
+.theme-light .assistant-quick:hover {
+    border-color: rgba(var(--aerix-light-pink-rgb), .70) !important;
+    background: rgba(var(--aerix-light-pink-rgb), .18) !important;
+    color: #111827 !important;
+}
+
     body { background-color: #050505; color: #f3f4f6; overflow-x: hidden; scroll-behavior: smooth; user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; }
     input, textarea, select, [contenteditable] { user-select: text; -webkit-user-select: text; }
     
@@ -1046,6 +1342,23 @@ body.theme-light {
             grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
         }
     }
+
+
+/* Derniers éléments utilisant des couleurs violettes dans des classes/attributs
+   arbitraires : on les bascule aussi vers le rose en thème clair. */
+.theme-light [class*="8B5CF6"] {
+    box-shadow: 0 0 18px rgba(var(--aerix-light-pink-rgb), .45) !important;
+}
+
+.theme-light [style*="#8B5CF6"] {
+    background: #f5bbd5 !important;
+    box-shadow: 0 0 8px rgba(var(--aerix-light-pink-rgb), .75) !important;
+}
+
+.theme-light [style*="rgba(139,92,246"] {
+    border-color: rgba(var(--aerix-light-pink-rgb), .65) !important;
+    box-shadow: 0 0 18px rgba(var(--aerix-light-pink-rgb), .40) !important;
+}
 
 </style>
 </head>
