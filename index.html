@@ -51,6 +51,27 @@
         }
     </script>
     <style>
+/* Rendre le texte lisible sur le thème clair */
+.theme-light {
+    color: #1a1a1a !important;
+}
+.theme-light .text-white {
+    color: #111 !important;
+}
+.theme-light .text-gray-400, .theme-light .text-gray-500 {
+    color: #444 !important;
+}
+.theme-light .bg-black\/50, .theme-light .bg-black\/45 {
+    background-color: rgba(255, 255, 255, 0.6) !important;
+}
+.theme-light .glass-panel, .theme-light .glass-panel-no-hover {
+    background: rgba(255, 255, 255, 0.75) !important;
+    border-color: rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05) !important;
+}
+.theme-light .bg-\[\#080808\]\/82 {
+    background-color: rgba(255, 255, 255, 0.85) !important;
+}
     body { background-color: #050505; color: #f3f4f6; overflow-x: hidden; scroll-behavior: smooth; user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; }
     input, textarea, select, [contenteditable] { user-select: text; -webkit-user-select: text; }
     
@@ -989,11 +1010,20 @@
             <div class="desktop-header-actions hidden md:flex items-center gap-2.5">
                 <div id="account-area" class="flex items-center gap-2"></div>
                 <a href="https://discord.gg/dJcHwYT4HY" target="_blank" rel="noopener noreferrer" class="desktop-discord-btn h-9 min-h-9 text-xs text-white transition px-4 rounded-full border border-aerix-purple/40 bg-aerix-purple/10 hover:bg-aerix-purple/20 flex items-center justify-center gap-2 font-medium whitespace-nowrap">
-                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.927 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-                    Discord
-                </a>
-                <div class="relative ml-1">
-                    <button type="button" onclick="toggleLanguageMenu(event)" class="desktop-language-btn h-9 min-h-9 flex items-center gap-2 text-xs font-bold text-white hover:text-gray-300 transition px-3 rounded-full border border-white/10 bg-white/5" id="lang-btn" aria-haspopup="true" aria-expanded="false">
+    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.927 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+    Discord
+</a>
+
+<!-- Bouton Thème Clair/Sombre -->
+<button type="button" onclick="toggleTheme()" class="h-9 w-9 flex items-center justify-center text-white hover:text-gray-300 transition rounded-full border border-white/10 bg-white/5 shrink-0 ml-1" aria-label="Changer le thème">
+    <!-- Icône Soleil (visible en mode sombre) -->
+    <svg id="theme-icon-light" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+    <!-- Icône Lune (visible en mode clair) -->
+    <svg id="theme-icon-dark" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+</button>
+
+<div class="relative ml-1">
+    <button type="button" onclick="toggleLanguageMenu(event)" class="desktop-language-btn h-9 min-h-9 flex items-center gap-2 text-xs font-bold text-white hover:text-gray-300 transition px-3 rounded-full border border-white/10 bg-white/5" id="lang-btn" aria-haspopup="true" aria-expanded="false">
                         <img id="current-flag" src="https://flagcdn.com/w20/fr.png" alt="FR" class="w-5 h-3.5 object-cover rounded-[2px] shadow-sm"> <span id="current-lang-text">FR</span> <span class="lang-chevron">▾</span>
                     </button>
                     <div id="language-menu" class="absolute right-0 mt-2 w-36 glass-panel-no-hover rounded-xl overflow-hidden flex flex-col p-2 shadow-xl border border-white/10">
@@ -5685,6 +5715,40 @@ document.addEventListener('keydown', function(e) {
     ) {
         e.preventDefault();
     }
+});
+
+// --- GESTION DU THÈME CLAIR / SOMBRE ---
+let currentTheme = localStorage.getItem('aerix_theme') || 'dark';
+
+function applyTheme(theme) {
+    const bgLayer = document.getElementById('page-bg-layer');
+    const iconDark = document.getElementById('theme-icon-dark');
+    const iconLight = document.getElementById('theme-icon-light');
+
+    if (theme === 'light') {
+        // Appliquer le fond d'écran clair
+        bgLayer.style.backgroundImage = "linear-gradient(to bottom, rgba(255,255,255,0.7), rgba(255,255,255,0.9)), url('peint-main-aquarelle-abstrait-aquarelle_23-2149007171.avif')";
+        document.body.classList.add('theme-light');
+        if(iconDark) iconDark.classList.remove('hidden');
+        if(iconLight) iconLight.classList.add('hidden');
+    } else {
+        // Appliquer le fond d'écran sombre
+        bgLayer.style.backgroundImage = "linear-gradient(to bottom, rgba(5,5,5,0.65), rgba(5,5,5,0.85)), url('abstract-black-violet-colors-background-design-flat_662214-314713.avif')";
+        document.body.classList.remove('theme-light');
+        if(iconDark) iconDark.classList.add('hidden');
+        if(iconLight) iconLight.classList.remove('hidden');
+    }
+}
+
+function toggleTheme() {
+    currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('aerix_theme', currentTheme);
+    applyTheme(currentTheme);
+}
+
+// Initialiser le thème au chargement
+document.addEventListener('DOMContentLoaded', () => {
+    applyTheme(currentTheme);
 });
     </script>
 </body>
