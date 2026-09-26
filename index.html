@@ -709,8 +709,45 @@ body.theme-light {
     #page-transition-overlay .transition-sub { margin-top: 9px; font-size: 9px; font-weight: 700; letter-spacing: .3em; text-transform: uppercase; color: rgba(255,255,255,.38); }
     body.language-changing .site-main, body.language-changing nav { animation: languageSwap .55s cubic-bezier(.16,1,.3,1) both; }
     @keyframes languageSwap { 0% { opacity: .35; filter: blur(7px); transform: translateY(5px); } 100% { opacity: 1; filter: blur(0); transform: translateY(0); } }
+    /* TRANSITION THÈME — même langage visuel que la transition de langue */
+    #page-transition-overlay.theme-switching {
+        pointer-events: auto;
+    }
+    #page-transition-overlay.theme-switching .transition-mark {
+        animation: themeMarkPulse .7s cubic-bezier(.16,1,.3,1) both;
+    }
+    #page-transition-overlay.theme-switching .transition-core {
+        animation: themeCoreIn .55s cubic-bezier(.16,1,.3,1) both;
+    }
+    #page-transition-overlay.theme-switching .transition-label {
+        animation: themeLabelIn .5s .06s cubic-bezier(.16,1,.3,1) both;
+    }
+    #page-transition-overlay.theme-switching .transition-sub {
+        animation: themeLabelIn .5s .12s cubic-bezier(.16,1,.3,1) both;
+    }
+    @keyframes themeMarkPulse {
+        0% { transform: scale(.72) rotate(-12deg); opacity:.2; filter:blur(5px); }
+        55% { transform: scale(1.08) rotate(2deg); opacity:1; filter:blur(0); }
+        100% { transform: scale(1) rotate(0); opacity:1; }
+    }
+    @keyframes themeCoreIn {
+        from { opacity:0; transform:translateY(18px) scale(.9); filter:blur(6px); }
+        to { opacity:1; transform:translateY(0) scale(1); filter:blur(0); }
+    }
+    @keyframes themeLabelIn {
+        from { opacity:0; transform:translateY(7px); letter-spacing:.42em; }
+        to { opacity:1; transform:translateY(0); letter-spacing:.28em; }
+    }
+    body.theme-changing .site-main, body.theme-changing nav {
+        animation: themeSwap .62s cubic-bezier(.16,1,.3,1) both;
+    }
+    @keyframes themeSwap {
+        0% { opacity:.55; filter:blur(5px); transform:scale(.997); }
+        100% { opacity:1; filter:blur(0); transform:scale(1); }
+    }
+
     @media (prefers-reduced-motion: reduce) {
-        .animate-tab-change, body.language-changing .site-main, body.language-changing nav { animation: none !important; }
+        .animate-tab-change, body.language-changing .site-main, body.language-changing nav, body.theme-changing .site-main, body.theme-changing nav { animation: none !important; }
         #page-transition-overlay { transition: opacity .12s ease; }
     }
 
@@ -1451,10 +1488,13 @@ body.theme-light {
 /* =========================================================
    AERIX — AJUSTEMENTS V6 DEMANDÉS
    ========================================================= */
-/* Les pseudos joueurs restent TOUJOURS blancs, quel que soit le thème. */
+/* Les noms/pseudos joueurs restent TOUJOURS blancs, quel que soit le thème. */
 .theme-light .effectif-player-card .member-card-pseudo,
-.theme-light .effectif-player-card .member-card-pseudo * {
+.theme-light .effectif-player-card .member-card-pseudo *,
+.theme-light .effectif-player-card .member-card-name,
+.theme-light .effectif-player-card .member-card-name * {
     color: #fff !important;
+    -webkit-text-fill-color: #fff !important;
     text-shadow: 0 3px 16px rgba(0,0,0,.95), 0 0 22px rgba(0,0,0,.7) !important;
 }
 
@@ -1695,7 +1735,7 @@ body.theme-light {
         <div class="transition-core">
             <div class="transition-mark"><img src="transparent-blanc.png" alt="AERIX"></div>
             <div id="transition-label" class="transition-label">AERIX</div>
-            <div class="transition-sub">Language</div>
+            <div id="transition-sub" class="transition-sub">Language</div>
         </div>
     </div>
 
@@ -6419,10 +6459,46 @@ function applyTheme(theme) {
     }
 }
 
+let themeTransitionTimer = null;
+let themeTransitionCloseTimer = null;
+
 function toggleTheme() {
-    currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    localStorage.setItem('aerix_theme', currentTheme);
-    applyTheme(currentTheme);
+    const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    const overlay = document.getElementById('page-transition-overlay');
+    const label = document.getElementById('transition-label');
+    const sub = document.getElementById('transition-sub');
+    const mark = overlay ? overlay.querySelector('.transition-mark') : null;
+
+    clearTimeout(themeTransitionTimer);
+    clearTimeout(themeTransitionCloseTimer);
+
+    if (label) label.textContent = nextTheme === 'light' ? 'THÈME CLAIR' : 'THÈME SOMBRE';
+    if (sub) sub.textContent = 'THÈME';
+    if (mark) {
+        mark.innerHTML = nextTheme === 'light'
+            ? '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"></path></svg>'
+            : '<svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.354 15.354A9 9 0 0 1 8.646 3.646 9.003 9.003 0 0 0 12 21a9.003 9.003 0 0 0 8.354-5.646Z"></path></svg>';
+    }
+
+    if (overlay) {
+        overlay.classList.remove('is-active', 'theme-switching');
+        void overlay.offsetWidth;
+        overlay.classList.add('theme-switching', 'is-active');
+    }
+    document.body.classList.remove('theme-changing');
+    void document.body.offsetWidth;
+    document.body.classList.add('theme-changing');
+
+    themeTransitionTimer = setTimeout(() => {
+        currentTheme = nextTheme;
+        localStorage.setItem('aerix_theme', currentTheme);
+        applyTheme(currentTheme);
+    }, 330);
+
+    themeTransitionCloseTimer = setTimeout(() => {
+        document.body.classList.remove('theme-changing');
+        if (overlay) overlay.classList.remove('is-active', 'theme-switching');
+    }, 820);
 }
 
 // Initialiser le thème au chargement
