@@ -6545,6 +6545,8 @@ document.addEventListener('keydown', function(e) {
 
 // --- GESTION DES THÈMES ---
 let currentTheme = localStorage.getItem('aerix_theme') || 'dark';
+let themeTransitionTimer = null;
+let themeTransitionCloseTimer = null;
 const THEME_META = {
     dark: { label:'Sombre', icon:'☾', sub:'THÈME SOMBRE' },
     light: { label:'Clair', icon:'☀', sub:'THÈME CLAIR' },
