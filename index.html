@@ -2431,6 +2431,162 @@ body.theme-white-red #admin-modal .text-aerix-purple { color:#c62828 !important;
 body.theme-white-red #admin-modal .text-red-400 { color:#c62828 !important; }
 </style>
 
+
+<style id="aerix-v22-light-polish">
+/* =========================================================
+   V22 — BLANC & ROSE : finition accueil + console + profil joueur
+   ========================================================= */
+
+/* Accueil : contraste net et hiérarchie plus premium. */
+body.theme-light #page-home {
+    color:#111827 !important;
+}
+body.theme-light #page-home h1 {
+    color:#111827 !important;
+    text-shadow:0 4px 28px rgba(255,255,255,.92), 0 1px 0 rgba(255,255,255,.8) !important;
+}
+body.theme-light #page-home h1 [data-i18n="hero_title_4"] {
+    background:none !important;
+    -webkit-background-clip:initial !important;
+    background-clip:initial !important;
+    -webkit-text-fill-color:#b85f87 !important;
+    color:#b85f87 !important;
+    text-shadow:0 2px 16px rgba(245,187,213,.28) !important;
+    opacity:1 !important;
+}
+body.theme-light #page-home h1 span:hover {
+    color:#a84f78 !important;
+    -webkit-text-fill-color:#a84f78 !important;
+}
+body.theme-light #page-home p[data-i18n="hero_desc"],
+body.theme-light #page-home .hero-desc {
+    color:#374151 !important;
+    text-shadow:0 1px 8px rgba(255,255,255,.7) !important;
+}
+
+/* Boutons hero : le CTA principal est bien rose. */
+body.theme-light #page-home button[data-i18n="hero_btn_1"] {
+    background:#d66f9e !important;
+    color:#fff !important;
+    border:1px solid rgba(194,83,135,.25) !important;
+    box-shadow:0 10px 28px rgba(214,111,158,.26), 0 0 20px rgba(245,187,213,.25) !important;
+}
+body.theme-light #page-home button[data-i18n="hero_btn_1"]:hover {
+    background:#c85f8f !important;
+    transform:translateY(-2px) !important;
+    box-shadow:0 14px 34px rgba(214,111,158,.32), 0 0 26px rgba(245,187,213,.34) !important;
+}
+body.theme-light #page-home button[data-i18n="hero_btn_2"] {
+    background:rgba(255,255,255,.72) !important;
+    color:#111827 !important;
+    border:1px solid rgba(245,187,213,.72) !important;
+    box-shadow:0 8px 24px rgba(17,24,39,.06), 0 0 18px rgba(245,187,213,.12) !important;
+}
+body.theme-light #page-home button[data-i18n="hero_btn_2"]:hover {
+    background:rgba(245,187,213,.22) !important;
+    border-color:#f5bbd5 !important;
+    color:#111827 !important;
+}
+body.theme-light #page-home button[data-i18n="nav_review"] {
+    background:#d66f9e !important;
+    color:#fff !important;
+    border:1px solid rgba(194,83,135,.25) !important;
+    box-shadow:0 10px 28px rgba(214,111,158,.24) !important;
+}
+
+/* Profil joueur ouvert : nom/pseudo toujours blanc en thème clair. */
+body.theme-light #player-modal #pm-pseudo,
+body.theme-light #player-modal #pm-mobile-pseudo,
+body.theme-light #player-modal #pm-name {
+    color:#fff !important;
+    -webkit-text-fill-color:#fff !important;
+    text-shadow:0 3px 16px rgba(0,0,0,.96),0 0 22px rgba(0,0,0,.72) !important;
+}
+
+/* Console d'administration : même philosophie glass que le blanc/rose. */
+body.theme-light #admin-modal {
+    background:rgba(245,187,213,.10) !important;
+    backdrop-filter:blur(28px) saturate(145%) !important;
+    -webkit-backdrop-filter:blur(28px) saturate(145%) !important;
+}
+body.theme-light #admin-modal > .glass-panel-no-hover {
+    background:linear-gradient(145deg,rgba(255,255,255,.94),rgba(255,255,255,.76)) !important;
+    color:#171717 !important;
+    border:1px solid rgba(245,187,213,.52) !important;
+    box-shadow:0 30px 90px rgba(17,24,39,.14),0 0 50px rgba(245,187,213,.18) !important;
+    backdrop-filter:blur(24px) saturate(140%) !important;
+    -webkit-backdrop-filter:blur(24px) saturate(140%) !important;
+}
+body.theme-light #admin-modal h3,
+body.theme-light #admin-modal h4,
+body.theme-light #admin-modal h5,
+body.theme-light #admin-modal label,
+body.theme-light #admin-modal .font-bold,
+body.theme-light #admin-modal .font-black,
+body.theme-light #admin-modal .text-white {
+    color:#171717 !important;
+}
+body.theme-light #admin-modal .text-gray-300 { color:#3f3f46 !important; }
+body.theme-light #admin-modal .text-gray-400,
+body.theme-light #admin-modal .text-gray-500 { color:#626262 !important; }
+body.theme-light #admin-tabs-container {
+    background:rgba(255,255,255,.58) !important;
+    border:1px solid rgba(245,187,213,.46) !important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.92),0 10px 28px rgba(17,24,39,.06) !important;
+    backdrop-filter:blur(18px) !important;
+}
+body.theme-light #admin-tab-pill {
+    background:linear-gradient(135deg,rgba(214,111,158,.96),rgba(194,83,135,.90)) !important;
+    border-color:rgba(255,255,255,.76) !important;
+    box-shadow:0 7px 22px rgba(214,111,158,.28) !important;
+}
+body.theme-light #admin-tabs-container .admin-tab-btn { color:#666 !important; }
+body.theme-light #admin-tabs-container .admin-tab-btn:hover { color:#a84f78 !important; }
+body.theme-light #admin-tabs-container .admin-tab-btn.active { color:#fff !important; }
+body.theme-light #admin-modal input,
+body.theme-light #admin-modal textarea,
+body.theme-light #admin-modal select {
+    background:rgba(255,255,255,.78) !important;
+    color:#171717 !important;
+    border-color:rgba(245,187,213,.60) !important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.92),0 5px 16px rgba(17,24,39,.04) !important;
+}
+body.theme-light #admin-modal input::placeholder,
+body.theme-light #admin-modal textarea::placeholder { color:#858585 !important; }
+body.theme-light #admin-modal input:focus,
+body.theme-light #admin-modal textarea:focus,
+body.theme-light #admin-modal select:focus {
+    border-color:#d66f9e !important;
+    box-shadow:0 0 0 3px rgba(245,187,213,.22),0 8px 20px rgba(17,24,39,.05) !important;
+}
+body.theme-light #admin-modal .glass-panel,
+body.theme-light #admin-modal .glass-panel-no-hover {
+    background:rgba(255,255,255,.66) !important;
+    border-color:rgba(245,187,213,.36) !important;
+    box-shadow:0 10px 28px rgba(17,24,39,.06) !important;
+}
+body.theme-light #admin-modal .bg-black\/60,
+body.theme-light #admin-modal .bg-black\/50,
+body.theme-light #admin-modal .bg-black\/40,
+body.theme-light #admin-modal .bg-black\/30,
+body.theme-light #admin-modal .bg-white\/5,
+body.theme-light #admin-modal .bg-white\/10 {
+    background:rgba(255,255,255,.48) !important;
+}
+body.theme-light #admin-modal .hover\:bg-white\/10:hover { background:rgba(245,187,213,.12) !important; }
+body.theme-light #admin-modal button.bg-aerix-purple,
+body.theme-light #admin-modal .bg-aerix-purple {
+    background:#d66f9e !important;
+    color:#fff !important;
+}
+body.theme-light #admin-modal button.bg-aerix-purple:hover,
+body.theme-light #admin-modal .bg-aerix-purple:hover {
+    background:#c85f8f !important;
+    box-shadow:0 8px 22px rgba(214,111,158,.24) !important;
+}
+body.theme-light #admin-modal .text-aerix-purple { color:#b85f87 !important; }
+</style>
+
 </head>
 <body class="antialiased selection:bg-purple-500 selection:text-white min-h-screen flex flex-col relative">
 
