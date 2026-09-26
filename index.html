@@ -1091,6 +1091,17 @@ body.theme-light {
 
     /* Thème blanc & rouge */
     body.theme-white-red { color:#151515; }
+    .theme-white-red .aerix-logo,
+    .theme-white-red .logo-equipe {
+        content: url('transparent-noir.png') !important;
+        filter: drop-shadow(0 1px 2px rgba(0,0,0,.10)) !important;
+    }
+    .theme-white-red #page-bg-layer {
+        background-image: linear-gradient(to bottom,rgba(255,255,255,.18),rgba(255,255,255,.30)),url('fond-rouge-blanc-fond-blanc-rose_1293074-30376.avif') !important;
+        background-size: cover !important;
+        background-position: center !important;
+        background-repeat: no-repeat !important;
+    }
     .theme-white-red #page-bg-layer { background-image:linear-gradient(to bottom,rgba(255,255,255,.76),rgba(255,255,255,.90)),url('fond-rouge-blanc-fond-blanc-rose_1293074-30376.avif') !important; background-size:cover; background-position:center; }
     .theme-white-red .text-white { color:#151515 !important; }
     .theme-white-red .text-gray-300 { color:#343434 !important; }
@@ -1694,6 +1705,33 @@ body.theme-light {
 .theme-light .partner-card-tile > span {
     color: #fff !important;
     text-shadow: 0 2px 5px rgba(0,0,0,.9), 0 0 12px rgba(0,0,0,.45) !important;
+}
+</style>
+
+<style id="aerix-player-names-all-themes">
+/* Noms des joueurs : toujours blancs sur les 4 thèmes. */
+body.theme-light .effectif-player-card .member-card-pseudo,
+body.theme-light .effectif-player-card .member-card-name,
+body.theme-black-red .effectif-player-card .member-card-pseudo,
+body.theme-black-red .effectif-player-card .member-card-name,
+body.theme-white-red .effectif-player-card .member-card-pseudo,
+body.theme-white-red .effectif-player-card .member-card-name,
+body:not(.theme-light):not(.theme-black-red):not(.theme-white-red) .effectif-player-card .member-card-pseudo,
+body:not(.theme-light):not(.theme-black-red):not(.theme-white-red) .effectif-player-card .member-card-name {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    text-shadow: 0 3px 16px rgba(0,0,0,.95), 0 0 22px rgba(0,0,0,.72) !important;
+}
+body.theme-light .effectif-player-card .member-card-pseudo *,
+body.theme-light .effectif-player-card .member-card-name *,
+body.theme-black-red .effectif-player-card .member-card-pseudo *,
+body.theme-black-red .effectif-player-card .member-card-name *,
+body.theme-white-red .effectif-player-card .member-card-pseudo *,
+body.theme-white-red .effectif-player-card .member-card-name *,
+body:not(.theme-light):not(.theme-black-red):not(.theme-white-red) .effectif-player-card .member-card-pseudo *,
+body:not(.theme-light):not(.theme-black-red):not(.theme-white-red) .effectif-player-card .member-card-name * {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
 }
 </style>
 </head>
@@ -6592,7 +6630,7 @@ function applyTheme(theme){
         dark:"linear-gradient(to bottom, rgba(5,5,5,0.65), rgba(5,5,5,0.85)), url('abstract-black-violet-colors-background-design-flat_662214-314713.avif')",
         light:"linear-gradient(to bottom, rgba(255,255,255,0.7), rgba(255,255,255,0.9)), url('peint-main-aquarelle-abstrait-aquarelle_23-2149007171.avif')",
         'black-red':"linear-gradient(to bottom, rgba(4,4,4,0.58), rgba(4,4,4,0.86)), url('4571004.webp')",
-        'white-red':"linear-gradient(to bottom, rgba(255,255,255,0.76), rgba(255,255,255,0.90)), url('fond-rouge-blanc-fond-blanc-rose_1293074-30376.avif')"
+        'white-red':"linear-gradient(to bottom, rgba(255,255,255,0.18), rgba(255,255,255,0.30)), url('fond-rouge-blanc-fond-blanc-rose_1293074-30376.avif')"
     };
     if(bgLayer) bgLayer.style.backgroundImage=backgrounds[theme] || backgrounds.dark;
     updateThemeMenuUI(theme);
