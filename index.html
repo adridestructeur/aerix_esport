@@ -5414,23 +5414,12 @@ function checkAdminSessionTimeout() {
                 const provider = new firebase.auth.GoogleAuthProvider();
                 provider.setCustomParameters({ prompt: 'select_account' });
 
-                // Popup en priorité : c'est le parcours le plus fluide sur desktop.
-                // Si le navigateur bloque les popups, on bascule automatiquement sur
-                // la redirection Google au lieu de laisser l'utilisateur bloqué.
-                try {
-                    await auth.signInWithPopup(provider);
-                } catch (popupError) {
-                    const fallbackCodes = ['auth/popup-blocked','auth/operation-not-supported-in-this-environment','auth/web-storage-unsupported'];
-                    if (fallbackCodes.includes(popupError?.code)) {
-                        sessionStorage.setItem('aerix_google_redirect', '1');
-                        await auth.signInWithRedirect(provider);
-                        return;
-                    }
-                    throw popupError;
-                }
-
-                closeAccountModal();
-                showToast(currentLang==='en'?'Signed in.':'Connexion réussie.');
+                // Connexion Google par redirection uniquement.
+                // Cela évite le cycle de fenêtre OAuth (popup) qui peut produire
+                // l'avertissement COOP « window.close » dans les navigateurs modernes.
+                sessionStorage.setItem('aerix_google_redirect', '1');
+                await auth.signInWithRedirect(provider);
+                return;
             } catch(e) {
                 console.error('Google sign-in failed:', e);
                 if (e.code === 'auth/popup-closed-by-user' || e.code === 'auth/cancelled-popup-request') return;
