@@ -3968,12 +3968,19 @@ body.theme-light #admin-modal .text-aerix-purple { color:#b85f87 !important; }
                 const result = await auth.getRedirectResult();
                 if (result && result.user) {
                     sessionStorage.removeItem('aerix_google_redirect');
-                    closeAccountModal();
-                    showToast(currentLang==='en'?'Signed in with Google.':'Connexion Google réussie.');
+                    if (sessionStorage.getItem('aerix_admin_reauth') === '1') {
+                        sessionStorage.removeItem('aerix_admin_reauth');
+                        adminReauthReturned = true;
+                        tryReopenAdmin();
+                    } else {
+                        closeAccountModal();
+                        showToast(currentLang==='en'?'Signed in with Google.':'Connexion Google réussie.');
+                    }
                 }
             } catch (e) {
                 console.error('Google redirect sign-in failed:', e);
                 sessionStorage.removeItem('aerix_google_redirect');
+                sessionStorage.removeItem('aerix_admin_reauth');
                 if (e?.code === 'auth/unauthorized-domain') {
                     showToast(currentLang==='en' ? 'This website is not authorized for Google sign-in.' : 'Ce domaine n’est pas autorisé pour la connexion Google.', 'error');
                 }
@@ -5200,6 +5207,20 @@ function checkAdminSessionTimeout() {
     }
 }
 
+        let adminReauthReturned = false;
+        function tryReopenAdmin() {
+            if (!adminReauthReturned || !currentUser || !currentAccount || !hasAdminAccess()) return;
+            adminReauthReturned = false;
+            document.getElementById('admin-login-modal')?.classList.add('hidden');
+            document.getElementById('admin-modal').classList.remove('hidden');
+            renderAdminLists();
+            applyAdminTabVisibility();
+            switchAdminTab(isOwner() ? 'comptes' : 'effectifs');
+            startAdminSession();
+            setAssistantHiddenForAdmin(true);
+            showToast(currentLang==='en'?'Admin access confirmed.':'Accès administrateur confirmé.', 'success');
+        }
+
         async function checkAdminPwd() {
             if (!currentUser || !hasAdminAccess()) {
                 document.getElementById('admin-login-modal')?.classList.add('hidden');
@@ -5221,7 +5242,11 @@ function checkAdminSessionTimeout() {
                     // Google-authenticated admins cannot be reauthenticated with a password that
                     // does not belong to that provider. Use the provider's own reauthentication flow.
                     const provider = new firebase.auth.GoogleAuthProvider();
-                    await currentUser.reauthenticateWithPopup(provider);
+                    // AUDIT : redirection au lieu d'un popup (évite l'avertissement COOP window.close).
+                    // Le retour est traité par getRedirectResult puis tryReopenAdmin().
+                    sessionStorage.setItem('aerix_admin_reauth', '1');
+                    await currentUser.reauthenticateWithRedirect(provider);
+                    return;
                 } else {
                     // Refresh the authenticated user and explicitly require a recent login for
                     // providers not supported by the site. This never grants admin access by itself.
@@ -5239,6 +5264,7 @@ function checkAdminSessionTimeout() {
                 setAssistantHiddenForAdmin(true);
                 showToast(currentLang==='en'?'Admin access confirmed.':'Accès administrateur confirmé.', 'success');
             } catch (e) {
+                sessionStorage.removeItem('aerix_admin_reauth');
                 console.error('Admin reauthentication failed:', e);
                 const code = e?.code || '';
                 let message;
@@ -6214,6 +6240,7 @@ function checkAdminSessionTimeout() {
             userTickets = user ? globalContactRequests.filter(t => t.uid === user.uid) : [];
             renderAccountArea();
             applyAdminTabVisibility();
+            tryReopenAdmin();
             });
         }).catch(err => console.error('Initialisation de la session Firebase:', err));
 
