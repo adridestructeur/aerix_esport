@@ -29,6 +29,7 @@
     <!-- Cropper.js -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.9/purify.min.js"></script>
 
     <!-- Firebase Compat SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
@@ -4959,7 +4960,7 @@ body.theme-light #admin-modal .text-aerix-purple { color:#b85f87 !important; }
             }
 
             document.getElementById('palmares-article-date').textContent = item.date || 'Non daté';
-            document.getElementById('palmares-article-desc').innerHTML = item.desc || '<p class="text-gray-500 italic">Aucun article rédigé pour ce résultat.</p>';
+            document.getElementById('palmares-article-desc').innerHTML = sanitizeRich(item.desc) || '<p class="text-gray-500 italic">Aucun article rédigé pour ce résultat.</p>';
 
             document.getElementById('palmares-article-modal').classList.remove('hidden');
             translateDynamicContent();
@@ -5001,7 +5002,7 @@ body.theme-light #admin-modal .text-aerix-purple { color:#b85f87 !important; }
                                 <span class="text-xs font-bold text-gray-500 flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> ${escapeHtml(a.date)}</span>
                             </div>
                             <h4 class="text-2xl font-black text-white mb-4 leading-tight tracking-tight group-hover:text-amber-400 transition-colors" data-translate-src="${escapeHtml(a.title || '')}">${escapeHtml(a.title)}</h4>
-                            <div class="text-sm text-gray-400 leading-relaxed rich-editor-content" data-translate-src="${escapeHtml(a.desc || '')}">${a.desc}</div>
+                            <div class="text-sm text-gray-400 leading-relaxed rich-editor-content" data-translate-src="${escapeHtml(sanitizeRich(a.desc || ''))}">${sanitizeRich(a.desc || '')}</div>
                         </div>
                     </div>`;
             });
@@ -5300,6 +5301,13 @@ function checkAdminSessionTimeout() {
         });
 
         // Refuse tout schéma autre que http(s) (javascript:, data:...) pour les liens saisis en admin.
+        // AUDIT : nettoie le HTML riche (articles / annonces) avant tout innerHTML.
+        // Si DOMPurify n'est pas chargé, on retombe sur du texte échappé (jamais du HTML brut).
+        function sanitizeRich(html) {
+            const raw = String(html == null ? '' : html);
+            if (window.DOMPurify) return window.DOMPurify.sanitize(raw);
+            return escapeHtml(raw);
+        }
         function safeUrl(u) {
             const v = String(u ?? '').trim();
             return /^https?:\/\//i.test(v) ? v : '#';
