@@ -29,7 +29,6 @@
     <!-- Cropper.js -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.9/purify.min.js"></script>
 
     <!-- Firebase Compat SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
@@ -1002,10 +1001,6 @@ body.theme-light {
     .aerix-logo { filter: none; transition: filter .3s ease, transform .3s ease; }
     .aerix-logo-wrap:hover::before { opacity: 1; transform: scale(1.12); }
     .aerix-logo-wrap:hover .aerix-logo { filter: drop-shadow(0 0 9px rgba(139,92,246,.9)) drop-shadow(0 0 24px rgba(139,92,246,.38)); }
-
-    /* BOUTIQUE AERIX : aucun prix affiché publiquement. Les anciennes données
-       "price" éventuellement présentes dans Firestore sont volontairement ignorées. */
-    #modal-product-price { display: none !important; }
 
     /* PARTENAIRES & BOUTIQUE */
     .partner-card { transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); position: relative; overflow: hidden; }
@@ -3102,6 +3097,7 @@ body.theme-light #admin-modal .text-aerix-purple { color:#b85f87 !important; }
                     <div id="modal-product-sizes" class="flex flex-wrap gap-3"></div>
                 </div>
                 <div class="flex items-center justify-between mt-auto pt-6 border-t border-white/10">
+                    <span id="modal-product-price" class="text-4xl font-black text-white">0 €</span>
                     <button id="modal-product-order" type="button" onclick="orderCurrentProduct()" disabled class="px-6 py-3.5 rounded-xl bg-aerix-purple text-white text-sm font-bold shadow-[0_0_20px_rgba(139,92,246,.35)] hover:bg-purple-500 transition disabled:opacity-40 disabled:cursor-not-allowed">Commander</button>
                 </div>
             </div>
@@ -3522,14 +3518,15 @@ body.theme-light #admin-modal .text-aerix-purple { color:#b85f87 !important; }
                 <div class="glass-panel glass-panel-form p-6 rounded-2xl border border-white/5">
                     <h4 id="shop-form-title" class="text-lg font-bold text-white mb-6 border-b border-white/10 pb-2">Ajouter un produit</h4>
                     <input type="hidden" id="edit-shop-id" value="">
-                    <div class="mb-4">
-                        <input type="text" id="add-shop-name" placeholder="Nom du produit" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple transition">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <input type="text" id="add-shop-name" placeholder="Nom du produit" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple transition">
+                        <input type="number" id="add-shop-price" placeholder="Prix (€)" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple transition">
                     </div>
                     <input type="text" id="add-shop-sizes" placeholder="Tailles (ex: S, M, L, XL)" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm mb-4 outline-none focus:border-aerix-purple transition">
                     <textarea id="add-shop-desc" placeholder="Description du produit..." class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm h-24 mb-4 outline-none focus:border-aerix-purple transition custom-scrollbar"></textarea>
                     
                     <div id="shop-img-previews" class="flex gap-3 flex-wrap mb-4"></div>
-                    <button type="button" id="shop-drop-zone" onclick="document.getElementById('shop-img-input').click()" class="bg-white/5 border border-dashed border-white/20 text-gray-400 hover:text-white hover:border-white/40 text-xs font-bold px-4 py-4 rounded-xl w-full mb-6 transition">+ Uploader des images (4:5) — utilisez uniquement des images dont AERIX détient les droits ou dispose d’une autorisation</button>
+                    <button type="button" id="shop-drop-zone" onclick="document.getElementById('shop-img-input').click()" class="bg-white/5 border border-dashed border-white/20 text-gray-400 hover:text-white hover:border-white/40 text-xs font-bold px-4 py-4 rounded-xl w-full mb-6 transition">+ Uploader des images (4:5) — ou glisser-déposer ici</button>
                     <input type="file" id="shop-img-input" accept="image/*" class="hidden">
                     <div class="flex gap-3">
                         <button id="shop-cancel-btn" onclick="resetShopForm()" class="hidden px-6 py-3.5 bg-white/5 border border-white/10 hover:bg-white/10 text-white rounded-xl text-sm font-bold transition">Annuler</button>
@@ -3968,19 +3965,12 @@ body.theme-light #admin-modal .text-aerix-purple { color:#b85f87 !important; }
                 const result = await auth.getRedirectResult();
                 if (result && result.user) {
                     sessionStorage.removeItem('aerix_google_redirect');
-                    if (sessionStorage.getItem('aerix_admin_reauth') === '1') {
-                        sessionStorage.removeItem('aerix_admin_reauth');
-                        adminReauthReturned = true;
-                        tryReopenAdmin();
-                    } else {
-                        closeAccountModal();
-                        showToast(currentLang==='en'?'Signed in with Google.':'Connexion Google réussie.');
-                    }
+                    closeAccountModal();
+                    showToast(currentLang==='en'?'Signed in with Google.':'Connexion Google réussie.');
                 }
             } catch (e) {
                 console.error('Google redirect sign-in failed:', e);
                 sessionStorage.removeItem('aerix_google_redirect');
-                sessionStorage.removeItem('aerix_admin_reauth');
                 if (e?.code === 'auth/unauthorized-domain') {
                     showToast(currentLang==='en' ? 'This website is not authorized for Google sign-in.' : 'Ce domaine n’est pas autorisé pour la connexion Google.', 'error');
                 }
@@ -4401,8 +4391,9 @@ body.theme-light #admin-modal .text-aerix-purple { color:#b85f87 !important; }
                         <div class="w-full aspect-[4/5] bg-black/80 relative border-b border-white/5 p-4">${imgTag}</div>
                         <div class="p-6 flex-grow flex flex-col justify-between">
                             <h4 class="text-lg font-bold text-white mb-4 tracking-tight leading-tight">${escapeHtml(item.name)}</h4>
-                            <div class="flex justify-end items-end mt-auto">
-                                <span class="shop-detail-btn text-xs font-bold text-aerix-purple bg-aerix-purple/10 border border-aerix-purple/20 px-4 py-2 rounded-xl group-hover:bg-aerix-purple group-hover:text-white transition shadow-[0_0_10px_rgba(139,92,246,0)] group-hover:shadow-[0_0_15px_rgba(139,92,246,0.4)]">Voir le produit</span>
+                            <div class="flex justify-between items-end mt-auto">
+                                <span class="text-2xl font-black text-white">${escapeHtml(item.price)} €</span>
+                                <span class="shop-detail-btn text-xs font-bold text-aerix-purple bg-aerix-purple/10 border border-aerix-purple/20 px-4 py-2 rounded-xl group-hover:bg-aerix-purple group-hover:text-white transition shadow-[0_0_10px_rgba(139,92,246,0)] group-hover:shadow-[0_0_15px_rgba(139,92,246,0.4)]">Détails</span>
                             </div>
                         </div>
                     </div>`;
@@ -4967,7 +4958,7 @@ body.theme-light #admin-modal .text-aerix-purple { color:#b85f87 !important; }
             }
 
             document.getElementById('palmares-article-date').textContent = item.date || 'Non daté';
-            document.getElementById('palmares-article-desc').innerHTML = sanitizeRich(item.desc) || '<p class="text-gray-500 italic">Aucun article rédigé pour ce résultat.</p>';
+            document.getElementById('palmares-article-desc').innerHTML = item.desc || '<p class="text-gray-500 italic">Aucun article rédigé pour ce résultat.</p>';
 
             document.getElementById('palmares-article-modal').classList.remove('hidden');
             translateDynamicContent();
@@ -5009,7 +5000,7 @@ body.theme-light #admin-modal .text-aerix-purple { color:#b85f87 !important; }
                                 <span class="text-xs font-bold text-gray-500 flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> ${escapeHtml(a.date)}</span>
                             </div>
                             <h4 class="text-2xl font-black text-white mb-4 leading-tight tracking-tight group-hover:text-amber-400 transition-colors" data-translate-src="${escapeHtml(a.title || '')}">${escapeHtml(a.title)}</h4>
-                            <div class="text-sm text-gray-400 leading-relaxed rich-editor-content" data-translate-src="${escapeHtml(sanitizeRich(a.desc || ''))}">${sanitizeRich(a.desc || '')}</div>
+                            <div class="text-sm text-gray-400 leading-relaxed rich-editor-content" data-translate-src="${escapeHtml(a.desc || '')}">${a.desc}</div>
                         </div>
                     </div>`;
             });
@@ -5207,20 +5198,6 @@ function checkAdminSessionTimeout() {
     }
 }
 
-        let adminReauthReturned = false;
-        function tryReopenAdmin() {
-            if (!adminReauthReturned || !currentUser || !currentAccount || !hasAdminAccess()) return;
-            adminReauthReturned = false;
-            document.getElementById('admin-login-modal')?.classList.add('hidden');
-            document.getElementById('admin-modal').classList.remove('hidden');
-            renderAdminLists();
-            applyAdminTabVisibility();
-            switchAdminTab(isOwner() ? 'comptes' : 'effectifs');
-            startAdminSession();
-            setAssistantHiddenForAdmin(true);
-            showToast(currentLang==='en'?'Admin access confirmed.':'Accès administrateur confirmé.', 'success');
-        }
-
         async function checkAdminPwd() {
             if (!currentUser || !hasAdminAccess()) {
                 document.getElementById('admin-login-modal')?.classList.add('hidden');
@@ -5242,11 +5219,7 @@ function checkAdminSessionTimeout() {
                     // Google-authenticated admins cannot be reauthenticated with a password that
                     // does not belong to that provider. Use the provider's own reauthentication flow.
                     const provider = new firebase.auth.GoogleAuthProvider();
-                    // AUDIT : redirection au lieu d'un popup (évite l'avertissement COOP window.close).
-                    // Le retour est traité par getRedirectResult puis tryReopenAdmin().
-                    sessionStorage.setItem('aerix_admin_reauth', '1');
-                    await currentUser.reauthenticateWithRedirect(provider);
-                    return;
+                    await currentUser.reauthenticateWithPopup(provider);
                 } else {
                     // Refresh the authenticated user and explicitly require a recent login for
                     // providers not supported by the site. This never grants admin access by itself.
@@ -5264,7 +5237,6 @@ function checkAdminSessionTimeout() {
                 setAssistantHiddenForAdmin(true);
                 showToast(currentLang==='en'?'Admin access confirmed.':'Accès administrateur confirmé.', 'success');
             } catch (e) {
-                sessionStorage.removeItem('aerix_admin_reauth');
                 console.error('Admin reauthentication failed:', e);
                 const code = e?.code || '';
                 let message;
@@ -5327,13 +5299,6 @@ function checkAdminSessionTimeout() {
         });
 
         // Refuse tout schéma autre que http(s) (javascript:, data:...) pour les liens saisis en admin.
-        // AUDIT : nettoie le HTML riche (articles / annonces) avant tout innerHTML.
-        // Si DOMPurify n'est pas chargé, on retombe sur du texte échappé (jamais du HTML brut).
-        function sanitizeRich(html) {
-            const raw = String(html == null ? '' : html);
-            if (window.DOMPurify) return window.DOMPurify.sanitize(raw);
-            return escapeHtml(raw);
-        }
         function safeUrl(u) {
             const v = String(u ?? '').trim();
             return /^https?:\/\//i.test(v) ? v : '#';
@@ -5448,12 +5413,23 @@ function checkAdminSessionTimeout() {
                 const provider = new firebase.auth.GoogleAuthProvider();
                 provider.setCustomParameters({ prompt: 'select_account' });
 
-                // Connexion Google par redirection uniquement.
-                // Cela évite le cycle de fenêtre OAuth (popup) qui peut produire
-                // l'avertissement COOP « window.close » dans les navigateurs modernes.
-                sessionStorage.setItem('aerix_google_redirect', '1');
-                await auth.signInWithRedirect(provider);
-                return;
+                // Popup en priorité : c'est le parcours le plus fluide sur desktop.
+                // Si le navigateur bloque les popups, on bascule automatiquement sur
+                // la redirection Google au lieu de laisser l'utilisateur bloqué.
+                try {
+                    await auth.signInWithPopup(provider);
+                } catch (popupError) {
+                    const fallbackCodes = ['auth/popup-blocked','auth/operation-not-supported-in-this-environment','auth/web-storage-unsupported'];
+                    if (fallbackCodes.includes(popupError?.code)) {
+                        sessionStorage.setItem('aerix_google_redirect', '1');
+                        await auth.signInWithRedirect(provider);
+                        return;
+                    }
+                    throw popupError;
+                }
+
+                closeAccountModal();
+                showToast(currentLang==='en'?'Signed in.':'Connexion réussie.');
             } catch(e) {
                 console.error('Google sign-in failed:', e);
                 if (e.code === 'auth/popup-closed-by-user' || e.code === 'auth/cancelled-popup-request') return;
@@ -6240,7 +6216,6 @@ function checkAdminSessionTimeout() {
             userTickets = user ? globalContactRequests.filter(t => t.uid === user.uid) : [];
             renderAccountArea();
             applyAdminTabVisibility();
-            tryReopenAdmin();
             });
         }).catch(err => console.error('Initialisation de la session Firebase:', err));
 
@@ -6255,7 +6230,7 @@ function checkAdminSessionTimeout() {
                     return `<div class="glass-panel glass-panel-form p-4 rounded-xl flex items-center justify-between gap-3"><div class="min-w-0"><div class="text-white font-bold text-sm truncate">${escapeHtml(u.username || '—')}</div><div class="text-xs text-gray-500 mt-1 truncate">${escapeHtml(u.email || '—')}</div><div class="text-xs text-aerix-purple mt-2 uppercase tracking-widest">${escapeHtml(role)}</div></div>${menu}</div>`;
                 }).join('') : `<p class="text-gray-500 text-sm italic">${currentLang==='en'?'No registered accounts.':'Aucun compte enregistré.'}</p>`;
             }
-            document.getElementById('admin-list-boutique').innerHTML = globalShop.map(item => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm">${item.name}</div></div><div class="flex gap-2"><button onclick="startEditShop('${item.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('shop', '${item.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
+            document.getElementById('admin-list-boutique').innerHTML = globalShop.map(item => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm">${item.name}</div><div class="text-xs text-gray-500">${item.price} €</div></div><div class="flex gap-2"><button onclick="startEditShop('${item.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('shop', '${item.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
             const sortedAdminEffectifs = [...globalEffectifs].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
             document.getElementById('admin-list-effectifs').innerHTML = sortedAdminEffectifs.map((r, idx) => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center effectif-row" draggable="true" data-id="${r.id}" ondragstart="dragEffectifStart(event)" ondragend="dragEffectifEnd(event)" ondragover="dragEffectifOver(event)" ondrop="dropEffectif(event)"><div class="flex items-center gap-2"><div class="effectif-drag-handle cursor-grab active:cursor-grabbing text-gray-500 hover:text-white transition px-1" title="Glisser pour réordonner"><svg width="10" height="16" viewBox="0 0 10 16" fill="currentColor"><circle cx="2" cy="2" r="1.5"/><circle cx="8" cy="2" r="1.5"/><circle cx="2" cy="8" r="1.5"/><circle cx="8" cy="8" r="1.5"/><circle cx="2" cy="14" r="1.5"/><circle cx="8" cy="14" r="1.5"/></svg></div><div class="flex flex-col gap-1"><button onclick="moveEffectif('${r.id}', -1)" ${idx === 0 ? 'disabled' : ''} class="w-6 h-6 flex items-center justify-center rounded-md bg-white/10 hover:bg-aerix-purple text-white text-xs transition disabled:opacity-20 disabled:cursor-not-allowed" title="Monter">▲</button><button onclick="moveEffectif('${r.id}', 1)" ${idx === sortedAdminEffectifs.length - 1 ? 'disabled' : ''} class="w-6 h-6 flex items-center justify-center rounded-md bg-white/10 hover:bg-aerix-purple text-white text-xs transition disabled:opacity-20 disabled:cursor-not-allowed" title="Descendre">▼</button></div><div><div class="text-white font-bold text-sm flex items-center gap-2">${r.name} <span class="bg-white/10 text-[9px] px-2 py-0.5 rounded-full">${r.players?.length||0} j.</span></div><div class="text-xs text-gray-500">${r.game || 'Général'}</div></div></div><div class="flex gap-2"><button onclick="startEditEffectif('${r.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('effectifs', '${r.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
             document.getElementById('admin-list-palmares').innerHTML = sortByDateDesc(globalPalmares).map(p => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm truncate max-w-[150px]">${p.title}</div><div class="text-xs text-gray-500">${p.game || 'Général'}</div></div><div class="flex gap-2"><button onclick="startEditPalmares('${p.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('palmares', '${p.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
@@ -6374,6 +6349,7 @@ function checkAdminSessionTimeout() {
             const item = globalShop.find(s => s.id === id); if(!item) return;
             document.getElementById('edit-shop-id').value = item.id;
             document.getElementById('add-shop-name').value = item.name;
+            document.getElementById('add-shop-price').value = item.price;
             document.getElementById('add-shop-sizes').value = item.sizes || '';
             document.getElementById('add-shop-desc').value = item.desc || '';
             tempShopImages = item.images ? [...item.images] : (item.image ? [item.image] : []);
@@ -6382,17 +6358,17 @@ function checkAdminSessionTimeout() {
             document.getElementById('shop-cancel-btn').classList.remove('hidden');
         }
         function resetShopForm() {
-            document.getElementById('edit-shop-id').value = ''; document.getElementById('add-shop-name').value = ''; document.getElementById('add-shop-sizes').value = ''; document.getElementById('add-shop-desc').value = '';
+            document.getElementById('edit-shop-id').value = ''; document.getElementById('add-shop-name').value = ''; document.getElementById('add-shop-price').value = ''; document.getElementById('add-shop-sizes').value = ''; document.getElementById('add-shop-desc').value = '';
             tempShopImages = []; renderShopPreviews();
             document.getElementById('shop-form-title').innerText = "Ajouter un produit"; document.getElementById('shop-cancel-btn').classList.add('hidden');
         }
         async function saveShopItem() {
-            const id = document.getElementById('edit-shop-id').value, name = document.getElementById('add-shop-name').value, sizes = document.getElementById('add-shop-sizes').value, desc = document.getElementById('add-shop-desc').value;
-            if(!name) return showToast("Nom du produit obligatoire.", "error");
+            const id = document.getElementById('edit-shop-id').value, name = document.getElementById('add-shop-name').value, price = document.getElementById('add-shop-price').value, sizes = document.getElementById('add-shop-sizes').value, desc = document.getElementById('add-shop-desc').value;
+            if(!name || !price) return showToast("Nom et prix obligatoires.", "error");
             try {
                 const images = tempShopImages;
-                if(id) await db.collection("shop").doc(id).update({ name, sizes, desc, images });
-                else await db.collection("shop").add({ name, sizes, desc, images });
+                if(id) await db.collection("shop").doc(id).update({ name, price, sizes, desc, images });
+                else await db.collection("shop").add({ name, price, sizes, desc, images });
                 showToast("Produit sauvegardé !"); resetShopForm(); switchAdminTab('boutique');
             } catch(e) { showToast("Erreur de sauvegarde", "error"); }
         }
@@ -7381,6 +7357,7 @@ function checkAdminSessionTimeout() {
             window.currentOrderProduct = item;
             window.currentOrderSize = '';
             document.getElementById('modal-product-title').innerText = item.name;
+            document.getElementById('modal-product-price').innerText = item.price + " €";
             document.getElementById('modal-product-desc').innerText = item.desc || "";
             const sizesDiv = document.getElementById('modal-product-sizes');
             const sizesArray = item.sizes ? String(item.sizes).split(',').map(s => s.trim()).filter(Boolean) : [];
@@ -7425,8 +7402,8 @@ function checkAdminSessionTimeout() {
         // MODAL LEGAL & COOKIES
         const legalTexts = {
             fr: {
-                mentions: `<p class="text-xs text-gray-500 mb-6">Dernière mise à jour : septembre 2026</p><h4 class="font-bold text-white mb-2 text-lg">1. Éditeur et responsable du site</h4><p class="mb-5">Le présent site présente et exploite le projet esport AERIX Esports. Il est géré par son responsable et ne doit pas être interprété comme le site d'une association ou d'une société juridiquement constituée sous ce nom tant qu'aucune telle structure n'a été officiellement créée.</p><h4 class="font-bold text-white mb-2 text-lg">2. Responsable de publication</h4><p class="mb-6"><strong>À compléter avant mise en ligne définitive :</strong> identité et coordonnées du responsable de publication / représentant légal. Ces informations ne doivent pas être remplacées par un simple pseudonyme.</p><h4 class="font-bold text-white mb-2 text-lg">3. Hébergement</h4><p class="mb-6">Le site est hébergé par GitHub Pages. Les données applicatives utilisées par le site sont gérées via les services Firebase de Google.</p><h4 class="font-bold text-white mb-2 text-lg">4. Propriété intellectuelle</h4><p class="mb-6">Les contenus, textes, visuels, logos, éléments graphiques et code présents sur le site sont protégés par les règles applicables en matière de propriété intellectuelle, sauf mention contraire. Toute réutilisation non autorisée est susceptible d'être interdite par la loi.</p><h4 class="font-bold text-white mb-2 text-lg">5. Comptes et contenus utilisateurs</h4><p class="mb-6">Le site peut permettre la création de comptes, l'envoi de demandes et la publication d'avis. Les utilisateurs sont responsables des contenus qu'ils transmettent et doivent respecter les présentes conditions d'utilisation.</p><h4 class="font-bold text-white mb-2 text-lg">6. Services tiers</h4><p class="mb-6">Le site utilise notamment GitHub Pages, Firebase et peut intégrer des services tiers tels que Twitch, Google Fonts ou FlagCDN. Ces services disposent de leurs propres conditions et politiques.</p><h4 class="font-bold text-white mb-2 text-lg">7. Droit applicable</h4><p>Le site est exploité dans le respect du droit français applicable. Les informations présentées peuvent être corrigées ou mises à jour lorsque cela est nécessaire.</p>`,
-                confidentialite: `<p class="text-xs text-gray-500 mb-6">Dernière mise à jour : septembre 2026</p><h4 class="font-bold text-white mb-2 text-lg">Responsable du traitement</h4><p class="mb-6"><strong>À compléter avant mise en ligne définitive :</strong> identité et coordonnées du responsable du traitement, ou de l'entité juridiquement constituée qui l'exploite. Les traitements liés au site sont réalisés dans le cadre du projet AERIX Esports par son responsable. Le site ne doit pas être présenté comme étant exploité par une association ou une société portant ce nom tant qu'une telle structure n'a pas été officiellement constituée.</p><h4 class="font-bold text-white mb-2 text-lg">Données traitées</h4><p class="mb-2">Selon les fonctionnalités utilisées, le site peut traiter :</p><p class="mb-1">— Données de compte : pseudo et adresse e-mail nécessaires à la création et à la gestion du compte.</p><p class="mb-1">— Demandes de coaching, tickets de contact et échanges associés : informations transmises volontairement pour traiter la demande.</p><p class="mb-1">— Avis publiés : contenu et informations nécessaires à leur affichage et à leur modération.</p><p class="mb-6">— Mesure d'audience : Google Analytics uniquement après consentement lorsque cet outil est activé.</p><h4 class="font-bold text-white mb-2 text-lg">Finalités</h4><p class="mb-6">Les données sont utilisées pour gérer les comptes, répondre aux demandes, gérer les avis et assurer le fonctionnement des fonctionnalités proposées sur le site.</p><h4 class="font-bold text-white mb-2 text-lg">Durées de conservation</h4><p class="mb-6">Les données sont conservées pendant la durée nécessaire aux finalités pour lesquelles elles sont traitées, conformément aux obligations légales applicables et aux règles de conservation définies par le responsable du traitement.</p><h4 class="font-bold text-white mb-2 text-lg">Vos droits</h4><p class="mb-6">Vous disposez, selon les conditions prévues par la réglementation, de droits d'accès, de rectification, d'effacement, de limitation, d'opposition et, lorsque applicable, de portabilité. Pour exercer vos droits, utilisez le moyen de contact officiel indiqué sur le site. Vous pouvez également saisir la CNIL.</p><h4 class="font-bold text-white mb-2 text-lg">Services tiers</h4><p>Le site peut utiliser Firebase, Google Analytics après consentement, Google Fonts, FlagCDN et d'autres services nécessaires à certaines fonctionnalités.</p>`,
+                mentions: `<p class="text-xs text-gray-500 mb-6">Dernière mise à jour : septembre 2026</p><h4 class="font-bold text-white mb-2 text-lg">1. Éditeur et responsable du site</h4><p class="mb-5">Le présent site présente et exploite le projet esport AERIX Esports. Il est géré par son responsable et ne doit pas être interprété comme le site d'une association ou d'une société juridiquement constituée sous ce nom tant qu'aucune telle structure n'a été officiellement créée.</p><h4 class="font-bold text-white mb-2 text-lg">2. Responsable de publication</h4><p class="mb-6">Le responsable de publication est le responsable du projet AERIX Esports. Les coordonnées nécessaires à l'identification de l'éditeur et du responsable de publication doivent être renseignées dans la version définitive des présentes mentions légales.</p><h4 class="font-bold text-white mb-2 text-lg">3. Hébergement</h4><p class="mb-6">Le site est hébergé par GitHub Pages. Les données applicatives utilisées par le site sont gérées via les services Firebase de Google.</p><h4 class="font-bold text-white mb-2 text-lg">4. Propriété intellectuelle</h4><p class="mb-6">Les contenus, textes, visuels, logos, éléments graphiques et code présents sur le site sont protégés par les règles applicables en matière de propriété intellectuelle, sauf mention contraire. Toute réutilisation non autorisée est susceptible d'être interdite par la loi.</p><h4 class="font-bold text-white mb-2 text-lg">5. Comptes et contenus utilisateurs</h4><p class="mb-6">Le site peut permettre la création de comptes, l'envoi de demandes et la publication d'avis. Les utilisateurs sont responsables des contenus qu'ils transmettent et doivent respecter les présentes conditions d'utilisation.</p><h4 class="font-bold text-white mb-2 text-lg">6. Services tiers</h4><p class="mb-6">Le site utilise notamment GitHub Pages, Firebase et peut intégrer des services tiers tels que Twitch, Google Fonts ou FlagCDN. Ces services disposent de leurs propres conditions et politiques.</p><h4 class="font-bold text-white mb-2 text-lg">7. Droit applicable</h4><p>Le site est exploité dans le respect du droit français applicable. Les informations présentées peuvent être corrigées ou mises à jour lorsque cela est nécessaire.</p>`,
+                confidentialite: `<p class="text-xs text-gray-500 mb-6">Dernière mise à jour : septembre 2026</p><h4 class="font-bold text-white mb-2 text-lg">Responsable du traitement</h4><p class="mb-6">Les traitements liés au site sont réalisés dans le cadre du projet AERIX Esports par son responsable. Le site ne doit pas être présenté comme étant exploité par une association ou une société portant ce nom tant qu'une telle structure n'a pas été officiellement constituée.</p><h4 class="font-bold text-white mb-2 text-lg">Données traitées</h4><p class="mb-2">Selon les fonctionnalités utilisées, le site peut traiter :</p><p class="mb-1">— Données de compte : pseudo et adresse e-mail nécessaires à la création et à la gestion du compte.</p><p class="mb-1">— Demandes de coaching, tickets de contact et échanges associés : informations transmises volontairement pour traiter la demande.</p><p class="mb-1">— Avis publiés : contenu et informations nécessaires à leur affichage et à leur modération.</p><p class="mb-6">— Mesure d'audience : Google Analytics uniquement après consentement lorsque cet outil est activé.</p><h4 class="font-bold text-white mb-2 text-lg">Finalités</h4><p class="mb-6">Les données sont utilisées pour gérer les comptes, répondre aux demandes, gérer les avis et assurer le fonctionnement des fonctionnalités proposées sur le site.</p><h4 class="font-bold text-white mb-2 text-lg">Durées de conservation</h4><p class="mb-6">Les données sont conservées pendant la durée nécessaire aux finalités pour lesquelles elles sont traitées, conformément aux obligations légales applicables et aux règles de conservation définies par le responsable du traitement.</p><h4 class="font-bold text-white mb-2 text-lg">Vos droits</h4><p class="mb-6">Vous disposez, selon les conditions prévues par la réglementation, de droits d'accès, de rectification, d'effacement, de limitation, d'opposition et, lorsque applicable, de portabilité. Pour exercer vos droits, utilisez le moyen de contact officiel indiqué sur le site. Vous pouvez également saisir la CNIL.</p><h4 class="font-bold text-white mb-2 text-lg">Services tiers</h4><p>Le site peut utiliser Firebase, Google Analytics après consentement, Google Fonts, FlagCDN et d'autres services nécessaires à certaines fonctionnalités.</p>`,
                 cgu: `<p class="text-xs text-gray-500 mb-6">Dernière mise à jour : septembre 2026</p><h4 class="font-bold text-white mb-2 text-lg">1. Objet</h4><p class="mb-5">Les présentes conditions définissent les règles d'utilisation du site et de ses fonctionnalités dans le cadre du projet esport AERIX Esports.</p><h4 class="font-bold text-white mb-2 text-lg">2. Compte utilisateur</h4><p class="mb-5">L'utilisateur doit fournir des informations exactes lors de la création de son compte et conserver ses identifiants confidentiels. Le compte est personnel et ne doit pas être utilisé pour usurper l'identité d'une autre personne.</p><h4 class="font-bold text-white mb-2 text-lg">3. Comportement et contenus</h4><p class="mb-5">Il est interdit d'utiliser le site pour publier ou transmettre des contenus illicites, frauduleux, diffamatoires, haineux, menaçants, malveillants ou portant atteinte aux droits de tiers.</p><h4 class="font-bold text-white mb-2 text-lg">4. Avis, demandes et modération</h4><p class="mb-5">Les avis et messages transmis restent sous la responsabilité de leur auteur. Le responsable du site peut modérer, masquer ou supprimer un contenu contraire aux règles applicables ou aux présentes conditions.</p><h4 class="font-bold text-white mb-2 text-lg">5. Coaching et candidatures</h4><p class="mb-5">Les formulaires de coaching, recrutement ou contact constituent des demandes. Leur envoi ne vaut pas automatiquement acceptation, réservation ou engagement définitif.</p><h4 class="font-bold text-white mb-2 text-lg">6. Disponibilité du site</h4><p class="mb-5">Le site peut être temporairement indisponible en raison de maintenance, d'un incident technique ou d'une défaillance d'un service tiers.</p><h4 class="font-bold text-white mb-2 text-lg">7. Suspension d'un compte</h4><p class="mb-5">Un compte peut être suspendu ou supprimé lorsqu'une utilisation est contraire aux présentes conditions, aux règles de sécurité ou au droit applicable.</p><h4 class="font-bold text-white mb-2 text-lg">8. Droit applicable</h4><p>Les présentes conditions sont soumises au droit français applicable.</p>`,
                 cgv: `<p class="text-xs text-gray-500 mb-6">Dernière mise à jour : septembre 2026</p><h4 class="font-bold text-white mb-2 text-lg">1. Champ d'application</h4><p class="mb-5">Ces conditions s'appliquent aux ventes éventuelles de produits ou prestations proposées dans le cadre du projet AERIX Esports.</p><h4 class="font-bold text-white mb-2 text-lg">2. Commandes</h4><p class="mb-5">Lorsque la commande est réalisée par l'intermédiaire d'un ticket ou d'un contact, la demande ne constitue pas à elle seule une vente définitive. La commande n'est confirmée qu'après validation des conditions applicables, du produit ou service concerné et, le cas échéant, du prix et des modalités de paiement.</p><h4 class="font-bold text-white mb-2 text-lg">3. Prix et paiement</h4><p class="mb-5">Les prix et modalités de paiement applicables sont communiqués avant la confirmation de la commande. Le site n'intègre pas actuellement de paiement en ligne direct dans son parcours de commande.</p><h4 class="font-bold text-white mb-2 text-lg">4. Livraison et exécution</h4><p class="mb-5">Les modalités de livraison ou d'exécution sont communiquées selon le produit ou service concerné avant confirmation de la commande.</p><h4 class="font-bold text-white mb-2 text-lg">5. Rétractation et remboursement</h4><p class="mb-5">Lorsque la réglementation accorde un droit de rétractation, celui-ci est appliqué selon les conditions et exceptions prévues par la loi. Les modalités de remboursement applicables sont communiquées au client lorsque nécessaire.</p><h4 class="font-bold text-white mb-2 text-lg">6. Réclamations</h4><p class="mb-5">Toute réclamation peut être adressée via le moyen de contact officiel indiqué sur le site, avec les informations nécessaires pour identifier la commande ou la demande concernée.</p><h4 class="font-bold text-white mb-2 text-lg">7. Droit applicable</h4><p>Les ventes éventuelles sont soumises au droit français applicable.</p>`,
                 cookies: `<p class="text-xs text-gray-500 mb-6">Dernière mise à jour : septembre 2026</p><h4 class="font-bold text-white mb-2 text-lg">1. Cookies et traceurs nécessaires</h4><p class="mb-5">Certains mécanismes techniques nécessaires au fonctionnement du site, à la navigation, à la sécurité ou à la gestion des préférences peuvent être utilisés sans consentement lorsqu'ils sont strictement nécessaires à ces finalités.</p><h4 class="font-bold text-white mb-2 text-lg">2. Mesure d'audience</h4><p class="mb-5">Google Analytics n'est chargé que lorsque l'utilisateur a donné son consentement à la mesure d'audience. Le choix peut être modifié depuis « Gérer les cookies ».</p><h4 class="font-bold text-white mb-2 text-lg">3. Gestion du consentement</h4><p class="mb-5">Le bandeau permet d'accepter, de refuser ou de personnaliser les catégories de cookies concernées. Les préférences sont enregistrées afin d'éviter de redemander le choix à chaque visite lorsque le navigateur autorise le stockage local et les cookies.</p><h4 class="font-bold text-white mb-2 text-lg">4. Services tiers</h4><p>Des services tiers peuvent déposer ou utiliser leurs propres mécanismes techniques lorsqu'une fonctionnalité correspondante est activée, notamment Firebase, Twitch ou les services de contenu externes.</p>`,
