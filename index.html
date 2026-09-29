@@ -31,9 +31,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
 
     <!-- Firebase Compat SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
 
     <script>
         tailwind.config = {
@@ -2845,7 +2845,7 @@ body.theme-light #admin-modal .text-aerix-purple { color:#b85f87 !important; }
                         <span class="text-xs text-gray-400">aerix_esport</span>
                     </div>
                     <div class="aspect-video rounded-2xl overflow-hidden border border-white/10 bg-black">
-                        <iframe src="https://player.twitch.tv/?channel=aerix_esport&parent=aerix-esport.com&parent=www.aerix-esport.com" class="w-full h-full" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="Twitch AERIX Esports"></iframe>
+                        <iframe src="https://player.twitch.tv/?channel=aerix_esport&parent=aerix-esport.com&parent=www.aerix-esport.com" class="w-full h-full" allowfullscreen title="Twitch AERIX Esports"></iframe>
                     </div>
                 </section>
             </div>
@@ -6366,11 +6366,23 @@ function checkAdminSessionTimeout() {
             const id = document.getElementById('edit-shop-id').value, name = document.getElementById('add-shop-name').value, price = document.getElementById('add-shop-price').value, sizes = document.getElementById('add-shop-sizes').value, desc = document.getElementById('add-shop-desc').value;
             if(!name || !price) return showToast("Nom et prix obligatoires.", "error");
             try {
-                const images = tempShopImages;
+                const images = await optimizeImageListForFirestore(tempShopImages, 700000);
+                const budget = ensureFirestoreImageBudget(images, 700000);
+                if (!budget.ok) {
+                    return showToast(
+                        currentLang==='en'
+                            ? 'The images are still too large. Remove one image and try again.'
+                            : 'Les images restent trop volumineuses. Supprime une image puis réessaie.',
+                        'error'
+                    );
+                }
                 if(id) await db.collection("shop").doc(id).update({ name, price, sizes, desc, images });
                 else await db.collection("shop").add({ name, price, sizes, desc, images });
                 showToast("Produit sauvegardé !"); resetShopForm(); switchAdminTab('boutique');
-            } catch(e) { showToast("Erreur de sauvegarde", "error"); }
+            } catch(e) {
+                console.error('saveShopItem', e);
+                showToast(e?.code === 'invalid-argument' ? 'Image(s) trop volumineuse(s) pour Firestore.' : 'Erreur de sauvegarde', 'error');
+            }
         }
 
         // --- EDITION EFFECTIFS ---
@@ -6393,7 +6405,16 @@ function checkAdminSessionTimeout() {
         async function saveEffectif() {
             const id = document.getElementById('edit-effectif-id').value, name = document.getElementById('add-roster-name').value, game = document.getElementById('add-roster-game').value, desc = document.getElementById('add-roster-desc').value;
             if(!name) return showToast("Nom du roster obligatoire.", "error");
-            const data = { name, game, desc, players: tempPlayers };
+            const players = [];
+            for (const player of tempPlayers) {
+                const avatar = player?.avatar ? (await optimizeImageListForFirestore([player.avatar], 180000))[0] : player.avatar;
+                players.push({ ...player, avatar });
+            }
+            const data = { name, game, desc, players };
+            const rosterBudget = ensureFirestoreImageBudget(players.map(p => p.avatar).filter(Boolean), 700000);
+            if (!rosterBudget.ok) {
+                return showToast('Les photos du roster sont trop volumineuses. Réduis le nombre de joueurs ou les photos.', 'error');
+            }
             try {
                 if(id) {
                     await db.collection("effectifs").doc(id).update(data);
@@ -6550,7 +6571,8 @@ function checkAdminSessionTimeout() {
             if(!title) return showToast("Titre/Compétition obligatoire.", "error");
 
             const desc = document.getElementById('add-palm-desc').innerHTML;
-            let data = { title, date, game, image: tempPalmImage || "", desc };
+            const optimizedPalmImage = tempPalmImage ? (await optimizeImageListForFirestore([tempPalmImage], 500000))[0] : "";
+            let data = { title, date, game, image: optimizedPalmImage || "", desc };
 
             if(game === 'Rocket League') {
                 data.opponent = document.getElementById('add-palm-opponent').value;
@@ -6675,7 +6697,8 @@ function checkAdminSessionTimeout() {
             const id = document.getElementById('edit-partner-id').value, name = document.getElementById('add-partner-name').value, category = document.getElementById('add-partner-category').value, url = document.getElementById('add-partner-url').value;
             if(!name) return showToast("Nom obligatoire.", "error");
             try {
-                const data = { name, category, url, image: tempPartnerImage || "" };
+                const image = tempPartnerImage ? (await optimizeImageListForFirestore([tempPartnerImage], 500000))[0] : "";
+                const data = { name, category, url, image };
                 if(id) await db.collection("partners").doc(id).update(data); else await db.collection("partners").add(data);
                 showToast("Partenaire sauvegardé !"); resetPartnerForm();
             } catch(e) { showToast("Erreur", "error"); }
@@ -6770,7 +6793,8 @@ function checkAdminSessionTimeout() {
             if(!title || !desc || desc === '<br>') return showToast("Titre et contenu obligatoires.", "error");
 
             try {
-                const data = { title, date: date || new Date().toLocaleDateString('fr-FR'), game, desc, image: tempAnnouncementImage || "" };
+                const image = tempAnnouncementImage ? (await optimizeImageListForFirestore([tempAnnouncementImage], 500000))[0] : "";
+                const data = { title, date: date || new Date().toLocaleDateString('fr-FR'), game, desc, image };
                 if(id) await db.collection("annonces").doc(id).update(data); else await db.collection("annonces").add(data);
                 showToast("Annonce publiée !"); resetAnnouncementForm();
             } catch(e) { showToast("Erreur", "error"); }
@@ -6786,7 +6810,8 @@ function checkAdminSessionTimeout() {
             const caption = document.getElementById('add-gallery-caption').value;
             const game = document.getElementById('add-gallery-game').value;
             try {
-                const image = tempGalleryImage;
+                const image = (await optimizeImageListForFirestore([tempGalleryImage], 500000))[0];
+                if (!image) return showToast("Image invalide.", "error");
                 await db.collection("gallery").add({ caption, game, image, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
                 showToast("Photo ajoutée à la galerie !"); resetGalleryForm();
             } catch(e) { console.error(e); showToast("Erreur", "error"); }
@@ -7066,21 +7091,150 @@ function checkAdminSessionTimeout() {
         if (window.ResizeObserver) { const navResizeObserver = new ResizeObserver(() => refreshNavPill()); const navContainer = document.getElementById('nav-container'); if(navContainer) navResizeObserver.observe(navContainer); }
 
         // CROP STUDIO
-        let cropper = null, cropCallback = null, cropMaxDim = 8192, cropQuality = 1;
-        function openCropper(file, ratio, callback, maxDim, quality) { const reader = new FileReader(); reader.onload = (e) => { const image = document.getElementById('crop-image'); image.src = e.target.result; document.getElementById('crop-modal').classList.remove('hidden'); if (cropper) cropper.destroy(); cropper = new Cropper(image, { aspectRatio: ratio, viewMode: 1, background: false, autoCropArea: 1 }); cropCallback = callback; cropMaxDim = maxDim || 8192; cropQuality = typeof quality === 'number' ? quality : 1; }; reader.readAsDataURL(file); }
-        // Les images des événements sont stockées directement dans Firestore : elles doivent
-        // rester sous la limite de taille d'un document. Les autres usages conservent leur
-        // qualité/résolution habituelles.
+        // Les images sont enregistrées dans Firestore sous forme de Data URL.
+        // Firestore limite chaque document à 1 MiB : une image trop lourde peut donc
+        // faire échouer l'écriture même si l'aperçu fonctionne.
+        let cropper = null, cropCallback = null, cropMaxDim = 1600, cropQuality = 0.82;
+
+        const FIRESTORE_DOC_SAFE_CHARS = 760000;
+        const FIRESTORE_SINGLE_IMAGE_CHARS = 520000;
+
+        function dataUrlChars(dataUrl) {
+            return typeof dataUrl === 'string' ? dataUrl.length : 0;
+        }
+
+        function canvasToOptimizedWebP(canvas, maxChars = FIRESTORE_SINGLE_IMAGE_CHARS, preferredQuality = 0.82) {
+            if (!canvas) return null;
+            const scales = [1, 0.85, 0.70, 0.58, 0.48, 0.40];
+            const qualities = [preferredQuality, 0.74, 0.66, 0.58, 0.50, 0.42];
+
+            for (const scale of scales) {
+                const w = Math.max(1, Math.round(canvas.width * scale));
+                const h = Math.max(1, Math.round(canvas.height * scale));
+                const work = document.createElement('canvas');
+                work.width = w;
+                work.height = h;
+                const ctx = work.getContext('2d', { alpha: true });
+                if (!ctx) continue;
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = 'high';
+                ctx.drawImage(canvas, 0, 0, w, h);
+
+                for (const q of qualities) {
+                    const dataUrl = work.toDataURL('image/webp', q);
+                    if (dataUrlChars(dataUrl) <= maxChars) return dataUrl;
+                }
+            }
+
+            const fallback = document.createElement('canvas');
+            fallback.width = Math.min(900, canvas.width);
+            fallback.height = Math.max(1, Math.round(canvas.height * (fallback.width / canvas.width)));
+            const fctx = fallback.getContext('2d', { alpha: true });
+            if (!fctx) return canvas.toDataURL('image/webp', 0.35);
+            fctx.imageSmoothingEnabled = true;
+            fctx.imageSmoothingQuality = 'high';
+            fctx.drawImage(canvas, 0, 0, fallback.width, fallback.height);
+            return fallback.toDataURL('image/webp', 0.35);
+        }
+
+        function openCropper(file, ratio, callback, maxDim, quality) {
+            if (!file || !file.type || !file.type.startsWith('image/')) {
+                showToast(currentLang==='en' ? 'Please select an image file.' : 'Sélectionne un fichier image.', 'error');
+                return;
+            }
+            const reader = new FileReader();
+            reader.onerror = () => showToast(currentLang==='en' ? 'Unable to read the image.' : 'Impossible de lire l’image.', 'error');
+            reader.onload = (e) => {
+                const image = document.getElementById('crop-image');
+                image.onload = () => {
+                    document.getElementById('crop-modal').classList.remove('hidden');
+                    if (cropper) cropper.destroy();
+                    cropper = new Cropper(image, {
+                        aspectRatio: ratio,
+                        viewMode: 1,
+                        background: false,
+                        autoCropArea: 1
+                    });
+                };
+                image.src = e.target.result;
+                cropCallback = callback;
+                cropMaxDim = Math.min(Number(maxDim) || 1600, 1600);
+                cropQuality = typeof quality === 'number' ? Math.min(Math.max(quality, 0.35), 0.9) : 0.82;
+            };
+            reader.readAsDataURL(file);
+        }
+
         function confirmCrop() {
             if (!cropper) return;
-            const canvas = cropper.getCroppedCanvas({ maxWidth: cropMaxDim, maxHeight: cropMaxDim, imageSmoothingEnabled: true, imageSmoothingQuality: 'high', fillColor: 'transparent' });
-            if (!canvas) { showToast(currentLang==='en'?'Could not process the image.':'Impossible de traiter cette image.', 'error'); return; }
+            const canvas = cropper.getCroppedCanvas({
+                maxWidth: cropMaxDim,
+                maxHeight: cropMaxDim,
+                imageSmoothingEnabled: true,
+                imageSmoothingQuality: 'high',
+                fillColor: 'transparent'
+            });
+            if (!canvas) {
+                showToast(currentLang==='en' ? 'Could not process the image.' : 'Impossible de traiter cette image.', 'error');
+                return;
+            }
+
             const callback = cropCallback;
+            const optimized = canvasToOptimizedWebP(canvas, FIRESTORE_SINGLE_IMAGE_CHARS, cropQuality);
+
             document.getElementById('crop-modal').classList.add('hidden');
-            cropper.destroy(); cropper = null; cropCallback = null;
-            const img = document.getElementById('crop-image'); if (img) img.src = '';
-            if (callback) callback(canvas.toDataURL('image/webp', cropQuality));
-            cropQuality = 1;
+            cropper.destroy();
+            cropper = null;
+            cropCallback = null;
+            const img = document.getElementById('crop-image');
+            if (img) img.src = '';
+
+            if (callback && optimized) callback(optimized);
+            cropQuality = 0.82;
+        }
+
+        function ensureFirestoreImageBudget(images, maxTotalChars = FIRESTORE_DOC_SAFE_CHARS) {
+            const list = Array.isArray(images) ? images.filter(Boolean) : [];
+            const total = list.reduce((sum, image) => sum + dataUrlChars(image), 0);
+            return { ok: total <= maxTotalChars, total, maxTotalChars };
+        }
+
+        async function optimizeImageListForFirestore(images, maxTotalChars = FIRESTORE_DOC_SAFE_CHARS) {
+            const list = Array.isArray(images) ? images.filter(Boolean) : [];
+            let total = list.reduce((sum, image) => sum + dataUrlChars(image), 0);
+            if (total <= maxTotalChars) return list;
+
+            const optimized = [];
+            for (const image of list) {
+                if (total <= maxTotalChars) {
+                    optimized.push(image);
+                    continue;
+                }
+
+                const target = Math.max(120000, Math.floor(maxTotalChars / Math.max(1, list.length)));
+                const img = new Image();
+                img.src = image;
+                await new Promise(resolve => {
+                    img.onload = resolve;
+                    img.onerror = resolve;
+                });
+
+                if (img.naturalWidth && img.naturalHeight) {
+                    const c = document.createElement('canvas');
+                    c.width = img.naturalWidth;
+                    c.height = img.naturalHeight;
+                    const ctx = c.getContext('2d', { alpha: true });
+                    if (ctx) {
+                        ctx.drawImage(img, 0, 0);
+                        const reduced = canvasToOptimizedWebP(c, target, 0.70);
+                        optimized.push(reduced);
+                        total -= dataUrlChars(image);
+                        total += dataUrlChars(reduced);
+                        continue;
+                    }
+                }
+                optimized.push(image);
+            }
+            return optimized;
         }
         function cancelCrop() { document.getElementById('crop-modal').classList.add('hidden'); if (cropper) cropper.destroy(); cropper = null; cropCallback = null; const img = document.getElementById('crop-image'); if (img) img.src = ''; }
 
