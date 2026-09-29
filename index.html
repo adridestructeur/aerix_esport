@@ -1539,39 +1539,6 @@ body.theme-light {
         }
     }
 
-    /* Les cartes d'un effectif ne doivent pas disparaître après la 5e :
-       on affiche toutes les cartes sur plusieurs colonnes. */
-    .roster-track {
-        display: grid !important;
-        grid-auto-flow: row !important;
-        grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
-        overflow: visible !important;
-        scroll-snap-type: none !important;
-    }
-    @media (max-width: 1024px) {
-        .roster-track {
-            grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-        }
-    }
-    @media (max-width: 768px) {
-        .roster-track {
-            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-            gap: 1rem !important;
-            width: 100% !important;
-            max-width: 100% !important;
-            margin-left: 0 !important;
-            margin-right: 0 !important;
-            padding-left: 0 !important;
-            padding-right: 0 !important;
-        }
-    }
-    @media (max-width: 480px) {
-        .roster-track {
-            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-        }
-    }
-
-
 /* Derniers éléments utilisant des couleurs violettes dans des classes/attributs
    arbitraires : on les bascule aussi vers le rose en thème clair. */
 .theme-light [class*="8B5CF6"] {
@@ -1652,7 +1619,7 @@ body.theme-light {
 }
 
 /* CTA avis accueil : toujours lisible. */
-.theme-light [data-i18n="nav_review"] { color:#fff !important; }
+.theme-light [data-i18n="nav_review"] { color:#0a0a0a !important; }
 
 </style>
 
@@ -2629,10 +2596,9 @@ body.theme-light #page-home button[data-i18n="hero_btn_2"]:hover {
     color:#111827 !important;
 }
 body.theme-light #page-home button[data-i18n="nav_review"] {
-    background:#d66f9e !important;
-    color:#fff !important;
-    border:1px solid rgba(194,83,135,.25) !important;
-    box-shadow:0 10px 28px rgba(214,111,158,.24) !important;
+    background:#fff !important;
+    color:#0a0a0a !important;
+    border:1px solid rgba(17,24,39,.18) !important;
 }
 
 /* Profil joueur ouvert : nom/pseudo toujours blanc en thème clair. */
@@ -2911,6 +2877,54 @@ footer{padding-bottom:calc(2rem + env(safe-area-inset-bottom))}
   .toast{width:100%}
 }
 </style>
+<style id="aerix-audit-2026-b">
+/* Titres secondaires : même zoom au survol que les titres de pages */
+main.page-view h3.text-2xl, main.page-view h4.text-2xl, main.page-view h4.text-3xl {
+  display:inline-block; transform-origin:left center; cursor:default;
+  transition:transform .3s cubic-bezier(.16,1,.3,1);
+}
+main.page-view h3.text-2xl:hover, main.page-view h4.text-2xl:hover, main.page-view h4.text-3xl:hover { transform:scale(1.06); }
+
+/* Bouton « Laisser un avis » : blanc + néon blanc */
+.btn-review-neon {
+  background:#fff; color:#0a0a0a; border:1px solid #fff;
+  box-shadow:0 0 6px rgba(255,255,255,.95), 0 0 16px rgba(255,255,255,.6), 0 0 34px rgba(255,255,255,.35);
+  transition:box-shadow .3s ease, transform .3s ease, background .3s ease;
+}
+.btn-review-neon:hover {
+  background:#f3f4f6; transform:translateY(-2px);
+  box-shadow:0 0 8px #fff, 0 0 22px rgba(255,255,255,.8), 0 0 48px rgba(255,255,255,.5);
+}
+body.theme-light .btn-review-neon, body.theme-white-red .btn-review-neon {
+  border-color:rgba(17,24,39,.18);
+  box-shadow:0 0 0 1px rgba(255,255,255,.9), 0 0 14px rgba(255,255,255,.95), 0 6px 22px rgba(17,24,39,.16);
+}
+body.theme-white-red .btn-review-neon { color:#151515 !important; }
+
+/* Carrousel effectifs : flèches */
+.roster-arrow {
+  position:absolute; top:50%; z-index:20; width:44px; height:44px; margin-top:-22px;
+  display:flex; align-items:center; justify-content:center; border-radius:9999px;
+  font-size:26px; line-height:1; color:#fff; cursor:pointer;
+  background:rgba(10,10,10,.72); border:1px solid rgba(255,255,255,.22);
+  -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+  box-shadow:0 8px 24px rgba(0,0,0,.45);
+  transition:opacity .25s ease, transform .25s ease, background .25s ease, border-color .25s ease;
+}
+.roster-arrow:hover { background:rgba(139,92,246,.85); border-color:rgba(139,92,246,1); transform:scale(1.08); }
+.roster-arrow-prev { left:-14px; } .roster-arrow-next { right:-14px; }
+.roster-arrow.is-hidden { opacity:0; pointer-events:none; }
+body.theme-light .roster-arrow, body.theme-white-red .roster-arrow {
+  background:rgba(255,255,255,.88); color:#111827; border-color:rgba(17,24,39,.15); box-shadow:0 8px 24px rgba(17,24,39,.15);
+}
+body.theme-light .roster-arrow:hover { background:#f5bbd5; border-color:#f5bbd5; }
+body.theme-white-red .roster-arrow:hover { background:#e53935; border-color:#e53935; color:#fff; }
+body.theme-black-red .roster-arrow:hover { background:#e53935; border-color:#e53935; }
+@media (max-width:767px) {
+  .roster-arrow { width:36px; height:36px; margin-top:-18px; font-size:22px; }
+  .roster-arrow-prev { left:4px; } .roster-arrow-next { right:4px; }
+}
+</style>
 </head>
 <body class="antialiased selection:bg-purple-500 selection:text-white min-h-screen flex flex-col relative">
 
@@ -3073,7 +3087,7 @@ footer{padding-bottom:calc(2rem + env(safe-area-inset-bottom))}
                 <div class="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6 animate-fade-up opacity-0 delay-200">
                     <button onclick="navigate('effectifs')" class="px-8 py-3.5 bg-white text-black text-sm font-bold rounded-full hover:bg-gray-200 transition shadow-[0_0_20px_rgba(255,255,255,0.2)]" data-i18n="hero_btn_1">Découvrir les équipes</button>
                     <button onclick="navigate('palmares')" class="px-8 py-3.5 glass-panel text-white text-sm font-bold rounded-full hover:border-aerix-purple transition" data-i18n="hero_btn_2">Notre Palmarès</button>
-                    <button onclick="openReviewModal()" class="px-8 py-3.5 rounded-full text-white text-sm font-bold transition" style="background:#d66f9e;box-shadow:0 0 22px rgba(245,187,213,.28)" data-i18n="nav_review">Laisser un avis</button>
+                    <button onclick="openReviewModal()" class="btn-review-neon px-8 py-3.5 rounded-full text-sm font-bold transition" data-i18n="nav_review">Laisser un avis</button>
                 </div>
             </div>
             
@@ -3166,7 +3180,7 @@ footer{padding-bottom:calc(2rem + env(safe-area-inset-bottom))}
         <main id="page-competition" class="page-view px-6 max-w-7xl mx-auto">
             <div class="mb-14 text-center animate-fade-up opacity-0">
                 <h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2">AERIX COMPETITION</h2>
-                <h3 class="text-4xl font-black text-white mb-4">Compétition</h3>
+                <h3 class="text-4xl font-black text-white mb-4 inline-block transition-transform duration-300 hover:scale-110 hover:text-aerix-purple cursor-default">Compétition</h3>
                 <p class="text-gray-400 max-w-2xl mx-auto">Retrouve les prochains matchs et courses ainsi que les dernières performances enregistrées par AERIX.</p>
             </div>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -3185,7 +3199,7 @@ footer{padding-bottom:calc(2rem + env(safe-area-inset-bottom))}
         <main id="page-performance" class="page-view px-6 max-w-7xl mx-auto">
             <div class="mb-14 text-center animate-fade-up opacity-0">
                 <h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2">AERIX PERFORMANCE</h2>
-                <h3 class="text-4xl font-black text-white mb-4">Performance</h3>
+                <h3 class="text-4xl font-black text-white mb-4 inline-block transition-transform duration-300 hover:scale-110 hover:text-aerix-purple cursor-default">Performance</h3>
                 <p class="text-gray-400 max-w-2xl mx-auto">Une vue synthétique des effectifs, compétitions et résultats actuellement enregistrés.</p>
             </div>
             <div id="performance-stats" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10"></div>
@@ -3197,7 +3211,7 @@ footer{padding-bottom:calc(2rem + env(safe-area-inset-bottom))}
 
         <!-- 6. MÉDIA -->
         <main id="page-media" class="page-view px-6 max-w-7xl mx-auto">
-            <div class="mb-14 text-center animate-fade-up opacity-0"><h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2">AERIX MEDIA</h2><h3 class="text-4xl font-black text-white mb-4">Média</h3><p class="text-gray-400 max-w-2xl mx-auto">Photos et contenus visuels publiés depuis les annonces et la galerie AERIX.</p></div>
+            <div class="mb-14 text-center animate-fade-up opacity-0"><h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2">AERIX MEDIA</h2><h3 class="text-4xl font-black text-white mb-4 inline-block transition-transform duration-300 hover:scale-110 hover:text-aerix-purple cursor-default">Média</h3><p class="text-gray-400 max-w-2xl mx-auto">Photos et contenus visuels publiés depuis les annonces et la galerie AERIX.</p></div>
             <div id="media-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5"></div>
         </main>
 
@@ -3256,7 +3270,7 @@ footer{padding-bottom:calc(2rem + env(safe-area-inset-bottom))}
             <div class="partners-hero glass-panel rounded-[2rem] p-7 md:p-10 mb-14 animate-fade-up opacity-0">
                 <div class="relative z-10">
                     <div class="text-xs font-black text-aerix-purple uppercase tracking-[.22em] mb-3" data-i18n="partners_subtitle">Sponsors & Affiliés</div>
-                    <h3 class="text-4xl md:text-5xl font-black text-white tracking-tight" data-i18n="partners_title">Partenaires Techniques</h3>
+                    <h3 class="text-4xl md:text-5xl font-black text-white tracking-tight inline-block transition-transform duration-300 hover:scale-110 hover:text-aerix-purple cursor-default" data-i18n="partners_title">Partenaires Techniques</h3>
                     <p class="text-sm md:text-base text-gray-400 max-w-2xl mx-auto mt-5 leading-relaxed" data-i18n="partners_desc">Des collaborations qui accompagnent AERIX dans son développement compétitif, son équipement et sa communauté.</p>
                     <div id="partners-stats" class="flex flex-wrap justify-center gap-3 md:gap-4 mt-8"></div>
                 </div>
@@ -3303,7 +3317,6 @@ footer{padding-bottom:calc(2rem + env(safe-area-inset-bottom))}
                     <button onclick="openLegal('mentions')" class="hover:text-white transition">Mentions légales</button>
                     <button onclick="openLegal('confidentialite')" class="hover:text-white transition">Confidentialité</button>
                     <button onclick="openLegal('cgu')" class="hover:text-white transition">CGU</button>
-                    <button onclick="openLegal('cgv')" class="hover:text-white transition">CGV</button>
                     <button onclick="openLegal('cookies')" class="hover:text-white transition">Politique cookies</button>
                     <button onclick="openContactModal()" class="hover:text-white transition" data-i18n="contact_form">Contact</button>
                     <button onclick="openCookieSettings()" class="hover:text-white transition">Gérer les cookies</button>
@@ -3540,16 +3553,12 @@ footer{padding-bottom:calc(2rem + env(safe-area-inset-bottom))}
                     </div>
                 </div>
 
-                <!-- 3. FORMAT & TARIFS -->
+                <!-- 3. FORMAT -->
                 <div>
-                    <h4 class="text-xs font-bold text-aerix-purple uppercase tracking-widest mb-3" data-i18n="coaching_step_format">3. Format & Tarifs</h4>
+                    <h4 class="text-xs font-bold text-aerix-purple uppercase tracking-widest mb-3" data-i18n="coaching_step_format">3. Format</h4>
                     <div class="grid grid-cols-2 gap-4 mb-4">
                         <button type="button" id="coaching-format-solo" onclick="setCoachingFormat('Solo')" class="filter-btn active !w-full !py-3" data-i18n="coaching_format_solo">Solo</button>
                         <button type="button" id="coaching-format-groupe" onclick="setCoachingFormat('Groupe')" class="filter-btn !w-full !py-3" data-i18n="coaching_format_group">Groupe</button>
-                    </div>
-                    <div class="rounded-xl border border-aerix-purple/25 bg-aerix-purple/10 p-4 text-xs text-gray-300 leading-relaxed flex items-start gap-3">
-                        <span class="text-aerix-purple text-base leading-none mt-0.5">ⓘ</span>
-                        <span data-i18n="coaching_pricing_notice">Le coaching AERIX est un service payant. Les tarifs varient selon le format choisi (Solo / Groupe), la durée et le niveau demandé. Un devis personnalisé te sera communiqué directement dans ton ticket après validation de ta demande.</span>
                     </div>
                 </div>
 
@@ -3764,7 +3773,7 @@ footer{padding-bottom:calc(2rem + env(safe-area-inset-bottom))}
                 </div>
                 <div>
                     <h4 class="text-lg font-bold text-white mb-2" data-i18n="coaching_admin_requests_title">Demandes de coaching</h4>
-                    <p class="text-xs text-gray-500 mb-5" data-i18n="coaching_admin_requests_desc">Centralisées avec les autres tickets — réponds pour envoyer un devis personnalisé.</p>
+                    <p class="text-xs text-gray-500 mb-5" data-i18n="coaching_admin_requests_desc">Centralisées avec les autres tickets — réponds directement dans le ticket.</p>
                     <div id="admin-list-coaching" class="space-y-4"></div>
                 </div>
             </div>
@@ -4334,13 +4343,12 @@ footer{padding-bottom:calc(2rem + env(safe-area-inset-bottom))}
                 account_login_desc: "Connecte-toi avec ton compte AERIX.", password_placeholder: "Mot de passe", forgot_password: "Mot de passe oublié ?",
                 account_register_desc: "Crée directement ton compte AERIX avec ton pseudo, ton email et ton mot de passe.", password_min_placeholder: "Mot de passe (8 caractères min.)", create_account: "Créer le compte", registered_accounts_title: "Comptes enregistrés", registered_accounts_desc: "Tous les comptes créés sur le site. Le Owner peut attribuer ou retirer le rôle Admin.", contact_admin_title: "Demandes de contact", contact_admin_desc: "Consulte et gère les tickets envoyés par les utilisateurs.", contact_title: "Contact AERIX", contact_desc: "Choisis Discord ou ouvre un ticket directement depuis le site.", contact_discord: "Contacter sur Discord", contact_form: "Formulaire de contact", contact_login_required: "Tu dois être connecté pour ouvrir un ticket.", ticket: "Tickets", no_tickets: "Aucun ticket en cours.", ticket_status: "Statut", ticket_category: "Catégorie", ticket_subject: "Sujet", ticket_message: "Message", ticket_send: "Envoyer le ticket", ticket_close: "Fermer", ticket_reply: "Réponse AERIX", ticket_created: "Ticket créé.", ticket_updated: "Ticket mis à jour.", ticket_required: "Sujet et message obligatoires.", contact_category_partnership: "Partenariat", contact_category_question: "Question", contact_category_other: "Autre demande", contact_status_new: "Nouveau", contact_status_progress: "En cours", contact_status_done: "Traité", contact_status_archived: "Archivé", role_user: "Utilisateur", role_admin: "Admin", role_owner: "Owner",
                 nav_competition: "Compétition", nav_more: "Plus", nav_more_main: "Navigation", nav_more_performance: "Performance & services", nav_more_content: "Contenu", nav_more_community: "Communauté", nav_performance: "Performance", nav_media: "Média", nav_recruit: "Rejoindre AERIX", nav_review: "Laisser un avis", nav_coaching: "Coaching", coaching_title: "Réserver un coaching", coaching_subtitle: "Le Mans Ultimate & iRacing — coaching individuel ou en groupe.",
-                coaching_step_infos: "1. Informations", coaching_step_profile: "2. Profil Simracing", coaching_step_format: "3. Format & Tarifs", coaching_step_calendar: "4. Choisis une date",
+                coaching_step_infos: "1. Informations", coaching_step_profile: "2. Profil Simracing", coaching_step_format: "3. Format", coaching_step_calendar: "4. Choisis une date",
                 coaching_discord_placeholder: "Pseudo Discord", coaching_level_beginner: "Débutant", coaching_level_intermediate: "Intermédiaire", coaching_level_advanced: "Confirmé", coaching_level_competition: "Compétition",
                 coaching_format_solo: "Solo", coaching_format_group: "Groupe",
-                coaching_pricing_notice: "Le coaching AERIX est un service payant. Les tarifs varient selon le format choisi (Solo / Groupe), la durée et le niveau demandé. Un devis personnalisé te sera communiqué directement dans ton ticket après validation de ta demande.",
                 coaching_legend_available: "Disponible", coaching_legend_unavailable: "Indisponible", coaching_submit: "Envoyer ma demande",
                 coaching_admin_availability_title: "Disponibilités coach", coaching_admin_availability_desc: "Ouvre ou ferme tes jours de coaching. Le calendrier public se met à jour en temps réel.", coaching_admin_availability_hint: "Clique sur une date pour ouvrir ou fermer ce créneau.",
-                coaching_admin_requests_title: "Demandes de coaching", coaching_admin_requests_desc: "Centralisées avec les autres tickets — réponds pour envoyer un devis personnalisé.",
+                coaching_admin_requests_title: "Demandes de coaching", coaching_admin_requests_desc: "Centralisées avec les autres tickets — réponds directement dans le ticket.",
                 nav_recruit: "Rejoindre", nav_review: "Avis", review_title: "Laisser un avis", review_subtitle: "Partage ton expérience avec la communauté AERIX.", review_select_rating: "Sélectionne une note", review_comment_placeholder: "Ton commentaire...", review_submit: "Publier mon avis",
                 review_admin_title: "Avis publiés", review_admin_desc: "Tous les avis laissés par les membres. Supprime les avis abusifs ou hors sujet.", no_reviews: "Aucun avis pour le moment.",
                 filter_gallery: "Galerie",
@@ -4371,13 +4379,12 @@ footer{padding-bottom:calc(2rem + env(safe-area-inset-bottom))}
                 account_register_desc: "Create your AERIX account directly with your username, email and password.", password_min_placeholder: "Password (8+ characters)", create_account: "Create account", registered_accounts_title: "Registered accounts", registered_accounts_desc: "All accounts created on the website. The Owner can grant or revoke the Admin role.",
                 contact_admin_title: "Contact requests", contact_admin_desc: "Review and manage tickets sent by users.", contact_title: "Contact AERIX", contact_desc: "Choose Discord or open a ticket directly from the website.", contact_discord: "Contact on Discord", contact_form: "Contact form", contact_login_required: "Sign in to open a ticket.", ticket: "Tickets", no_tickets: "No active tickets.", ticket_status: "Status", ticket_category: "Category", ticket_subject: "Subject", ticket_message: "Message", ticket_send: "Send the ticket", ticket_close: "Close", ticket_reply: "AERIX reply", ticket_created: "Ticket created.", ticket_updated: "Ticket updated.", ticket_required: "Subject and message are required.", contact_category_partnership: "Partnership", contact_category_question: "Question", contact_category_other: "Other request", contact_status_new: "New", contact_status_progress: "In progress", contact_status_done: "Resolved", contact_status_archived: "Archived", role_user: "User", role_admin: "Admin", role_owner: "Owner",
                 nav_coaching: "Coaching", coaching_title: "Book a coaching session", coaching_subtitle: "Le Mans Ultimate & iRacing — solo or group coaching.",
-                coaching_step_infos: "1. Information", coaching_step_profile: "2. Simracing profile", coaching_step_format: "3. Format & pricing", coaching_step_calendar: "4. Pick a date",
+                coaching_step_infos: "1. Information", coaching_step_profile: "2. Simracing profile", coaching_step_format: "3. Format", coaching_step_calendar: "4. Pick a date",
                 coaching_discord_placeholder: "Discord username", coaching_level_beginner: "Beginner", coaching_level_intermediate: "Intermediate", coaching_level_advanced: "Advanced", coaching_level_competition: "Competition",
                 coaching_format_solo: "Solo", coaching_format_group: "Group",
-                coaching_pricing_notice: "AERIX coaching is a paid service. Pricing varies depending on the chosen format (Solo / Group), duration and requested level. A personalized quote will be sent directly in your ticket once your request is validated.",
                 coaching_legend_available: "Available", coaching_legend_unavailable: "Unavailable", coaching_submit: "Send my request",
                 coaching_admin_availability_title: "Coach availability", coaching_admin_availability_desc: "Open or close your coaching days. The public calendar updates in real time.", coaching_admin_availability_hint: "Click a date to open or close that slot.",
-                coaching_admin_requests_title: "Coaching requests", coaching_admin_requests_desc: "Centralized with the other tickets — reply to send a personalized quote.",
+                coaching_admin_requests_title: "Coaching requests", coaching_admin_requests_desc: "Centralized with the other tickets — reply directly in the ticket.",
                 nav_review: "Reviews", review_title: "Leave a review", review_subtitle: "Share your experience with the AERIX community.", review_select_rating: "Select a rating", review_comment_placeholder: "Your comment...", review_submit: "Publish my review",
                 review_admin_title: "Published reviews", review_admin_desc: "All reviews left by members. Delete abusive or off-topic reviews.", no_reviews: "No reviews yet.",
                 filter_gallery: "Gallery",
@@ -4821,6 +4828,30 @@ footer{padding-bottom:calc(2rem + env(safe-area-inset-bottom))}
             return socials.filter(([,url]) => url && safeUrl(url)).map(([key,url,icon]) => `<a href="${escapeHtml(safeUrl(url))}" target="_blank" rel="noopener noreferrer" aria-label="${key}" title="${key}" onclick="event.stopPropagation()" class="player-social-link" data-social="${key}">${icon}</a>`).join('');
         }
 
+        function updateRosterArrows(track) {
+            const wrap = track.parentElement; if (!wrap) return;
+            const prev = wrap.querySelector('.roster-arrow-prev'), next = wrap.querySelector('.roster-arrow-next');
+            const max = track.scrollWidth - track.clientWidth;
+            const scrollable = max > 2;
+            if (prev) prev.classList.toggle('is-hidden', !scrollable || track.scrollLeft <= 2);
+            if (next) next.classList.toggle('is-hidden', !scrollable || track.scrollLeft >= max - 2);
+        }
+        function scrollRoster(id, dir) {
+            const track = document.getElementById(id); if (!track) return;
+            track.scrollBy({ left: dir * track.clientWidth * 0.9, behavior: 'smooth' });
+        }
+        function initRosterArrows() {
+            document.querySelectorAll('.roster-track').forEach(track => {
+                if (!track.dataset.arrowsBound) {
+                    track.dataset.arrowsBound = '1';
+                    track.addEventListener('scroll', () => updateRosterArrows(track), { passive: true });
+                    if (window.ResizeObserver) new ResizeObserver(() => updateRosterArrows(track)).observe(track);
+                }
+                updateRosterArrows(track);
+            });
+        }
+        window.addEventListener('resize', initRosterArrows, { passive: true });
+
         function renderEffectifs() {
             const sortedEffectifs = [...globalEffectifs].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
             const selectedFilter = currentFilters.effectifs;
@@ -4891,13 +4922,16 @@ footer{padding-bottom:calc(2rem + env(safe-area-inset-bottom))}
                                 Direction, encadrement et création de la structure.
                             </p>
                         </div>
-                        <div class="relative">
+                        <div class="relative roster-wrap">
+                            <button type="button" class="roster-arrow roster-arrow-prev is-hidden" onclick="scrollRoster('roster-track-staff',-1)" aria-label="Précédent">‹</button>
+                            <button type="button" class="roster-arrow roster-arrow-next is-hidden" onclick="scrollRoster('roster-track-staff',1)" aria-label="Suivant">›</button>
                             <div class="roster-track" id="roster-track-staff">
                                 ${playersHTML}
                             </div>
                         </div>
                     </div>`;
                 setTimeout(revealActiveElements, 20);
+                requestAnimationFrame(initRosterArrows);
                 return;
             }
 
@@ -4947,7 +4981,9 @@ footer{padding-bottom:calc(2rem + env(safe-area-inset-bottom))}
                             </div>
                             ${r.desc ? `<p class="text-gray-400 text-sm md:max-w-md text-left md:text-right leading-relaxed" data-translate-src="${escapeHtml(r.desc)}">${r.desc}</p>` : ''}
                         </div>
-                        <div class="relative">
+                        <div class="relative roster-wrap">
+                            <button type="button" class="roster-arrow roster-arrow-prev is-hidden" onclick="scrollRoster('roster-track-${index}',-1)" aria-label="Précédent">‹</button>
+                            <button type="button" class="roster-arrow roster-arrow-next is-hidden" onclick="scrollRoster('roster-track-${index}',1)" aria-label="Suivant">›</button>
                             <div class="roster-track" id="roster-track-${index}">
                                 ${playersHTML}
                             </div>
@@ -4957,6 +4993,7 @@ footer{padding-bottom:calc(2rem + env(safe-area-inset-bottom))}
 
             container.innerHTML = filtered.length ? __html : '<p class="text-gray-500 text-sm italic text-center">Aucun effectif pour cette catégorie.</p>';
             setTimeout(revealActiveElements, 20);
+                requestAnimationFrame(initRosterArrows);
         }
 
         function openPlayerModal(playerDataStr) {
@@ -7803,22 +7840,20 @@ function checkAdminSessionTimeout() {
                 mentions: `<p class="text-xs text-gray-500 mb-6">Dernière mise à jour : septembre 2026</p><h4 class="font-bold text-white mb-2 text-lg">1. Éditeur et responsable du site</h4><p class="mb-5">Le présent site présente et exploite le projet esport AERIX Esports. Il est géré par son responsable et ne doit pas être interprété comme le site d'une association ou d'une société juridiquement constituée sous ce nom tant qu'aucune telle structure n'a été officiellement créée.</p><h4 class="font-bold text-white mb-2 text-lg">2. Responsable de publication</h4><p class="mb-6">Le responsable de publication est le responsable du projet AERIX Esports. Les coordonnées nécessaires à l'identification de l'éditeur et du responsable de publication doivent être renseignées dans la version définitive des présentes mentions légales.</p><h4 class="font-bold text-white mb-2 text-lg">3. Hébergement</h4><p class="mb-6">Le site est hébergé par GitHub Pages. Les données applicatives utilisées par le site sont gérées via les services Firebase de Google.</p><h4 class="font-bold text-white mb-2 text-lg">4. Propriété intellectuelle</h4><p class="mb-6">Les contenus, textes, visuels, logos, éléments graphiques et code présents sur le site sont protégés par les règles applicables en matière de propriété intellectuelle, sauf mention contraire. Toute réutilisation non autorisée est susceptible d'être interdite par la loi.</p><h4 class="font-bold text-white mb-2 text-lg">5. Comptes et contenus utilisateurs</h4><p class="mb-6">Le site peut permettre la création de comptes, l'envoi de demandes et la publication d'avis. Les utilisateurs sont responsables des contenus qu'ils transmettent et doivent respecter les présentes conditions d'utilisation.</p><h4 class="font-bold text-white mb-2 text-lg">6. Services tiers</h4><p class="mb-6">Le site utilise notamment GitHub Pages, Firebase et peut intégrer des services tiers tels que Twitch, Google Fonts ou FlagCDN. Ces services disposent de leurs propres conditions et politiques.</p><h4 class="font-bold text-white mb-2 text-lg">7. Droit applicable</h4><p>Le site est exploité dans le respect du droit français applicable. Les informations présentées peuvent être corrigées ou mises à jour lorsque cela est nécessaire.</p>`,
                 confidentialite: `<p class="text-xs text-gray-500 mb-6">Dernière mise à jour : septembre 2026</p><h4 class="font-bold text-white mb-2 text-lg">Responsable du traitement</h4><p class="mb-6">Les traitements liés au site sont réalisés dans le cadre du projet AERIX Esports par son responsable. Le site ne doit pas être présenté comme étant exploité par une association ou une société portant ce nom tant qu'une telle structure n'a pas été officiellement constituée.</p><h4 class="font-bold text-white mb-2 text-lg">Données traitées</h4><p class="mb-2">Selon les fonctionnalités utilisées, le site peut traiter :</p><p class="mb-1">— Données de compte : pseudo et adresse e-mail nécessaires à la création et à la gestion du compte.</p><p class="mb-1">— Demandes de coaching, tickets de contact et échanges associés : informations transmises volontairement pour traiter la demande.</p><p class="mb-1">— Avis publiés : contenu et informations nécessaires à leur affichage et à leur modération.</p><p class="mb-6">— Mesure d'audience : Google Analytics uniquement après consentement lorsque cet outil est activé.</p><h4 class="font-bold text-white mb-2 text-lg">Finalités</h4><p class="mb-6">Les données sont utilisées pour gérer les comptes, répondre aux demandes, gérer les avis et assurer le fonctionnement des fonctionnalités proposées sur le site.</p><h4 class="font-bold text-white mb-2 text-lg">Durées de conservation</h4><p class="mb-6">Les données sont conservées pendant la durée nécessaire aux finalités pour lesquelles elles sont traitées, conformément aux obligations légales applicables et aux règles de conservation définies par le responsable du traitement.</p><h4 class="font-bold text-white mb-2 text-lg">Vos droits</h4><p class="mb-6">Vous disposez, selon les conditions prévues par la réglementation, de droits d'accès, de rectification, d'effacement, de limitation, d'opposition et, lorsque applicable, de portabilité. Pour exercer vos droits, utilisez le moyen de contact officiel indiqué sur le site. Vous pouvez également saisir la CNIL.</p><h4 class="font-bold text-white mb-2 text-lg">Services tiers</h4><p>Le site peut utiliser Firebase, Google Analytics après consentement, Google Fonts, FlagCDN et d'autres services nécessaires à certaines fonctionnalités.</p>`,
                 cgu: `<p class="text-xs text-gray-500 mb-6">Dernière mise à jour : septembre 2026</p><h4 class="font-bold text-white mb-2 text-lg">1. Objet</h4><p class="mb-5">Les présentes conditions définissent les règles d'utilisation du site et de ses fonctionnalités dans le cadre du projet esport AERIX Esports.</p><h4 class="font-bold text-white mb-2 text-lg">2. Compte utilisateur</h4><p class="mb-5">L'utilisateur doit fournir des informations exactes lors de la création de son compte et conserver ses identifiants confidentiels. Le compte est personnel et ne doit pas être utilisé pour usurper l'identité d'une autre personne.</p><h4 class="font-bold text-white mb-2 text-lg">3. Comportement et contenus</h4><p class="mb-5">Il est interdit d'utiliser le site pour publier ou transmettre des contenus illicites, frauduleux, diffamatoires, haineux, menaçants, malveillants ou portant atteinte aux droits de tiers.</p><h4 class="font-bold text-white mb-2 text-lg">4. Avis, demandes et modération</h4><p class="mb-5">Les avis et messages transmis restent sous la responsabilité de leur auteur. Le responsable du site peut modérer, masquer ou supprimer un contenu contraire aux règles applicables ou aux présentes conditions.</p><h4 class="font-bold text-white mb-2 text-lg">5. Coaching et candidatures</h4><p class="mb-5">Les formulaires de coaching, recrutement ou contact constituent des demandes. Leur envoi ne vaut pas automatiquement acceptation, réservation ou engagement définitif.</p><h4 class="font-bold text-white mb-2 text-lg">6. Disponibilité du site</h4><p class="mb-5">Le site peut être temporairement indisponible en raison de maintenance, d'un incident technique ou d'une défaillance d'un service tiers.</p><h4 class="font-bold text-white mb-2 text-lg">7. Suspension d'un compte</h4><p class="mb-5">Un compte peut être suspendu ou supprimé lorsqu'une utilisation est contraire aux présentes conditions, aux règles de sécurité ou au droit applicable.</p><h4 class="font-bold text-white mb-2 text-lg">8. Droit applicable</h4><p>Les présentes conditions sont soumises au droit français applicable.</p>`,
-                cgv: `<p class="text-xs text-gray-500 mb-6">Dernière mise à jour : septembre 2026</p><h4 class="font-bold text-white mb-2 text-lg">1. Champ d'application</h4><p class="mb-5">Ces conditions s'appliquent aux ventes éventuelles de produits ou prestations proposées dans le cadre du projet AERIX Esports.</p><h4 class="font-bold text-white mb-2 text-lg">2. Commandes</h4><p class="mb-5">Lorsque la commande est réalisée par l'intermédiaire d'un ticket ou d'un contact, la demande ne constitue pas à elle seule une vente définitive. La commande n'est confirmée qu'après validation des conditions applicables, du produit ou service concerné et, le cas échéant, du prix et des modalités de paiement.</p><h4 class="font-bold text-white mb-2 text-lg">3. Prix et paiement</h4><p class="mb-5">Les prix et modalités de paiement applicables sont communiqués avant la confirmation de la commande. Le site n'intègre pas actuellement de paiement en ligne direct dans son parcours de commande.</p><h4 class="font-bold text-white mb-2 text-lg">4. Livraison et exécution</h4><p class="mb-5">Les modalités de livraison ou d'exécution sont communiquées selon le produit ou service concerné avant confirmation de la commande.</p><h4 class="font-bold text-white mb-2 text-lg">5. Rétractation et remboursement</h4><p class="mb-5">Lorsque la réglementation accorde un droit de rétractation, celui-ci est appliqué selon les conditions et exceptions prévues par la loi. Les modalités de remboursement applicables sont communiquées au client lorsque nécessaire.</p><h4 class="font-bold text-white mb-2 text-lg">6. Réclamations</h4><p class="mb-5">Toute réclamation peut être adressée via le moyen de contact officiel indiqué sur le site, avec les informations nécessaires pour identifier la commande ou la demande concernée.</p><h4 class="font-bold text-white mb-2 text-lg">7. Droit applicable</h4><p>Les ventes éventuelles sont soumises au droit français applicable.</p>`,
                 cookies: `<p class="text-xs text-gray-500 mb-6">Dernière mise à jour : septembre 2026</p><h4 class="font-bold text-white mb-2 text-lg">1. Cookies et traceurs nécessaires</h4><p class="mb-5">Certains mécanismes techniques nécessaires au fonctionnement du site, à la navigation, à la sécurité ou à la gestion des préférences peuvent être utilisés sans consentement lorsqu'ils sont strictement nécessaires à ces finalités.</p><h4 class="font-bold text-white mb-2 text-lg">2. Mesure d'audience</h4><p class="mb-5">Google Analytics n'est chargé que lorsque l'utilisateur a donné son consentement à la mesure d'audience. Le choix peut être modifié depuis « Gérer les cookies ».</p><h4 class="font-bold text-white mb-2 text-lg">3. Gestion du consentement</h4><p class="mb-5">Le bandeau permet d'accepter, de refuser ou de personnaliser les catégories de cookies concernées. Les préférences sont enregistrées afin d'éviter de redemander le choix à chaque visite lorsque le navigateur autorise le stockage local et les cookies.</p><h4 class="font-bold text-white mb-2 text-lg">4. Services tiers</h4><p>Des services tiers peuvent déposer ou utiliser leurs propres mécanismes techniques lorsqu'une fonctionnalité correspondante est activée, notamment Firebase, Twitch ou les services de contenu externes.</p>`,
             },
             en: {
                 mentions: `<p class="text-xs text-gray-500 mb-6">Last updated: September 2026</p><h4 class="font-bold text-white mb-2 text-lg">1. Website operator</h4><p class="mb-5">This website presents and operates the AERIX Esports esports project. It is managed by its responsible person and must not be presented as the website of an association or company legally incorporated under this name unless such an entity has been officially created.</p><h4 class="font-bold text-white mb-2 text-lg">2. Publication responsibility</h4><p class="mb-6">Publication responsibility lies with the person responsible for the AERIX Esports project. The final legal notice must include the information required to identify the publisher and publication director.</p><h4 class="font-bold text-white mb-2 text-lg">3. Hosting</h4><p class="mb-6">The website is hosted by GitHub Pages. Application data is managed through Google's Firebase services.</p><h4 class="font-bold text-white mb-2 text-lg">4. Intellectual property</h4><p class="mb-6">Website content, text, visuals, logos, graphics and code are protected by applicable intellectual property rules unless otherwise stated.</p><h4 class="font-bold text-white mb-2 text-lg">5. Accounts and user content</h4><p class="mb-6">The website may allow users to create accounts, submit requests and publish reviews. Users are responsible for the content they submit and must comply with these terms.</p><h4 class="font-bold text-white mb-2 text-lg">6. Third-party services</h4><p class="mb-6">The website uses GitHub Pages, Firebase and may integrate third-party services such as Twitch, Google Fonts or FlagCDN.</p><h4 class="font-bold text-white mb-2 text-lg">7. Applicable law</h4><p>The website is operated in accordance with applicable French law.</p>`,
                 confidentialite: `<p class="text-xs text-gray-500 mb-6">Last updated: September 2026</p><h4 class="font-bold text-white mb-2 text-lg">Data controller</h4><p class="mb-6">Processing activities related to this website are carried out within the AERIX Esports project by its responsible person. The website must not be presented as being operated by an association or company under this name unless such an entity has been officially incorporated.</p><h4 class="font-bold text-white mb-2 text-lg">Data processed</h4><p class="mb-2">Depending on the features used, the website may process:</p><p class="mb-1">— Account data: username and email address required to create and manage an account.</p><p class="mb-1">— Coaching requests, contact tickets and related exchanges: information voluntarily submitted to process the request.</p><p class="mb-1">— Published reviews: content and information required for display and moderation.</p><p class="mb-6">— Analytics: Google Analytics only after consent when enabled.</p><h4 class="font-bold text-white mb-2 text-lg">Purposes</h4><p class="mb-6">Data is used to manage accounts, respond to requests, manage reviews and operate website features.</p><h4 class="font-bold text-white mb-2 text-lg">Retention</h4><p class="mb-6">Data is retained for as long as necessary for the purposes for which it is processed, subject to applicable legal obligations and the retention rules defined by the controller.</p><h4 class="font-bold text-white mb-2 text-lg">Your rights</h4><p class="mb-6">Subject to applicable law, you may have rights of access, rectification, erasure, restriction, objection and, where applicable, data portability. You may exercise these rights through the official contact method indicated on the website. You may also contact the CNIL.</p><h4 class="font-bold text-white mb-2 text-lg">Third-party services</h4><p>The website may use Firebase, Google Analytics after consent, Google Fonts, FlagCDN and other services required for certain features.</p>`,
                 cgu: `<p class="text-xs text-gray-500 mb-6">Last updated: September 2026</p><h4 class="font-bold text-white mb-2 text-lg">1. Purpose</h4><p class="mb-5">These terms define the rules for using the website and its features within the AERIX Esports esports project.</p><h4 class="font-bold text-white mb-2 text-lg">2. User accounts</h4><p class="mb-5">Users must provide accurate information when creating an account and keep their credentials confidential. Accounts are personal and must not be used to impersonate another person.</p><h4 class="font-bold text-white mb-2 text-lg">3. Conduct and content</h4><p class="mb-5">Users must not use the website to publish or transmit unlawful, fraudulent, defamatory, hateful, threatening or malicious content, or content that infringes third-party rights.</p><h4 class="font-bold text-white mb-2 text-lg">4. Reviews, requests and moderation</h4><p class="mb-5">Users are responsible for the reviews and messages they submit. The site operator may moderate, hide or remove content that breaches these terms or applicable law.</p><h4 class="font-bold text-white mb-2 text-lg">5. Coaching and applications</h4><p class="mb-5">Coaching, recruitment and contact forms are requests. Submitting a form does not automatically constitute acceptance, a booking or a final commitment.</p><h4 class="font-bold text-white mb-2 text-lg">6. Availability</h4><p class="mb-5">The website may be temporarily unavailable due to maintenance, technical incidents or failures of third-party services.</p><h4 class="font-bold text-white mb-2 text-lg">7. Account suspension</h4><p class="mb-5">An account may be suspended or deleted when its use breaches these terms, security rules or applicable law.</p><h4 class="font-bold text-white mb-2 text-lg">8. Applicable law</h4><p>These terms are governed by applicable French law.</p>`,
-                cgv: `<p class="text-xs text-gray-500 mb-6">Last updated: September 2026</p><h4 class="font-bold text-white mb-2 text-lg">1. Scope</h4><p class="mb-5">These terms apply to any sale of products or services offered within the AERIX Esports project.</p><h4 class="font-bold text-white mb-2 text-lg">2. Orders</h4><p class="mb-5">When an order is initiated through a ticket or contact request, the request does not by itself constitute a final sale. The order is confirmed only after the applicable product or service, price and payment terms have been validated.</p><h4 class="font-bold text-white mb-2 text-lg">3. Prices and payment</h4><p class="mb-5">Applicable prices and payment terms are communicated before order confirmation. The website currently does not provide direct online payment within its order flow.</p><h4 class="font-bold text-white mb-2 text-lg">4. Delivery and performance</h4><p class="mb-5">Delivery or performance terms are communicated according to the relevant product or service before the order is confirmed.</p><h4 class="font-bold text-white mb-2 text-lg">5. Withdrawal and refunds</h4><p class="mb-5">Where the law provides a withdrawal right, it applies subject to the legal conditions and exceptions. Applicable refund terms are communicated to the customer when required.</p><h4 class="font-bold text-white mb-2 text-lg">6. Complaints</h4><p class="mb-5">Complaints may be submitted through the official contact method indicated on the website, with the information necessary to identify the relevant order or request.</p><h4 class="font-bold text-white mb-2 text-lg">7. Applicable law</h4><p>Any sales are governed by applicable French law.</p>`,
                 cookies: `<p class="text-xs text-gray-500 mb-6">Last updated: September 2026</p><h4 class="font-bold text-white mb-2 text-lg">1. Necessary cookies and trackers</h4><p class="mb-5">Technical mechanisms necessary for website operation, navigation, security or preference management may be used without consent where they are strictly necessary for these purposes.</p><h4 class="font-bold text-white mb-2 text-lg">2. Analytics</h4><p class="mb-5">Google Analytics is loaded only when the user has consented to analytics. This choice can be changed through “Manage cookies”.</p><h4 class="font-bold text-white mb-2 text-lg">3. Consent management</h4><p class="mb-5">The banner allows users to accept, refuse or customize relevant cookie categories. Preferences are stored to avoid requesting the choice on every visit when local storage and cookies are available.</p><h4 class="font-bold text-white mb-2 text-lg">4. Third-party services</h4><p>Third-party services may use their own technical mechanisms when a corresponding feature is enabled, including Firebase, Twitch or external content services.</p>`
             }
         };
 
         function openLegal(type) {
             const titleMap = {
-                fr: { mentions:"Mentions légales", confidentialite:"Confidentialité", cgu:"Conditions d'utilisation (CGU)", cgv:"Conditions générales de vente (CGV)", cookies:"Politique de cookies" },
-                en: { mentions:"Legal notice", confidentialite:"Privacy", cgu:"Terms of use", cgv:"Terms of sale", cookies:"Cookie policy" }
+                fr: { mentions:"Mentions légales", confidentialite:"Confidentialité", cgu:"Conditions d'utilisation (CGU)", cookies:"Politique de cookies" },
+                en: { mentions:"Legal notice", confidentialite:"Privacy", cgu:"Terms of use", cookies:"Cookie policy" }
             };
             document.getElementById('legal-title').innerText = titleMap[currentLang][type] || "Document";
             document.getElementById('legal-content').innerHTML = legalTexts[currentLang][type] || "<p>Document unavailable.</p>";
