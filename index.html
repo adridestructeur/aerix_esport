@@ -31,7 +31,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Cropper.js -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" /></noscript>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js" defer></script>
 
     <!-- Firebase Compat SDKs -->
@@ -2935,6 +2936,37 @@ body.theme-light .btn-review-neon, body.theme-white-red .btn-review-neon {
 body.theme-white-red .btn-review-neon { color:#151515 !important; }
 
 </style>
+<style id="aerix-mobile-v2">
+/* Ancres sous la nav fixe + pas de zoom de texte auto en paysage */
+html{scroll-padding-top:84px;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+/* Focus clavier visible */
+button:focus-visible,a:focus-visible,[onclick]:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #a78bfa;outline-offset:2px}
+
+@media (max-width:767px){
+  /* Modales : 100vh dépasse la zone visible quand la barre d'adresse est affichée -> dvh */
+  [class*="max-h-["][class*="vh]"]{max-height:calc(100dvh - 24px)!important}
+  /* Flou allégé : les gros backdrop-filter saccadent sur mobile */
+  .glass-panel,.glass-panel-no-hover{-webkit-backdrop-filter:blur(12px)!important;backdrop-filter:blur(12px)!important}
+  /* Longs pseudos / URL : on coupe au lieu de déborder de l'écran */
+  main.page-view h1,main.page-view h2,main.page-view h3,main.page-view h4,main.page-view p,.glass-panel a{overflow-wrap:anywhere}
+  /* Tableaux et blocs larges défilent dans leur conteneur */
+  main.page-view table{display:block;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+}
+
+/* Écrans tactiles : pas de survol « collé » après un tap */
+@media (hover:none){
+  .glass-panel:hover{transform:none!important}
+  main.page-view h3.text-2xl:hover,main.page-view h4.text-2xl:hover,main.page-view h4.text-3xl:hover{transform:none!important}
+  .btn-review-neon:hover{transform:none}
+}
+
+/* Cibles tactiles >= 44px (recommandation Apple/Google) */
+@media (pointer:coarse){
+  button[onclick*="close"],button[onclick*="Close"],button[onclick*="toggleAerixAssistant(false)"]{min-width:44px;min-height:44px}
+  .theme-option,[data-lang-option]{min-height:44px}
+  #scrollTopBtn{bottom:calc(24px + env(safe-area-inset-bottom));right:max(24px,env(safe-area-inset-right))}
+}
+</style>
 </head>
 <body class="antialiased selection:bg-purple-500 selection:text-white min-h-screen flex flex-col relative">
 
@@ -3020,8 +3052,8 @@ body.theme-white-red .btn-review-neon { color:#151515 !important; }
                         <img id="current-flag" src="https://flagcdn.com/w20/fr.png" alt="FR" class="w-5 h-3.5 object-cover rounded-[2px] shadow-sm"> <span id="current-lang-text">FR</span> <span class="lang-chevron">▾</span>
                     </button>
                     <div id="language-menu" class="absolute right-0 mt-2 w-36 glass-panel-no-hover rounded-xl overflow-hidden flex flex-col p-2 shadow-xl border border-white/10">
-                        <button type="button" onclick="setLang('fr')" data-lang-option="fr" class="flex items-center gap-3 text-left px-3 py-2.5 text-xs font-bold text-white hover:bg-white/10 rounded-lg transition"><img src="https://flagcdn.com/w20/fr.png" class="w-4 h-3 object-cover rounded-sm" alt="Image AERIX"> Français</button>
-                        <button type="button" onclick="setLang('en')" data-lang-option="en" class="flex items-center gap-3 text-left px-3 py-2.5 text-xs font-bold text-white hover:bg-white/10 rounded-lg transition"><img src="https://flagcdn.com/w20/gb.png" class="w-4 h-3 object-cover rounded-sm" alt="Image AERIX"> English</button>
+                        <button type="button" onclick="setLang('fr')" data-lang-option="fr" class="flex items-center gap-3 text-left px-3 py-2.5 text-xs font-bold text-white hover:bg-white/10 rounded-lg transition"><img src="https://flagcdn.com/w20/fr.png" class="w-4 h-3 object-cover rounded-sm" alt="" aria-hidden="true"> Français</button>
+                        <button type="button" onclick="setLang('en')" data-lang-option="en" class="flex items-center gap-3 text-left px-3 py-2.5 text-xs font-bold text-white hover:bg-white/10 rounded-lg transition"><img src="https://flagcdn.com/w20/gb.png" class="w-4 h-3 object-cover rounded-sm" alt="" aria-hidden="true"> English</button>
                     </div>
                 </div>
             </div>
@@ -3064,8 +3096,8 @@ body.theme-white-red .btn-review-neon { color:#151515 !important; }
                 Rejoindre le Discord
             </a>
             <div class="flex gap-2 mt-1">
-                <button onclick="setLang('fr'); closeMobileMenu();" class="flex-1 py-3 bg-white/5 border border-white/10 rounded-xl text-xs font-bold text-white flex justify-center items-center gap-2"><img src="https://flagcdn.com/w20/fr.png" class="w-4 h-3 rounded-sm" alt="Image AERIX"> FR</button>
-                <button onclick="setLang('en'); closeMobileMenu();" class="flex-1 py-3 bg-white/5 border border-white/10 rounded-xl text-xs font-bold text-white flex justify-center items-center gap-2"><img src="https://flagcdn.com/w20/gb.png" class="w-4 h-3 rounded-sm" alt="Image AERIX"> EN</button>
+                <button onclick="setLang('fr'); closeMobileMenu();" class="flex-1 py-3 bg-white/5 border border-white/10 rounded-xl text-xs font-bold text-white flex justify-center items-center gap-2"><img src="https://flagcdn.com/w20/fr.png" class="w-4 h-3 rounded-sm" alt="" aria-hidden="true"> FR</button>
+                <button onclick="setLang('en'); closeMobileMenu();" class="flex-1 py-3 bg-white/5 border border-white/10 rounded-xl text-xs font-bold text-white flex justify-center items-center gap-2"><img src="https://flagcdn.com/w20/gb.png" class="w-4 h-3 rounded-sm" alt="" aria-hidden="true"> EN</button>
             </div>
         </div>
     </nav>
@@ -3345,7 +3377,7 @@ body.theme-white-red .btn-review-neon { color:#151515 !important; }
         <div class="member-profile-shell w-full max-w-5xl max-h-[92vh] rounded-[2rem] flex flex-col md:flex-row overflow-hidden relative">
             <button onclick="closePlayerModal()" aria-label="Fermer" class="absolute top-5 right-5 text-white hover:text-aerix-purple z-50 bg-black/55 w-10 h-10 rounded-full flex items-center justify-center border border-white/15 backdrop-blur-md transition">✕</button>
             <div class="member-profile-photo w-full md:w-[54%] bg-[#050505] overflow-hidden relative">
-                <img id="pm-img" src="" class="w-full h-full object-cover" alt="Membre AERIX">
+                <img loading="lazy" decoding="async" id="pm-img" src="" class="w-full h-full object-cover" alt="Membre AERIX">
                 <div class="pm-image-bottom-fade absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent"></div>
                 <div class="pm-image-side-fade absolute inset-y-0 right-0 w-1/2 bg-gradient-to-r from-transparent to-[#050505]/85 hidden md:block"></div>
                 <div class="absolute top-6 left-6 z-10 flex items-center gap-3">
@@ -3380,7 +3412,7 @@ body.theme-white-red .btn-review-neon { color:#151515 !important; }
             <button onclick="closeProductModal()" aria-label="Fermer" class="absolute top-6 right-6 text-white hover:text-aerix-purple z-50 bg-black/50 w-10 h-10 rounded-full flex items-center justify-center border border-white/20 backdrop-blur-md transition">✕</button>
             <div class="w-full md:w-1/2 h-[62%] md:h-full bg-[#050505] flex items-center justify-center relative border-b md:border-b-0 md:border-r border-white/10">
                 <div class="absolute inset-0 bg-gradient-to-tr from-purple-900/10 to-transparent"></div>
-                <img id="modal-product-img" src="" class="w-full h-full object-cover object-center p-0 relative z-10" alt="Image du produit AERIX">
+                <img loading="lazy" decoding="async" id="modal-product-img" src="" class="w-full h-full object-cover object-center p-0 relative z-10" alt="Image du produit AERIX">
                 <button id="slider-prev" onclick="prevProductImg()" aria-label="Image précédente" class="absolute left-4 top-1/2 transform -translate-y-1/2 z-20 bg-black/60 backdrop-blur border border-white/10 text-white p-3 rounded-full hover:bg-aerix-purple transition hidden">‹</button>
                 <button id="slider-next" onclick="nextProductImg()" aria-label="Image suivante" class="absolute right-4 top-1/2 transform -translate-y-1/2 z-20 bg-black/60 backdrop-blur border border-white/10 text-white p-3 rounded-full hover:bg-aerix-purple transition hidden">›</button>
                 <div id="slider-dots" class="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-20 flex gap-2"></div>
@@ -3398,7 +3430,7 @@ body.theme-white-red .btn-review-neon { color:#151515 !important; }
         <div class="glass-panel-no-hover w-full max-w-5xl max-h-[94vh] overflow-y-auto rounded-[2rem] shadow-2xl relative">
             <button onclick="closeEventArticle()" class="absolute top-6 right-6 text-white hover:text-aerix-purple z-50 bg-black/60 w-10 h-10 rounded-full flex items-center justify-center border border-white/20 backdrop-blur-md transition">✕</button>
             <div id="event-article-img-wrap" class="w-full aspect-video bg-[#050505] overflow-hidden border-b border-white/10 hidden">
-                <img id="event-article-img" src="" class="w-full h-full object-cover" alt="Image de l'événement AERIX">
+                <img loading="lazy" decoding="async" id="event-article-img" src="" class="w-full h-full object-cover" alt="Image de l'événement AERIX">
             </div>
             <div class="p-6 md:p-10">
                 <div id="event-article-badges" class="flex flex-wrap gap-3 items-center mb-4"></div>
@@ -3415,7 +3447,7 @@ body.theme-white-red .btn-review-neon { color:#151515 !important; }
         <div class="glass-panel-no-hover w-full max-w-3xl max-h-[92vh] overflow-y-auto rounded-[2rem] shadow-2xl relative">
             <button onclick="closePalmaresArticle()" class="absolute top-6 right-6 text-white hover:text-aerix-purple z-50 bg-black/50 w-10 h-10 rounded-full flex items-center justify-center border border-white/20 backdrop-blur-md transition">✕</button>
             <div id="palmares-article-img-wrap" class="w-full aspect-video bg-[#050505] overflow-hidden border-b border-white/10 hidden">
-                <img id="palmares-article-img" src="" class="w-full h-full object-cover" alt="Image AERIX">
+                <img loading="lazy" decoding="async" id="palmares-article-img" src="" class="w-full h-full object-cover" alt="Image AERIX">
             </div>
             <div class="p-6 md:p-10">
                 <div class="flex flex-wrap gap-3 items-center mb-4" id="palmares-article-badges"></div>
@@ -3712,7 +3744,7 @@ body.theme-white-red .btn-review-neon { color:#151515 !important; }
     <div id="media-lightbox" class="fixed inset-0 z-[300] hidden items-center justify-center p-4 bg-black/95 backdrop-blur-xl" onclick="if(event.target===this) closeImageViewer()" role="dialog" aria-modal="true" aria-label="Aperçu du média">
         <button type="button" onclick="closeImageViewer()" class="absolute top-5 right-5 z-10 w-11 h-11 rounded-full bg-white/10 border border-white/15 text-white text-xl hover:bg-white/20 transition">✕</button>
         <div class="relative max-w-[96vw] max-h-[92vh] flex flex-col items-center">
-            <img id="media-lightbox-img" src="" alt="AERIX Media" class="rounded-xl shadow-2xl border border-white/10">
+            <img loading="lazy" decoding="async" id="media-lightbox-img" src="" alt="AERIX Media" class="rounded-xl shadow-2xl border border-white/10">
             <div id="media-lightbox-caption" class="mt-4 text-sm text-gray-300 text-center max-w-3xl"></div>
         </div>
     </div>
@@ -4220,6 +4252,52 @@ body.theme-white-red .btn-review-neon { color:#151515 !important; }
 
     <!-- SCRIPTS CORE -->
     <script>
+
+        // Stockage protégé : localStorage/sessionStorage lèvent une SecurityError dans certains
+        // navigateurs intégrés (Instagram, Discord...) ou avec les cookies bloqués, ce qui
+        // faisait planter tout le script au chargement.
+        const lsGet = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+        const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
+        const ssSet = (k, v) => { try { sessionStorage.setItem(k, v); } catch (e) {} };
+        const ssRemove = k => { try { sessionStorage.removeItem(k); } catch (e) {} };
+
+        // Si le SDK Firebase est bloqué (bloqueur de pub, réseau mobile faible), on installe un
+        // substitut hors-ligne : le site reste navigable au lieu de rester figé.
+        if (typeof firebase === 'undefined') {
+            console.warn('Firebase indisponible (réseau ou bloqueur de contenu) : mode hors-ligne.');
+            const off = () => Promise.reject(Object.assign(new Error('Firebase indisponible'), { code: 'offline' }));
+            const noop = () => {};
+            const query = () => {
+                const q = {
+                    orderBy: () => q, where: () => q, limit: () => q,
+                    doc: () => ({ get: off, set: off, update: off, delete: off }),
+                    add: off, get: off,
+                    onSnapshot: (ok, err) => { if (typeof err === 'function') err(new Error('offline')); return noop; }
+                };
+                return q;
+            };
+            const authStub = {
+                currentUser: null,
+                setPersistence: () => Promise.resolve(),
+                getRedirectResult: () => Promise.resolve(null),
+                onAuthStateChanged: cb => { setTimeout(() => cb(null), 0); return noop; },
+                signOut: () => Promise.resolve(),
+                signInWithPopup: off, signInWithRedirect: off, signInWithEmailAndPassword: off,
+                createUserWithEmailAndPassword: off, sendPasswordResetEmail: off
+            };
+            window.firebase = {
+                initializeApp: noop,
+                firestore: Object.assign(() => ({ collection: query }), {
+                    FieldValue: { serverTimestamp: () => null, arrayUnion: (...a) => a, delete: () => null }
+                }),
+                auth: Object.assign(() => authStub, {
+                    Auth: { Persistence: { LOCAL: 'local' } },
+                    EmailAuthProvider: { credential: () => null },
+                    GoogleAuthProvider: function () {}
+                })
+            };
+        }
+
         const firebaseConfig = {
             apiKey: "AIzaSyCD4RcLGWDM4qP9XWU_B-ogvStpuaORugo",
             authDomain: "aerix-4172f.firebaseapp.com",
@@ -4250,13 +4328,13 @@ body.theme-white-red .btn-review-neon { color:#151515 !important; }
             try {
                 const result = await auth.getRedirectResult();
                 if (result && result.user) {
-                    sessionStorage.removeItem('aerix_google_redirect');
+                    ssRemove('aerix_google_redirect');
                     closeAccountModal();
                     showToast(currentLang==='en'?'Signed in with Google.':'Connexion Google réussie.');
                 }
             } catch (e) {
                 console.error('Google redirect sign-in failed:', e);
-                sessionStorage.removeItem('aerix_google_redirect');
+                ssRemove('aerix_google_redirect');
                 if (e?.code === 'auth/unauthorized-domain') {
                     showToast(currentLang==='en' ? 'This website is not authorized for Google sign-in.' : 'Ce domaine n’est pas autorisé pour la connexion Google.', 'error');
                 }
@@ -4401,7 +4479,7 @@ body.theme-white-red .btn-review-neon { color:#151515 !important; }
                 assistant_welcome: "Hi! How can I help you?", assistant_quick_about: "Who is AERIX?", assistant_quick_join: "Join AERIX", assistant_quick_contact: "Contact administration", assistant_quick_coaching: "Coaching", assistant_action_contact: "Contact administration", assistant_action_coaching: "Request coaching", assistant_action_discord: "Join the Discord"
             }
         };
-        let currentLang = localStorage.getItem('aerix_lang') || ((navigator.language || '').toLowerCase().startsWith('en') ? 'en' : 'fr');
+        let currentLang = lsGet('aerix_lang') || ((navigator.language || '').toLowerCase().startsWith('en') ? 'en' : 'fr');
         
         function closeHeaderDropdowns(except = '') {
             if (except !== 'language') closeLanguageMenu();
@@ -4524,7 +4602,7 @@ body.theme-white-red .btn-review-neon { color:#151515 !important; }
             if (label) label.textContent = textMap[lang];
             if (overlay) {
                 const mark = overlay.querySelector('.transition-mark');
-                if (mark) mark.innerHTML = `<img src="${flagMap[lang]}" alt="${textMap[lang]}">`;
+                if (mark) mark.innerHTML = `<img loading="lazy" decoding="async" src="${flagMap[lang]}" alt="${textMap[lang]}">`;
                 overlay.classList.add('is-active');
             }
             closeLanguageMenu();
@@ -4539,7 +4617,7 @@ body.theme-white-red .btn-review-neon { color:#151515 !important; }
             // soit lisible avant la disparition de l'overlay.
             languageTransitionTimer = setTimeout(() => {
                 currentLang = lang;
-                localStorage.setItem('aerix_lang', lang);
+                lsSet('aerix_lang', lang);
                 const smallFlagMap = { fr: "https://flagcdn.com/w20/fr.png", en: "https://flagcdn.com/w20/gb.png" };
                 const shortMap = { fr: "FR", en: "EN" };
                 const langBtn = document.getElementById('lang-btn');
@@ -4677,7 +4755,7 @@ body.theme-white-red .btn-review-neon { color:#151515 !important; }
             let __html = '';
             globalShop.forEach((item, index) => {
                 let firstImg = Array.isArray(item.images) && item.images.length > 0 ? item.images[0] : item.image;
-                const imgTag = firstImg ? `<img src="${escapeHtml(firstImg)}" loading="lazy" decoding="async" class="w-full h-full object-cover object-center transition duration-700 group-hover:scale-105" alt="${escapeHtml(item.name)}">` : `<div class="w-full h-full bg-black/40 flex items-center justify-center text-xs text-gray-600">Sans image</div>`;
+                const imgTag = firstImg ? `<img loading="lazy" decoding="async" src="${escapeHtml(firstImg)}" loading="lazy" decoding="async" class="w-full h-full object-cover object-center transition duration-700 group-hover:scale-105" alt="${escapeHtml(item.name)}">` : `<div class="w-full h-full bg-black/40 flex items-center justify-center text-xs text-gray-600">Sans image</div>`;
                 __html += `
                     <div onclick="openProductModal(${index})" class="glass-panel rounded-3xl flex flex-col h-full cursor-pointer group reveal delay-${(index%4)*100} overflow-hidden border-t-2 border-t-aerix-purple/20">
                         <div class="w-full aspect-[4/5] bg-black/80 relative border-b border-white/5 p-4">${imgTag}</div>
@@ -4700,7 +4778,7 @@ body.theme-white-red .btn-review-neon { color:#151515 !important; }
         // traduit à la volée via un service de traduction public, puis mis en cache
         // (mémoire + localStorage) pour éviter de re-traduire à chaque changement de langue.
         const translationCache = (() => {
-            try { return JSON.parse(localStorage.getItem('aerix_translation_cache') || '{}'); }
+            try { return JSON.parse(lsGet('aerix_translation_cache') || '{}'); }
             catch(e) { return {}; }
         })();
         // Sauvegarde différée et regroupée : avant, tout le cache était re-sérialisé et réécrit
@@ -4715,7 +4793,7 @@ body.theme-white-red .btn-review-neon { color:#151515 !important; }
                     const keys = Object.keys(translationCache);
                     // Garde-fou : on évite qu'un cache qui grossit indéfiniment sature le quota.
                     if (keys.length > 1500) keys.slice(0, keys.length - 1000).forEach(k => delete translationCache[k]);
-                    localStorage.setItem('aerix_translation_cache', JSON.stringify(translationCache));
+                    lsSet('aerix_translation_cache', JSON.stringify(translationCache));
                 } catch(e) { /* quota, ignore */ }
             }, 800);
         }
@@ -4878,7 +4956,7 @@ body.theme-white-red .btn-review-neon { color:#151515 !important; }
                     return `
                         <div class="glass-panel effectif-player-card rounded-3xl cursor-pointer group transition-all duration-500" onclick="openPlayerModal('${escapedPlayer}')">
                             <div class="member-card-media">
-                                <img src="${escapeHtml(p.avatar || defaultAvatar)}" loading="eager" decoding="async" alt="${escapeHtml(p.pseudo || p.name || 'AERIX Member')}" class="object-top-custom">
+                                <img loading="lazy" decoding="async" src="${escapeHtml(p.avatar || defaultAvatar)}" loading="eager" decoding="async" alt="${escapeHtml(p.pseudo || p.name || 'AERIX Member')}" class="object-top-custom">
                             </div>
                             <div class="member-card-top">
                                 <span class="member-role-badge"><span class="member-role-dot"></span>${escapeHtml(roleIcon)} ${escapeHtml(roleLabel)}</span>
@@ -4933,7 +5011,7 @@ body.theme-white-red .btn-review-neon { color:#151515 !important; }
                         return `
                         <div class="glass-panel effectif-player-card rounded-3xl cursor-pointer group transition-all duration-500" onclick="openPlayerModal('${escapedPlayer}')">
                             <div class="member-card-media">
-                                <img src="${escapeHtml(p.avatar || defaultAvatar)}" loading="eager" decoding="async" alt="${escapeHtml(p.pseudo || p.name || 'AERIX Member')}" class="object-top-custom">
+                                <img loading="lazy" decoding="async" src="${escapeHtml(p.avatar || defaultAvatar)}" loading="eager" decoding="async" alt="${escapeHtml(p.pseudo || p.name || 'AERIX Member')}" class="object-top-custom">
                             </div>
                             <div class="member-card-top">
                                 <span class="member-role-badge"><span class="member-role-dot"></span>${escapeHtml(roleIcon)} ${escapeHtml(roleLabel)}</span>
@@ -5166,7 +5244,7 @@ body.theme-white-red .btn-review-neon { color:#151515 !important; }
             
             filtered.forEach((p, index) => {
                 let layoutHTML = '';
-                const imgHTML = p.image ? `<div class="w-full aspect-video rounded-xl overflow-hidden mb-6 border border-white/10 shadow-inner"><img src="${escapeHtml(p.image)}" loading="lazy" alt="" class="w-full h-full object-cover"></div>` : '';
+                const imgHTML = p.image ? `<div class="w-full aspect-video rounded-xl overflow-hidden mb-6 border border-white/10 shadow-inner"><img loading="lazy" decoding="async" src="${escapeHtml(p.image)}" loading="lazy" alt="" class="w-full h-full object-cover"></div>` : '';
 
                 if (p.game === 'Rocket League') {
                     let badgeClass = p.result === 'Victoire' ? 'bg-aerix-win/20 text-aerix-win border-aerix-win/30' : 'bg-aerix-loss/20 text-aerix-loss border-aerix-loss/30';
@@ -5279,7 +5357,7 @@ body.theme-white-red .btn-review-neon { color:#151515 !important; }
             let __html = '';
             
             filtered.forEach((a, index) => {
-                const imgHTML = a.image ? `<div class="w-full md:w-1/3 shrink-0 h-48 md:h-auto border-r border-white/5 overflow-hidden"><img src="${escapeHtml(a.image)}" loading="lazy" alt="" class="news-img w-full h-full object-cover"></div>` : '';
+                const imgHTML = a.image ? `<div class="w-full md:w-1/3 shrink-0 h-48 md:h-auto border-r border-white/5 overflow-hidden"><img loading="lazy" decoding="async" src="${escapeHtml(a.image)}" loading="lazy" alt="" class="news-img w-full h-full object-cover"></div>` : '';
                 __html += `
                     <div class="news-card-animated group cursor-pointer glass-panel rounded-3xl overflow-hidden reveal delay-${(index%3)*100} flex flex-col md:flex-row border-l-2 border-l-aerix-purple/50 hover:border-l-aerix-purple transition-colors">
                         ${imgHTML}
@@ -5307,7 +5385,7 @@ body.theme-white-red .btn-review-neon { color:#151515 !important; }
             items.forEach((a, index) => {
                 __html += `
                     <div class="news-card-animated group cursor-pointer glass-panel rounded-2xl overflow-hidden reveal delay-${(index%6)*80} aspect-square relative">
-                        <img src="${escapeHtml(a.image)}" loading="lazy" alt="" class="news-img w-full h-full object-cover">
+                        <img loading="lazy" decoding="async" src="${escapeHtml(a.image)}" loading="lazy" alt="" class="news-img w-full h-full object-cover">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3">
                             <div class="mb-1">${getGameBadge(a.game)}</div>
                             ${a.caption ? `<p class="text-white text-xs font-bold truncate" data-translate-src="${escapeHtml(a.caption || '')}">${escapeHtml(a.caption)}</p>` : ''}
@@ -5346,7 +5424,7 @@ body.theme-white-red .btn-review-neon { color:#151515 !important; }
             const featuredPartner = explicitFeatured || partners.find(p => /nolt/i.test(p.name || '')) || partners.find(p => /équipement|equipment|official/i.test(p.category || ''));
             if (featured && featuredPartner) {
                 const logo = featuredPartner.image
-                    ? `<img src="${escapeHtml(featuredPartner.image)}" alt="${escapeHtml(featuredPartner.name || 'AERIX Partner')}" loading="lazy" class="partner-featured-logo max-h-24 max-w-[260px] object-contain mx-auto">`
+                    ? `<img loading="lazy" decoding="async" src="${escapeHtml(featuredPartner.image)}" alt="${escapeHtml(featuredPartner.name || 'AERIX Partner')}" loading="lazy" class="partner-featured-logo max-h-24 max-w-[260px] object-contain mx-auto">`
                     : `<div class="partner-featured-logo flex items-center justify-center text-3xl font-black text-white">${escapeHtml(featuredPartner.name || 'Partenaire')}</div>`;
                 const link = featuredPartner.url && safeUrl(featuredPartner.url)
                     ? `<a href="${escapeHtml(safeUrl(featuredPartner.url))}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs font-bold text-white hover:bg-aerix-purple/15 hover:border-aerix-purple/40 transition">${currentLang === 'en' ? 'Discover partner ↗' : 'Découvrir le partenaire ↗'}</a>`
@@ -5371,7 +5449,7 @@ body.theme-white-red .btn-review-neon { color:#151515 !important; }
                 let sectionHTML = `<div class="mb-14"><div class="flex items-end justify-between gap-4 border-b border-white/5 pb-3 mb-6"><h4 class="text-xs font-bold text-gray-500 uppercase tracking-widest text-left">${escapeHtml(cat)}</h4><span class="text-[10px] text-gray-600 font-bold">${categories[cat].length}</span></div><div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6 items-center">`;
                 categories[cat].forEach((p, index) => {
                     const contentHTML = p.image
-                        ? `<img src="${escapeHtml(p.image)}" alt="${escapeHtml(p.name)}" loading="lazy" class="max-h-16 max-w-full object-contain filter drop-shadow-[0_0_10px_rgba(255,255,255,0.1)] group-hover:drop-shadow-[0_0_20px_rgba(139,92,246,0.6)] transition-all duration-500 group-hover:scale-110">`
+                        ? `<img loading="lazy" decoding="async" src="${escapeHtml(p.image)}" alt="${escapeHtml(p.name)}" loading="lazy" class="max-h-16 max-w-full object-contain filter drop-shadow-[0_0_10px_rgba(255,255,255,0.1)] group-hover:drop-shadow-[0_0_20px_rgba(139,92,246,0.6)] transition-all duration-500 group-hover:scale-110">`
                         : `<span class="text-xl font-bold text-white tracking-tighter transition-all duration-500 group-hover:scale-110 inline-block">${escapeHtml(p.name)}</span>`;
                     const wrapperHTML = p.url && safeUrl(p.url)
                         ? `<a href="${escapeHtml(safeUrl(p.url))}" target="_blank" rel="noopener noreferrer" class="partner-card-tile glass-panel p-6 rounded-2xl flex items-center justify-center min-h-[120px] group reveal delay-${(index%5)*100} hover:border-aerix-purple/50 bg-[#050505]/50">${contentHTML}</a>`
@@ -5611,10 +5689,10 @@ function checkAdminSessionTimeout() {
             // peut en définir une pour son propre compte.
             const canUseProfileAvatar = isOwner();
             const avatarHtml = canUseProfileAvatar && currentAccount && currentAccount.avatar
-                ? `<img src="${escapeHtml(currentAccount.avatar)}" class="w-6 h-6 rounded-full object-cover border border-aerix-purple/50" alt="Photo de profil du Owner">`
+                ? `<img loading="lazy" decoding="async" src="${escapeHtml(currentAccount.avatar)}" class="w-6 h-6 rounded-full object-cover border border-aerix-purple/50" alt="Photo de profil du Owner">`
                 : `<span class="w-6 h-6 rounded-full bg-aerix-purple/25 border border-aerix-purple/50 flex items-center justify-center text-[10px] font-black">${escapeHtml((currentAccount?.username || 'A').charAt(0).toUpperCase())}</span>`;
             const menuAvatarHtml = canUseProfileAvatar && currentAccount && currentAccount.avatar
-                ? `<img src="${escapeHtml(currentAccount.avatar)}" class="w-12 h-12 rounded-full object-cover border border-aerix-purple/50" alt="Photo de profil du Owner">`
+                ? `<img loading="lazy" decoding="async" src="${escapeHtml(currentAccount.avatar)}" class="w-12 h-12 rounded-full object-cover border border-aerix-purple/50" alt="Photo de profil du Owner">`
                 : `<span class="w-12 h-12 rounded-full bg-aerix-purple/25 border border-aerix-purple/50 flex items-center justify-center text-base font-black">${escapeHtml((currentAccount?.username || 'A').charAt(0).toUpperCase())}</span>`;
             const buildHtml = (menuId, isMobile = false) => currentUser && currentAccount ? `
                 <div class="relative group ${isMobile ? 'w-full' : ''}">
@@ -5710,7 +5788,7 @@ function checkAdminSessionTimeout() {
                 } catch (popupError) {
                     const fallbackCodes = ['auth/popup-blocked','auth/operation-not-supported-in-this-environment','auth/web-storage-unsupported'];
                     if (fallbackCodes.includes(popupError?.code)) {
-                        sessionStorage.setItem('aerix_google_redirect', '1');
+                        ssSet('aerix_google_redirect', '1');
                         await auth.signInWithRedirect(provider);
                         return;
                     }
@@ -6530,7 +6608,7 @@ function checkAdminSessionTimeout() {
                     const type = e.type || 'Événement';
                     const dateText = e.date ? e.date.split('-').reverse().join('/') : 'Date non renseignée';
                     const timeText = e.time ? ` · ${e.time}` : '';
-                    return `<div class="glass-panel p-5 rounded-2xl flex flex-col gap-4">${e.image ? `<button type="button" onclick="openEventArticle('${e.id}')" class="w-full aspect-video rounded-xl overflow-hidden border border-white/10 bg-black group"><img src="${escapeHtml(e.image)}" class="w-full h-full object-cover group-hover:scale-[1.02] transition duration-300" alt="" loading="lazy"></button>` : ''}<div class="flex items-start justify-between gap-3"><button type="button" onclick="openEventArticle('${e.id}')" class="min-w-0 text-left flex-1"><div class="flex flex-wrap items-center gap-2 mb-2"><span class="text-aerix-purple text-xs font-bold">${escapeHtml(type)}</span><span class="text-gray-500 text-xs">${escapeHtml(e.game || 'Autre')}</span></div><div class="text-white font-bold text-sm break-words hover:text-aerix-purple transition">${escapeHtml(e.title || 'Événement')}</div><div class="text-xs text-gray-400 mt-2">📅 ${escapeHtml(dateText + timeText)}</div>${e.opponent ? `<div class="text-xs text-gray-500 mt-1">${type === 'Course' ? '🏁' : '⚔️'} ${escapeHtml(e.opponent)}</div>` : ''}${e.competition ? `<div class="text-xs text-gray-500 mt-1">${escapeHtml(e.competition)}</div>` : ''}</button><div class="flex gap-2 shrink-0"><button onclick="startEditEvent('${e.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('events', '${e.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 rounded-lg px-3 py-1.5 transition">Suppr</button></div></div>${e.description ? `<div class="text-xs text-gray-400 bg-black/25 border border-white/5 rounded-xl p-3 whitespace-pre-wrap">${escapeHtml(e.description)}</div>` : ''}</div>`;
+                    return `<div class="glass-panel p-5 rounded-2xl flex flex-col gap-4">${e.image ? `<button type="button" onclick="openEventArticle('${e.id}')" class="w-full aspect-video rounded-xl overflow-hidden border border-white/10 bg-black group"><img loading="lazy" decoding="async" src="${escapeHtml(e.image)}" class="w-full h-full object-cover group-hover:scale-[1.02] transition duration-300" alt="" loading="lazy"></button>` : ''}<div class="flex items-start justify-between gap-3"><button type="button" onclick="openEventArticle('${e.id}')" class="min-w-0 text-left flex-1"><div class="flex flex-wrap items-center gap-2 mb-2"><span class="text-aerix-purple text-xs font-bold">${escapeHtml(type)}</span><span class="text-gray-500 text-xs">${escapeHtml(e.game || 'Autre')}</span></div><div class="text-white font-bold text-sm break-words hover:text-aerix-purple transition">${escapeHtml(e.title || 'Événement')}</div><div class="text-xs text-gray-400 mt-2">📅 ${escapeHtml(dateText + timeText)}</div>${e.opponent ? `<div class="text-xs text-gray-500 mt-1">${type === 'Course' ? '🏁' : '⚔️'} ${escapeHtml(e.opponent)}</div>` : ''}${e.competition ? `<div class="text-xs text-gray-500 mt-1">${escapeHtml(e.competition)}</div>` : ''}</button><div class="flex gap-2 shrink-0"><button onclick="startEditEvent('${e.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('events', '${e.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 rounded-lg px-3 py-1.5 transition">Suppr</button></div></div>${e.description ? `<div class="text-xs text-gray-400 bg-black/25 border border-white/5 rounded-xl p-3 whitespace-pre-wrap">${escapeHtml(e.description)}</div>` : ''}</div>`;
                 }).join('') : `<p class="text-gray-500 text-sm italic col-span-full">Aucun événement à venir.</p>`;
             }
             const achievementsEl = document.getElementById('admin-list-achievements');
@@ -6563,11 +6641,11 @@ function checkAdminSessionTimeout() {
             }
             const galleryEl = document.getElementById('admin-list-gallery');
             if (galleryEl) {
-                galleryEl.innerHTML = globalGallery.length ? globalGallery.map(g => `<div class="relative group rounded-xl overflow-hidden aspect-square border border-white/10"><img src="${g.image}" loading="lazy" decoding="async" class="w-full h-full object-cover" alt="Image AERIX"><button onclick="deleteItem('gallery', '${g.id}')" class="absolute top-1.5 right-1.5 bg-red-500 text-white text-[10px] w-6 h-6 rounded-full font-bold opacity-0 group-hover:opacity-100 transition">✕</button></div>`).join('') : `<p class="text-gray-500 text-sm italic col-span-full">Aucune photo dans la galerie.</p>`;
+                galleryEl.innerHTML = globalGallery.length ? globalGallery.map(g => `<div class="relative group rounded-xl overflow-hidden aspect-square border border-white/10"><img loading="lazy" decoding="async" src="${g.image}" loading="lazy" decoding="async" class="w-full h-full object-cover" alt="Image AERIX"><button onclick="deleteItem('gallery', '${g.id}')" class="absolute top-1.5 right-1.5 bg-red-500 text-white text-[10px] w-6 h-6 rounded-full font-bold opacity-0 group-hover:opacity-100 transition">✕</button></div>`).join('') : `<p class="text-gray-500 text-sm italic col-span-full">Aucune photo dans la galerie.</p>`;
             }
             const galleryMediaEl = document.getElementById('admin-list-gallery-media');
             if (galleryMediaEl) {
-                galleryMediaEl.innerHTML = globalGallery.length ? globalGallery.map(g => `<div class="relative group rounded-2xl overflow-hidden aspect-square border border-white/10 bg-black/40 cursor-pointer" onclick="openImageViewer('${escapeHtml(g.image)}', '${escapeHtml(g.caption || '')}')"><img src="${escapeHtml(g.image)}" loading="lazy" decoding="async" class="w-full h-full object-cover transition duration-500 group-hover:scale-105" alt="${escapeHtml(g.caption || 'Image AERIX')}"><button type="button" onclick="event.stopPropagation(); deleteItem('gallery', '${g.id}')" class="absolute top-2 right-2 bg-red-500/90 text-white text-[10px] w-7 h-7 rounded-full font-bold opacity-0 group-hover:opacity-100 transition">✕</button></div>`).join('') : `<p class="text-gray-500 text-sm italic col-span-full">Aucune photo dans la galerie.</p>`;
+                galleryMediaEl.innerHTML = globalGallery.length ? globalGallery.map(g => `<div class="relative group rounded-2xl overflow-hidden aspect-square border border-white/10 bg-black/40 cursor-pointer" onclick="openImageViewer('${escapeHtml(g.image)}', '${escapeHtml(g.caption || '')}')"><img loading="lazy" decoding="async" src="${escapeHtml(g.image)}" loading="lazy" decoding="async" class="w-full h-full object-cover transition duration-500 group-hover:scale-105" alt="${escapeHtml(g.caption || 'Image AERIX')}"><button type="button" onclick="event.stopPropagation(); deleteItem('gallery', '${g.id}')" class="absolute top-2 right-2 bg-red-500/90 text-white text-[10px] w-7 h-7 rounded-full font-bold opacity-0 group-hover:opacity-100 transition">✕</button></div>`).join('') : `<p class="text-gray-500 text-sm italic col-span-full">Aucune photo dans la galerie.</p>`;
             }
         }
         // Carte d'avis affichée dans l'onglet admin "Avis" : note en étoiles, auteur,
@@ -7223,7 +7301,7 @@ function checkAdminSessionTimeout() {
             }).slice(0,6);
             up.innerHTML = upcoming.length ? upcoming.map(e => {
                 const dateText = e.date ? e.date.split('-').reverse().join('/') : 'Date non renseignée';
-                return `<button type="button" onclick="openEventArticle('${e.id}')" class="glass-panel p-0 rounded-2xl border border-white/10 overflow-hidden text-left w-full group hover:border-aerix-purple/50 transition duration-300">${e.image ? `<div class="w-full aspect-video bg-black overflow-hidden"><img src="${escapeHtml(e.image)}" class="w-full h-full object-cover group-hover:scale-[1.025] transition duration-500" alt="" loading="lazy"></div>` : ''}<div class="p-5"><div class="flex items-start justify-between gap-3"><div class="min-w-0"><div class="flex flex-wrap items-center gap-2"><span class="text-xs text-aerix-purple font-bold uppercase">${escapeHtml(e.game || e.type || 'Événement')}</span>${e.type ? `<span class="text-[10px] text-gray-500 uppercase tracking-widest">${escapeHtml(e.type)}</span>` : ''}</div><div class="text-white font-bold text-lg mt-2">${escapeHtml(e.title || 'Événement')}</div><div class="text-xs text-gray-500 mt-2">📅 ${escapeHtml(dateText)}${e.time ? ' · ' + escapeHtml(e.time) : ''}</div></div>${e.opponent ? `<span class="text-xs text-gray-400 text-right shrink-0">${escapeHtml(e.opponent)}</span>` : ''}</div>${e.competition ? `<div class="text-xs text-gray-500 mt-3">${escapeHtml(e.competition)}</div>` : ''}<div class="text-xs text-aerix-purple font-bold mt-4">Voir les détails →</div></div></button>`;
+                return `<button type="button" onclick="openEventArticle('${e.id}')" class="glass-panel p-0 rounded-2xl border border-white/10 overflow-hidden text-left w-full group hover:border-aerix-purple/50 transition duration-300">${e.image ? `<div class="w-full aspect-video bg-black overflow-hidden"><img loading="lazy" decoding="async" src="${escapeHtml(e.image)}" class="w-full h-full object-cover group-hover:scale-[1.025] transition duration-500" alt="" loading="lazy"></div>` : ''}<div class="p-5"><div class="flex items-start justify-between gap-3"><div class="min-w-0"><div class="flex flex-wrap items-center gap-2"><span class="text-xs text-aerix-purple font-bold uppercase">${escapeHtml(e.game || e.type || 'Événement')}</span>${e.type ? `<span class="text-[10px] text-gray-500 uppercase tracking-widest">${escapeHtml(e.type)}</span>` : ''}</div><div class="text-white font-bold text-lg mt-2">${escapeHtml(e.title || 'Événement')}</div><div class="text-xs text-gray-500 mt-2">📅 ${escapeHtml(dateText)}${e.time ? ' · ' + escapeHtml(e.time) : ''}</div></div>${e.opponent ? `<span class="text-xs text-gray-400 text-right shrink-0">${escapeHtml(e.opponent)}</span>` : ''}</div>${e.competition ? `<div class="text-xs text-gray-500 mt-3">${escapeHtml(e.competition)}</div>` : ''}<div class="text-xs text-aerix-purple font-bold mt-4">Voir les détails →</div></div></button>`;
             }).join('') : `<p class="text-gray-500 text-sm italic">Aucun événement à venir.</p>`;
             const results = sortByDateDesc([...(globalPalmares || [])]).slice(0,6);
             res.innerHTML = results.length ? results.map(p => `<div class="glass-panel p-4 rounded-2xl border border-white/10 flex items-center justify-between gap-4"><div><div class="text-white font-bold">${escapeHtml(p.title || 'Résultat')}</div><div class="text-xs text-gray-500 mt-1">${escapeHtml(p.game || 'Général')} ${p.date ? '· '+escapeHtml(p.date) : ''}</div></div><span class="text-xs font-bold text-aerix-purple">${escapeHtml(p.result || p.position || '')}</span></div>`).join('') : `<p class="text-gray-500 text-sm italic">Aucun résultat enregistré.</p>`;
@@ -7314,7 +7392,7 @@ function checkAdminSessionTimeout() {
             const items = [];
             (globalGallery || []).forEach(g => { if (g.image) items.push(g); });
             (globalAnnonces || []).forEach(a => { if (a.image) items.push({image:a.image, caption:a.title, game:a.game}); });
-            c.innerHTML = items.length ? items.slice(0,32).map((m,i) => `<button type="button" onclick="openImageViewer('${escapeHtml(m.image).replace(/'/g, '&#39;')}', '${escapeHtml(m.caption || '').replace(/'/g, '&#39;')}')" class="group aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 bg-black/40"><img src="${escapeHtml(m.image)}" loading="lazy" decoding="async" alt="${escapeHtml(m.caption || 'AERIX Media')}" class="w-full h-full object-cover transition duration-500 group-hover:scale-105"><div class="absolute"></div></button>`).join('') : `<div class="col-span-full glass-panel p-10 rounded-3xl text-center text-gray-500">Aucun média disponible pour le moment.</div>`;
+            c.innerHTML = items.length ? items.slice(0,32).map((m,i) => `<button type="button" onclick="openImageViewer('${escapeHtml(m.image).replace(/'/g, '&#39;')}', '${escapeHtml(m.caption || '').replace(/'/g, '&#39;')}')" class="group aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 bg-black/40"><img loading="lazy" decoding="async" src="${escapeHtml(m.image)}" loading="lazy" decoding="async" alt="${escapeHtml(m.caption || 'AERIX Media')}" class="w-full h-full object-cover transition duration-500 group-hover:scale-105"><div class="absolute"></div></button>`).join('') : `<div class="col-span-full glass-panel p-10 rounded-3xl text-center text-gray-500">Aucun média disponible pour le moment.</div>`;
         }
 
         function navigate(pageId, pushHistory = true) {
@@ -7572,7 +7650,7 @@ function checkAdminSessionTimeout() {
         const defaultAvatar = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E";
         
         document.getElementById('shop-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 4/5, b => { tempShopImages.push(b); renderShopPreviews(); }); e.target.value=''; });
-        function renderShopPreviews() { document.getElementById('shop-img-previews').innerHTML = tempShopImages.map((src, i) => `<div class="relative w-16 h-20 rounded-lg overflow-hidden border border-white/20"><img src="${src}" alt="" class="w-full h-full object-cover"><button type="button" onclick="tempShopImages.splice(${i}, 1); renderShopPreviews()" class="absolute top-0 right-0 bg-red-500/90 text-white text-[10px] w-5 h-5">✕</button></div>`).join(''); }
+        function renderShopPreviews() { document.getElementById('shop-img-previews').innerHTML = tempShopImages.map((src, i) => `<div class="relative w-16 h-20 rounded-lg overflow-hidden border border-white/20"><img loading="lazy" decoding="async" src="${src}" alt="" class="w-full h-full object-cover"><button type="button" onclick="tempShopImages.splice(${i}, 1); renderShopPreviews()" class="absolute top-0 right-0 bg-red-500/90 text-white text-[10px] w-5 h-5">✕</button></div>`).join(''); }
         
         document.getElementById('player-avatar-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 3/4, b => { tempPlayerAvatar = b; document.getElementById('player-avatar-preview').src = b; }, 1200, 0.9); e.target.value=''; });
         document.getElementById('profile-avatar-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 1/1, b => updateProfileAvatar(b)); e.target.value=''; });
@@ -7642,7 +7720,7 @@ function checkAdminSessionTimeout() {
             if (cancelBtn) cancelBtn.classList.remove('hidden');
             document.getElementById('temp-player-pseudo').scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
-        function renderTempPlayersAdmin() { document.getElementById('temp-players-list').innerHTML = tempPlayers.map((p, i) => `<div class="flex items-center justify-between glass-panel p-3 rounded-xl border border-white/10 ${editingPlayerIndex === i ? 'border-aerix-purple/60' : ''}"><div class="flex items-center gap-3 cursor-pointer" onclick="startEditTempPlayer(${i})"><img src="${p.avatar}" alt="" class="w-10 h-12 rounded bg-black object-cover object-top-custom border border-white/10"><div><div class="text-white font-bold text-sm uppercase">${p.pseudo||p.name}</div><div class="text-gray-400 text-xs">${p.country||'🌍'} | #${p.number||'-'}</div></div></div><div class="flex gap-2"><button type="button" onclick="startEditTempPlayer(${i})" class="text-white bg-white/10 px-2 py-1 rounded text-xs hover:bg-aerix-purple transition">${currentLang==='en'?'Edit':'Éditer'}</button><button type="button" onclick="if(editingPlayerIndex===${i}) resetTempPlayerForm(); tempPlayers.splice(${i}, 1); renderTempPlayersAdmin()" class="text-red-400 bg-red-500/10 px-2 py-1 rounded text-xs hover:bg-red-500/20 transition">Retirer</button></div></div>`).join(''); }
+        function renderTempPlayersAdmin() { document.getElementById('temp-players-list').innerHTML = tempPlayers.map((p, i) => `<div class="flex items-center justify-between glass-panel p-3 rounded-xl border border-white/10 ${editingPlayerIndex === i ? 'border-aerix-purple/60' : ''}"><div class="flex items-center gap-3 cursor-pointer" onclick="startEditTempPlayer(${i})"><img loading="lazy" decoding="async" src="${escapeHtml(p.avatar)}" alt="" class="w-10 h-12 rounded bg-black object-cover object-top-custom border border-white/10"><div><div class="text-white font-bold text-sm uppercase">${p.pseudo||p.name}</div><div class="text-gray-400 text-xs">${p.country||'🌍'} | #${p.number||'-'}</div></div></div><div class="flex gap-2"><button type="button" onclick="startEditTempPlayer(${i})" class="text-white bg-white/10 px-2 py-1 rounded text-xs hover:bg-aerix-purple transition">${currentLang==='en'?'Edit':'Éditer'}</button><button type="button" onclick="if(editingPlayerIndex===${i}) resetTempPlayerForm(); tempPlayers.splice(${i}, 1); renderTempPlayersAdmin()" class="text-red-400 bg-red-500/10 px-2 py-1 rounded text-xs hover:bg-red-500/20 transition">Retirer</button></div></div>`).join(''); }
         
         document.getElementById('palm-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 16/9, b => { tempPalmImage = b; document.getElementById('palm-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('palm-img-preview').classList.remove('hidden'); }); e.target.value=''; });
         document.getElementById('partner-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], NaN, b => { tempPartnerImage = b; document.getElementById('partner-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('partner-img-preview').classList.remove('hidden'); }); e.target.value=''; });
@@ -7854,7 +7932,7 @@ function checkAdminSessionTimeout() {
 
         function setPersistedValue(key, value) {
             try {
-                localStorage.setItem(key, String(value));
+                lsSet(key, String(value));
             } catch(e) {
                 console.warn('localStorage indisponible:', e);
             }
@@ -7867,7 +7945,7 @@ function checkAdminSessionTimeout() {
 
         function getPersistedValue(key) {
             try {
-                const fromStorage = localStorage.getItem(key);
+                const fromStorage = lsGet(key);
                 if (fromStorage !== null) return fromStorage;
             } catch(e) {}
             try {
@@ -8032,7 +8110,7 @@ document.addEventListener('keydown', function(e) {
 });
 
 // --- GESTION DES THÈMES ---
-let currentTheme = localStorage.getItem('aerix_theme') || 'dark';
+let currentTheme = lsGet('aerix_theme') || 'dark';
 let themeTransitionTimer = null;
 let themeTransitionCloseTimer = null;
 const THEME_META = {
@@ -8084,6 +8162,7 @@ function applyTheme(theme){
     const bgLayer=document.getElementById('page-bg-layer');
     const allThemeClasses=['theme-light','theme-black-red','theme-white-red'];
     document.body.classList.remove(...allThemeClasses);
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', ({light:'#f4f4f6','white-red':'#ffffff'})[theme] || '#050505');
     if(theme==='light') document.body.classList.add('theme-light');
     if(theme==='black-red') document.body.classList.add('theme-black-red');
     if(theme==='white-red') document.body.classList.add('theme-white-red');
@@ -8109,7 +8188,7 @@ function setTheme(theme){
     if(mark) mark.innerHTML=`<span style="display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:999px;font-size:24px;font-weight:900;color:${theme.includes('red')?'#e53935':'#fff'}">${meta.icon}</span>`;
     if(overlay){ overlay.classList.remove('is-active','theme-switching'); void overlay.offsetWidth; overlay.classList.add('theme-switching','is-active'); }
     document.body.classList.remove('theme-changing'); void document.body.offsetWidth; document.body.classList.add('theme-changing');
-    themeTransitionTimer=setTimeout(()=>{ currentTheme=theme; localStorage.setItem('aerix_theme',theme); applyTheme(theme); },330);
+    themeTransitionTimer=setTimeout(()=>{ currentTheme=theme; lsSet('aerix_theme',theme); applyTheme(theme); },330);
     themeTransitionCloseTimer=setTimeout(()=>{ document.body.classList.remove('theme-changing'); if(overlay) overlay.classList.remove('is-active','theme-switching'); },820);
     closeThemeMenu();
 }
