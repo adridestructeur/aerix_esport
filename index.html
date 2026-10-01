@@ -2967,6 +2967,41 @@ button:focus-visible,a:focus-visible,[onclick]:focus-visible,input:focus-visible
   #scrollTopBtn{bottom:calc(24px + env(safe-area-inset-bottom));right:max(24px,env(safe-area-inset-right))}
 }
 </style>
+<style id="aerix-white-red-v3">
+/* BLANC & ROUGE v3 : contrastes, détails natifs et résidus sombres */
+body.theme-white-red{color-scheme:light}
+html:has(body.theme-white-red){scrollbar-color:#c9c9cf #f4f4f6}
+body.theme-white-red ::selection{background:#e53935!important;color:#fff!important}
+body.theme-white-red ::-webkit-scrollbar-track{background:#f4f4f6}
+body.theme-white-red ::-webkit-scrollbar-thumb{background:#c9c9cf;border-radius:4px}
+body.theme-white-red ::-webkit-scrollbar-thumb:hover{background:#e53935}
+body.theme-white-red ::placeholder{color:#6b7280!important;opacity:1}
+
+/* Boutons rouges pleins : le texte reste blanc (la règle globale .text-white le passait en noir) */
+body.theme-white-red .bg-aerix-purple.text-white,
+body.theme-white-red button.bg-aerix-purple,
+body.theme-white-red a.bg-aerix-purple{color:#fff!important}
+
+/* Couleurs de statut : versions foncées lisibles sur fond blanc (ratio >= 4.5:1) */
+body.theme-white-red .text-green-400,body.theme-white-red .text-emerald-400,
+body.theme-white-red .text-aerix-win,body.theme-white-red .text-aerix-green{color:#047857!important}
+body.theme-white-red .text-yellow-200,body.theme-white-red .text-yellow-300,
+body.theme-white-red .text-amber-400{color:#a16207!important}
+body.theme-white-red .text-blue-300,body.theme-white-red .text-aerix-rl{color:#0369a1!important}
+body.theme-white-red .text-aerix-lmu{color:#c2410c!important}
+body.theme-white-red .text-red-300,body.theme-white-red .text-red-400,
+body.theme-white-red .text-aerix-loss{color:#b91c1c!important}
+
+/* Notifications et bouton « remonter » : plus de bloc noir sur page blanche */
+body.theme-white-red .toast{background:rgba(255,255,255,.97);color:#151515;border:1px solid rgba(17,24,39,.12);box-shadow:0 10px 30px rgba(17,24,39,.16)}
+body.theme-white-red #scrollTopBtn{color:#151515!important;border-color:rgba(229,57,53,.35)}
+body.theme-white-red #scrollTopBtn:hover{color:#e53935!important;border-color:#e53935}
+
+/* Focus clavier en rouge */
+body.theme-white-red button:focus-visible,body.theme-white-red a:focus-visible,
+body.theme-white-red [onclick]:focus-visible,body.theme-white-red input:focus-visible,
+body.theme-white-red select:focus-visible,body.theme-white-red textarea:focus-visible{outline-color:#e53935}
+</style>
 </head>
 <body class="antialiased selection:bg-purple-500 selection:text-white min-h-screen flex flex-col relative">
 
