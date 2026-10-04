@@ -4359,6 +4359,38 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
         const ssSet = (k, v) => { try { sessionStorage.setItem(k, v); } catch (e) {} };
         const ssRemove = k => { try { sessionStorage.removeItem(k); } catch (e) {} };
 
+        // Cache d'affichage du compte : permet d'afficher immédiatement le profil
+        // déjà connu pendant que Firebase/Firestore confirme la session en arrière-plan.
+        // Ce cache n'est JAMAIS utilisé pour authentifier un utilisateur ni pour
+        // accorder des droits : Firebase reste la source d'autorité.
+        const ACCOUNT_CACHE_PREFIX = 'aerix_account_cache_v1_';
+        const getAccountCache = uid => {
+            if (!uid) return null;
+            try {
+                const raw = lsGet(ACCOUNT_CACHE_PREFIX + uid);
+                if (!raw) return null;
+                const data = JSON.parse(raw);
+                return data && data.uid === uid ? data : null;
+            } catch (e) { return null; }
+        };
+        const setAccountCache = account => {
+            if (!account || !account.uid) return;
+            try {
+                // On ne conserve que les données nécessaires à l'affichage instantané.
+                lsSet(ACCOUNT_CACHE_PREFIX + account.uid, JSON.stringify({
+                    uid: account.uid,
+                    email: account.email || '',
+                    username: account.username || '',
+                    avatar: account.avatar || null,
+                    cachedAt: Date.now()
+                }));
+            } catch (e) {}
+        };
+        const clearAccountCache = uid => {
+            if (!uid) return;
+            try { localStorage.removeItem(ACCOUNT_CACHE_PREFIX + uid); } catch (e) {}
+        };
+
         // Si le SDK Firebase est bloqué (bloqueur de pub, réseau mobile faible), on installe un
         // substitut hors-ligne : le site reste navigable au lieu de rester figé.
         if (typeof firebase === 'undefined') {
@@ -5888,6 +5920,7 @@ function checkAdminSessionTimeout() {
                 const cred=await auth.createUserWithEmailAndPassword(email,password);
                 try {
                     await db.collection('accounts').doc(cred.user.uid).set({uid:cred.user.uid,username,email,role:'user',status:'active',createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+                    setAccountCache({ uid: cred.user.uid, username, email });
                 } catch(e) {
                     try { await cred.user.delete(); } catch(cleanupError) { console.error(cleanupError); }
                     throw e;
@@ -5984,8 +6017,10 @@ function checkAdminSessionTimeout() {
         // Aucun chargement, changement de page, changement de thème ou changement de langue
         // ne doit appeler auth.signOut().
         async function logoutAccount() {
+            const uid = currentUser?.uid || window._aerixLastAuthUid;
             try {
                 await auth.signOut();
+                if (uid) clearAccountCache(uid);
                 document.querySelectorAll('.account-menu').forEach(m => m.classList.add('hidden'));
                 showToast(currentLang==='en'?'Signed out.':'Déconnexion réussie.');
             } catch(e){ console.error('Déconnexion Firebase:', e); }
@@ -6693,6 +6728,16 @@ function checkAdminSessionTimeout() {
             currentUser = user;
             currentAccount = null;
             if (user) {
+                // Affichage instantané : si le profil de cet UID est déjà connu,
+                // on le montre immédiatement sans attendre la lecture Firestore.
+                // Les droits sensibles ne sont jamais tirés de ce cache.
+                const cachedAccount = getAccountCache(user.uid);
+                if (cachedAccount) {
+                    currentAccount = { ...cachedAccount, role: 'user', status: 'active', _cached: true };
+                    renderAccountArea();
+                    applyAdminTabVisibility();
+                }
+
                 try {
                     if (isOwner()) {
                         currentAccount = await ensureOwnerAccountDoc(user);
@@ -6709,11 +6754,19 @@ function checkAdminSessionTimeout() {
                             }
                         }
                     }
+                    if (currentAccount) setAccountCache(currentAccount);
                 } catch (e) {
                     console.error(e);
-                    showToast(currentLang === 'en' ? 'Unable to load your account.' : 'Impossible de charger ton compte.', 'error');
+                    // Le profil en cache reste affiché si Firebase/Firestore est temporairement lent.
+                    if (!currentAccount || !currentAccount._cached) {
+                        showToast(currentLang === 'en' ? 'Unable to load your account.' : 'Impossible de charger ton compte.', 'error');
+                    }
                 }
+            } else {
+                // Déconnexion confirmée : supprimer uniquement le cache d'affichage de l'UID connu.
+                if (window._aerixLastAuthUid) clearAccountCache(window._aerixLastAuthUid);
             }
+            window._aerixLastAuthUid = user?.uid || null;
             userTickets = user ? globalContactRequests.filter(t => t.uid === user.uid) : [];
             renderAccountArea();
             applyAdminTabVisibility();
