@@ -4541,7 +4541,7 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
                 assistant_welcome: "Bonjour ! Comment puis-je t'aider ?", assistant_quick_about: "Qui est AERIX ?", assistant_quick_join: "Rejoindre AERIX", assistant_quick_contact: "Contacter l'administration", assistant_quick_coaching: "Coaching", assistant_action_contact: "Contacter les administrateurs", assistant_action_coaching: "Demander un coaching", assistant_action_discord: "Rejoindre le Discord"
             },
             en: {
-                nav_home: "Home", nav_more: "More", nav_more_main: "Navigation", nav_more_performance: "Performance & services", nav_more_content: "Content", nav_more_community: "Community", nav_effectifs: "Rosters", nav_palmares: "Results", nav_histoire: "History", nav_boutique: "Shop", nav_partenaires: "Partners", nav_annonces: "News",
+                nav_home: "Home", nav_more: "More", nav_more_main: "Navigation", nav_more_performance: "Performance & services", nav_more_content: "Content", nav_more_community: "Community", nav_effectifs: "Rosters", nav_palmares: "Results", nav_histoire: "History", nav_boutique: "Shop", nav_partenaires: "Partners", nav_annonces: "News", nav_competition: "Competition", nav_performance: "Performance", nav_media: "Media", nav_recruit: "Join AERIX", nav_review: "Leave a review",
                 hero_title_1: "The future", hero_title_2: "of", hero_title_3: "Esports", hero_title_4: "Competition.",
                 hero_desc: "Independent structure gathering the elite on Rocket League and virtual circuits. Performance, precision, and ambition.",
                 hero_btn_1: "Discover Rosters", hero_btn_2: "Our Achievements",
@@ -4657,7 +4657,11 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
                 'Aucun résultat pour cette catégorie.':'No results for this category.','Résultat':'Result','Non daté':'Undated','Adversaire':'Opponent','Classé':'Ranked','Catégorie':'Category','Voiture':'Car',
                 'Aucune annonce.':'No announcements.','Aucun partenaire renseigné.':'No partners listed.','Partenaires & Affiliés':'Partners & Affiliates',
                 'Aucun effectif pour cette catégorie.':'No roster for this category.','Aucun joueur dans ce roster.':'No player in this roster.',
-                'Boutique vide.':'Shop empty.','Sans image':'No image','Détails':'Details'
+                'Boutique vide.':'Shop empty.','Sans image':'No image','Détails':'Details',
+                'Compétition':'Competition','Média':'Media','Sélecteur de thème':'Theme selector','Thème':'Theme','Sombre':'Dark','Clair':'Light','Noir & Rouge':'Black & Red','Blanc & Rouge':'White & Red','Choisir le thème':'Choose theme','Ouvrir le menu':'Open menu',
+                'Compétition.':'Competition.','À venir':'Upcoming','Prochains événements':'Upcoming events','Derniers résultats':'Latest results','Nos résultats':'Our results','Retrouve les prochains matchs et courses ainsi que les dernières performances enregistrées par AERIX.':'Check upcoming matches and races, as well as AERIX’s latest recorded performances.','Une vue synthétique des effectifs, compétitions et résultats actuellement enregistrés.':'A concise overview of the rosters, competitions and results currently recorded.','Effectif compétition':'Competition roster','Photos et contenus visuels publiés depuis les annonces et la galerie AERIX.':'Photos and visual content published from AERIX announcements and gallery.',
+                'Nationalité':'Nationality','Âge':'Age',"L'Héritage":'The Legacy','La Genèse sur les circuits':'The Genesis on the circuits',"L'ère de l'Endurance":'The Endurance Era',"L'arrivée d'iRacing":'The arrival of iRacing',"L'arrivée de RBR":'RBR joins','Sponsors & Affiliés':'Sponsors & Affiliates','Des collaborations qui accompagnent AERIX dans son développement compétitif, son équipement et sa communauté.':'Collaborations supporting AERIX across competitive development, equipment and community.','Présentez-nous votre projet et échangeons sur une collaboration adaptée à votre marque.':'Tell us about your project and let’s discuss a collaboration adapted to your brand.',
+                'Créer un compte':'Create account','Créer le compte':'Create account',"J'ai déjà un compte — Se connecter":'Already have an account — Sign in','Mot de passe oublié ?':'Forgot password?','Accès Sécurisé':'Secure Access','Réserver un coaching':'Book coaching','Débutant':'Beginner','Intermédiaire':'Intermediate','Confirmé':'Advanced','Partage ton expérience avec la communauté AERIX.':'Share your experience with the AERIX community.','Sélectionne une note':'Select a rating'
             };
             const reverse = {}; Object.entries(pairs).forEach(([frText,enText]) => reverse[enText]=frText);
             const map = en ? pairs : reverse;
@@ -4668,6 +4672,19 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
             });
             document.querySelectorAll('input[placeholder], textarea[placeholder], [contenteditable][placeholder]').forEach(el => { const t=el.getAttribute('placeholder'); if(map[t]) el.setAttribute('placeholder',map[t]); });
             document.querySelectorAll('option').forEach(el => { const t=el.textContent.trim(); if(map[t]) el.textContent=map[t]; });
+        }
+
+        function translateAccessibilityUI() {
+            const en = currentLang === 'en';
+            const map = en ? {
+                'Choisir le thème':'Choose theme','Ouvrir le menu':'Open menu','Fenêtre de dialogue':'Dialog window','Image précédente':'Previous image','Image suivante':'Next image','Détail de l':'Detail of','Note sur 5 étoiles':'5-star rating','1 étoile':'1 star','2 étoiles':'2 stars','3 étoiles':'3 stars','4 étoiles':'4 stars','5 étoiles':'5 stars','Aperçu du média':'Media preview'
+            } : {
+                'Choose theme':'Choisir le thème','Open menu':'Ouvrir le menu','Dialog window':'Fenêtre de dialogue','Previous image':'Image précédente','Next image':'Image suivante','Detail of':'Détail de l','5-star rating':'Note sur 5 étoiles','1 star':'1 étoile','2 stars':'2 étoiles','3 stars':'3 étoiles','4 stars':'4 étoiles','5 stars':'5 étoiles','Media preview':'Aperçu du média'
+            };
+            document.querySelectorAll('[aria-label]').forEach(el => {
+                const value = el.getAttribute('aria-label');
+                if (value && map[value]) el.setAttribute('aria-label', map[value]);
+            });
         }
 
         function updateLanguageMenuUI(lang) {
@@ -4689,6 +4706,37 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
 
         let languageTransitionTimer = null;
         let languageTransitionCloseTimer = null;
+        function applyLanguageContent(lang) {
+                currentLang = lang;
+                lsSet('aerix_lang', lang);
+                const smallFlagMap = { fr: "https://flagcdn.com/w20/fr.png", en: "https://flagcdn.com/w20/gb.png" };
+                const shortMap = { fr: "FR", en: "EN" };
+                const langBtn = document.getElementById('lang-btn');
+                if (langBtn) langBtn.innerHTML = `<img id="current-flag" src="${smallFlagMap[lang]}" alt="${shortMap[lang]}" class="w-5 h-3.5 object-cover rounded-[2px] shadow-sm"> <span id="current-lang-text">${shortMap[lang]}</span> <span class="lang-chevron">▾</span>`;
+                document.documentElement.lang = lang;
+                updateLanguageMenuUI(lang);
+
+                // 1) Traduction structurée par clé.
+                document.querySelectorAll('[data-i18n]').forEach(el => {
+                    const key = el.getAttribute('data-i18n');
+                    const value = i18n[lang] && i18n[lang][key];
+                    if (value !== undefined) el.innerHTML = value;
+                });
+                document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                    const key = el.getAttribute('data-i18n-placeholder');
+                    const value = i18n[lang] && i18n[lang][key];
+                    if (value !== undefined) el.setAttribute('placeholder', value);
+                });
+
+                // 2) Compatibilité avec les anciens blocs sans data-i18n.
+                translateStaticUI();
+                translateAccessibilityUI();
+                refreshAssistantTranslations();
+                renderAccountArea();
+                refreshNavPill();
+
+        }
+
         function setLang(lang) {
             if (!i18n[lang]) lang = 'fr';
             if (lang === currentLang) { closeLanguageMenu(); return; }
@@ -4714,32 +4762,7 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
             // d'appliquer les traductions, puis encore ~0,7 s pour que le changement
             // soit lisible avant la disparition de l'overlay.
             languageTransitionTimer = setTimeout(() => {
-                currentLang = lang;
-                lsSet('aerix_lang', lang);
-                const smallFlagMap = { fr: "https://flagcdn.com/w20/fr.png", en: "https://flagcdn.com/w20/gb.png" };
-                const shortMap = { fr: "FR", en: "EN" };
-                const langBtn = document.getElementById('lang-btn');
-                if (langBtn) langBtn.innerHTML = `<img id="current-flag" src="${smallFlagMap[lang]}" alt="${shortMap[lang]}" class="w-5 h-3.5 object-cover rounded-[2px] shadow-sm"> <span id="current-lang-text">${shortMap[lang]}</span> <span class="lang-chevron">▾</span>`;
-                document.documentElement.lang = lang;
-                updateLanguageMenuUI(lang);
-
-                // 1) Traduction structurée par clé.
-                document.querySelectorAll('[data-i18n]').forEach(el => {
-                    const key = el.getAttribute('data-i18n');
-                    const value = i18n[lang] && i18n[lang][key];
-                    if (value !== undefined) el.innerHTML = value;
-                });
-                document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-                    const key = el.getAttribute('data-i18n-placeholder');
-                    const value = i18n[lang] && i18n[lang][key];
-                    if (value !== undefined) el.setAttribute('placeholder', value);
-                });
-
-                // 2) Compatibilité avec les anciens blocs sans data-i18n.
-                translateStaticUI();
-                refreshAssistantTranslations();
-                renderAccountArea();
-                refreshNavPill();
+                applyLanguageContent(lang);
 
                 // 3) Contenus dynamiques.
                 if (typeof globalEffectifs !== 'undefined') renderEffectifs();
@@ -5496,6 +5519,18 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
         }
 
         // PARTENAIRES
+        function getPartnerCategoryLabel(category) {
+            const raw = String(category || '').trim();
+            const labels = {
+                'Équipementier': currentLang === 'en' ? 'Equipment Partner' : 'Équipementier',
+                'Partenaire Officiel': currentLang === 'en' ? 'Official Partner' : 'Partenaire Officiel',
+                'Affilié': currentLang === 'en' ? 'Affiliate' : 'Affilié',
+                'Partenaires & Affiliés': currentLang === 'en' ? 'Partners & Affiliates' : 'Partenaires & Affiliés',
+                'Setup & Simracing': currentLang === 'en' ? 'Setup & Sim Racing' : 'Setup & Simracing'
+            };
+            return labels[raw] || raw;
+        }
+
         function renderPartners() {
             const container = document.getElementById('partners-container');
             const featured = document.getElementById('partners-featured');
@@ -5530,21 +5565,22 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
                 featured.innerHTML = `<div class="partner-featured glass-panel rounded-3xl p-7 md:p-9 mb-14 text-center">
                     <div class="text-[10px] font-black text-aerix-purple uppercase tracking-[.2em] mb-4">${currentLang === 'en' ? 'Official partner' : 'Partenaire mis en avant'}</div>
                     ${logo}
-                    <div class="text-sm text-gray-400 mt-4">${escapeHtml(featuredPartner.category || (currentLang === 'en' ? 'Partner' : 'Partenaire'))}</div>
+                    <div class="text-sm text-gray-400 mt-4">${escapeHtml(getPartnerCategoryLabel(featuredPartner.category || (currentLang === 'en' ? 'Partner' : 'Partenaire')))}</div>
                     ${link ? `<div class="mt-5">${link}</div>` : ''}
                 </div>`;
             } else if (featured) featured.innerHTML = '';
 
             const categories = {};
             partners.forEach(p => {
-                const cat = p.category || (currentLang === 'en' ? 'Partners & Affiliates' : 'Partenaires & Affiliés');
+                const rawCat = p.category || 'Partenaires & Affiliés';
+                const cat = getPartnerCategoryLabel(rawCat);
                 if(!categories[cat]) categories[cat] = [];
                 categories[cat].push(p);
             });
 
             let html = '';
             Object.keys(categories).forEach(cat => {
-                let sectionHTML = `<div class="mb-14"><div class="flex items-end justify-between gap-4 border-b border-white/5 pb-3 mb-6"><h4 class="text-xs font-bold text-gray-500 uppercase tracking-widest text-left">${escapeHtml(cat)}</h4><span class="partners-category-count text-2xl md:text-3xl leading-none text-white font-black tabular-nums min-w-[2.25rem] text-right" aria-label="${categories[cat].length} partenaire(s)">${categories[cat].length}</span></div><div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6 items-center">`;
+                let sectionHTML = `<div class="mb-14"><div class="flex items-end justify-between gap-4 border-b border-white/5 pb-3 mb-6"><h4 class="text-xs font-bold text-gray-500 uppercase tracking-widest text-left">${escapeHtml(cat)}</h4><span class="partners-category-count text-2xl md:text-3xl leading-none text-white font-black tabular-nums min-w-[2.25rem] text-right" aria-label="${categories[cat].length} ${currentLang === 'en' ? 'partner(s)' : 'partenaire(s)'}">${categories[cat].length}</span></div><div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6 items-center">`;
                 categories[cat].forEach((p, index) => {
                     const contentHTML = p.image
                         ? `<img loading="lazy" decoding="async" src="${escapeHtml(p.image)}" alt="${escapeHtml(p.name)}" loading="lazy" class="max-h-16 max-w-full object-contain filter drop-shadow-[0_0_10px_rgba(255,255,255,0.1)] group-hover:drop-shadow-[0_0_20px_rgba(139,92,246,0.6)] transition-all duration-500 group-hover:scale-110">`
@@ -8216,7 +8252,7 @@ function checkAdminSessionTimeout() {
             if (typeof aerixAssistantOpen !== 'undefined' && aerixAssistantOpen) toggleAerixAssistant(false);
         });
 
-        setLang(currentLang);
+        applyLanguageContent(currentLang);
         updateLanguageMenuUI(currentLang);
         renderAccountArea();
         startSync();
@@ -8251,10 +8287,10 @@ let currentTheme = lsGet('aerix_theme') || 'dark';
 let themeTransitionTimer = null;
 let themeTransitionCloseTimer = null;
 const THEME_META = {
-    dark: { label:'Sombre', icon:'☾', sub:'THÈME SOMBRE' },
-    light: { label:'Clair', icon:'☀', sub:'THÈME CLAIR' },
-    'black-red': { label:'Noir & Rouge', icon:'●', sub:'NOIR & ROUGE' },
-    'white-red': { label:'Blanc & Rouge', icon:'●', sub:'BLANC & ROUGE' }
+    dark: { label:{fr:'Sombre',en:'Dark'}, icon:'☾', sub:{fr:'THÈME SOMBRE',en:'DARK THEME'} },
+    light: { label:{fr:'Clair',en:'Light'}, icon:'☀', sub:{fr:'THÈME CLAIR',en:'LIGHT THEME'} },
+    'black-red': { label:{fr:'Noir & Rouge',en:'Black & Red'}, icon:'●', sub:{fr:'NOIR & ROUGE',en:'BLACK & RED'} },
+    'white-red': { label:{fr:'Blanc & Rouge',en:'White & Red'}, icon:'●', sub:{fr:'BLANC & ROUGE',en:'WHITE & RED'} }
 };
 
 function closeThemeMenu(){
@@ -8290,9 +8326,9 @@ function updateThemeMenuUI(theme){
     const text=document.getElementById('theme-current-text');
     const icon=document.getElementById('theme-current-icon');
     const mobile=document.getElementById('mobile-theme-current');
-    if(text) text.textContent=meta.label;
+    if(text) text.textContent=meta.label[currentLang] || meta.label.fr;
     if(icon) icon.textContent=meta.icon;
-    if(mobile) mobile.textContent=meta.label+' ▾';
+    if(mobile) mobile.textContent=(meta.label[currentLang] || meta.label.fr)+' ▾';
     document.querySelectorAll('#theme-menu [data-theme-option]').forEach(el=>el.classList.toggle('is-selected',el.dataset.themeOption===theme));
 }
 function applyTheme(theme){
@@ -8320,8 +8356,8 @@ function setTheme(theme){
     const mark=overlay ? overlay.querySelector('.transition-mark') : null;
     clearTimeout(themeTransitionTimer); clearTimeout(themeTransitionCloseTimer);
     const meta=THEME_META[theme];
-    if(label) label.textContent=meta.label.toUpperCase();
-    if(sub) sub.textContent='THÈME';
+    if(label) label.textContent=(meta.label[currentLang] || meta.label.fr).toUpperCase();
+    if(sub) sub.textContent=meta.sub[currentLang] || meta.sub.fr;
     if(mark) mark.innerHTML=`<span style="display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:999px;font-size:24px;font-weight:900;color:${theme.includes('red')?'#e53935':'#fff'}">${meta.icon}</span>`;
     if(overlay){ overlay.classList.remove('is-active','theme-switching'); void overlay.offsetWidth; overlay.classList.add('theme-switching','is-active'); }
     document.body.classList.remove('theme-changing'); void document.body.offsetWidth; document.body.classList.add('theme-changing');
