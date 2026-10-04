@@ -5870,7 +5870,7 @@ function checkAdminSessionTimeout() {
             if (isRI(cps[0]) && isRI(cps[1])) {
                 const code = cps.slice(0, 2).map(c => String.fromCharCode(c.codePointAt(0) - 0x1F1E6 + 97)).join('');
                 const rest = cps.slice(2).join('').trim();
-                return `<img src="https://flagcdn.com/w40/${code}.png" srcset="https://flagcdn.com/w80/${code}.png 2x" alt="${code.toUpperCase()}" loading="lazy" class="inline-block rounded-[2px] align-[-2px]" style="height:${h}px;width:auto">${rest ? ' ' + escapeHtml(rest) : ''}`;
+                return `<img src="https://flagcdn.com/w40/${code}.png" srcset="https://flagcdn.com/w80/${code}.png 2x" alt="${code.toUpperCase()}" loading="lazy" class="inline-block rounded-[2px] align-[-2px]" style="height:${h}px;width:auto;min-height:0;min-width:0;max-width:none;object-fit:contain;display:inline-block">${rest ? ' ' + escapeHtml(rest) : ''}`;
             }
             return escapeHtml(country || '🌍');
         }
