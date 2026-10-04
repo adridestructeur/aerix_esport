@@ -3002,6 +3002,69 @@ body.theme-white-red button:focus-visible,body.theme-white-red a:focus-visible,
 body.theme-white-red [onclick]:focus-visible,body.theme-white-red input:focus-visible,
 body.theme-white-red select:focus-visible,body.theme-white-red textarea:focus-visible{outline-color:#e53935}
 </style>
+
+<style id="aerix-fixes-2026-10-04">
+/* --- Correctifs interactions images / modales --- */
+.product-modal-panel{transform:none!important;will-change:auto!important;isolation:isolate;}
+.product-modal-panel > *{position:relative;z-index:1;}
+#product-modal{isolation:isolate;}
+#product-modal .product-slider-btn{pointer-events:auto!important;touch-action:manipulation;-webkit-tap-highlight-color:transparent;}
+#product-modal #modal-product-img{pointer-events:none;user-select:none;-webkit-user-drag:none;}
+#slider-dots{pointer-events:none;}
+.announcement-image-button{display:block;padding:0;margin:0;background:none;border:0;}
+.announcement-image-button img{pointer-events:none;}
+#announcements-gallery > button{position:relative;border:0;padding:0;}
+#media-lightbox{isolation:isolate;}
+#media-lightbox > button{pointer-events:auto!important;touch-action:manipulation;}
+#media-lightbox > div{position:relative;z-index:1;}
+#media-lightbox-img{display:block;pointer-events:auto;user-select:none;-webkit-user-drag:none;}
+
+/* --- Compteurs partenaires : réellement lisibles --- */
+.partners-category-count{text-shadow:0 0 22px rgba(139,92,246,.22);}
+body.theme-light .partners-category-count{color:#111827!important;text-shadow:none;}
+body.theme-white-red .partners-category-count{color:#151515!important;text-shadow:none;}
+
+/* --- Éditeur riche : rendu cohérent dans les 4 thèmes --- */
+.rich-editor-toolbar{position:relative;z-index:20;align-items:center;min-height:52px;}
+.rich-editor-toolbar button,.rich-editor-toolbar span{flex:0 0 auto;cursor:pointer;touch-action:manipulation;}
+.rich-editor-toolbar button{min-width:32px;min-height:32px;}
+.rich-editor-toolbar > .relative{z-index:30;}
+.rich-editor-toolbar [id$="emoji-picker"]{z-index:80;}
+.rich-editor[contenteditable="true"]{cursor:text;caret-color:currentColor;line-height:1.65;}
+.rich-editor[contenteditable="true"]:focus{box-shadow:0 0 0 2px rgba(139,92,246,.12),inset 0 0 24px rgba(139,92,246,.04)!important;}
+body.theme-light .rich-editor-toolbar,
+body.theme-white-red .rich-editor-toolbar{background:rgba(255,255,255,.88)!important;border-color:rgba(17,24,39,.12)!important;}
+body.theme-light .rich-editor-toolbar button,
+body.theme-light .rich-editor-toolbar span,
+body.theme-white-red .rich-editor-toolbar button,
+body.theme-white-red .rich-editor-toolbar span{color:#1f2937!important;}
+body.theme-light .rich-editor-toolbar button:hover,
+body.theme-light .rich-editor-toolbar span:hover,
+body.theme-white-red .rich-editor-toolbar button:hover,
+body.theme-white-red .rich-editor-toolbar span:hover{background:rgba(245,187,213,.28)!important;color:#9d4f76!important;}
+body.theme-light .rich-editor,
+body.theme-white-red .rich-editor{background:rgba(255,255,255,.82)!important;color:#111827!important;border-color:rgba(17,24,39,.12)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.8)!important;}
+body.theme-light .rich-editor[contenteditable="true"]:empty:before,
+body.theme-white-red .rich-editor[contenteditable="true"]:empty:before{color:#6b7280!important;}
+body.theme-light .rich-editor blockquote,
+body.theme-white-red .rich-editor blockquote{color:#4b5563!important;border-left-color:#d66f9e!important;}
+body.theme-light .rich-editor-toolbar .text-aerix-purple{color:#b85f87!important;}
+body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!important;}
+body.theme-black-red .rich-editor-toolbar{background:rgba(22,22,22,.92)!important;border-color:rgba(229,57,53,.18)!important;}
+body.theme-black-red .rich-editor{background:rgba(8,8,8,.78)!important;color:#f5f5f5!important;border-color:rgba(229,57,53,.20)!important;}
+body.theme-black-red .rich-editor-toolbar button:hover,
+body.theme-black-red .rich-editor-toolbar span:hover{background:rgba(229,57,53,.12)!important;color:#ff6b66!important;}
+body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!important;}
+@media(max-width:767px){
+  #product-modal{padding:10px!important;}
+  #product-modal .product-modal-panel{height:calc(100dvh - 20px)!important;max-height:calc(100dvh - 20px)!important;}
+  #product-modal .product-slider-btn{width:44px;height:44px;}
+  #media-lightbox{padding:12px!important;}
+  .rich-editor-toolbar{overflow-x:auto;overflow-y:visible;scrollbar-width:none;}
+  .rich-editor-toolbar::-webkit-scrollbar{display:none;}
+}
+</style>
+
 </head>
 <body class="antialiased selection:bg-purple-500 selection:text-white min-h-screen flex flex-col relative">
 
@@ -3443,13 +3506,13 @@ body.theme-white-red select:focus-visible,body.theme-white-red textarea:focus-vi
 
     <!-- MODAL : PRODUIT BOUTIQUE (image, nom, disponibilité) -->
     <div id="product-modal" class="fixed inset-0 z-[120] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl" role="dialog" aria-modal="true" aria-label="Fenêtre de dialogue">
-        <div class="glass-panel w-full max-w-5xl h-[85dvh] md:h-[650px] rounded-[2rem] flex flex-col md:flex-row overflow-hidden relative shadow-2xl">
+        <div class="glass-panel-no-hover product-modal-panel w-full max-w-5xl h-[85dvh] md:h-[650px] rounded-[2rem] flex flex-col md:flex-row overflow-hidden relative shadow-2xl">
             <button onclick="closeProductModal()" aria-label="Fermer" class="absolute top-6 right-6 text-white hover:text-aerix-purple z-50 bg-black/50 w-10 h-10 rounded-full flex items-center justify-center border border-white/20 backdrop-blur-md transition">✕</button>
             <div class="w-full md:w-1/2 h-[62%] md:h-full bg-[#050505] flex items-center justify-center relative border-b md:border-b-0 md:border-r border-white/10">
                 <div class="absolute inset-0 bg-gradient-to-tr from-purple-900/10 to-transparent"></div>
                 <img loading="lazy" decoding="async" id="modal-product-img" src="" class="w-full h-full object-cover object-center p-0 relative z-10" alt="Image du produit AERIX">
-                <button id="slider-prev" onclick="prevProductImg()" aria-label="Image précédente" class="absolute left-4 top-1/2 transform -translate-y-1/2 z-20 bg-black/60 backdrop-blur border border-white/10 text-white p-3 rounded-full hover:bg-aerix-purple transition hidden">‹</button>
-                <button id="slider-next" onclick="nextProductImg()" aria-label="Image suivante" class="absolute right-4 top-1/2 transform -translate-y-1/2 z-20 bg-black/60 backdrop-blur border border-white/10 text-white p-3 rounded-full hover:bg-aerix-purple transition hidden">›</button>
+                <button type="button" id="slider-prev" onclick="event.stopPropagation(); prevProductImg()" aria-label="Image précédente" class="product-slider-btn absolute left-4 top-1/2 -translate-y-1/2 z-[40] bg-black/65 backdrop-blur-md border border-white/20 text-white w-12 h-12 rounded-full hover:bg-aerix-purple hover:border-aerix-purple transition hidden flex items-center justify-center text-2xl leading-none cursor-pointer select-none">‹</button>
+                <button type="button" id="slider-next" onclick="event.stopPropagation(); nextProductImg()" aria-label="Image suivante" class="product-slider-btn absolute right-4 top-1/2 -translate-y-1/2 z-[40] bg-black/65 backdrop-blur-md border border-white/20 text-white w-12 h-12 rounded-full hover:bg-aerix-purple hover:border-aerix-purple transition hidden flex items-center justify-center text-2xl leading-none cursor-pointer select-none">›</button>
                 <div id="slider-dots" class="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-20 flex gap-2"></div>
             </div>
             <div class="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center overflow-y-auto bg-black/40">
@@ -4009,7 +4072,7 @@ body.theme-white-red select:focus-visible,body.theme-white-red textarea:focus-vi
 
                     <!-- ÉDITEUR RICHE (article détaillé du résultat) -->
                     <div class="mb-6">
-                        <div class="flex gap-1 bg-[#1a1a1a] p-2 rounded-t-xl border border-white/10 border-b-0 overflow-x-auto">
+                        <div class="rich-editor-toolbar flex gap-1 bg-[#1a1a1a] p-2 rounded-t-xl border border-white/10 border-b-0 overflow-x-auto">
                             <button type="button" onclick="formatText('bold', null, 'add-palm-desc')" class="w-8 h-8 flex items-center justify-center text-white hover:bg-white/10 rounded font-bold transition">B</button>
                             <button type="button" onclick="formatText('italic', null, 'add-palm-desc')" class="w-8 h-8 flex items-center justify-center text-white hover:bg-white/10 rounded italic transition">I</button>
                             <button type="button" onclick="formatText('underline', null, 'add-palm-desc')" class="w-8 h-8 flex items-center justify-center text-white hover:bg-white/10 rounded underline transition">U</button>
@@ -4155,7 +4218,7 @@ body.theme-white-red select:focus-visible,body.theme-white-red textarea:focus-vi
                     
                     <!-- ÉDITEUR RICHE -->
                     <div class="mb-6">
-                        <div class="flex gap-1 bg-[#1a1a1a] p-2 rounded-t-xl border border-white/10 border-b-0 overflow-x-auto">
+                        <div class="rich-editor-toolbar flex gap-1 bg-[#1a1a1a] p-2 rounded-t-xl border border-white/10 border-b-0 overflow-x-auto">
                             <button type="button" onclick="formatText('bold')" class="w-8 h-8 flex items-center justify-center text-white hover:bg-white/10 rounded font-bold transition">B</button>
                             <button type="button" onclick="formatText('italic')" class="w-8 h-8 flex items-center justify-center text-white hover:bg-white/10 rounded italic transition">I</button>
                             <button type="button" onclick="formatText('underline')" class="w-8 h-8 flex items-center justify-center text-white hover:bg-white/10 rounded underline transition">U</button>
@@ -5392,7 +5455,7 @@ body.theme-white-red select:focus-visible,body.theme-white-red textarea:focus-vi
             let __html = '';
             
             filtered.forEach((a, index) => {
-                const imgHTML = a.image ? `<div class="w-full md:w-1/3 shrink-0 h-48 md:h-auto border-r border-white/5 overflow-hidden"><img loading="lazy" decoding="async" src="${escapeHtml(a.image)}" loading="lazy" alt="" class="news-img w-full h-full object-cover"></div>` : '';
+                const imgHTML = a.image ? `<button type="button" class="announcement-image-button w-full md:w-1/3 shrink-0 h-48 md:h-auto border-r border-white/5 overflow-hidden cursor-zoom-in group/image" onclick="event.stopPropagation(); openImageViewer(decodeURIComponent('${encodeURIComponent(a.image)}'), decodeURIComponent('${encodeURIComponent(a.title || '')}'))" aria-label="Ouvrir l'image de l'annonce"><img loading="lazy" decoding="async" src="${escapeHtml(a.image)}" loading="lazy" alt="${escapeHtml(a.title || 'Image AERIX')}" class="news-img w-full h-full object-cover transition duration-500 group-hover/image:scale-105"></button>` : '';
                 __html += `
                     <div class="news-card-animated group cursor-pointer glass-panel rounded-3xl overflow-hidden reveal delay-${(index%3)*100} flex flex-col md:flex-row border-l-2 border-l-aerix-purple/50 hover:border-l-aerix-purple transition-colors">
                         ${imgHTML}
@@ -5419,13 +5482,13 @@ body.theme-white-red select:focus-visible,body.theme-white-red textarea:focus-vi
             let __html = '';
             items.forEach((a, index) => {
                 __html += `
-                    <div class="news-card-animated group cursor-pointer glass-panel rounded-2xl overflow-hidden reveal delay-${(index%6)*80} aspect-square relative">
-                        <img loading="lazy" decoding="async" src="${escapeHtml(a.image)}" loading="lazy" alt="" class="news-img w-full h-full object-cover">
+                    <button type="button" onclick="openImageViewer(decodeURIComponent('${encodeURIComponent(a.image)}'), decodeURIComponent('${encodeURIComponent(a.caption || '')}'))" class="news-card-animated group cursor-zoom-in glass-panel rounded-2xl overflow-hidden reveal delay-${(index%6)*80} aspect-square relative text-left w-full" aria-label="Ouvrir l'image">
+                        <img loading="lazy" decoding="async" src="${escapeHtml(a.image)}" loading="lazy" alt="${escapeHtml(a.caption || 'Image AERIX')}" class="news-img w-full h-full object-cover">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3">
                             <div class="mb-1">${getGameBadge(a.game)}</div>
                             ${a.caption ? `<p class="text-white text-xs font-bold truncate" data-translate-src="${escapeHtml(a.caption || '')}">${escapeHtml(a.caption)}</p>` : ''}
                         </div>
-                    </div>`;
+                    </button>`;
             });
             gallery.innerHTML = items.length ? __html : '<p class="text-gray-500 text-sm italic text-center col-span-full">Aucune image.</p>';
             setTimeout(revealActiveElements, 20);
@@ -5481,7 +5544,7 @@ body.theme-white-red select:focus-visible,body.theme-white-red textarea:focus-vi
 
             let html = '';
             Object.keys(categories).forEach(cat => {
-                let sectionHTML = `<div class="mb-14"><div class="flex items-end justify-between gap-4 border-b border-white/5 pb-3 mb-6"><h4 class="text-xs font-bold text-gray-500 uppercase tracking-widest text-left">${escapeHtml(cat)}</h4><span class="text-[10px] text-gray-600 font-bold">${categories[cat].length}</span></div><div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6 items-center">`;
+                let sectionHTML = `<div class="mb-14"><div class="flex items-end justify-between gap-4 border-b border-white/5 pb-3 mb-6"><h4 class="text-xs font-bold text-gray-500 uppercase tracking-widest text-left">${escapeHtml(cat)}</h4><span class="partners-category-count text-2xl md:text-3xl leading-none text-white font-black tabular-nums min-w-[2.25rem] text-right" aria-label="${categories[cat].length} partenaire(s)">${categories[cat].length}</span></div><div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6 items-center">`;
                 categories[cat].forEach((p, index) => {
                     const contentHTML = p.image
                         ? `<img loading="lazy" decoding="async" src="${escapeHtml(p.image)}" alt="${escapeHtml(p.name)}" loading="lazy" class="max-h-16 max-w-full object-contain filter drop-shadow-[0_0_10px_rgba(255,255,255,0.1)] group-hover:drop-shadow-[0_0_20px_rgba(139,92,246,0.6)] transition-all duration-500 group-hover:scale-110">`
@@ -7166,8 +7229,47 @@ function checkAdminSessionTimeout() {
         }
 
         // --- EDITION ANNONCES (TEXTE RICHE) — éditeur générique, réutilisé aussi par le Palmarès ---
-        function formatText(command, value = null, targetId = 'add-announcement-desc') { document.execCommand(command, false, value); document.getElementById(targetId).focus(); }
-        function insertEmoji(emoji, targetId = 'add-announcement-desc', pickerId = 'emoji-picker') { document.execCommand('insertText', false, emoji); document.getElementById(pickerId).classList.add('hidden'); document.getElementById(targetId).focus(); }
+        const richEditorSelections = new Map();
+        function rememberRichEditorSelection(targetId, event) {
+            const editor = document.getElementById(targetId);
+            if (!editor) return;
+            const selection = window.getSelection();
+            if (!selection || !selection.rangeCount || !editor.contains(selection.anchorNode)) return;
+            richEditorSelections.set(targetId, selection.getRangeAt(0).cloneRange());
+        }
+        document.addEventListener('mousedown', event => {
+            const control = event.target.closest('.rich-editor-toolbar button, .rich-editor-toolbar span');
+            if (!control) return;
+            const toolbar = control.closest('.rich-editor-toolbar');
+            if (!toolbar) return;
+            const editor = toolbar.nextElementSibling;
+            if (editor && editor.classList.contains('rich-editor')) {
+                rememberRichEditorSelection(editor.id, event);
+            }
+        }, true);
+        function restoreRichEditorSelection(targetId) {
+            const editor = document.getElementById(targetId);
+            if (!editor) return false;
+            editor.focus();
+            const saved = richEditorSelections.get(targetId);
+            if (saved) {
+                const selection = window.getSelection();
+                selection.removeAllRanges();
+                selection.addRange(saved);
+            }
+            return true;
+        }
+        function formatText(command, value = null, targetId = 'add-announcement-desc') {
+            if (!restoreRichEditorSelection(targetId)) return;
+            document.execCommand(command, false, value);
+            document.getElementById(targetId)?.focus();
+        }
+        function insertEmoji(emoji, targetId = 'add-announcement-desc', pickerId = 'emoji-picker') {
+            if (!restoreRichEditorSelection(targetId)) return;
+            document.execCommand('insertText', false, emoji);
+            document.getElementById(pickerId)?.classList.add('hidden');
+            document.getElementById(targetId)?.focus();
+        }
 
         function startEditAnnouncement(id) {
             const item = globalAnnonces.find(a => a.id === id); if(!item) return;
@@ -7427,7 +7529,7 @@ function checkAdminSessionTimeout() {
             const items = [];
             (globalGallery || []).forEach(g => { if (g.image) items.push(g); });
             (globalAnnonces || []).forEach(a => { if (a.image) items.push({image:a.image, caption:a.title, game:a.game}); });
-            c.innerHTML = items.length ? items.slice(0,32).map((m,i) => `<button type="button" onclick="openImageViewer('${escapeHtml(m.image).replace(/'/g, '&#39;')}', '${escapeHtml(m.caption || '').replace(/'/g, '&#39;')}')" class="group aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 bg-black/40"><img loading="lazy" decoding="async" src="${escapeHtml(m.image)}" loading="lazy" decoding="async" alt="${escapeHtml(m.caption || 'AERIX Media')}" class="w-full h-full object-cover transition duration-500 group-hover:scale-105"><div class="absolute"></div></button>`).join('') : `<div class="col-span-full glass-panel p-10 rounded-3xl text-center text-gray-500">Aucun média disponible pour le moment.</div>`;
+            c.innerHTML = items.length ? items.slice(0,32).map((m,i) => `<button type="button" onclick="openImageViewer(decodeURIComponent('${encodeURIComponent(m.image)}'), decodeURIComponent('${encodeURIComponent(m.caption || '')}'))" class="group aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 bg-black/40"><img loading="lazy" decoding="async" src="${escapeHtml(m.image)}" loading="lazy" decoding="async" alt="${escapeHtml(m.caption || 'AERIX Media')}" class="w-full h-full object-cover transition duration-500 group-hover:scale-105"><div class="absolute"></div></button>`).join('') : `<div class="col-span-full glass-panel p-10 rounded-3xl text-center text-gray-500">Aucun média disponible pour le moment.</div>`;
         }
 
         function navigate(pageId, pushHistory = true) {
