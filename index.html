@@ -4364,6 +4364,7 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
         // Ce cache n'est JAMAIS utilisé pour authentifier un utilisateur ni pour
         // accorder des droits : Firebase reste la source d'autorité.
         const ACCOUNT_CACHE_PREFIX = 'aerix_account_cache_v1_';
+        const LAST_UID_KEY = 'aerix_last_uid_v1';
         const getAccountCache = uid => {
             if (!uid) return null;
             try {
@@ -4376,6 +4377,7 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
         const setAccountCache = account => {
             if (!account || !account.uid) return;
             try {
+                lsSet(LAST_UID_KEY, account.uid);
                 // On ne conserve que les données nécessaires à l'affichage instantané.
                 lsSet(ACCOUNT_CACHE_PREFIX + account.uid, JSON.stringify({
                     uid: account.uid,
@@ -4388,7 +4390,10 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
         };
         const clearAccountCache = uid => {
             if (!uid) return;
-            try { localStorage.removeItem(ACCOUNT_CACHE_PREFIX + uid); } catch (e) {}
+            try {
+                localStorage.removeItem(ACCOUNT_CACHE_PREFIX + uid);
+                if (lsGet(LAST_UID_KEY) === uid) localStorage.removeItem(LAST_UID_KEY);
+            } catch (e) {}
         };
 
         // Si le SDK Firebase est bloqué (bloqueur de pub, réseau mobile faible), on installe un
@@ -4479,6 +4484,23 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
 // Le mot de passe utilisé pour confirmer l'accès admin est celui du compte Firebase connecté.
         let currentUser = null;
         let currentAccount = null;
+
+        // Session optimiste : on affiche tout de suite le compte du dernier visiteur connu
+        // (cache d'affichage uniquement). Firebase confirme ou invalide ensuite via
+        // onAuthStateChanged ; les droits réels restent imposés par les règles Firestore.
+        (function optimisticSession() {
+            const run = () => {
+                if (window._aerixAuthResolved || currentUser) return;
+                const cached = getAccountCache(lsGet(LAST_UID_KEY));
+                if (!cached) return;
+                currentUser = { uid: cached.uid, email: cached.email, _optimistic: true };
+                currentAccount = { ...cached, role: 'user', status: 'active', _cached: true };
+                renderAccountArea();
+                applyAdminTabVisibility();
+            };
+            if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
+            else setTimeout(run, 0);
+        })();
 
         // GOOGLE ANALYTICS (GA4)
         // Remplacer par le véritable ID de mesure (format G-XXXXXXXXXX) une fois
@@ -6539,7 +6561,8 @@ function checkAdminSessionTimeout() {
             const btn = document.getElementById('review-submit-btn');
             try {
                 if (btn) btn.disabled = true;
-                await db.collection('reviews').add({
+                // 1 avis par utilisateur : l'ID du document = UID (imposé par les règles Firestore)
+                await db.collection('reviews').doc(currentUser.uid).set({
                     uid: currentUser.uid,
                     username: currentAccount.username || '',
                     rating: reviewRating,
@@ -6551,7 +6574,11 @@ function checkAdminSessionTimeout() {
                 closeReviewModal();
             } catch (e) {
                 console.error(e);
-                showToast(currentLang === 'en' ? 'Error while publishing.' : 'Erreur lors de la publication.', 'error');
+                if (e && e.code === 'permission-denied') {
+                    showToast(currentLang === 'en' ? 'You have already published a review.' : 'Tu as déjà publié un avis.', 'error');
+                } else {
+                    showToast(currentLang === 'en' ? 'Error while publishing.' : 'Erreur lors de la publication.', 'error');
+                }
             } finally {
                 if (btn) btn.disabled = false;
             }
@@ -6723,8 +6750,11 @@ function checkAdminSessionTimeout() {
 
         // Ne démarre l'écoute qu'une fois la persistance locale configurée.
         // Cela évite qu'un état initial 'null' transitoire soit interprété comme une déconnexion.
-        authPersistenceReady.then(() => {
+        // LOCAL est déjà la persistance par défaut sur le web : inutile d'attendre
+        // setPersistence() avant d'écouter l'état d'auth (gain de latence au chargement).
+        Promise.resolve().then(() => {
             auth.onAuthStateChanged(async user => {
+            window._aerixAuthResolved = true;
             currentUser = user;
             currentAccount = null;
             if (user) {
@@ -6764,7 +6794,8 @@ function checkAdminSessionTimeout() {
                 }
             } else {
                 // Déconnexion confirmée : supprimer uniquement le cache d'affichage de l'UID connu.
-                if (window._aerixLastAuthUid) clearAccountCache(window._aerixLastAuthUid);
+                const staleUid = window._aerixLastAuthUid || lsGet(LAST_UID_KEY);
+                if (staleUid) clearAccountCache(staleUid);
             }
             window._aerixLastAuthUid = user?.uid || null;
             userTickets = user ? globalContactRequests.filter(t => t.uid === user.uid) : [];
