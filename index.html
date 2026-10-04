@@ -5142,7 +5142,7 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
                                 <div class="member-card-pseudo">${escapeHtml(p.pseudo || p.name || 'AERIX')}</div>
                                 <div class="member-card-name">${escapeHtml(p.name || '')}</div>
                                 <div class="member-card-meta">
-                                    <span>${escapeHtml(p.country || '🌍')}</span>
+                                    <span class="inline-flex items-center">${countryHTML(p.country, 12)}</span>
                                     ${p.age ? `<span class="member-card-separator"></span><span>${escapeHtml(p.age)} ${currentLang==='en'?'y.o.':'ans'}</span>` : ''}
                                 </div>
                                 ${playerSocialsHTML(p) ? `<div class="player-socials mt-3">${playerSocialsHTML(p)}</div>` : ''}
@@ -5197,7 +5197,7 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
                                 <div class="member-card-pseudo">${escapeHtml(p.pseudo || p.name)}</div>
                                 <div class="member-card-name">${escapeHtml(p.name || '')}</div>
                                 <div class="member-card-meta">
-                                    <span>${escapeHtml(p.country || '🌍')}</span>
+                                    <span class="inline-flex items-center">${countryHTML(p.country, 12)}</span>
                                     ${p.age ? `<span class="member-card-separator"></span><span>${escapeHtml(p.age)} ${currentLang==='en'?'y.o.':'ans'}</span>` : ''}
                                 </div>
                                 ${playerSocialsHTML(p) ? `<div class="player-socials mt-3">${playerSocialsHTML(p)}</div>` : ''}
@@ -5236,13 +5236,13 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
             const roleIcon = getMemberRoleIcon(p.role);
             const roleHTML = `<span class="member-profile-role-dot"></span><span>${escapeHtml(roleIcon)} ${escapeHtml(roleLabel)}</span>`;
             document.getElementById('pm-img').src = p.avatar || defaultAvatar;
-            document.getElementById('pm-flag').innerText = p.country || '🌍';
+            document.getElementById('pm-flag').innerHTML = countryHTML(p.country, 22);
             document.getElementById('pm-number').innerText = p.number ? `#${p.number}` : '';
             document.getElementById('pm-pseudo').innerText = p.pseudo || p.name || 'AERIX';
             document.getElementById('pm-mobile-pseudo').innerText = p.pseudo || p.name || 'AERIX';
             document.getElementById('pm-name').innerText = p.name || (currentLang==='en'?'Not provided':'Non renseigné');
             document.getElementById('pm-age').innerText = p.age ? `${p.age} ${currentLang==='en'?'y.o.':'ans'}` : 'N/A';
-            document.getElementById('pm-country').innerText = p.country || 'N/A';
+            document.getElementById('pm-country').innerHTML = p.country ? countryHTML(p.country, 16) : 'N/A';
             document.getElementById('pm-game-badge').innerHTML = getGameBadge(p.game);
             document.getElementById('pm-role').innerHTML = roleHTML;
             document.getElementById('pm-mobile-role').innerHTML = roleHTML;
@@ -5862,6 +5862,18 @@ function checkAdminSessionTimeout() {
             return String(value ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
         }
 
+        // Windows n'affiche pas les emojis-drapeaux (🇫🇷 devient « FR »).
+        // On convertit donc l'emoji stocké en vraie image (FlagCDN) ; les données Firestore ne changent pas.
+        function countryHTML(country, h = 14) {
+            const cps = [...String(country || '')];
+            const isRI = c => c && c.codePointAt(0) >= 0x1F1E6 && c.codePointAt(0) <= 0x1F1FF;
+            if (isRI(cps[0]) && isRI(cps[1])) {
+                const code = cps.slice(0, 2).map(c => String.fromCharCode(c.codePointAt(0) - 0x1F1E6 + 97)).join('');
+                const rest = cps.slice(2).join('').trim();
+                return `<img src="https://flagcdn.com/w40/${code}.png" srcset="https://flagcdn.com/w80/${code}.png 2x" alt="${code.toUpperCase()}" loading="lazy" class="inline-block rounded-[2px] align-[-2px]" style="height:${h}px;width:auto">${rest ? ' ' + escapeHtml(rest) : ''}`;
+            }
+            return escapeHtml(country || '🌍');
+        }
         function isOwner() {
             return !!currentUser && OWNER_EMAIL !== 'OWNER_EMAIL_HERE' && (currentUser.email || '').toLowerCase() === OWNER_EMAIL.toLowerCase();
         }
@@ -7977,7 +7989,7 @@ function checkAdminSessionTimeout() {
             if (cancelBtn) cancelBtn.classList.remove('hidden');
             document.getElementById('temp-player-pseudo').scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
-        function renderTempPlayersAdmin() { document.getElementById('temp-players-list').innerHTML = tempPlayers.map((p, i) => `<div class="flex items-center justify-between glass-panel p-3 rounded-xl border border-white/10 ${editingPlayerIndex === i ? 'border-aerix-purple/60' : ''}"><div class="flex items-center gap-3 cursor-pointer" onclick="startEditTempPlayer(${i})"><img loading="lazy" decoding="async" src="${escapeHtml(p.avatar)}" alt="" class="w-10 h-12 rounded bg-black object-cover object-top-custom border border-white/10"><div><div class="text-white font-bold text-sm uppercase">${p.pseudo||p.name}</div><div class="text-gray-400 text-xs">${p.country||'🌍'} | #${p.number||'-'}</div></div></div><div class="flex gap-2"><button type="button" onclick="startEditTempPlayer(${i})" class="text-white bg-white/10 px-2 py-1 rounded text-xs hover:bg-aerix-purple transition">${currentLang==='en'?'Edit':'Éditer'}</button><button type="button" onclick="if(editingPlayerIndex===${i}) resetTempPlayerForm(); tempPlayers.splice(${i}, 1); renderTempPlayersAdmin()" class="text-red-400 bg-red-500/10 px-2 py-1 rounded text-xs hover:bg-red-500/20 transition">Retirer</button></div></div>`).join(''); }
+        function renderTempPlayersAdmin() { document.getElementById('temp-players-list').innerHTML = tempPlayers.map((p, i) => `<div class="flex items-center justify-between glass-panel p-3 rounded-xl border border-white/10 ${editingPlayerIndex === i ? 'border-aerix-purple/60' : ''}"><div class="flex items-center gap-3 cursor-pointer" onclick="startEditTempPlayer(${i})"><img loading="lazy" decoding="async" src="${escapeHtml(p.avatar)}" alt="" class="w-10 h-12 rounded bg-black object-cover object-top-custom border border-white/10"><div><div class="text-white font-bold text-sm uppercase">${p.pseudo||p.name}</div><div class="text-gray-400 text-xs">${countryHTML(p.country, 12)} | #${p.number||'-'}</div></div></div><div class="flex gap-2"><button type="button" onclick="startEditTempPlayer(${i})" class="text-white bg-white/10 px-2 py-1 rounded text-xs hover:bg-aerix-purple transition">${currentLang==='en'?'Edit':'Éditer'}</button><button type="button" onclick="if(editingPlayerIndex===${i}) resetTempPlayerForm(); tempPlayers.splice(${i}, 1); renderTempPlayersAdmin()" class="text-red-400 bg-red-500/10 px-2 py-1 rounded text-xs hover:bg-red-500/20 transition">Retirer</button></div></div>`).join(''); }
         
         document.getElementById('palm-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 16/9, b => { tempPalmImage = b; document.getElementById('palm-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('palm-img-preview').classList.remove('hidden'); }); e.target.value=''; });
         document.getElementById('partner-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], NaN, b => { tempPartnerImage = b; document.getElementById('partner-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('partner-img-preview').classList.remove('hidden'); }); e.target.value=''; });
