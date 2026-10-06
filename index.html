@@ -1701,6 +1701,54 @@ body.theme-light {
 /* CTA avis accueil : toujours lisible. */
 .theme-light [data-i18n="nav_review"] { color:#0a0a0a !important; }
 
+/* Banderole défilante des partenaires (entre la nav et le titre AERIX) */
+.partners-marquee-wrap {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding: 14px 0;
+    background: rgba(255,255,255,0.03);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 64px, #000 calc(100% - 64px), transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0, #000 64px, #000 calc(100% - 64px), transparent 100%);
+}
+.partners-marquee-track {
+    display: flex;
+    align-items: center;
+    width: max-content;
+    gap: 56px;
+    animation: partners-marquee-scroll 32s linear infinite;
+}
+.partners-marquee-wrap:hover .partners-marquee-track { animation-play-state: paused; }
+.partners-marquee-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    height: 34px;
+    opacity: 0.72;
+    filter: grayscale(35%);
+    transition: opacity .3s ease, filter .3s ease, transform .3s ease;
+    text-decoration: none;
+}
+.partners-marquee-item:hover { opacity: 1; filter: grayscale(0%); transform: scale(1.06); }
+.partners-marquee-item img { height: 100%; max-width: 140px; object-fit: contain; }
+.partners-marquee-item span { font-size: 0.95rem; font-weight: 800; color: #fff; letter-spacing: -0.01em; white-space: nowrap; }
+.theme-light .partners-marquee-wrap { background: rgba(17,24,39,0.03); border-color: rgba(17,24,39,0.08); }
+.theme-light .partners-marquee-item span { color: #111827; }
+.theme-black-red .partners-marquee-wrap { border-color: rgba(229,57,53,0.14); }
+.theme-white-red .partners-marquee-wrap { background: rgba(17,24,39,0.03); border-color: rgba(229,57,53,0.14); }
+.theme-white-red .partners-marquee-item span { color: #111827; }
+@keyframes partners-marquee-scroll {
+    from { transform: translateX(-50%); }
+    to { transform: translateX(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .partners-marquee-track { animation: none; }
+    .partners-marquee-wrap { overflow-x: auto; }
+}
+
 </style>
 
 <style id="aerix-final-v5-polish">
@@ -3245,6 +3293,11 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
             </div>
         </div>
     </nav>
+
+    <!-- Banderole défilante des partenaires -->
+    <div id="partners-marquee-wrap" class="partners-marquee-wrap hidden" aria-label="Partenaires AERIX">
+        <div class="partners-marquee-track" id="partners-marquee-track"></div>
+    </div>
 
     <!-- Transition globale entre les vues -->
     <div id="page-transition-overlay" aria-hidden="true">
@@ -4934,7 +4987,7 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
             db.collection("palmares").onSnapshot((snapshot) => { globalPalmares = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); scheduleRender(renderPalmares); renderCompetitionPage(); renderPerformancePage(); scheduleAdminRender(); }, (e) => console.error('palmares', e));
             db.collection("achievements").onSnapshot((snapshot) => { globalAchievements = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); scheduleRender(renderAchievements); scheduleAdminRender(); }, () => { globalAchievements = []; scheduleRender(renderAchievements); scheduleAdminRender(); });
             db.collection("annonces").onSnapshot((snapshot) => { globalAnnonces = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); globalAnnonces = sortByDateDesc(globalAnnonces); scheduleRender(renderAnnonces); renderMediaPage(); scheduleAdminRender(); }, error => { globalAnnonces = []; db.collection("annonces").get().then(s => { globalAnnonces = s.docs.map(doc => ({ id: doc.id, ...doc.data() })); globalAnnonces = sortByDateDesc(globalAnnonces); scheduleRender(renderAnnonces); scheduleAdminRender(); }).catch(e => console.error('annonces fallback', e)); });
-            db.collection("partners").onSnapshot((snapshot) => { globalPartners = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); scheduleRender(renderPartners); scheduleAdminRender(); }, (e) => console.error('partners', e));
+            db.collection("partners").onSnapshot((snapshot) => { globalPartners = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); scheduleRender(renderPartners); scheduleRender(renderPartnersMarquee); scheduleAdminRender(); }, (e) => console.error('partners', e));
             db.collection("accounts").onSnapshot((snapshot) => { globalAccounts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); scheduleAdminRender(); }, () => { globalAccounts = []; scheduleAdminRender(); });
             db.collection("contactRequests").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
                 globalContactRequests = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -5636,6 +5689,31 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
                 'Setup & Simracing': currentLang === 'en' ? 'Setup & Sim Racing' : 'Setup & Simracing'
             };
             return labels[raw] || raw;
+        }
+
+        // Banderole défilante des partenaires, affichée sous la nav sur toutes les pages.
+        function renderPartnersMarquee() {
+            const wrap = document.getElementById('partners-marquee-wrap');
+            const track = document.getElementById('partners-marquee-track');
+            if (!wrap || !track) return;
+            const partners = (Array.isArray(globalPartners) ? globalPartners : []).filter(p => p.name || p.image);
+            if (!partners.length) {
+                wrap.classList.add('hidden');
+                track.innerHTML = '';
+                return;
+            }
+            const itemHTML = p => {
+                const inner = p.image
+                    ? `<img loading="lazy" decoding="async" src="${escapeHtml(p.image)}" alt="${escapeHtml(p.name || 'Partenaire AERIX')}">`
+                    : `<span>${escapeHtml(p.name || '')}</span>`;
+                return (p.url && safeUrl(p.url) !== '#')
+                    ? `<a class="partners-marquee-item" href="${escapeHtml(safeUrl(p.url))}" target="_blank" rel="noopener noreferrer">${inner}</a>`
+                    : `<div class="partners-marquee-item">${inner}</div>`;
+            };
+            // Dupliqué deux fois pour une boucle visuelle continue (défilement de gauche à droite).
+            const once = partners.map(itemHTML).join('');
+            track.innerHTML = once + once;
+            wrap.classList.remove('hidden');
         }
 
         function renderPartners() {
