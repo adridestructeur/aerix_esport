@@ -1322,7 +1322,7 @@ body.theme-light {
 
         /* Zone principale : les px-6 Tailwind sont trop larges sur petits écrans. */
         .site-main {
-            padding-top: 96px !important;
+            padding-top: 24px !important;
             padding-bottom: 48px !important;
         }
 
@@ -1701,63 +1701,128 @@ body.theme-light {
 /* CTA avis accueil : toujours lisible. */
 .theme-light [data-i18n="nav_review"] { color:#0a0a0a !important; }
 
-/* Banderole partenaires : placée entre la navigation et le hero AERIX */
+/* =========================================================
+   AERIX — BANDEAU PARTENAIRES
+   Directement entre la navigation et le titre AERIX ESPORTS.
+   Transparent, compact, continu et droite -> gauche.
+   ========================================================= */
 .partners-marquee-wrap {
+    margin-top: 68px;
     position: relative;
-    z-index: 20;
+    z-index: 21;
     width: 100%;
+    height: 58px;
+    min-height: 58px;
     overflow: hidden;
-    padding: 10px 0;
-    min-height: 64px;
     display: flex;
     align-items: center;
-    background: rgba(8, 6, 14, 0.82);
-    border-top: 1px solid rgba(255,255,255,0.07);
-    border-bottom: 1px solid rgba(167,139,250,0.16);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border-top: 1px solid rgba(255,255,255,0.06);
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 64px, #000 calc(100% - 64px), transparent 100%);
-    mask-image: linear-gradient(to right, transparent 0, #000 64px, #000 calc(100% - 64px), transparent 100%);
+    background: transparent !important;
+    border: 0 !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    -webkit-mask-image: none !important;
+    mask-image: none !important;
 }
+
+/* Supprime l'ancien espace qui plaçait le bandeau trop loin du hero. */
+.site-main {
+    padding-top: 0 !important;
+}
+
+/* Le titre arrive immédiatement sous le bandeau. */
+#page-home {
+    margin-top: 8px !important;
+}
+
 .partners-marquee-track {
     display: flex;
     align-items: center;
     width: max-content;
-    gap: 56px;
-    animation: partners-marquee-scroll 28s linear infinite;
+    gap: 54px;
+    padding: 0 27px;
+    animation: partners-marquee-scroll 24s linear infinite;
     will-change: transform;
 }
-.partners-marquee-wrap:hover .partners-marquee-track { animation-play-state: paused; }
+
+/* On ne bloque PAS l'animation au survol : seul le logo survolé réagit. */
 .partners-marquee-item {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     flex: 0 0 auto;
-    height: 34px;
-    opacity: 0.72;
-    filter: grayscale(35%);
-    transition: opacity .3s ease, filter .3s ease, transform .3s ease;
+    height: 38px;
+    min-width: 72px;
+    padding: 4px 8px;
+    opacity: .68;
+    filter: grayscale(25%);
     text-decoration: none;
+    transition: opacity .25s ease, filter .25s ease, transform .25s ease, drop-shadow .25s ease;
+    transform: translateZ(0) scale(1);
 }
-.partners-marquee-item:hover { opacity: 1; filter: grayscale(0%); transform: scale(1.06); }
-.partners-marquee-item img { height: 100%; max-width: 140px; object-fit: contain; }
-.partners-marquee-item span { font-size: 0.95rem; font-weight: 800; color: #fff; letter-spacing: -0.01em; white-space: nowrap; }
-.theme-light .partners-marquee-wrap { background: rgba(17,24,39,0.03); border-color: rgba(17,24,39,0.08); }
-.theme-light .partners-marquee-item span { color: #111827; }
-.theme-black-red .partners-marquee-wrap { border-color: rgba(229,57,53,0.14); }
-.theme-white-red .partners-marquee-wrap { background: rgba(17,24,39,0.03); border-color: rgba(229,57,53,0.14); }
-.theme-white-red .partners-marquee-item span { color: #111827; }
+
+.partners-marquee-item:hover {
+    opacity: 1;
+    filter: grayscale(0%) drop-shadow(0 0 10px rgba(167,139,250,.65));
+    transform: translateZ(0) scale(1.12);
+}
+
+.partners-marquee-item img {
+    display: block;
+    height: 100%;
+    width: auto;
+    max-width: 150px;
+    object-fit: contain;
+}
+
+.partners-marquee-item span {
+    font-size: .9rem;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -.01em;
+    white-space: nowrap;
+}
+
+.theme-light .partners-marquee-item span,
+.theme-white-red .partners-marquee-item span {
+    color: #111827;
+}
+
 @keyframes partners-marquee-scroll {
     from { transform: translateX(-50%); }
     to { transform: translateX(0); }
 }
-@media (prefers-reduced-motion: reduce) {
-    .partners-marquee-track { animation: none; }
-    .partners-marquee-wrap { overflow-x: auto; }
+
+@media (max-width: 767px) {
+    .partners-marquee-wrap {
+        margin-top: 68px;
+        height: 52px;
+        min-height: 52px;
+    }
+
+    .partners-marquee-track {
+        gap: 38px;
+        padding: 0 18px;
+        animation-duration: 21s;
+    }
+
+    .partners-marquee-item {
+        height: 32px;
+        min-width: 62px;
+        padding: 3px 5px;
+    }
+
+    .partners-marquee-item img {
+        max-width: 120px;
+    }
+
+    #page-home {
+        margin-top: 4px !important;
+    }
 }
 
+@media (prefers-reduced-motion: reduce) {
+    .partners-marquee-track { animation: none; }
+}
 </style>
 
 <style id="aerix-final-v5-polish">
