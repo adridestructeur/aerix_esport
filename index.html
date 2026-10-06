@@ -1706,23 +1706,43 @@ body.theme-light {
    Sous la navigation, avant le hero
    Défilement automatique : GAUCHE → DROITE
    ========================================================= */
+
 .partners-marquee-wrap {
     position: relative;
     z-index: 21;
+
     width: 100%;
-    height: 58px;
-    min-height: 58px;
+    height: 62px;
+    min-height: 62px;
     margin-top: 82px;
+
     display: flex;
     align-items: center;
     overflow: hidden;
+
     background: transparent !important;
     border: 0 !important;
     box-shadow: none !important;
+
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
+
     mask-image: none !important;
     -webkit-mask-image: none !important;
+
+    /* Réserve immédiatement la place avant le chargement Firebase.
+       Cela empêche le hero de descendre brutalement après ~1 seconde. */
+}
+
+/* Le conteneur reste présent même lorsque Firebase n'a pas encore répondu. */
+.partners-marquee-wrap.hidden {
+    display: flex !important;
+    visibility: hidden !important;
+}
+
+/* Une fois les logos disponibles, le JS retire .hidden et la bande devient visible. */
+.partners-marquee-wrap:not(.hidden) {
+    visibility: visible !important;
 }
 
 .site-main {
@@ -1730,58 +1750,85 @@ body.theme-light {
 }
 
 #page-home {
-    margin-top: 4px !important;
+    margin-top: 0 !important;
 }
+
+/* =========================================================
+   PISTE
+   4 copies identiques = bandeau rempli sur toute la largeur
+   et boucle parfaitement continue.
+   ========================================================= */
 
 .partners-marquee-track {
     display: flex;
     align-items: center;
+
     width: max-content;
     flex-shrink: 0;
-    gap: 52px;
-    padding: 0 26px;
+
+    gap: 42px;
+    padding: 0 22px;
+
     position: relative;
     z-index: 2;
-    animation: partners-marquee-scroll 22s linear infinite !important;
+
+    animation: partners-marquee-scroll 24s linear infinite !important;
     animation-play-state: running !important;
+
     will-change: transform;
 }
 
-/* On met la piste en pause au survol pour rendre le clic précis. */
+/* Pas de pause : le défilement reste fluide même au survol. */
 .partners-marquee-wrap:hover .partners-marquee-track {
-    animation-play-state: paused !important;
+    animation-play-state: running !important;
 }
 
 .partners-marquee-item {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+
     flex: 0 0 auto;
-    height: 36px;
-    min-width: 70px;
+
+    height: 38px;
+    min-width: 78px;
+
     padding: 3px 6px;
+
     opacity: .72;
     filter: grayscale(25%);
+
     text-decoration: none;
     cursor: pointer;
+
     position: relative;
     z-index: 3;
     pointer-events: auto;
+
     transform: translateZ(0) scale(1);
-    transition: opacity .22s ease, filter .22s ease, transform .22s ease;
+
+    transition:
+        opacity .22s ease,
+        filter .22s ease,
+        transform .22s ease;
 }
 
 .partners-marquee-item:hover {
     opacity: 1;
-    filter: grayscale(0%) drop-shadow(0 0 10px rgba(167,139,250,.65));
-    transform: translateZ(0) scale(1.12);
+    filter:
+        grayscale(0%)
+        drop-shadow(0 0 10px rgba(167,139,250,.65));
+
+    transform: translateZ(0) scale(1.1);
 }
 
 .partners-marquee-item img {
     display: block;
+
     width: auto;
     height: 100%;
     max-width: 155px;
+
     object-fit: contain;
 }
 
@@ -1798,32 +1845,35 @@ body.theme-light {
     color: #111827;
 }
 
+/* 4 copies -> -25% correspond exactement à une copie. */
 @keyframes partners-marquee-scroll {
     from {
-        transform: translateX(-50%);
+        transform: translateX(-25%);
     }
+
     to {
         transform: translateX(0);
     }
 }
 
 @media (max-width: 767px) {
+
     .partners-marquee-wrap {
-        height: 48px;
-        min-height: 48px;
+        height: 54px;
+        min-height: 54px;
         margin-top: 78px;
     }
 
     .partners-marquee-track {
-        gap: 36px;
-        padding: 0 18px;
-        animation-duration: 19s !important;
+        gap: 30px;
+        padding: 0 16px;
+        animation-duration: 20s !important;
     }
 
     .partners-marquee-item {
-        height: 30px;
-        min-width: 58px;
-        padding: 2px 5px;
+        height: 31px;
+        min-width: 62px;
+        padding: 2px 4px;
     }
 
     .partners-marquee-item img {
@@ -1831,7 +1881,7 @@ body.theme-light {
     }
 
     #page-home {
-        margin-top: 2px !important;
+        margin-top: 0 !important;
     }
 }
 
@@ -5799,9 +5849,14 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
                     ? `<a class="partners-marquee-item" href="${escapeHtml(safeUrl(p.url))}" target="_blank" rel="noopener noreferrer">${inner}</a>`
                     : `<div class="partners-marquee-item">${inner}</div>`;
             };
-            // Dupliqué deux fois pour une boucle visuelle continue, de gauche à droite.
+            /*
+             * On répète le même groupe 4 fois.
+             * La piste peut ainsi remplir toute la largeur de l'écran
+             * sans gros trous, tout en gardant une boucle parfaitement fluide.
+             */
             const once = partners.map(itemHTML).join('');
-            track.innerHTML = once + once;
+            track.innerHTML = once + once + once + once;
+
             wrap.classList.remove('hidden');
         }
 
