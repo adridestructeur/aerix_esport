@@ -1701,13 +1701,21 @@ body.theme-light {
 /* CTA avis accueil : toujours lisible. */
 .theme-light [data-i18n="nav_review"] { color:#0a0a0a !important; }
 
-/* Banderole défilante des partenaires (entre la nav et le titre AERIX) */
+/* Banderole partenaires : placée entre la navigation et le hero AERIX */
 .partners-marquee-wrap {
     position: relative;
+    z-index: 20;
     width: 100%;
     overflow: hidden;
-    padding: 14px 0;
-    background: rgba(255,255,255,0.03);
+    padding: 10px 0;
+    min-height: 64px;
+    display: flex;
+    align-items: center;
+    background: rgba(8, 6, 14, 0.82);
+    border-top: 1px solid rgba(255,255,255,0.07);
+    border-bottom: 1px solid rgba(167,139,250,0.16);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
     border-top: 1px solid rgba(255,255,255,0.06);
     border-bottom: 1px solid rgba(255,255,255,0.06);
     -webkit-mask-image: linear-gradient(to right, transparent 0, #000 64px, #000 calc(100% - 64px), transparent 100%);
@@ -1718,7 +1726,8 @@ body.theme-light {
     align-items: center;
     width: max-content;
     gap: 56px;
-    animation: partners-marquee-scroll 32s linear infinite;
+    animation: partners-marquee-scroll 28s linear infinite;
+    will-change: transform;
 }
 .partners-marquee-wrap:hover .partners-marquee-track { animation-play-state: paused; }
 .partners-marquee-item {
@@ -3294,8 +3303,8 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
         </div>
     </nav>
 
-    <!-- Banderole défilante des partenaires -->
-    <div id="partners-marquee-wrap" class="partners-marquee-wrap hidden" aria-label="Partenaires AERIX">
+    <!-- Banderole défilante des partenaires : ENTRE LA NAVIGATION ET LE HERO -->
+    <div id="partners-marquee-wrap" class="partners-marquee-wrap hidden" aria-label="Partenaires et affiliés AERIX">
         <div class="partners-marquee-track" id="partners-marquee-track"></div>
     </div>
 
@@ -5696,11 +5705,18 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
             const wrap = document.getElementById('partners-marquee-wrap');
             const track = document.getElementById('partners-marquee-track');
             if (!wrap || !track) return;
-            const partners = (Array.isArray(globalPartners) ? globalPartners : []).filter(p => p.name || p.image);
+            let partners = (Array.isArray(globalPartners) ? globalPartners : []).filter(p => p.name || p.image);
+
+            // Fallback immédiat : la banderole reste visible même avant la réponse Firebase.
+            // Les données Firebase remplacent automatiquement ces noms dès leur chargement.
             if (!partners.length) {
-                wrap.classList.add('hidden');
-                track.innerHTML = '';
-                return;
+                partners = [
+                    { name: 'NOLT' },
+                    { name: 'SYNCMESH' },
+                    { name: 'Lovely Sticker' },
+                    { name: 'GO SETUPS' },
+                    { name: 'Instant Gaming' }
+                ];
             }
             const itemHTML = p => {
                 const inner = p.image
@@ -5710,7 +5726,7 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
                     ? `<a class="partners-marquee-item" href="${escapeHtml(safeUrl(p.url))}" target="_blank" rel="noopener noreferrer">${inner}</a>`
                     : `<div class="partners-marquee-item">${inner}</div>`;
             };
-            // Dupliqué deux fois pour une boucle visuelle continue (défilement de gauche à droite).
+            // Dupliqué deux fois pour une boucle visuelle continue, de gauche à droite.
             const once = partners.map(itemHTML).join('');
             track.innerHTML = once + once;
             wrap.classList.remove('hidden');
@@ -8483,6 +8499,8 @@ function checkAdminSessionTimeout() {
         updateLanguageMenuUI(currentLang);
         renderAccountArea();
         startSync();
+        // Premier rendu immédiat de la banderole ; Firebase la met ensuite à jour.
+        renderPartnersMarquee();
         // Hash routing : ouverture directe d'une section et conservation de l'historique navigateur.
         if (window.location.hash) navigateFromHash(); else navigate('home', false);
         requestAnimationFrame(() => {
