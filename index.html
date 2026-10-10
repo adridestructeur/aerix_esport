@@ -87,7 +87,9 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
 
     <script>
-        tailwind.config = {
+        // Le CDN peut être bloqué par un filtre réseau ou un bloqueur de contenu.
+        // Dans ce cas, on évite une ReferenceError qui interromprait ce bloc.
+        if (window.tailwind) window.tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: { sans: ['Inter', 'sans-serif'] },
@@ -3516,8 +3518,8 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
         <!-- 2. EFFECTIFS -->
         <main id="page-effectifs" class="page-view px-6 max-w-7xl mx-auto">
             <div class="mb-14 text-center animate-fade-up opacity-0">
-                <h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2" data-i18n="roster_subtitle">Divisions</h2>
-                <h3 class="text-4xl font-black text-white mb-8 inline-block transition-transform duration-300 hover:scale-110 hover:text-aerix-purple cursor-default" data-i18n="roster_title">Nos équipes</h3>
+                <h3 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2" data-i18n="roster_subtitle">Divisions</h3>
+                <h2 class="text-4xl font-black text-white mb-8 inline-block transition-transform duration-300 hover:scale-110 hover:text-aerix-purple cursor-default" data-i18n="roster_title">Nos équipes</h2>
                 <div class="flex flex-wrap justify-center gap-3" id="filters-effectifs">
                     <button onclick="setFilter('effectifs', 'Staff')" data-filter="Staff" class="filter-btn active">Staff</button>
                     <button onclick="setFilter('effectifs', 'Rocket League')" data-filter="Rocket League" class="filter-btn">Rocket League</button>
@@ -3532,8 +3534,8 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
         <!-- 3. PALMARÈS / RÉSULTATS -->
         <main id="page-palmares" class="page-view px-6 max-w-7xl mx-auto">
             <div class="mb-14 text-center animate-fade-up opacity-0">
-                <h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2" data-i18n="results_subtitle">Compétitions</h2>
-                <h3 class="text-4xl font-black text-white mb-8 inline-block transition-transform duration-300 hover:scale-110 hover:text-aerix-purple cursor-default" data-i18n="results_title">Nos résultats</h3>
+                <h3 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2" data-i18n="results_subtitle">Compétitions</h3>
+                <h2 class="text-4xl font-black text-white mb-8 inline-block transition-transform duration-300 hover:scale-110 hover:text-aerix-purple cursor-default" data-i18n="results_title">Nos résultats</h2>
                 <div class="flex flex-wrap justify-center gap-3 mb-4" id="palmares-view-toggle">
                     <button onclick="setPalmaresView('resultats')" data-view="resultats" class="filter-btn active" data-i18n="results_tab_results">Résultats</button>
                     <button onclick="setPalmaresView('palmares')" data-view="palmares" class="filter-btn" data-i18n="results_tab_achievements">Palmarès</button>
@@ -3553,8 +3555,8 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
         <!-- 4. COMPÉTITION -->
         <main id="page-competition" class="page-view px-6 max-w-7xl mx-auto">
             <div class="mb-14 text-center animate-fade-up opacity-0">
-                <h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2">AERIX COMPETITION</h2>
-                <h3 class="text-4xl font-black text-white mb-4 inline-block transition-transform duration-300 hover:scale-110 hover:text-aerix-purple cursor-default">Compétition</h3>
+                <h3 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2">AERIX COMPETITION</h3>
+                <h2 class="text-4xl font-black text-white mb-4 inline-block transition-transform duration-300 hover:scale-110 hover:text-aerix-purple cursor-default">Compétition</h2>
                 <p class="text-gray-400 max-w-2xl mx-auto">Retrouve les prochains matchs et courses ainsi que les dernières performances enregistrées par AERIX.</p>
             </div>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -3572,8 +3574,8 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
         <!-- 5. PERFORMANCE -->
         <main id="page-performance" class="page-view px-6 max-w-7xl mx-auto">
             <div class="mb-14 text-center animate-fade-up opacity-0">
-                <h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2">AERIX PERFORMANCE</h2>
-                <h3 class="text-4xl font-black text-white mb-4 inline-block transition-transform duration-300 hover:scale-110 hover:text-aerix-purple cursor-default">Performance</h3>
+                <h3 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2">AERIX PERFORMANCE</h3>
+                <h2 class="text-4xl font-black text-white mb-4 inline-block transition-transform duration-300 hover:scale-110 hover:text-aerix-purple cursor-default">Performance</h2>
                 <p class="text-gray-400 max-w-2xl mx-auto">Une vue synthétique des effectifs, compétitions et résultats actuellement enregistrés.</p>
             </div>
             <div id="performance-stats" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10"></div>
@@ -3585,15 +3587,15 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
 
         <!-- 6. MÉDIA -->
         <main id="page-media" class="page-view px-6 max-w-7xl mx-auto">
-            <div class="mb-14 text-center animate-fade-up opacity-0"><h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2">AERIX MEDIA</h2><h3 class="text-4xl font-black text-white mb-4 inline-block transition-transform duration-300 hover:scale-110 hover:text-aerix-purple cursor-default">Média</h3><p class="text-gray-400 max-w-2xl mx-auto">Photos et contenus visuels publiés depuis les annonces et la galerie AERIX.</p></div>
+            <div class="mb-14 text-center animate-fade-up opacity-0"><h3 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2">AERIX MEDIA</h3><h2 class="text-4xl font-black text-white mb-4 inline-block transition-transform duration-300 hover:scale-110 hover:text-aerix-purple cursor-default">Média</h2><p class="text-gray-400 max-w-2xl mx-auto">Photos et contenus visuels publiés depuis les annonces et la galerie AERIX.</p></div>
             <div id="media-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5"></div>
         </main>
 
         <!-- 7. HISTOIRE -->
         <main id="page-histoire" class="page-view px-6 max-w-5xl mx-auto">
             <div class="text-center mb-20 animate-fade-up opacity-0">
-                <h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2" data-i18n="history_subtitle">L'Héritage</h2>
-                <h3 class="text-4xl font-black text-white mb-6 inline-block transition-transform duration-300 hover:scale-110 hover:text-aerix-purple cursor-default" data-i18n="history_title">L'Histoire d'AERIX</h3>
+                <h3 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2" data-i18n="history_subtitle">L'Héritage</h3>
+                <h2 class="text-4xl font-black text-white mb-6 inline-block transition-transform duration-300 hover:scale-110 hover:text-aerix-purple cursor-default" data-i18n="history_title">L'Histoire d'AERIX</h2>
                 <p class="text-gray-400 text-lg max-w-2xl mx-auto font-light" data-i18n="history_desc">Née d'une passion commune pour le sport automobile virtuel et l'esport, AERIX n'a cessé d'évoluer.</p>
             </div>
             <div class="relative border-l border-white/10 ml-4 md:ml-1/2 space-y-24 py-10">
@@ -3633,8 +3635,8 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
         <!-- 5. BOUTIQUE -->
         <main id="page-boutique" class="page-view px-6 max-w-7xl mx-auto">
             <div class="mb-14 text-center animate-fade-up opacity-0">
-                <h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2" data-i18n="shop_subtitle">Shop</h2>
-                <h3 class="text-4xl font-black text-white inline-block transition-transform duration-300 hover:scale-110 hover:text-aerix-purple cursor-default" data-i18n="shop_title">Équipement Officiel</h3>
+                <h3 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2" data-i18n="shop_subtitle">Shop</h3>
+                <h2 class="text-4xl font-black text-white inline-block transition-transform duration-300 hover:scale-110 hover:text-aerix-purple cursor-default" data-i18n="shop_title">Équipement Officiel</h2>
             </div>
             <div id="shop-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"></div>
         </main>
@@ -3662,8 +3664,8 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
         <!-- 7. ANNONCES -->
         <main id="page-annonces" class="page-view px-6 max-w-4xl mx-auto">
             <div class="mb-14 text-center animate-fade-up opacity-0">
-                <h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2" data-i18n="news_subtitle">Actualités</h2>
-                <h3 class="text-4xl font-black text-white mb-8 inline-block transition-transform duration-300 hover:scale-110 hover:text-aerix-purple cursor-default" data-i18n="news_title">Annonces & Mises à jour</h3>
+                <h3 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2" data-i18n="news_subtitle">Actualités</h3>
+                <h2 class="text-4xl font-black text-white mb-8 inline-block transition-transform duration-300 hover:scale-110 hover:text-aerix-purple cursor-default" data-i18n="news_title">Annonces & Mises à jour</h2>
                 <div class="flex flex-wrap justify-center gap-3 mb-4" id="annonces-view-toggle">
                     <button onclick="setAnnoncesView('liste')" data-view="liste" class="filter-btn active">Actualités</button>
                     <button onclick="setAnnoncesView('galerie')" data-view="galerie" class="filter-btn" data-i18n="filter_gallery">Galerie</button>
@@ -4570,11 +4572,11 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
     </div>
 
     <!-- MODAL : REJOINDRE AERIX -->
-    <div id="recruitment-modal" class="fixed inset-0 z-[210] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl">
+    <div id="recruitment-modal" class="fixed inset-0 z-[210] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl" role="dialog" aria-modal="true" aria-labelledby="recruitment-modal-title" aria-hidden="true">
         <div class="glass-panel w-full max-w-2xl max-h-[92vh] overflow-y-auto rounded-[2rem] p-7 md:p-9 shadow-2xl">
             <div class="flex items-center justify-between mb-7">
-                <div><div class="text-xs font-bold text-aerix-purple uppercase tracking-widest">AERIX Esports</div><h3 class="text-3xl font-black text-white mt-1">Rejoindre AERIX</h3></div>
-                <button type="button" onclick="closeRecruitmentModal()" class="w-10 h-10 rounded-full bg-white/5 border border-white/10 text-white">✕</button>
+                <div><div class="text-xs font-bold text-aerix-purple uppercase tracking-widest">AERIX Esports</div><h3 id="recruitment-modal-title" class="text-3xl font-black text-white mt-1">Rejoindre AERIX</h3></div>
+                <button id="recruitment-modal-close" type="button" onclick="closeRecruitmentModal()" class="w-10 h-10 rounded-full bg-white/5 border border-white/10 text-white" aria-label="Fermer la fenêtre de recrutement">✕</button>
             </div>
             <form id="recruitment-form" onsubmit="submitRecruitment(event)" class="space-y-4">
                 <select id="recruitment-division" required class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
@@ -6454,10 +6456,17 @@ function checkAdminSessionTimeout() {
         }
 
         function openRecruitmentModal() {
-            document.getElementById('recruitment-modal')?.classList.remove('hidden');
+            const modal = document.getElementById('recruitment-modal');
+            if (!modal) return;
+            modal.classList.remove('hidden');
+            modal.setAttribute('aria-hidden', 'false');
+            document.getElementById('recruitment-modal-close')?.focus();
         }
         function closeRecruitmentModal() {
-            document.getElementById('recruitment-modal')?.classList.add('hidden');
+            const modal = document.getElementById('recruitment-modal');
+            if (!modal) return;
+            modal.classList.add('hidden');
+            modal.setAttribute('aria-hidden', 'true');
         }
         async function submitRecruitment(event) {
             event.preventDefault();
@@ -7104,8 +7113,8 @@ function checkAdminSessionTimeout() {
             }
             document.getElementById('admin-list-boutique').innerHTML = globalShop.map(item => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm">${escapeHtml(item.name)}</div><div class="text-xs text-gray-500">${item.available === false ? 'Indisponible' : 'Disponible'}</div></div><div class="flex gap-2"><button onclick="startEditShop('${item.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('shop', '${item.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
             const sortedAdminEffectifs = [...globalEffectifs].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-            document.getElementById('admin-list-effectifs').innerHTML = sortedAdminEffectifs.map((r, idx) => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center effectif-row" draggable="true" data-id="${r.id}" ondragstart="dragEffectifStart(event)" ondragend="dragEffectifEnd(event)" ondragover="dragEffectifOver(event)" ondrop="dropEffectif(event)"><div class="flex items-center gap-2"><div class="effectif-drag-handle cursor-grab active:cursor-grabbing text-gray-500 hover:text-white transition px-1" title="Glisser pour réordonner"><svg width="10" height="16" viewBox="0 0 10 16" fill="currentColor"><circle cx="2" cy="2" r="1.5"/><circle cx="8" cy="2" r="1.5"/><circle cx="2" cy="8" r="1.5"/><circle cx="8" cy="8" r="1.5"/><circle cx="2" cy="14" r="1.5"/><circle cx="8" cy="14" r="1.5"/></svg></div><div class="flex flex-col gap-1"><button onclick="moveEffectif('${r.id}', -1)" ${idx === 0 ? 'disabled' : ''} class="w-6 h-6 flex items-center justify-center rounded-md bg-white/10 hover:bg-aerix-purple text-white text-xs transition disabled:opacity-20 disabled:cursor-not-allowed" title="Monter">▲</button><button onclick="moveEffectif('${r.id}', 1)" ${idx === sortedAdminEffectifs.length - 1 ? 'disabled' : ''} class="w-6 h-6 flex items-center justify-center rounded-md bg-white/10 hover:bg-aerix-purple text-white text-xs transition disabled:opacity-20 disabled:cursor-not-allowed" title="Descendre">▼</button></div><div><div class="text-white font-bold text-sm flex items-center gap-2">${r.name} <span class="bg-white/10 text-[9px] px-2 py-0.5 rounded-full">${r.players?.length||0} j.</span></div><div class="text-xs text-gray-500">${r.game || 'Général'}</div></div></div><div class="flex gap-2"><button onclick="startEditEffectif('${r.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('effectifs', '${r.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
-            document.getElementById('admin-list-palmares').innerHTML = sortByDateDesc(globalPalmares).map(p => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm truncate max-w-[150px]">${p.title}</div><div class="text-xs text-gray-500">${p.game || 'Général'}</div></div><div class="flex gap-2"><button onclick="startEditPalmares('${p.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('palmares', '${p.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
+            document.getElementById('admin-list-effectifs').innerHTML = sortedAdminEffectifs.map((r, idx) => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center effectif-row" draggable="true" data-id="${r.id}" ondragstart="dragEffectifStart(event)" ondragend="dragEffectifEnd(event)" ondragover="dragEffectifOver(event)" ondrop="dropEffectif(event)"><div class="flex items-center gap-2"><div class="effectif-drag-handle cursor-grab active:cursor-grabbing text-gray-500 hover:text-white transition px-1" title="Glisser pour réordonner"><svg width="10" height="16" viewBox="0 0 10 16" fill="currentColor"><circle cx="2" cy="2" r="1.5"/><circle cx="8" cy="2" r="1.5"/><circle cx="2" cy="8" r="1.5"/><circle cx="8" cy="8" r="1.5"/><circle cx="2" cy="14" r="1.5"/><circle cx="8" cy="14" r="1.5"/></svg></div><div class="flex flex-col gap-1"><button onclick="moveEffectif('${r.id}', -1)" ${idx === 0 ? 'disabled' : ''} class="w-6 h-6 flex items-center justify-center rounded-md bg-white/10 hover:bg-aerix-purple text-white text-xs transition disabled:opacity-20 disabled:cursor-not-allowed" title="Monter">▲</button><button onclick="moveEffectif('${r.id}', 1)" ${idx === sortedAdminEffectifs.length - 1 ? 'disabled' : ''} class="w-6 h-6 flex items-center justify-center rounded-md bg-white/10 hover:bg-aerix-purple text-white text-xs transition disabled:opacity-20 disabled:cursor-not-allowed" title="Descendre">▼</button></div><div><div class="text-white font-bold text-sm flex items-center gap-2">${escapeHtml(r.name || 'Effectif')} <span class="bg-white/10 text-[9px] px-2 py-0.5 rounded-full">${r.players?.length||0} j.</span></div><div class="text-xs text-gray-500">${escapeHtml(r.game || 'Général')}</div></div></div><div class="flex gap-2"><button onclick="startEditEffectif('${r.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('effectifs', '${r.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
+            document.getElementById('admin-list-palmares').innerHTML = sortByDateDesc(globalPalmares).map(p => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm truncate max-w-[150px]">${escapeHtml(p.title || 'Résultat')}</div><div class="text-xs text-gray-500">${escapeHtml(p.game || 'Général')}</div></div><div class="flex gap-2"><button onclick="startEditPalmares('${p.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('palmares', '${p.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
             const eventsEl = document.getElementById('admin-list-evenements');
             if (eventsEl) {
                 const sortedEvents = [...(globalEvents || [])].sort((a, b) => parseAERIXDate(a.datetime || a.date || '') - parseAERIXDate(b.datetime || b.date || ''));
@@ -7127,7 +7136,7 @@ function checkAdminSessionTimeout() {
                 featuredSelect.innerHTML = `<option value="">${currentLang === 'en' ? 'No featured partner' : 'Aucun partenaire'}</option>` + globalPartners.map(p => `<option value="${escapeHtml(p.id)}" ${p.id === selectedFeatured ? 'selected' : ''}>${escapeHtml(p.name || 'Partenaire')}</option>`).join('');
             }
             if (partnersAdminEl) partnersAdminEl.innerHTML = globalPartners.map(p => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center gap-3"><div class="min-w-0"><div class="text-white font-bold text-sm flex items-center gap-2">${escapeHtml(p.name || 'Partenaire')} ${p.featured ? '<span class="text-[9px] uppercase tracking-widest text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 px-2 py-0.5 rounded-full">Mis en avant</span>' : ''}</div><div class="text-xs text-gray-500 mt-1">${escapeHtml(p.category || 'Partenaire')}</div></div><div class="flex gap-2 shrink-0"><button onclick="startEditPartner('${p.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('partners', '${p.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
-            document.getElementById('admin-list-annonces').innerHTML = sortByDateDesc(globalAnnonces).map(a => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm truncate max-w-[200px]">${a.title}</div><div class="text-xs text-gray-500">${a.date}</div></div><div class="flex gap-2"><button onclick="startEditAnnouncement('${a.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('annonces', '${a.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
+            document.getElementById('admin-list-annonces').innerHTML = sortByDateDesc(globalAnnonces).map(a => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm truncate max-w-[200px]">${escapeHtml(a.title || 'Annonce')}</div><div class="text-xs text-gray-500">${escapeHtml(a.date || '')}</div></div><div class="flex gap-2"><button onclick="startEditAnnouncement('${a.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('annonces', '${a.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
             const contactEl = document.getElementById('admin-list-contact');
             if (contactEl) {
                 const contactOnly = globalContactRequests.filter(t => t.type !== 'coaching');
@@ -7792,9 +7801,13 @@ function checkAdminSessionTimeout() {
         function renderNavbar() {
             const activePage = document.querySelector('.page-view.active');
             const activeId = activePage ? activePage.id.replace('page-', '') : 'home';
-            document.querySelectorAll('#nav-container .nav-btn').forEach(btn => btn.classList.toggle('active', btn.id === 'nav-' + activeId));
-            updateNavPill(document.getElementById('nav-' + activeId));
-            if (!['home','histoire','effectifs','palmares','competition','performance','partenaires','boutique','coaching'].includes(activeId)) { document.getElementById('nav-more')?.classList.add('active'); }
+            const activeNavId = document.getElementById('nav-' + activeId) ? 'nav-' + activeId : 'nav-more';
+            document.querySelectorAll('#nav-container .nav-btn').forEach(btn => {
+                const isActive = btn.id === activeNavId;
+                btn.classList.toggle('active', isActive);
+                btn.toggleAttribute('aria-current', isActive);
+            });
+            updateNavPill(document.getElementById(activeNavId));
         }
 
         function positionMoreMenu() {
@@ -7951,11 +7964,24 @@ function checkAdminSessionTimeout() {
             void targetPage.offsetWidth;
             targetPage.classList.add('animate-tab-change');
 
+            const activeNavId = document.getElementById('nav-' + pageId) ? 'nav-' + pageId : 'nav-more';
             document.querySelectorAll('#nav-container .nav-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.id === 'nav-' + pageId);
+                const isActive = btn.id === activeNavId;
+                btn.classList.toggle('active', isActive);
+                btn.toggleAttribute('aria-current', isActive);
             });
-            updateNavPill(document.getElementById('nav-' + pageId));
+            updateNavPill(document.getElementById(activeNavId));
             refreshNavPill();
+
+            const pageTitles = {
+                home: { fr: 'Accueil', en: 'Home' }, histoire: { fr: "L’histoire d’AERIX", en: 'AERIX History' },
+                effectifs: { fr: 'Nos équipes', en: 'Our Teams' }, palmares: { fr: 'Palmarès', en: 'Results' },
+                competition: { fr: 'Compétition', en: 'Competition' }, performance: { fr: 'Performance', en: 'Performance' },
+                partenaires: { fr: 'Partenaires', en: 'Partners' }, boutique: { fr: 'Boutique', en: 'Shop' },
+                annonces: { fr: 'Actualités', en: 'News' }, media: { fr: 'Média', en: 'Media' }
+            };
+            const pageTitle = pageTitles[pageId];
+            document.title = pageTitle ? `AERIX Esports | ${pageTitle[currentLang] || pageTitle.fr}` : 'AERIX Esports';
 
             document.querySelectorAll('.animate-fade-up').forEach(el => {
                 el.style.animation = 'none';
@@ -7971,6 +7997,7 @@ function checkAdminSessionTimeout() {
             if (pageId === 'performance') renderPerformancePage();
             if (pageId === 'media') renderMediaPage();
             if (pageId === 'partenaires') renderPartners();
+            trackPageView(pageId);
             setTimeout(revealActiveElements, 20);
         }
 
@@ -8588,6 +8615,7 @@ function checkAdminSessionTimeout() {
             'coaching-modal': () => closeCoachingModal(),
             'review-modal': () => closeReviewModal(),
             'account-modal': () => closeAccountModal(),
+            'recruitment-modal': () => closeRecruitmentModal(),
             'admin-login-modal': () => document.getElementById('admin-login-modal').classList.add('hidden'),
             'legal-modal': () => closeLegal(),
             'crop-modal': () => cancelCrop(),
