@@ -3851,6 +3851,124 @@ body.theme-white-red #page-annonces .news-card-animated h4 { color:#171717 !impo
 }
 </style>
 
+
+<style id="aerix-v3-performance-history-shop">
+/* AERIX V3 — rendu plus net, moins de flou GPU, composants cohérents */
+:root {
+  --aerix-ink:#080808; --aerix-surface:#121212; --aerix-surface-raised:#191919;
+  --aerix-line:rgba(255,255,255,.12); --aerix-text:#f5f5f5; --aerix-muted:#a3a3a3;
+  --aerix-accent:#f5f5f5; --aerix-accent-soft:rgba(255,255,255,.08);
+}
+/* Le fond utilise des dégradés CSS nets au lieu d'une image agrandie/floue. */
+#page-bg-layer {
+  background-image: radial-gradient(ellipse at 15% 15%, rgba(255,255,255,.075), transparent 38%),
+                    radial-gradient(ellipse at 85% 75%, rgba(255,255,255,.035), transparent 34%),
+                    linear-gradient(135deg,#050505 0%,#0b0b0b 52%,#101010 100%) !important;
+  background-size:cover !important; background-position:center !important;
+  filter:none !important; transform:none !important; opacity:1 !important;
+}
+body.theme-light #page-bg-layer {
+  background-image: radial-gradient(ellipse at 12% 10%,rgba(0,0,0,.045),transparent 38%),
+                    radial-gradient(ellipse at 88% 80%,rgba(120,120,120,.08),transparent 35%),
+                    linear-gradient(135deg,#f7f7f7,#ececec 58%,#fafafa) !important;
+}
+body.theme-black-red #page-bg-layer {
+  background-image: radial-gradient(ellipse at 14% 15%,rgba(229,57,53,.12),transparent 38%),
+                    radial-gradient(ellipse at 88% 78%,rgba(229,57,53,.07),transparent 32%),
+                    linear-gradient(135deg,#050505,#100909 62%,#080808) !important;
+}
+body.theme-white-red #page-bg-layer {
+  background-image: radial-gradient(ellipse at 12% 12%,rgba(229,57,53,.055),transparent 36%),
+                    linear-gradient(135deg,#fff,#f5f5f5 58%,#fff) !important;
+}
+/* Les panneaux avaient un blur de 30–35 px : coûteux et visuellement laiteux sur PC. */
+.glass-panel, .glass-panel-no-hover {
+  -webkit-backdrop-filter:blur(8px) saturate(115%) !important;
+  backdrop-filter:blur(8px) saturate(115%) !important;
+}
+#nav-container, nav.fixed, #mobile-menu { -webkit-backdrop-filter:blur(8px) !important; backdrop-filter:blur(8px) !important; }
+#player-modal, #product-modal, #event-article-modal, #palmares-article-modal {
+  -webkit-backdrop-filter:blur(5px) !important; backdrop-filter:blur(5px) !important;
+}
+@media (max-width: 768px) {
+  .glass-panel, .glass-panel-no-hover { -webkit-backdrop-filter:blur(5px) !important; backdrop-filter:blur(5px) !important; }
+}
+/* Champs de formulaire nets, lisibles et cohérents sur les thèmes sombres. */
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+textarea, select, .form-control {
+  max-width:100%; min-width:0; border-radius:12px;
+  border:1px solid rgba(255,255,255,.16) !important;
+  background-color:rgba(12,12,12,.94) !important; color:#f5f5f5 !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035);
+  -webkit-backdrop-filter:none !important; backdrop-filter:none !important;
+  transition:border-color .18s ease,box-shadow .18s ease,background-color .18s ease;
+}
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), select { min-height:42px; }
+textarea { line-height:1.55; resize:vertical; }
+input::placeholder, textarea::placeholder { color:#8b8b8b !important; opacity:1; }
+input:focus-visible, textarea:focus-visible, select:focus-visible, button:focus-visible, a:focus-visible {
+  outline:2px solid rgba(255,255,255,.78) !important; outline-offset:2px;
+}
+input:focus, textarea:focus, select:focus {
+  border-color:rgba(255,255,255,.5) !important;
+  box-shadow:0 0 0 3px rgba(255,255,255,.07) !important; outline:none;
+}
+body.theme-light input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+body.theme-light textarea, body.theme-light select, body.theme-light .form-control,
+body.theme-white-red input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+body.theme-white-red textarea, body.theme-white-red select, body.theme-white-red .form-control {
+  background:#fff !important; color:#171717 !important; border-color:rgba(0,0,0,.18) !important;
+}
+body.theme-light input::placeholder, body.theme-light textarea::placeholder,
+body.theme-white-red input::placeholder, body.theme-white-red textarea::placeholder { color:#666 !important; }
+body.theme-black-red input:focus, body.theme-black-red textarea:focus, body.theme-black-red select:focus { border-color:rgba(229,57,53,.72) !important; box-shadow:0 0 0 3px rgba(229,57,53,.12) !important; }
+/* PERFORMANCE — chiffres lisibles et blocs de rosters bien séparés. */
+#page-performance { padding-top:clamp(2rem,5vw,4.5rem); padding-bottom:4rem; }
+#page-performance > div:first-child { margin-bottom:clamp(2rem,4vw,3.5rem) !important; }
+#performance-stats > div { min-width:0; border:1px solid var(--aerix-line); border-radius:18px; background:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.025)); box-shadow:0 12px 28px rgba(0,0,0,.16); }
+#performance-stats > div > div:first-child { font-size:clamp(1.65rem,3vw,2.35rem); letter-spacing:-.04em; }
+#page-performance section { min-width:0; border-color:var(--aerix-line) !important; background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.018)) !important; }
+#performance-rl > div, #performance-sim > div { gap:1rem; border-color:var(--aerix-line) !important; background:rgba(255,255,255,.035) !important; transition:background .18s ease,border-color .18s ease,transform .18s ease; }
+#performance-rl > div:hover, #performance-sim > div:hover { background:rgba(255,255,255,.065) !important; border-color:rgba(255,255,255,.22) !important; transform:translateY(-2px); }
+/* HISTOIRE — frise plus propre, sans effets lumineux flous. */
+#page-histoire { padding-top:clamp(2rem,5vw,4.5rem); padding-bottom:4rem; }
+#page-histoire > div:first-child { margin-bottom:clamp(2.5rem,6vw,5rem) !important; }
+#page-histoire .border-l { border-color:rgba(255,255,255,.18) !important; }
+#page-histoire .reveal > div.glass-panel { border:1px solid var(--aerix-line) !important; border-radius:20px !important; background:linear-gradient(145deg,rgba(255,255,255,.06),rgba(255,255,255,.018)) !important; box-shadow:0 12px 30px rgba(0,0,0,.15); }
+#page-histoire .reveal > div.absolute.rounded-full { background:#f5f5f5 !important; box-shadow:0 0 0 5px rgba(255,255,255,.08) !important; }
+#page-histoire .reveal { scroll-margin-top:110px; }
+/* BOUTIQUE — produit mis en avant, image cadrée, texte et statut alignés. */
+#page-boutique { padding-top:clamp(2rem,5vw,4.5rem); padding-bottom:4rem; }
+#page-boutique > div:first-child { margin-bottom:clamp(2rem,4vw,3rem) !important; }
+#shop-container { align-items:stretch; gap:clamp(1rem,2vw,1.6rem) !important; }
+#shop-container > .glass-panel { min-width:0; border:1px solid var(--aerix-line) !important; border-top:2px solid rgba(255,255,255,.35) !important; border-radius:20px !important; background:linear-gradient(155deg,rgba(255,255,255,.065),rgba(255,255,255,.018)) !important; box-shadow:0 12px 28px rgba(0,0,0,.18); transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease; }
+#shop-container > .glass-panel:hover { transform:translateY(-4px); border-color:rgba(255,255,255,.28) !important; box-shadow:0 18px 38px rgba(0,0,0,.28); }
+#shop-container > .glass-panel > div:first-child { background:linear-gradient(135deg,#171717,#090909) !important; padding:1rem !important; }
+#shop-container > .glass-panel > div:first-child img { object-fit:contain !important; transform:none !important; filter:none !important; }
+#shop-container > .glass-panel > div:last-child { padding:1.15rem !important; gap:1rem; }
+#shop-container h4 { font-size:clamp(1rem,1.5vw,1.12rem); line-height:1.4; overflow-wrap:anywhere; }
+body.theme-light #page-performance section, body.theme-light #page-histoire .reveal > div.glass-panel,
+body.theme-light #shop-container > .glass-panel,
+body.theme-white-red #page-performance section, body.theme-white-red #page-histoire .reveal > div.glass-panel,
+body.theme-white-red #shop-container > .glass-panel { background:linear-gradient(145deg,rgba(255,255,255,.96),rgba(245,245,245,.92)) !important; border-color:rgba(0,0,0,.12) !important; box-shadow:0 12px 28px rgba(0,0,0,.07); }
+body.theme-light #performance-rl > div, body.theme-light #performance-sim > div,
+body.theme-white-red #performance-rl > div, body.theme-white-red #performance-sim > div { background:rgba(0,0,0,.025) !important; border-color:rgba(0,0,0,.10) !important; }
+body.theme-light #page-histoire .border-l, body.theme-white-red #page-histoire .border-l { border-color:rgba(0,0,0,.18) !important; }
+body.theme-light #page-histoire .reveal > div.absolute.rounded-full, body.theme-white-red #page-histoire .reveal > div.absolute.rounded-full { background:#171717 !important; box-shadow:0 0 0 5px rgba(0,0,0,.06) !important; }
+body.theme-light #shop-container > .glass-panel > div:first-child, body.theme-white-red #shop-container > .glass-panel > div:first-child { background:linear-gradient(135deg,#f4f4f4,#e8e8e8) !important; }
+@media (max-width: 640px) {
+  #page-performance, #page-histoire, #page-boutique { padding-left:1rem !important; padding-right:1rem !important; }
+  #page-performance section { padding:1.15rem !important; }
+  #page-histoire .reveal > div.glass-panel { padding:1.15rem !important; }
+  #shop-container { gap:1rem !important; }
+  #shop-container > .glass-panel > div:last-child { padding:1rem !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #performance-rl > div, #performance-sim > div, #shop-container > .glass-panel { transition:none !important; }
+  #performance-rl > div:hover, #performance-sim > div:hover, #shop-container > .glass-panel:hover { transform:none !important; }
+}
+</style>
+
 </head>
 <body class="antialiased selection:bg-purple-500 selection:text-white min-h-screen flex flex-col relative">
 <script id="aerix-early-theme-init">
