@@ -3969,11 +3969,80 @@ body.theme-light #shop-container > .glass-panel > div:first-child, body.theme-wh
 }
 </style>
 
+
+<style id="aerix-partners-smooth-motion-v4">
+/* Partenaires : interactions discrètes et fluides, sans animation coûteuse de filtre. */
+#page-partenaires #partners-container > .glass-panel,
+#page-partenaires .partner-card-tile {
+  transform:translate3d(0,0,0);
+  transition:transform 280ms cubic-bezier(.2,.7,.2,1),
+             border-color 280ms ease,
+             box-shadow 280ms ease,
+             background-color 280ms ease !important;
+  will-change:auto;
+}
+#page-partenaires #partners-container > .glass-panel:hover,
+#page-partenaires .partner-card-tile:hover {
+  transform:translate3d(0,-2px,0) !important;
+  box-shadow:0 10px 24px rgba(0,0,0,.14) !important;
+}
+#page-partenaires .partner-card-tile:hover {
+  border-color:rgba(255,255,255,.24) !important;
+}
+#page-partenaires .partner-card-tile img,
+#page-partenaires .partner-card-tile span,
+#page-partenaires .partners-marquee-item img {
+  transition:opacity 260ms ease, transform 260ms cubic-bezier(.2,.7,.2,1) !important;
+}
+#page-partenaires .partner-card-tile img,
+#page-partenaires .partners-marquee-item img {
+  filter:none !important;
+  opacity:.92;
+}
+#page-partenaires .partner-card-tile:hover img,
+#page-partenaires .partners-marquee-item:hover img {
+  filter:none !important;
+  opacity:1;
+  transform:scale(1.025);
+}
+#page-partenaires .partners-marquee-item {
+  opacity:.88;
+  filter:none !important;
+  transform:translate3d(0,0,0);
+  transition:opacity 240ms ease, transform 240ms cubic-bezier(.2,.7,.2,1) !important;
+}
+#page-partenaires .partners-marquee-item:hover {
+  opacity:1;
+  filter:none !important;
+  transform:translate3d(0,-1px,0) !important;
+}
+#page-partenaires .partners-marquee-item:hover img {
+  transform:none;
+}
+#page-partenaires .partners-marquee-track {
+  animation-duration:36s !important;
+  animation-timing-function:linear !important;
+}
+#page-partenaires .partners-marquee-wrap:hover .partners-marquee-track {
+  animation-play-state:running !important;
+}
+@media (prefers-reduced-motion:reduce) {
+  #page-partenaires #partners-container > .glass-panel,
+  #page-partenaires .partner-card-tile,
+  #page-partenaires .partner-card-tile img,
+  #page-partenaires .partner-card-tile span,
+  #page-partenaires .partners-marquee-item,
+  #page-partenaires .partners-marquee-item img {
+    transition:none !important; transform:none !important;
+  }
+  #page-partenaires .partners-marquee-track { animation:none !important; }
+}
+</style>
 </head>
 <body class="antialiased selection:bg-purple-500 selection:text-white min-h-screen flex flex-col relative">
 <script id="aerix-early-theme-init">
 (() => {
-  const allowed = new Set(['dark', 'light', 'black-red', 'white-red']);
+  const allowed = new Set(['dark', 'light', 'black-red']);
   let theme = 'dark';
   try {
     const stored = localStorage.getItem('aerix_theme');
@@ -4061,7 +4130,6 @@ body.theme-light #shop-container > .glass-panel > div:first-child, body.theme-wh
         <button type="button" onclick="setTheme('dark')" data-theme-option="dark" class="theme-option flex items-center gap-3 text-left px-3 py-2.5 text-xs font-bold text-white hover:bg-white/10 rounded-lg border border-transparent"><span class="theme-swatch"></span><span>Sombre</span></button>
         <button type="button" onclick="setTheme('light')" data-theme-option="light" class="theme-option flex items-center gap-3 text-left px-3 py-2.5 text-xs font-bold text-white hover:bg-white/10 rounded-lg border border-transparent"><span class="theme-swatch"></span><span>Clair</span></button>
         <button type="button" onclick="setTheme('black-red')" data-theme-option="black-red" class="theme-option flex items-center gap-3 text-left px-3 py-2.5 text-xs font-bold text-white hover:bg-white/10 rounded-lg border border-transparent"><span class="theme-swatch"></span><span>Noir &amp; Rouge</span></button>
-        <button type="button" onclick="setTheme('white-red')" data-theme-option="white-red" class="theme-option flex items-center gap-3 text-left px-3 py-2.5 text-xs font-bold text-white hover:bg-white/10 rounded-lg border border-transparent"><span class="theme-swatch"></span><span>Blanc &amp; Rouge</span></button>
     </div>
 </div>
 
@@ -4106,7 +4174,6 @@ body.theme-light #shop-container > .glass-panel > div:first-child, body.theme-wh
                     <button type="button" onclick="setTheme('dark'); closeMobileMenu();" class="w-full text-left py-2.5 px-3 rounded-lg text-xs font-bold text-white hover:bg-white/10">● Sombre</button>
                     <button type="button" onclick="setTheme('light'); closeMobileMenu();" class="w-full text-left py-2.5 px-3 rounded-lg text-xs font-bold text-white hover:bg-white/10">● Clair</button>
                     <button type="button" onclick="setTheme('black-red'); closeMobileMenu();" class="w-full text-left py-2.5 px-3 rounded-lg text-xs font-bold text-white hover:bg-white/10">● Noir &amp; Rouge</button>
-                    <button type="button" onclick="setTheme('white-red'); closeMobileMenu();" class="w-full text-left py-2.5 px-3 rounded-lg text-xs font-bold text-white hover:bg-white/10">● Blanc &amp; Rouge</button>
                 </div>
             </div>
             <a href="https://discord.gg/dJcHwYT4HY" target="_blank" rel="noopener noreferrer" class="text-center text-xs text-white py-3.5 rounded-xl border border-aerix-purple/40 bg-aerix-purple/20 font-bold flex items-center justify-center gap-2">
@@ -9432,14 +9499,14 @@ document.addEventListener('keydown', function(e) {
 });
 
 // --- GESTION DES THÈMES ---
-let currentTheme = ['dark','light','black-red','white-red'].includes(lsGet('aerix_theme')) ? lsGet('aerix_theme') : 'dark';
+let currentTheme = ['dark','light','black-red'].includes(lsGet('aerix_theme')) ? lsGet('aerix_theme') : 'dark';
 let themeTransitionTimer = null;
 let themeTransitionCloseTimer = null;
 const THEME_META = {
     dark: { label:{fr:'Sombre',en:'Dark'}, icon:'☾', sub:{fr:'THÈME SOMBRE',en:'DARK THEME'} },
     light: { label:{fr:'Clair',en:'Light'}, icon:'☀', sub:{fr:'THÈME CLAIR',en:'LIGHT THEME'} },
     'black-red': { label:{fr:'Noir & Rouge',en:'Black & Red'}, icon:'●', sub:{fr:'NOIR & ROUGE',en:'BLACK & RED'} },
-    'white-red': { label:{fr:'Blanc & Rouge',en:'White & Red'}, icon:'●', sub:{fr:'BLANC & ROUGE',en:'WHITE & RED'} }
+
 };
 
 function closeThemeMenu(){
@@ -9489,12 +9556,16 @@ function applyTheme(theme){
     if(theme==='black-red') document.body.classList.add('theme-black-red');
     if(theme==='white-red') document.body.classList.add('theme-white-red');
     const backgrounds={
-        dark:"linear-gradient(to bottom, rgba(5,5,5,0.65), rgba(5,5,5,0.85)), url('abstract-black-violet-colors-background-design-flat_662214-314713.avif')",
-        light:"linear-gradient(to bottom, rgba(255,255,255,0.7), rgba(255,255,255,0.9)), url('peint-main-aquarelle-abstrait-aquarelle_23-2149007171.avif')",
-        'black-red':"linear-gradient(to bottom, rgba(4,4,4,0.58), rgba(4,4,4,0.86)), url('4571004.webp')",
-        'white-red':"linear-gradient(to bottom, rgba(255,255,255,0.18), rgba(255,255,255,0.30)), var(--aerix-wr-bg)"
+        dark:"linear-gradient(to bottom, rgba(0,0,0,0.42), rgba(0,0,0,0.58)), url('background-dark.webp')",
+        light:"linear-gradient(to bottom, rgba(255,255,255,0.28), rgba(255,255,255,0.42)), url('background-light.webp')",
+        'black-red':"linear-gradient(to bottom, rgba(8,0,2,0.32), rgba(8,0,2,0.48)), url('background-black-red.webp')"
     };
-    if(bgLayer) bgLayer.style.backgroundImage=backgrounds[theme] || backgrounds.dark;
+    if(bgLayer) {
+        bgLayer.style.backgroundImage=backgrounds[theme] || backgrounds.dark;
+        bgLayer.style.backgroundSize='cover';
+        bgLayer.style.backgroundPosition='center';
+        bgLayer.style.backgroundRepeat='no-repeat';
+    }
     updateThemeMenuUI(theme);
 }
 function setTheme(theme){
@@ -9515,7 +9586,7 @@ function setTheme(theme){
     closeThemeMenu();
 }
 function toggleTheme(){
-    const order=['dark','light','black-red','white-red'];
+    const order=['dark','light','black-red'];
     const next=order[(order.indexOf(currentTheme)+1)%order.length];
     setTheme(next);
 }
