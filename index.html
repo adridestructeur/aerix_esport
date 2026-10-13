@@ -3859,27 +3859,24 @@ body.theme-white-red #page-annonces .news-card-animated h4 { color:#171717 !impo
   --aerix-line:rgba(255,255,255,.12); --aerix-text:#f5f5f5; --aerix-muted:#a3a3a3;
   --aerix-accent:#f5f5f5; --aerix-accent-soft:rgba(255,255,255,.08);
 }
-/* Le fond utilise des dégradés CSS nets au lieu d'une image agrandie/floue. */
+/* Fonds AERIX : ne pas utiliser !important ici, pour laisser applyTheme() sélectionner l'image active. */
 #page-bg-layer {
-  background-image: radial-gradient(ellipse at 15% 15%, rgba(255,255,255,.075), transparent 38%),
-                    radial-gradient(ellipse at 85% 75%, rgba(255,255,255,.035), transparent 34%),
-                    linear-gradient(135deg,#050505 0%,#0b0b0b 52%,#101010 100%) !important;
-  background-size:cover !important; background-position:center !important;
-  filter:none !important; transform:none !important; opacity:1 !important;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: none;
+  transform: none;
+  opacity: 1;
+}
+/* Repli CSS si JavaScript n'a pas encore appliqué le thème. */
+body:not(.theme-light):not(.theme-black-red):not(.theme-white-red) #page-bg-layer {
+  background-image: linear-gradient(to bottom, rgba(0,0,0,.42), rgba(0,0,0,.58)), url('background-dark.webp');
 }
 body.theme-light #page-bg-layer {
-  background-image: radial-gradient(ellipse at 12% 10%,rgba(0,0,0,.045),transparent 38%),
-                    radial-gradient(ellipse at 88% 80%,rgba(120,120,120,.08),transparent 35%),
-                    linear-gradient(135deg,#f7f7f7,#ececec 58%,#fafafa) !important;
+  background-image: linear-gradient(to bottom, rgba(255,255,255,.28), rgba(255,255,255,.42)), url('background-light.webp');
 }
 body.theme-black-red #page-bg-layer {
-  background-image: radial-gradient(ellipse at 14% 15%,rgba(229,57,53,.12),transparent 38%),
-                    radial-gradient(ellipse at 88% 78%,rgba(229,57,53,.07),transparent 32%),
-                    linear-gradient(135deg,#050505,#100909 62%,#080808) !important;
-}
-body.theme-white-red #page-bg-layer {
-  background-image: radial-gradient(ellipse at 12% 12%,rgba(229,57,53,.055),transparent 36%),
-                    linear-gradient(135deg,#fff,#f5f5f5 58%,#fff) !important;
+  background-image: linear-gradient(to bottom, rgba(8,0,2,.32), rgba(8,0,2,.48)), url('background-black-red.webp');
 }
 /* Les panneaux avaient un blur de 30–35 px : coûteux et visuellement laiteux sur PC. */
 .glass-panel, .glass-panel-no-hover {
@@ -9549,12 +9546,11 @@ function updateThemeMenuUI(theme){
 }
 function applyTheme(theme){
     const bgLayer=document.getElementById('page-bg-layer');
-    const allThemeClasses=['theme-light','theme-black-red','theme-white-red'];
+    const allThemeClasses=['theme-light','theme-black-red'];
     document.body.classList.remove(...allThemeClasses);
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', ({light:'#f4f4f6','white-red':'#ffffff'})[theme] || '#050505');
     if(theme==='light') document.body.classList.add('theme-light');
     if(theme==='black-red') document.body.classList.add('theme-black-red');
-    if(theme==='white-red') document.body.classList.add('theme-white-red');
     const backgrounds={
         dark:"linear-gradient(to bottom, rgba(0,0,0,0.42), rgba(0,0,0,0.58)), url('background-dark.webp')",
         light:"linear-gradient(to bottom, rgba(255,255,255,0.28), rgba(255,255,255,0.42)), url('background-light.webp')",
