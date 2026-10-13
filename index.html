@@ -3669,6 +3669,188 @@ body.theme-white-red #page-competition #competition-results .text-gray-500 { col
 }
 </style>
 
+
+<style id="aerix-2026-visible-card-refresh">
+/* AERIX visual refresh: concrete overrides for the existing rendered card markup. */
+:root {
+  --aerix-card-line: rgba(255,255,255,.18);
+  --aerix-card-surface: #101010;
+  --aerix-card-accent: #f4f4f4;
+  --aerix-card-muted: #b7b7b7;
+}
+body.theme-light, body.theme-white-red {
+  --aerix-card-line: rgba(0,0,0,.13);
+  --aerix-card-surface: #fff;
+  --aerix-card-accent: #151515;
+  --aerix-card-muted: #555;
+}
+/* EFFECTIFS: visible photo gradient, strong name hierarchy and monochrome accent. */
+#page-effectifs .effectif-player-card {
+  position:relative !important; min-height:390px !important; border-radius:20px !important;
+  overflow:hidden !important; isolation:isolate;
+  border:1px solid var(--aerix-card-line) !important;
+  background:linear-gradient(150deg,#202020,#080808 75%) !important;
+  box-shadow:0 16px 38px rgba(0,0,0,.28) !important;
+  transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease !important;
+}
+#page-effectifs .effectif-player-card .member-card-media { position:absolute !important; inset:0 !important; z-index:0 !important; overflow:hidden; }
+#page-effectifs .effectif-player-card .member-card-media::after {
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background:linear-gradient(180deg,rgba(0,0,0,.12) 0%,rgba(0,0,0,.02) 28%,rgba(0,0,0,.22) 48%,rgba(0,0,0,.92) 100%);
+}
+#page-effectifs .effectif-player-card .member-card-media img {
+  width:100% !important; height:100% !important; object-fit:cover !important; object-position:center 22% !important;
+  transform:scale(1.001) !important; transition:transform .45s cubic-bezier(.2,.7,.2,1) !important;
+}
+#page-effectifs .effectif-player-card:hover .member-card-media img { transform:scale(1.055) !important; }
+#page-effectifs .effectif-player-card .member-card-top { top:14px !important; left:14px !important; right:14px !important; z-index:3 !important; }
+#page-effectifs .effectif-player-card .member-role-badge {
+  display:inline-flex !important; align-items:center; max-width:calc(100% - 50px);
+  padding:7px 10px !important; border-radius:7px !important;
+  background:rgba(8,8,8,.82) !important; color:#fff !important;
+  border:1px solid rgba(255,255,255,.28) !important; backdrop-filter:blur(10px);
+  font-size:10px !important; font-weight:800 !important; letter-spacing:.09em !important;
+  text-transform:uppercase; line-height:1.2;
+}
+#page-effectifs .effectif-player-card .member-role-badge * { color:#fff !important; }
+#page-effectifs .effectif-player-card .member-number {
+  padding:6px 8px; border-radius:6px; background:rgba(8,8,8,.78);
+  border:1px solid rgba(255,255,255,.2); color:#fff !important; font-size:11px; font-weight:800;
+}
+#page-effectifs .effectif-player-card .member-card-content {
+  left:18px !important; right:18px !important; bottom:18px !important; z-index:3 !important;
+}
+#page-effectifs .effectif-player-card .member-card-game {
+  margin-bottom:8px; color:rgba(255,255,255,.75) !important; font-size:10px !important;
+  font-weight:800 !important; letter-spacing:.16em !important; text-transform:uppercase;
+}
+#page-effectifs .effectif-player-card .member-card-pseudo {
+  color:#fff !important; font-size:clamp(21px,2vw,29px) !important; font-weight:950 !important;
+  letter-spacing:-.045em !important; line-height:1.02 !important; text-shadow:0 2px 16px rgba(0,0,0,.65) !important;
+  overflow-wrap:anywhere; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+}
+#page-effectifs .effectif-player-card .member-card-name { color:rgba(255,255,255,.78) !important; font-size:12px !important; margin-top:5px; }
+#page-effectifs .effectif-player-card .member-card-meta { display:flex; flex-wrap:wrap; gap:7px; align-items:center; margin-top:9px; color:#eee !important; font-size:11px; }
+#page-effectifs .effectif-player-card .player-socials { display:flex; flex-wrap:wrap; gap:7px; }
+#page-effectifs .effectif-player-card .player-socials a { border:1px solid rgba(255,255,255,.22); border-radius:7px; background:rgba(0,0,0,.42); }
+#page-effectifs .reveal > .flex h4 { font-weight:900 !important; letter-spacing:-.045em !important; }
+#page-effectifs .reveal > .flex { padding-bottom:18px; border-color:var(--aerix-card-line) !important; }
+#page-effectifs .roster-track { gap:16px !important; padding:10px 3px 18px !important; }
+@media (min-width:1200px) { #page-effectifs .roster-track { grid-auto-columns:calc((100% - 4 * 16px) / 5) !important; } }
+@media (min-width:768px) and (max-width:1199px) { #page-effectifs .roster-track { grid-auto-columns:calc((100% - 2 * 16px) / 3) !important; } }
+@media (max-width:767px) {
+  #page-effectifs .effectif-player-card { min-height:340px !important; border-radius:16px !important; }
+  #page-effectifs .roster-track { grid-auto-columns:minmax(230px,78vw) !important; gap:12px !important; }
+  #page-effectifs .effectif-player-card .member-card-content { left:14px !important; right:14px !important; bottom:14px !important; }
+  #page-effectifs .effectif-player-card .member-card-pseudo { font-size:23px !important; }
+}
+/* PALMARÈS: each existing result card gains a consistent surface, spacing and hover feedback. */
+#page-palmares #palmares-container > .glass-panel,
+#page-palmares #achievements-container > .glass-panel {
+  min-width:0; border:1px solid var(--aerix-card-line) !important; border-top-width:3px !important;
+  border-radius:18px !important; padding:20px !important;
+  background:linear-gradient(145deg,rgba(255,255,255,.065),rgba(255,255,255,.018)) !important;
+  box-shadow:0 12px 30px rgba(0,0,0,.14) !important;
+  transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease !important;
+}
+#page-palmares #palmares-container > .glass-panel:hover,
+#page-palmares #achievements-container > .glass-panel:hover {
+  transform:translateY(-4px); border-color:rgba(255,255,255,.32) !important;
+  box-shadow:0 18px 38px rgba(0,0,0,.23) !important;
+}
+#page-palmares #palmares-container img { border-radius:12px !important; }
+#page-palmares #palmares-container h4 { font-weight:850 !important; letter-spacing:-.025em; }
+#page-palmares #palmares-container .bg-black\/50 {
+  background:rgba(255,255,255,.055) !important; border-color:rgba(255,255,255,.12) !important;
+}
+body.theme-light #page-palmares #palmares-container > .glass-panel,
+body.theme-light #page-palmares #achievements-container > .glass-panel,
+body.theme-white-red #page-palmares #palmares-container > .glass-panel,
+body.theme-white-red #page-palmares #achievements-container > .glass-panel {
+  background:linear-gradient(145deg,#fff,#f5f5f5) !important; border-color:rgba(0,0,0,.12) !important;
+  box-shadow:0 10px 28px rgba(0,0,0,.06) !important;
+}
+body.theme-light #page-palmares #palmares-container h4,
+body.theme-white-red #page-palmares #palmares-container h4 { color:#151515 !important; }
+body.theme-light #page-palmares #palmares-container .bg-black\/50,
+body.theme-white-red #page-palmares #palmares-container .bg-black\/50 { background:#f1f1f1 !important; border-color:#e3e3e3 !important; }
+/* COMPÉTITION: events read like editorial cards; results have a clear two-column hierarchy. */
+#page-competition #competition-upcoming { gap:16px !important; align-items:stretch; }
+#page-competition #competition-upcoming > button {
+  min-width:0; height:100%; border:1px solid var(--aerix-card-line) !important;
+  border-radius:18px !important; overflow:hidden; background:var(--aerix-card-surface) !important;
+  box-shadow:0 12px 30px rgba(0,0,0,.13) !important;
+  transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease !important;
+}
+#page-competition #competition-upcoming > button:hover {
+  transform:translateY(-3px); border-color:rgba(255,255,255,.35) !important;
+  box-shadow:0 18px 38px rgba(0,0,0,.24) !important;
+}
+#page-competition #competition-upcoming > button img { transition:transform .4s ease !important; }
+#page-competition #competition-upcoming > button:hover img { transform:scale(1.035) !important; }
+#page-competition #competition-upcoming > button .p-5 { padding:20px !important; }
+#page-competition #competition-upcoming > button .text-aerix-purple { color:var(--aerix-card-accent) !important; }
+#page-competition #competition-upcoming > button .text-white { color:#f8f8f8 !important; }
+#page-competition #competition-results > .glass-panel {
+  padding:16px 18px !important; border:1px solid var(--aerix-card-line) !important;
+  border-radius:14px !important; background:linear-gradient(110deg,rgba(255,255,255,.06),rgba(255,255,255,.018)) !important;
+  transition:border-color .2s ease,transform .2s ease !important;
+}
+#page-competition #competition-results > .glass-panel:hover { transform:translateX(3px); border-color:rgba(255,255,255,.28) !important; }
+body.theme-light #page-competition #competition-upcoming > button,
+body.theme-white-red #page-competition #competition-upcoming > button { background:#fff !important; border-color:rgba(0,0,0,.12) !important; }
+body.theme-light #page-competition #competition-upcoming > button .text-white,
+body.theme-white-red #page-competition #competition-upcoming > button .text-white,
+body.theme-light #page-competition #competition-results .text-white,
+body.theme-white-red #page-competition #competition-results .text-white { color:#171717 !important; }
+body.theme-light #page-competition #competition-results > .glass-panel,
+body.theme-white-red #page-competition #competition-results > .glass-panel { background:#fff !important; border-color:rgba(0,0,0,.12) !important; }
+/* NEXT PASS: partenaires et actualités, avec les mêmes codes visuels. */
+#page-partenaires #partners-featured .partner-featured,
+#page-partenaires #partners-container > .glass-panel {
+  border:1px solid var(--aerix-card-line) !important; border-radius:20px !important;
+  background:linear-gradient(145deg,rgba(255,255,255,.065),rgba(255,255,255,.018)) !important;
+  box-shadow:0 14px 34px rgba(0,0,0,.14) !important;
+}
+#page-partenaires #partners-container > .glass-panel {
+  transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease !important;
+}
+#page-partenaires #partners-container > .glass-panel:hover {
+  transform:translateY(-3px); border-color:rgba(255,255,255,.3) !important;
+}
+#page-partenaires .partners-stat { border-color:var(--aerix-card-line) !important; }
+#page-partenaires .partners-marquee-item { background:rgba(255,255,255,.035); border:1px solid var(--aerix-card-line); border-radius:12px; }
+#page-partenaires .partners-marquee-item img { filter:grayscale(1); opacity:.78; transition:filter .2s ease,opacity .2s ease; }
+#page-partenaires .partners-marquee-item:hover img { filter:grayscale(0); opacity:1; }
+#page-annonces .news-card-animated {
+  border:1px solid var(--aerix-card-line) !important; border-left:3px solid rgba(255,255,255,.58) !important;
+  border-radius:18px !important; background:linear-gradient(115deg,rgba(255,255,255,.06),rgba(255,255,255,.018)) !important;
+  box-shadow:0 12px 30px rgba(0,0,0,.12) !important;
+  transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease !important;
+}
+#page-annonces .news-card-animated:hover { transform:translateY(-2px); border-left-color:#fff !important; box-shadow:0 18px 36px rgba(0,0,0,.2) !important; }
+#page-annonces .news-card-animated h4 { font-weight:900 !important; letter-spacing:-.035em !important; }
+#page-annonces .announcement-image-button { min-height:190px; }
+#page-annonces .announcement-image-button img { transition:transform .35s ease !important; }
+body.theme-light #page-partenaires #partners-featured .partner-featured,
+body.theme-light #page-partenaires #partners-container > .glass-panel,
+body.theme-white-red #page-partenaires #partners-featured .partner-featured,
+body.theme-white-red #page-partenaires #partners-container > .glass-panel,
+body.theme-light #page-annonces .news-card-animated,
+body.theme-white-red #page-annonces .news-card-animated {
+  background:linear-gradient(145deg,#fff,#f6f6f6) !important;
+  border-color:rgba(0,0,0,.13) !important; box-shadow:0 10px 26px rgba(0,0,0,.06) !important;
+}
+body.theme-light #page-annonces .news-card-animated h4,
+body.theme-white-red #page-annonces .news-card-animated h4 { color:#171717 !important; }
+@media (prefers-reduced-motion:reduce) {
+ #page-effectifs .effectif-player-card, #page-effectifs .member-card-media img,
+ #page-palmares #palmares-container > .glass-panel, #page-competition #competition-upcoming > button,
+ #page-competition #competition-results > .glass-panel, #page-partenaires #partners-container > .glass-panel,
+ #page-annonces .news-card-animated { transition:none !important; transform:none !important; }
+}
+</style>
+
 </head>
 <body class="antialiased selection:bg-purple-500 selection:text-white min-h-screen flex flex-col relative">
 <script id="aerix-early-theme-init">
@@ -5184,8 +5366,53 @@ body.theme-white-red #page-competition #competition-results .text-gray-500 { col
         // Calendrier coaching (côté admin)
         let adminCoachingCalendarDate = new Date();
 
-        // VARIABLES GLOBALES
-        let globalShop = [], globalEffectifs = [], globalPalmares = [], globalAchievements = [], globalAnnonces = [], globalPartners = [], globalEvents = [];
+        // Cache local des contenus PUBLICS : réafficher les données immédiatement au rechargement,
+        // puis laisser les listeners Firestore les actualiser. Les données privées (comptes, tickets,
+        // avis et disponibilités internes) ne sont jamais mises en cache ici.
+        const AERIX_PUBLIC_CACHE_PREFIX = 'aerix_public_collection_v1_';
+        const AERIX_PUBLIC_CACHE_MAX_AGE = 7 * 24 * 60 * 60 * 1000;
+        const AERIX_PUBLIC_CACHE_MAX_CHARS = 260000;
+        function readPublicCollectionCache(name) {
+            try {
+                const raw = lsGet(AERIX_PUBLIC_CACHE_PREFIX + name);
+                if (!raw) return [];
+                const cached = JSON.parse(raw);
+                if (!cached || !Array.isArray(cached.data) || !cached.savedAt ||
+                    (Date.now() - cached.savedAt) > AERIX_PUBLIC_CACHE_MAX_AGE) return [];
+                return cached.data;
+            } catch (_) { return []; }
+        }
+        function savePublicCollectionCache(name, rows) {
+            try {
+                // Les images intégrées en base64 peuvent dépasser les quotas du navigateur.
+                // Elles sont omises du cache d'affichage uniquement ; Firestore reste intact.
+                const safeRows = JSON.parse(JSON.stringify(rows || [], (key, value) => {
+                    if (typeof value === 'string' && /^data:image\//i.test(value) && value.length > 18000) return '';
+                    if (typeof value === 'string' && value.length > 180000) return '';
+                    return value;
+                }));
+                const raw = JSON.stringify({ savedAt: Date.now(), data: safeRows });
+                if (raw.length > AERIX_PUBLIC_CACHE_MAX_CHARS) return;
+                lsSet(AERIX_PUBLIC_CACHE_PREFIX + name, raw);
+            } catch (_) { /* Quota indisponible : le site fonctionne sans cache. */ }
+        }
+        const aerixCachedPublic = {
+            events: readPublicCollectionCache('events'),
+            shop: readPublicCollectionCache('shop'),
+            effectifs: readPublicCollectionCache('effectifs'),
+            palmares: readPublicCollectionCache('palmares'),
+            achievements: readPublicCollectionCache('achievements'),
+            annonces: readPublicCollectionCache('annonces'),
+            partners: readPublicCollectionCache('partners'),
+            gallery: readPublicCollectionCache('gallery')
+        };
+        const hasCachedPublicContent = Object.values(aerixCachedPublic).some(rows => rows.length > 0);
+
+        // VARIABLES GLOBALES : amorçage depuis le cache local, actualisé ensuite par Firestore.
+        let globalShop = aerixCachedPublic.shop, globalEffectifs = aerixCachedPublic.effectifs,
+            globalPalmares = aerixCachedPublic.palmares, globalAchievements = aerixCachedPublic.achievements,
+            globalAnnonces = aerixCachedPublic.annonces, globalPartners = aerixCachedPublic.partners,
+            globalEvents = aerixCachedPublic.events;
         let currentFilters = { effectifs: 'Staff', annonces: 'Tous', palmares: 'Tous' };
         
         // I18N (LANGUES)
@@ -5508,13 +5735,13 @@ body.theme-white-red #page-competition #competition-results .text-gray-500 { col
 
         // INITIALISATION BDD
         function startSync() {
-            db.collection("events").onSnapshot((snapshot) => { globalEvents = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderUpcomingEvents(); renderCompetitionPage(); renderPerformancePage(); }, () => { globalEvents = []; renderUpcomingEvents(); renderCompetitionPage(); renderPerformancePage(); });
-            db.collection("shop").onSnapshot((snapshot) => { globalShop = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); scheduleRender(renderShop); scheduleAdminRender(); }, (e) => console.error('shop', e));
-            db.collection("effectifs").onSnapshot((snapshot) => { globalEffectifs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); scheduleRender(renderEffectifs); renderPerformancePage(); scheduleAdminRender(); }, (e) => console.error('effectifs', e));
-            db.collection("palmares").onSnapshot((snapshot) => { globalPalmares = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); scheduleRender(renderPalmares); renderCompetitionPage(); renderPerformancePage(); scheduleAdminRender(); }, (e) => console.error('palmares', e));
-            db.collection("achievements").onSnapshot((snapshot) => { globalAchievements = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); scheduleRender(renderAchievements); scheduleAdminRender(); }, () => { globalAchievements = []; scheduleRender(renderAchievements); scheduleAdminRender(); });
-            db.collection("annonces").onSnapshot((snapshot) => { globalAnnonces = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); globalAnnonces = sortByDateDesc(globalAnnonces); scheduleRender(renderAnnonces); renderMediaPage(); scheduleAdminRender(); }, error => { globalAnnonces = []; db.collection("annonces").get().then(s => { globalAnnonces = s.docs.map(doc => ({ id: doc.id, ...doc.data() })); globalAnnonces = sortByDateDesc(globalAnnonces); scheduleRender(renderAnnonces); scheduleAdminRender(); }).catch(e => console.error('annonces fallback', e)); });
-            db.collection("partners").onSnapshot((snapshot) => { globalPartners = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); scheduleRender(renderPartners); scheduleRender(renderPartnersMarquee); scheduleAdminRender(); }, (e) => console.error('partners', e));
+            db.collection("events").onSnapshot((snapshot) => { globalEvents = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); savePublicCollectionCache("events", globalEvents); renderUpcomingEvents(); renderCompetitionPage(); renderPerformancePage(); }, () => { globalEvents = []; renderUpcomingEvents(); renderCompetitionPage(); renderPerformancePage(); });
+            db.collection("shop").onSnapshot((snapshot) => { globalShop = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); savePublicCollectionCache("shop", globalShop); scheduleRender(renderShop); scheduleAdminRender(); }, (e) => console.error('shop', e));
+            db.collection("effectifs").onSnapshot((snapshot) => { globalEffectifs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); savePublicCollectionCache("effectifs", globalEffectifs); scheduleRender(renderEffectifs); renderPerformancePage(); scheduleAdminRender(); }, (e) => console.error('effectifs', e));
+            db.collection("palmares").onSnapshot((snapshot) => { globalPalmares = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); savePublicCollectionCache("palmares", globalPalmares); scheduleRender(renderPalmares); renderCompetitionPage(); renderPerformancePage(); scheduleAdminRender(); }, (e) => console.error('palmares', e));
+            db.collection("achievements").onSnapshot((snapshot) => { globalAchievements = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); savePublicCollectionCache("achievements", globalAchievements); scheduleRender(renderAchievements); scheduleAdminRender(); }, () => { globalAchievements = []; scheduleRender(renderAchievements); scheduleAdminRender(); });
+            db.collection("annonces").onSnapshot((snapshot) => { globalAnnonces = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); globalAnnonces = sortByDateDesc(globalAnnonces); savePublicCollectionCache("annonces", globalAnnonces); scheduleRender(renderAnnonces); renderMediaPage(); scheduleAdminRender(); }, error => { globalAnnonces = []; db.collection("annonces").get().then(s => { globalAnnonces = s.docs.map(doc => ({ id: doc.id, ...doc.data() })); globalAnnonces = sortByDateDesc(globalAnnonces); savePublicCollectionCache("annonces", globalAnnonces); scheduleRender(renderAnnonces); scheduleAdminRender(); }).catch(e => console.error('annonces fallback', e)); });
+            db.collection("partners").onSnapshot((snapshot) => { globalPartners = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); savePublicCollectionCache("partners", globalPartners); scheduleRender(renderPartners); scheduleRender(renderPartnersMarquee); scheduleAdminRender(); }, (e) => console.error('partners', e));
             db.collection("accounts").onSnapshot((snapshot) => { globalAccounts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); scheduleAdminRender(); }, () => { globalAccounts = []; scheduleAdminRender(); });
             db.collection("contactRequests").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
                 globalContactRequests = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -5533,6 +5760,7 @@ body.theme-white-red #page-competition #competition-results .text-gray-500 { col
             }, () => { globalReviews = []; scheduleAdminRender(); });
             db.collection("gallery").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
                 globalGallery = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                savePublicCollectionCache("gallery", globalGallery);
                 renderMediaPage();
                 scheduleAdminRender();
                 if (annoncesView === 'galerie') scheduleRender(renderAnnonces);
@@ -9047,6 +9275,15 @@ function checkAdminSessionTimeout() {
         applyLanguageContent(currentLang);
         updateLanguageMenuUI(currentLang);
         renderAccountArea();
+        // Premier rendu depuis le cache local : les contenus publics sont visibles immédiatement.
+        // Les snapshots Firestore ci-dessous remplacent ces données dès qu'ils arrivent.
+        if (hasCachedPublicContent) {
+            [
+                renderEffectifs, renderPalmares, renderAchievements, renderAnnonces,
+                renderShop, renderPartners, renderPartnersMarquee, renderUpcomingEvents,
+                renderCompetitionPage, renderPerformancePage, renderMediaPage
+            ].forEach(fn => { try { if (typeof fn === 'function') fn(); } catch (e) { console.warn('Rendu cache AERIX', e); } });
+        }
         startSync();
         // Premier rendu immédiat de la banderole ; Firebase la met ensuite à jour.
         renderPartnersMarquee();
