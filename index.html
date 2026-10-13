@@ -3449,6 +3449,226 @@ body.theme-white-red button:focus-visible,body.theme-white-red a:focus-visible,b
 @media (prefers-reduced-motion:reduce) { #player-modal .member-profile-shell, .effectif-player-card, .glass-panel { transition-duration:.01ms!important; animation-duration:.01ms!important; scroll-behavior:auto!important; } }
 </style>
 
+
+<style id="aerix-v18-roster-palmares-competition">
+/* AERIX v18 — polish visuel des effectifs, résultats et compétition.
+   CSS uniquement : les données, événements, filtres et appels Firebase restent inchangés. */
+:root {
+  --aerix-ui-accent: #f4f4f5;
+  --aerix-ui-accent-rgb: 244,244,245;
+  --aerix-ui-border: rgba(255,255,255,.12);
+  --aerix-ui-muted: #a1a1aa;
+}
+body.theme-black-red, body.theme-white-red {
+  --aerix-ui-accent: #ef4444;
+  --aerix-ui-accent-rgb: 239,68,68;
+}
+body.theme-light {
+  --aerix-ui-accent: #171717;
+  --aerix-ui-accent-rgb: 23,23,23;
+  --aerix-ui-border: rgba(24,24,27,.12);
+  --aerix-ui-muted: #52525b;
+}
+
+/* Effectifs : cartes plus éditoriales, lisibles et cohérentes. */
+#page-effectifs .filter-btn,
+#page-palmares .filter-btn {
+  min-height: 40px;
+  border-radius: 999px;
+  padding: .62rem 1rem;
+  letter-spacing: .075em;
+  border-color: var(--aerix-ui-border);
+  transition: background .2s ease, color .2s ease, border-color .2s ease, transform .2s ease;
+}
+#page-effectifs .filter-btn:hover,
+#page-palmares .filter-btn:hover { transform: translateY(-1px); }
+#page-effectifs .filter-btn.active,
+#page-palmares .filter-btn.active {
+  color: #fff !important;
+  background: #202020 !important;
+  border-color: rgba(var(--aerix-ui-accent-rgb),.65) !important;
+  box-shadow: 0 6px 20px rgba(0,0,0,.12), inset 0 0 0 1px rgba(var(--aerix-ui-accent-rgb),.12);
+}
+body.theme-light #page-effectifs .filter-btn.active,
+body.theme-light #page-palmares .filter-btn.active { color:#fff !important; background:#171717 !important; }
+body.theme-white-red #page-effectifs .filter-btn.active,
+body.theme-white-red #page-palmares .filter-btn.active { color:#fff !important; background:#c62828 !important; }
+
+#page-effectifs .effectif-player-card {
+  min-height: 370px;
+  border-radius: 22px !important;
+  border-color: rgba(255,255,255,.13) !important;
+  background: #101010 !important;
+  box-shadow: 0 14px 36px rgba(0,0,0,.20);
+  transition: border-color .22s ease, box-shadow .22s ease;
+}
+#page-effectifs .effectif-player-card::before {
+  content:"";
+  display:block;
+  position:absolute;
+  inset:0;
+  z-index:2;
+  pointer-events:none;
+  background: linear-gradient(180deg, rgba(0,0,0,.12) 0%, transparent 32%, rgba(0,0,0,.12) 50%, rgba(0,0,0,.86) 100%);
+}
+#page-effectifs .effectif-player-card:hover {
+  border-color: rgba(var(--aerix-ui-accent-rgb),.62) !important;
+  box-shadow: 0 20px 48px rgba(0,0,0,.30), 0 0 0 1px rgba(var(--aerix-ui-accent-rgb),.08);
+}
+#page-effectifs .member-card-media { z-index:1; background:#111; }
+#page-effectifs .member-card-media img { transition: transform .45s cubic-bezier(.2,.7,.2,1) !important; }
+#page-effectifs .effectif-player-card:hover .member-card-media img { transform:scale(1.035) !important; }
+#page-effectifs .member-card-top { top:14px; left:14px; right:14px; }
+#page-effectifs .member-role-badge {
+  max-width: calc(100% - 12px);
+  padding:.48rem .7rem;
+  border-color:rgba(255,255,255,.24);
+  background:rgba(12,12,12,.72);
+  backdrop-filter:blur(12px);
+  letter-spacing:.09em;
+}
+#page-effectifs .member-role-dot { background:var(--aerix-ui-accent); box-shadow:0 0 10px rgba(var(--aerix-ui-accent-rgb),.45); }
+#page-effectifs .member-card-content { left:19px; right:19px; bottom:20px; }
+#page-effectifs .member-card-pseudo {
+  max-width:100%;
+  overflow-wrap:anywhere;
+  font-size:clamp(1.15rem, 1.8vw, 1.8rem) !important;
+  line-height:1.02 !important;
+  letter-spacing:-.035em !important;
+}
+#page-effectifs .reveal > .flex h4 { letter-spacing:-.035em; }
+#page-effectifs .reveal > .flex { border-color:var(--aerix-ui-border) !important; }
+#page-effectifs .roster-track { padding: .65rem .35rem 1rem; }
+@media (min-width: 1200px) {
+  #page-effectifs .roster-track { grid-auto-columns: calc((100% - 4 * 1rem) / 5); gap:1rem; }
+}
+@media (max-width: 767px) {
+  #page-effectifs .effectif-player-card { min-height:330px; border-radius:18px !important; }
+  #page-effectifs .member-card-content { left:15px; right:15px; bottom:16px; }
+  #page-effectifs .member-card-pseudo { font-size:clamp(1rem, 5vw, 1.4rem) !important; }
+}
+
+/* Palmarès : cartes de résultats avec rythme, alignements et états au survol. */
+#page-palmares #palmares-container,
+#page-palmares #achievements-container { align-items:stretch; gap:1.15rem; }
+#page-palmares #palmares-container > .glass-panel,
+#page-palmares #achievements-container > .glass-panel {
+  position:relative;
+  min-width:0;
+  padding:1.25rem !important;
+  border:1px solid var(--aerix-ui-border) !important;
+  border-top-width:2px !important;
+  border-radius:22px !important;
+  background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.018)) !important;
+  box-shadow:0 12px 34px rgba(0,0,0,.12);
+  transition:transform .22s ease, border-color .22s ease, box-shadow .22s ease;
+  cursor:pointer;
+}
+#page-palmares #palmares-container > .glass-panel:hover,
+#page-palmares #achievements-container > .glass-panel:hover {
+  transform:translateY(-3px);
+  border-color:rgba(var(--aerix-ui-accent-rgb),.48) !important;
+  box-shadow:0 18px 42px rgba(0,0,0,.19);
+}
+#page-palmares #palmares-container img { display:block; object-fit:cover; transition:transform .35s ease; }
+#page-palmares #palmares-container > .glass-panel:hover img { transform:scale(1.025); }
+#page-palmares #palmares-container h4 { overflow-wrap:anywhere; letter-spacing:-.025em; }
+#page-palmares #palmares-container .aspect-video { border-radius:14px; background:rgba(127,127,127,.08); }
+#page-palmares #palmares-container [class*="bg-black/50"] {
+  border:1px solid var(--aerix-ui-border) !important;
+  border-radius:14px !important;
+  background:rgba(127,127,127,.07) !important;
+}
+#page-palmares #achievements-container > .glass-panel { cursor:default; }
+body.theme-light #page-palmares #palmares-container > .glass-panel,
+body.theme-light #page-palmares #achievements-container > .glass-panel,
+body.theme-white-red #page-palmares #palmares-container > .glass-panel,
+body.theme-white-red #page-palmares #achievements-container > .glass-panel {
+  color:#171717;
+  background:linear-gradient(145deg,rgba(255,255,255,.94),rgba(245,245,245,.82)) !important;
+  border-color:rgba(24,24,27,.12) !important;
+  box-shadow:0 12px 32px rgba(24,24,27,.07);
+}
+body.theme-light #page-palmares #palmares-container h4,
+body.theme-light #page-palmares #achievements-container h4,
+body.theme-white-red #page-palmares #palmares-container h4,
+body.theme-white-red #page-palmares #achievements-container h4 { color:#171717 !important; }
+body.theme-light #page-palmares #palmares-container .text-gray-500,
+body.theme-white-red #page-palmares #palmares-container .text-gray-500 { color:#626262 !important; }
+
+/* Compétition : distinguer les événements à venir de l'historique. */
+#page-competition > .mb-14 { margin-bottom:2.75rem; }
+#page-competition > .mb-14 h3 { letter-spacing:-.045em; }
+#page-competition > .mb-14 p { line-height:1.75; }
+#page-competition > .grid > section {
+  min-width:0;
+  padding:clamp(1rem,2.5vw,1.75rem) !important;
+  border:1px solid var(--aerix-ui-border) !important;
+  border-radius:24px !important;
+  background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.018)) !important;
+  box-shadow:0 14px 40px rgba(0,0,0,.12);
+}
+#page-competition > .grid > section h4 { letter-spacing:-.035em; }
+#page-competition #competition-upcoming > button {
+  border-radius:17px !important;
+  border-color:var(--aerix-ui-border) !important;
+  background:rgba(127,127,127,.035) !important;
+  box-shadow:0 8px 24px rgba(0,0,0,.08);
+  transition:transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+#page-competition #competition-upcoming > button:hover {
+  transform:translateY(-2px);
+  border-color:rgba(var(--aerix-ui-accent-rgb),.52) !important;
+  box-shadow:0 14px 30px rgba(0,0,0,.14);
+}
+#page-competition #competition-upcoming > button img { max-height:220px; object-fit:cover; }
+#page-competition #competition-upcoming > button .p-5 { padding:1.1rem; }
+#page-competition #competition-results > .glass-panel {
+  border-radius:15px !important;
+  border-color:var(--aerix-ui-border) !important;
+  background:rgba(127,127,127,.045) !important;
+  transition:border-color .2s ease, background .2s ease;
+}
+#page-competition #competition-results > .glass-panel:hover {
+  border-color:rgba(var(--aerix-ui-accent-rgb),.4) !important;
+  background:rgba(127,127,127,.08) !important;
+}
+body.theme-light #page-competition > .grid > section,
+body.theme-white-red #page-competition > .grid > section {
+  background:linear-gradient(145deg,rgba(255,255,255,.95),rgba(246,246,246,.88)) !important;
+  border-color:rgba(24,24,27,.12) !important;
+  box-shadow:0 14px 36px rgba(24,24,27,.07);
+}
+body.theme-light #page-competition #competition-upcoming > button,
+body.theme-light #page-competition #competition-results > .glass-panel,
+body.theme-white-red #page-competition #competition-upcoming > button,
+body.theme-white-red #page-competition #competition-results > .glass-panel {
+  background:rgba(255,255,255,.66) !important;
+  border-color:rgba(24,24,27,.12) !important;
+  box-shadow:0 8px 24px rgba(24,24,27,.05);
+}
+body.theme-light #page-competition #competition-upcoming .text-white,
+body.theme-light #page-competition #competition-results .text-white,
+body.theme-white-red #page-competition #competition-upcoming .text-white,
+body.theme-white-red #page-competition #competition-results .text-white { color:#171717 !important; }
+body.theme-light #page-competition #competition-upcoming .text-gray-400,
+body.theme-light #page-competition #competition-upcoming .text-gray-500,
+body.theme-light #page-competition #competition-results .text-gray-400,
+body.theme-light #page-competition #competition-results .text-gray-500,
+body.theme-white-red #page-competition #competition-upcoming .text-gray-400,
+body.theme-white-red #page-competition #competition-upcoming .text-gray-500,
+body.theme-white-red #page-competition #competition-results .text-gray-400,
+body.theme-white-red #page-competition #competition-results .text-gray-500 { color:#626262 !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  #page-effectifs .filter-btn,
+  #page-effectifs .member-card-media img,
+  #page-palmares #palmares-container > .glass-panel,
+  #page-palmares #palmares-container img,
+  #page-competition #competition-upcoming > button { transition:none !important; }
+}
+</style>
+
 </head>
 <body class="antialiased selection:bg-purple-500 selection:text-white min-h-screen flex flex-col relative">
 <script id="aerix-early-theme-init">
