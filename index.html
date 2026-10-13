@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>AERIX Esports | Structure française d’esport compétitif</title>
-    <meta name="description" content="AERIX Esports est une structure française d’esport compétitif évoluant sur Rocket League et le sim racing, avec des équipes engagées sur la scène compétitive.">
+    <title>AERIX Esport | Structure française d’esport compétitif</title>
+    <meta name="description" content="AERIX Esport est une structure française d’esport compétitif évoluant sur Rocket League et le sim racing, avec des équipes engagées sur la scène compétitive.">
     <meta name="theme-color" content="#050505">
     <meta name="robots" content="index, follow, max-image-preview:large">
-    <meta name="author" content="AERIX Esports">
+    <meta name="author" content="AERIX Esport">
     <link rel="canonical" href="https://aerix-esport.com/">
     <script type="application/ld+json">
     {
@@ -16,12 +16,12 @@
         {
           "@type": "Organization",
           "@id": "https://aerix-esport.com/#organization",
-          "name": "AERIX Esports",
+          "name": "AERIX Esport",
           "alternateName": "AERIX",
           "url": "https://aerix-esport.com/",
           "logo": "https://aerix-esport.com/transparent-noir.png",
           "image": "https://aerix-esport.com/transparent-blanc.png",
-          "description": "AERIX Esports est une structure française d’esport compétitif évoluant sur Rocket League et le sim racing, avec des équipes engagées sur la scène compétitive.",
+          "description": "AERIX Esport est une structure française d’esport compétitif évoluant sur Rocket League et le sim racing, avec des équipes engagées sur la scène compétitive.",
           "sameAs": [
             "https://www.twitch.tv/aerix_esport",
             "https://x.com/aerix_esport",
@@ -42,7 +42,7 @@
           "@type": "WebSite",
           "@id": "https://aerix-esport.com/#website",
           "url": "https://aerix-esport.com/",
-          "name": "AERIX Esports",
+          "name": "AERIX Esport",
           "description": "Structure française d’esport compétitif évoluant sur Rocket League et le sim racing.",
           "publisher": {
             "@id": "https://aerix-esport.com/#organization"
@@ -53,16 +53,16 @@
     }
     </script>
     <meta property="og:type" content="website">
-    <meta property="og:site_name" content="AERIX Esports">
-    <meta property="og:title" content="AERIX Esports | Structure française d’esport compétitif">
-    <meta property="og:description" content="AERIX Esports est une structure française d’esport compétitif évoluant sur Rocket League et le sim racing, avec des équipes engagées sur la scène compétitive.">
+    <meta property="og:site_name" content="AERIX Esport">
+    <meta property="og:title" content="AERIX Esport | Structure française d’esport compétitif">
+    <meta property="og:description" content="AERIX Esport est une structure française d’esport compétitif évoluant sur Rocket League et le sim racing, avec des équipes engagées sur la scène compétitive.">
     <meta property="og:url" content="https://aerix-esport.com/">
     <meta property="og:locale" content="fr_FR">
     <meta property="og:image" content="https://aerix-esport.com/transparent-blanc.png">
-    <meta property="og:image:alt" content="Logo AERIX Esports">
+    <meta property="og:image:alt" content="Logo AERIX Esport">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="AERIX Esports | Structure française d’esport compétitif">
-    <meta name="twitter:description" content="AERIX Esports est une structure française d’esport compétitif évoluant sur Rocket League et le sim racing, avec des équipes engagées sur la scène compétitive.">
+    <meta name="twitter:title" content="AERIX Esport | Structure française d’esport compétitif">
+    <meta name="twitter:description" content="AERIX Esport est une structure française d’esport compétitif évoluant sur Rocket League et le sim racing, avec des équipes engagées sur la scène compétitive.">
     <meta name="twitter:image" content="https://aerix-esport.com/transparent-blanc.png">
     <link rel="icon" type="image/png" sizes="256x256" href="aerix-favicon-final.png?v=2">
     <link rel="shortcut icon" type="image/png" sizes="256x256" href="aerix-favicon-final.png?v=2">
@@ -3295,8 +3295,84 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
 }
 </style>
 
+
+<style id="aerix-cohesive-theme-and-player-fixes">
+/* Tokens de thème : tous les composants personnalisés partagent le même accent. */
+body { --aerix-accent:#8B5CF6; --aerix-accent-rgb:139,92,246; --aerix-accent-strong:#7C3AED; --aerix-surface:rgba(18,18,22,.72); --aerix-surface-border:rgba(255,255,255,.12); }
+body.theme-light { --aerix-accent:#d66f9e; --aerix-accent-rgb:214,111,158; --aerix-accent-strong:#a84878; --aerix-surface:rgba(255,255,255,.78); --aerix-surface-border:rgba(31,41,55,.12); color-scheme:light; }
+body.theme-black-red { --aerix-accent:#e53935; --aerix-accent-rgb:229,57,53; --aerix-accent-strong:#c62828; --aerix-surface:rgba(18,18,18,.78); --aerix-surface-border:rgba(229,57,53,.24); color-scheme:dark; }
+body.theme-white-red { --aerix-accent:#e53935; --aerix-accent-rgb:229,57,53; --aerix-accent-strong:#c62828; --aerix-surface:rgba(255,255,255,.82); --aerix-surface-border:rgba(31,41,55,.12); color-scheme:light; }
+body.theme-light .glass-panel::before, body.theme-light #mouse-glow { --aerix-accent-rgb:214,111,158; }
+body.theme-black-red .glass-panel::before, body.theme-white-red .glass-panel::before { background:linear-gradient(120deg,transparent,rgba(var(--aerix-accent-rgb),.10),transparent)!important; }
+body.theme-light .glass-panel::before { background:linear-gradient(120deg,transparent,rgba(var(--aerix-accent-rgb),.12),transparent)!important; }
+body.theme-light #mouse-glow, body.theme-black-red #mouse-glow, body.theme-white-red #mouse-glow { background:radial-gradient(400px circle at var(--mouse-x,50%) var(--mouse-y,50%),rgba(var(--aerix-accent-rgb),.09),transparent 80%)!important; }
+body.theme-light .glass-panel:hover, body.theme-white-red .glass-panel:hover { border-color:rgba(var(--aerix-accent-rgb),.38); }
+body.theme-black-red .glass-panel:hover { border-color:rgba(var(--aerix-accent-rgb),.42); }
+
+/* Cartes joueurs : dimensions stables, pseudos lisibles et badges contrastés sur photo. */
+.effectif-player-card { min-width:0; overflow:hidden; isolation:isolate; }
+.effectif-player-card .member-card-media { min-width:0; overflow:hidden; }
+.effectif-player-card .member-card-media img { display:block; width:100%; max-width:100%; height:100%; object-fit:cover; object-position:center top; }
+.effectif-player-card .member-card-content { min-width:0; max-width:100%; }
+.effectif-player-card .member-card-pseudo { display:block; max-width:100%; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; overflow-wrap:anywhere; }
+.effectif-player-card .member-role-badge { max-width:calc(100% - 1rem); color:#fff!important; background:rgba(12,12,14,.82)!important; border:1px solid rgba(255,255,255,.24)!important; box-shadow:0 3px 14px rgba(0,0,0,.25); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); }
+.effectif-player-card .member-role-badge, .effectif-player-card .member-role-badge * { color:#fff!important; -webkit-text-fill-color:#fff!important; }
+.effectif-player-card .member-card-top { min-width:0; gap:.4rem; }
+.effectif-player-card .member-card-game { max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+#player-modal .member-profile-shell { transition:opacity .22s ease,transform .22s ease; }
+#player-modal .member-profile-shell:not(.member-profile-open) { opacity:0; transform:translateY(8px) scale(.99); }
+
+/* Harmonisation des modales claires : surfaces nettes et accent propre à chaque thème. */
+body.theme-light .modal-content, body.theme-light .modal-panel,
+body.theme-white-red .modal-content, body.theme-white-red .modal-panel,
+body.theme-white-red #player-modal .member-profile-shell { background:var(--aerix-surface); border-color:var(--aerix-surface-border); }
+body.theme-light .theme-option.is-selected, body.theme-white-red .theme-option.is-selected { border-color:var(--aerix-accent)!important; box-shadow:0 0 0 1px rgba(var(--aerix-accent-rgb),.22); }
+body.theme-light .bg-aerix-purple\/15, body.theme-white-red .bg-aerix-purple\/15 { background:rgba(var(--aerix-accent-rgb),.12)!important; }
+body.theme-light [class*="border-aerix-purple"], body.theme-white-red [class*="border-aerix-purple"] { border-color:rgba(var(--aerix-accent-rgb),.38)!important; }
+body.theme-light [class*="text-aerix-purple"] { color:#a84878!important; }
+body.theme-white-red [class*="text-aerix-purple"] { color:#c62828!important; }
+body.theme-black-red [class*="text-aerix-purple"] { color:#ff6b66!important; }
+/* Réaffectation des utilitaires de marque, y compris ceux générés dynamiquement. */
+body.theme-light [class~="bg-aerix-purple"], body.theme-light button[class~="bg-aerix-purple"], body.theme-light a[class~="bg-aerix-purple"] { background-color:#a84878!important; }
+body.theme-black-red [class~="bg-aerix-purple"], body.theme-black-red button[class~="bg-aerix-purple"], body.theme-black-red a[class~="bg-aerix-purple"] { background-color:#c62828!important; }
+body.theme-white-red [class~="bg-aerix-purple"], body.theme-white-red button[class~="bg-aerix-purple"], body.theme-white-red a[class~="bg-aerix-purple"] { background-color:#c62828!important; }
+body.theme-light [class*="bg-aerix-purple/"] { background-color:rgba(214,111,158,.13)!important; }
+body.theme-black-red [class*="bg-aerix-purple/"] { background-color:rgba(229,57,53,.14)!important; }
+body.theme-white-red [class*="bg-aerix-purple/"] { background-color:rgba(229,57,53,.12)!important; }
+body.theme-light [class*="border-aerix-purple"], body.theme-light [class*="border-t-aerix-purple"], body.theme-light [class*="border-l-aerix-purple"] { border-color:rgba(214,111,158,.48)!important; }
+body.theme-black-red [class*="border-aerix-purple"], body.theme-black-red [class*="border-t-aerix-purple"], body.theme-black-red [class*="border-l-aerix-purple"] { border-color:rgba(229,57,53,.48)!important; }
+body.theme-white-red [class*="border-aerix-purple"], body.theme-white-red [class*="border-t-aerix-purple"], body.theme-white-red [class*="border-l-aerix-purple"] { border-color:rgba(229,57,53,.42)!important; }
+body.theme-light [style*="#8B5CF6"], body.theme-light [style*="139,92,246"], body.theme-light [style*="139, 92, 246"] { --aerix-accent-rgb:214,111,158; }
+body.theme-black-red [style*="#8B5CF6"], body.theme-black-red [style*="139,92,246"], body.theme-black-red [style*="139, 92, 246"] { --aerix-accent-rgb:229,57,53; }
+body.theme-white-red [style*="#8B5CF6"], body.theme-white-red [style*="139,92,246"], body.theme-white-red [style*="139, 92, 246"] { --aerix-accent-rgb:229,57,53; }
+/* Alertes jaune pâle : texte sombre pour rester lisible sur fond clair. */
+body.theme-light [class*="bg-yellow-"], body.theme-white-red [class*="bg-yellow-"], body.theme-light [class*="bg-amber-"], body.theme-white-red [class*="bg-amber-"] { color:#713f12!important; }
+body.theme-light [class*="text-yellow-"], body.theme-white-red [class*="text-yellow-"], body.theme-light [class*="text-amber-"], body.theme-white-red [class*="text-amber-"] { color:#854d0e!important; }
+body.theme-light [class*="shadow-[0_0_"], body.theme-white-red [class*="shadow-[0_0_"], body.theme-black-red [class*="shadow-[0_0_"] { --tw-shadow-color:rgba(var(--aerix-accent-rgb),.45)!important; }
+body.theme-light button:focus-visible,body.theme-light a:focus-visible,body.theme-light input:focus-visible,body.theme-light select:focus-visible,body.theme-light textarea:focus-visible,
+body.theme-black-red button:focus-visible,body.theme-black-red a:focus-visible,body.theme-black-red input:focus-visible,body.theme-black-red select:focus-visible,body.theme-black-red textarea:focus-visible,
+body.theme-white-red button:focus-visible,body.theme-white-red a:focus-visible,body.theme-white-red input:focus-visible,body.theme-white-red select:focus-visible,body.theme-white-red textarea:focus-visible { outline:2px solid var(--aerix-accent)!important; outline-offset:3px; }
+@media (prefers-reduced-motion:reduce) { #player-modal .member-profile-shell, .effectif-player-card, .glass-panel { transition-duration:.01ms!important; animation-duration:.01ms!important; scroll-behavior:auto!important; } }
+</style>
+
 </head>
 <body class="antialiased selection:bg-purple-500 selection:text-white min-h-screen flex flex-col relative">
+<script id="aerix-early-theme-init">
+(() => {
+  const allowed = new Set(['dark', 'light', 'black-red', 'white-red']);
+  let theme = 'dark';
+  try {
+    const stored = localStorage.getItem('aerix_theme');
+    if (allowed.has(stored)) theme = stored;
+    else if (stored !== null) localStorage.removeItem('aerix_theme');
+  } catch (_) { /* Le site reste utilisable si le stockage est bloqué. */ }
+  document.body.classList.remove('theme-light', 'theme-black-red', 'theme-white-red');
+  if (theme !== 'dark') document.body.classList.add('theme-' + theme);
+  document.documentElement.dataset.aerixTheme = theme;
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.content = theme === 'light' ? '#f4f4f6' : theme === 'white-red' ? '#ffffff' : '#050505';
+})();
+</script>
 
     <div id="mouse-glow"></div>
     <div id="page-bg-layer" class="fixed inset-0 pointer-events-none z-[-2] transition-all duration-700 bg-cover bg-center" style="background-image: linear-gradient(to bottom, rgba(5,5,5,0.65), rgba(5,5,5,0.85)), url('abstract-black-violet-colors-background-design-flat_662214-314713.avif');"></div>
@@ -3456,7 +3532,7 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
                 </h1>
                 <div class="text-lg sm:text-xl md:text-2xl font-semibold text-gray-300 mb-6 animate-fade-up opacity-0 delay-75" data-i18n="hero_tagline">L'avenir de la Compétition.</div>
                 <p class="mt-2 text-base sm:text-lg text-gray-400 max-w-2xl mx-auto font-light leading-relaxed mb-12 animate-fade-up opacity-0 delay-100" data-i18n="hero_desc">
-                    AERIX Esports est une structure française d’esport compétitif évoluant sur Rocket League et le sim racing, avec des équipes engagées sur la scène compétitive.
+                    AERIX Esport est une structure française d’esport compétitif évoluant sur Rocket League et le sim racing, avec des équipes engagées sur la scène compétitive.
                 </p>
                 <div class="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6 animate-fade-up opacity-0 delay-200">
                     <button onclick="navigate('effectifs')" class="px-8 py-3.5 bg-white text-black text-sm font-bold rounded-full hover:bg-gray-200 transition shadow-[0_0_20px_rgba(255,255,255,0.2)]" data-i18n="hero_btn_1">Découvrir les équipes</button>
@@ -3507,7 +3583,7 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
                         <span class="text-xs text-gray-400">aerix_esport</span>
                     </div>
                     <div class="aspect-video rounded-2xl overflow-hidden border border-white/10 bg-black">
-                        <iframe src="https://player.twitch.tv/?channel=aerix_esport&parent=aerix-esport.com&parent=www.aerix-esport.com" class="w-full h-full" allowfullscreen title="Twitch AERIX Esports"></iframe>
+                        <iframe src="https://player.twitch.tv/?channel=aerix_esport&parent=aerix-esport.com&parent=www.aerix-esport.com" class="w-full h-full" allowfullscreen title="Twitch AERIX Esport"></iframe>
                     </div>
                 </section>
             </div>
@@ -3686,7 +3762,7 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
     <footer class="py-8 border-t border-white/5 relative z-10 w-full mt-auto bg-[#030303]">
         <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
             <div class="flex flex-col md:flex-row items-center gap-4 text-center md:text-left">
-                <p class="text-xs text-gray-600">© 2026 AERIX Esports. Tous droits réservés.</p>
+                <p class="text-xs text-gray-600">© 2026 AERIX Esport. Tous droits réservés.</p>
                 <div class="flex space-x-6 text-xs text-gray-500">
                     <button onclick="openLegal('mentions')" class="hover:text-white transition">Mentions légales</button>
                     <button onclick="openLegal('confidentialite')" class="hover:text-white transition">Confidentialité</button>
@@ -4573,7 +4649,7 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
     <div id="recruitment-modal" class="fixed inset-0 z-[210] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl">
         <div class="glass-panel w-full max-w-2xl max-h-[92vh] overflow-y-auto rounded-[2rem] p-7 md:p-9 shadow-2xl">
             <div class="flex items-center justify-between mb-7">
-                <div><div class="text-xs font-bold text-aerix-purple uppercase tracking-widest">AERIX Esports</div><h3 class="text-3xl font-black text-white mt-1">Rejoindre AERIX</h3></div>
+                <div><div class="text-xs font-bold text-aerix-purple uppercase tracking-widest">AERIX Esport</div><h3 class="text-3xl font-black text-white mt-1">Rejoindre AERIX</h3></div>
                 <button type="button" onclick="closeRecruitmentModal()" class="w-10 h-10 rounded-full bg-white/5 border border-white/10 text-white">✕</button>
             </div>
             <form id="recruitment-form" onsubmit="submitRecruitment(event)" class="space-y-4">
@@ -4803,7 +4879,7 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
                 nav_home: "Accueil", nav_effectifs: "Effectifs", nav_palmares: "Palmarès", nav_histoire: "Histoire", nav_boutique: "Boutique", nav_partenaires: "Partenaires", nav_annonces: "Annonces",
                 hero_title_1: "AERIX", hero_title_2: "", hero_title_3: "", hero_title_4: "Esports",
                 hero_tagline: "L’avenir de la Compétition.",
-                hero_desc: "AERIX Esports est une structure française d’esport compétitif évoluant sur Rocket League et le sim racing, avec des équipes engagées sur la scène compétitive.",
+                hero_desc: "AERIX Esport est une structure française d’esport compétitif évoluant sur Rocket League et le sim racing, avec des équipes engagées sur la scène compétitive.",
                 hero_btn_1: "Découvrir les équipes", hero_btn_2: "Notre Palmarès",
                 card_1_title: "Former nos joueurs", card_1_desc: "Offrir un cadre d'entraînement rigoureux et un encadrement technique de pointe pour révéler les talents de demain.",
                 card_2_title: "Performance & Élite", card_2_desc: "Viser les sommets dans les compétitions majeures sur Rocket League et les circuits d'endurance virtuels.",
@@ -4936,7 +5012,7 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
                 "Débuts remarqués sur Le Mans Ultimate qui marque notre arrivée dans le monde de l'esport.":'Strong first appearances on Le Mans Ultimate. Strategy becomes the core of our Motorsport division.',
                 'Entrée officielle sur Rocket League avec des joueurs de rang Grand Champion.':'Official entry into Rocket League with Grand Champion-level players.',
                 'Équipement Officiel':'Official Merch','Sponsors & Affiliés':'Sponsors & Affiliates','Actualités':'News','Annonces & Mises à jour':'Announcements & Updates',
-                '© 2026 AERIX Esports. Tous droits réservés.':'© 2026 AERIX Esports. All rights reserved.','Mentions légales':'Legal notice','Confidentialité':'Privacy','Gérer les cookies':'Manage cookies',
+                '© 2026 AERIX Esport. Tous droits réservés.':'© 2026 AERIX Esport. All rights reserved.','Mentions légales':'Legal notice','Confidentialité':'Privacy','Gérer les cookies':'Manage cookies',
                 'Votre confidentialité':'Your privacy','Voir les détails et préférences':'View details and preferences','Préférences de cookies':'Cookie preferences','Nécessaires':'Necessary',
                 'Indispensables pour les préférences, la navigation et le fonctionnement du site. Toujours actifs.':'Required for preferences, navigation and site operation. Always active.',
                 'Mesure d’audience':'Analytics','Autorise les outils d’analyse d’audience lorsqu’ils sont activés par AERIX.':'Allows analytics tools when enabled by AERIX.',
@@ -5172,7 +5248,7 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
             let __html = '';
             globalShop.forEach((item, index) => {
                 let firstImg = Array.isArray(item.images) && item.images.length > 0 ? item.images[0] : item.image;
-                const imgTag = firstImg ? `<img loading="lazy" decoding="async" src="${escapeHtml(firstImg)}" loading="lazy" decoding="async" class="w-full h-full object-cover object-center transition duration-700 group-hover:scale-105" alt="${escapeHtml(item.name)}">` : `<div class="w-full h-full bg-black/40 flex items-center justify-center text-xs text-gray-600">Sans image</div>`;
+                const imgTag = firstImg ? `<img loading="lazy" decoding="async" src="${escapeHtml(firstImg)}" class="w-full h-full object-cover object-center transition duration-700 group-hover:scale-105" alt="${escapeHtml(item.name)}">` : `<div class="w-full h-full bg-black/40 flex items-center justify-center text-xs text-gray-600">Sans image</div>`;
                 __html += `
                     <div onclick="openProductModal(${index})" class="glass-panel rounded-3xl flex flex-col h-full cursor-pointer group reveal delay-${(index%4)*100} overflow-hidden border-t-2 border-t-aerix-purple/20">
                         <div class="w-full aspect-[4/5] bg-black/80 relative border-b border-white/5 p-4">${imgTag}</div>
@@ -5333,7 +5409,23 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
             return socials.filter(([,url]) => url && safeUrl(url)).map(([key,url,icon]) => `<a href="${escapeHtml(safeUrl(url))}" target="_blank" rel="noopener noreferrer" aria-label="${key}" title="${key}" onclick="event.stopPropagation()" class="player-social-link" data-social="${key}">${icon}</a>`).join('');
         }
 
+        // Registre temporaire : les cartes ne transportent qu'une clé courte dans leur onclick.
+        const aerixPlayerRegistry = Object.create(null);
+        let aerixPlayerRegistrySeq = 0;
+        function registerPlayerForModal(player) {
+            const key = 'p' + (++aerixPlayerRegistrySeq);
+            aerixPlayerRegistry[key] = player;
+            return key;
+        }
+        function openPlayerModalByKey(key) {
+            const player = aerixPlayerRegistry[String(key)];
+            if (!player) return;
+            openPlayerModal(player);
+        }
+
         function renderEffectifs() {
+            for (const key of Object.keys(aerixPlayerRegistry)) delete aerixPlayerRegistry[key];
+            aerixPlayerRegistrySeq = 0;
             const sortedEffectifs = [...globalEffectifs].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
             const selectedFilter = currentFilters.effectifs;
             const container = document.getElementById('effectifs-container');
@@ -5366,14 +5458,14 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
                 });
 
                 const playersHTML = staffMembers.length ? staffMembers.map(p => {
-                    const escapedPlayer = encodeURIComponent(JSON.stringify(p)).replace(/'/g, '%27');
+                    const playerKey = registerPlayerForModal(p);
                     const roleLabel = getMemberRoleLabel(p.role);
                     const roleIcon = getMemberRoleIcon(p.role);
 
                     return `
-                        <div class="glass-panel effectif-player-card rounded-3xl cursor-pointer group transition-all duration-500" onclick="openPlayerModal('${escapedPlayer}')">
+                        <div class="glass-panel effectif-player-card rounded-3xl cursor-pointer group transition-all duration-500" onclick="openPlayerModalByKey('${playerKey}')">
                             <div class="member-card-media">
-                                <img loading="lazy" decoding="async" src="${escapeHtml(p.avatar || defaultAvatar)}" loading="eager" decoding="async" alt="${escapeHtml(p.pseudo || p.name || 'AERIX Member')}" class="object-top-custom">
+                                <img loading="lazy" decoding="async" src="${escapeHtml(p.avatar || defaultAvatar)}" alt="${escapeHtml(p.pseudo || p.name || 'AERIX Member')}" class="object-top-custom">
                             </div>
                             <div class="member-card-top">
                                 <span class="member-role-badge"><span class="member-role-dot"></span>${escapeHtml(roleIcon)} ${escapeHtml(roleLabel)}</span>
@@ -5421,21 +5513,21 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
                 let playersHTML = '';
                 if (r.players && r.players.length > 0) {
                     playersHTML = r.players.map(p => {
-                        const escapedPlayer = encodeURIComponent(JSON.stringify({...p, game: r.game})).replace(/'/g, '%27');
+                        const playerKey = registerPlayerForModal({...p, game: r.game, division: p.division || r.game});
                         const roleLabel = getMemberRoleLabel(p.role);
                         const roleIcon = getMemberRoleIcon(p.role);
 
                         return `
-                        <div class="glass-panel effectif-player-card rounded-3xl cursor-pointer group transition-all duration-500" onclick="openPlayerModal('${escapedPlayer}')">
+                        <div class="glass-panel effectif-player-card rounded-3xl cursor-pointer group transition-all duration-500" onclick="openPlayerModalByKey('${playerKey}')">
                             <div class="member-card-media">
-                                <img loading="lazy" decoding="async" src="${escapeHtml(p.avatar || defaultAvatar)}" loading="eager" decoding="async" alt="${escapeHtml(p.pseudo || p.name || 'AERIX Member')}" class="object-top-custom">
+                                <img loading="lazy" decoding="async" src="${escapeHtml(p.avatar || defaultAvatar)}" alt="${escapeHtml(p.pseudo || p.name || 'AERIX Member')}" class="object-top-custom">
                             </div>
                             <div class="member-card-top">
                                 <span class="member-role-badge"><span class="member-role-dot"></span>${escapeHtml(roleIcon)} ${escapeHtml(roleLabel)}</span>
                                 ${p.number ? `<span class="member-number">#${escapeHtml(p.number)}</span>` : ''}
                             </div>
                             <div class="member-card-content">
-                                <div class="member-card-game">${escapeHtml(r.game || 'AERIX Esports')}</div>
+                                <div class="member-card-game">${escapeHtml(r.game || 'AERIX Esport')}</div>
                                 <div class="member-card-pseudo">${escapeHtml(p.pseudo || p.name)}</div>
                                 <div class="member-card-name">${escapeHtml(p.name || '')}</div>
                                 <div class="member-card-meta">
@@ -5457,7 +5549,7 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
                                 <div class="mb-2">${getGameBadge(r.game)}</div>
                                 <h4 class="text-3xl font-black text-white">${escapeHtml(r.name)}</h4>
                             </div>
-                            ${r.desc ? `<p class="text-gray-400 text-sm md:max-w-md text-left md:text-right leading-relaxed" data-translate-src="${escapeHtml(r.desc)}">${r.desc}</p>` : ''}
+                            ${r.desc ? `<p class="text-gray-400 text-sm md:max-w-md text-left md:text-right leading-relaxed" data-translate-src="${escapeHtml(r.desc)}">${escapeHtml(r.desc)}</p>` : ''}
                         </div>
                         <div class="relative">
                             <div class="roster-track" id="roster-track-${index}">
@@ -5471,9 +5563,13 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
             setTimeout(revealActiveElements, 20);
         }
 
-        function openPlayerModal(playerDataStr) {
-            let p;
-            try { p = JSON.parse(decodeURIComponent(playerDataStr)); } catch(e) { console.error('openPlayerModal', e); return; }
+        function openPlayerModal(playerData) {
+            let p = playerData;
+            if (typeof playerData === 'string') {
+                try { p = JSON.parse(decodeURIComponent(playerData)); }
+                catch (e) { try { p = JSON.parse(playerData); } catch (_) { console.error('openPlayerModal: données invalides'); return; } }
+            }
+            if (!p || typeof p !== 'object') return;
             const roleLabel = getMemberRoleLabel(p.role);
             const roleIcon = getMemberRoleIcon(p.role);
             const roleHTML = `<span class="member-profile-role-dot"></span><span>${escapeHtml(roleIcon)} ${escapeHtml(roleLabel)}</span>`;
@@ -5495,10 +5591,19 @@ body.theme-white-red .rich-editor-toolbar .text-aerix-purple{color:#c62828!impor
                 const links = playerSocialsHTML(p);
                 pmSocials.innerHTML = links ? `<div class="member-profile-label mb-2">Réseaux</div><div class="player-socials player-socials-modal">${links}</div>` : '';
             }
-            document.getElementById('player-modal').classList.remove('hidden');
-            requestAnimationFrame(() => document.getElementById('player-modal').querySelector('.member-profile-shell')?.classList.add('member-profile-open'));
+            const modal = document.getElementById('player-modal');
+            if (!modal) return;
+            const shell = modal.querySelector('.member-profile-shell');
+            shell?.classList.remove('member-profile-open');
+            modal.classList.remove('hidden');
+            requestAnimationFrame(() => requestAnimationFrame(() => shell?.classList.add('member-profile-open')));
         }
-        function closePlayerModal() { document.getElementById('player-modal').classList.add('hidden'); }
+        function closePlayerModal() {
+            const modal = document.getElementById('player-modal');
+            if (!modal) return;
+            modal.querySelector('.member-profile-shell')?.classList.remove('member-profile-open');
+            modal.classList.add('hidden');
+        }
 
 
         // ===============================
@@ -7936,7 +8041,7 @@ function checkAdminSessionTimeout() {
             const items = [];
             (globalGallery || []).forEach(g => { if (g.image) items.push(g); });
             (globalAnnonces || []).forEach(a => { if (a.image) items.push({image:a.image, caption:a.title, game:a.game}); });
-            c.innerHTML = items.length ? items.slice(0,32).map((m,i) => `<button type="button" onclick="openImageViewer(decodeURIComponent('${encodeURIComponent(m.image)}'), decodeURIComponent('${encodeURIComponent(m.caption || '')}'))" class="group aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 bg-black/40"><img loading="lazy" decoding="async" src="${escapeHtml(m.image)}" loading="lazy" decoding="async" alt="${escapeHtml(m.caption || 'AERIX Media')}" class="w-full h-full object-cover transition duration-500 group-hover:scale-105"><div class="absolute"></div></button>`).join('') : `<div class="col-span-full glass-panel p-10 rounded-3xl text-center text-gray-500">Aucun média disponible pour le moment.</div>`;
+            c.innerHTML = items.length ? items.slice(0,32).map((m,i) => `<button type="button" onclick="openImageViewer(decodeURIComponent('${encodeURIComponent(m.image)}'), decodeURIComponent('${encodeURIComponent(m.caption || '')}'))" class="group aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 bg-black/40"><img loading="lazy" decoding="async" src="${escapeHtml(m.image)}" alt="${escapeHtml(m.caption || 'AERIX Media')}" class="w-full h-full object-cover transition duration-500 group-hover:scale-105"><div class="absolute"></div></button>`).join('') : `<div class="col-span-full glass-panel p-10 rounded-3xl text-center text-gray-500">Aucun média disponible pour le moment.</div>`;
         }
 
         function navigate(pageId, pushHistory = true) {
@@ -7966,6 +8071,7 @@ function checkAdminSessionTimeout() {
             if (pushHistory && window.location.hash !== '#' + pageId) {
                 history.pushState({ page: pageId }, '', '#' + pageId);
             }
+            trackPageView(pageId);
             window.scrollTo({ top: 0, behavior: 'smooth' });
             if (pageId === 'competition') renderCompetitionPage();
             if (pageId === 'performance') renderPerformancePage();
@@ -8439,15 +8545,15 @@ function checkAdminSessionTimeout() {
         // MODAL LEGAL & COOKIES
         const legalTexts = {
             fr: {
-                mentions: `<p class="text-xs text-gray-500 mb-6">Dernière mise à jour : septembre 2026</p><h4 class="font-bold text-white mb-2 text-lg">1. Éditeur et responsable du site</h4><p class="mb-5">Le présent site présente et exploite le projet esport AERIX Esports. Il est géré par son responsable et ne doit pas être interprété comme le site d'une association ou d'une société juridiquement constituée sous ce nom tant qu'aucune telle structure n'a été officiellement créée.</p><h4 class="font-bold text-white mb-2 text-lg">2. Responsable de publication</h4><p class="mb-6">Le responsable de publication est le responsable du projet AERIX Esports. Les coordonnées nécessaires à l'identification de l'éditeur et du responsable de publication doivent être renseignées dans la version définitive des présentes mentions légales.</p><h4 class="font-bold text-white mb-2 text-lg">3. Hébergement</h4><p class="mb-6">Le site est hébergé par GitHub Pages. Les données applicatives utilisées par le site sont gérées via les services Firebase de Google.</p><h4 class="font-bold text-white mb-2 text-lg">4. Propriété intellectuelle</h4><p class="mb-6">Les contenus, textes, visuels, logos, éléments graphiques et code présents sur le site sont protégés par les règles applicables en matière de propriété intellectuelle, sauf mention contraire. Toute réutilisation non autorisée est susceptible d'être interdite par la loi.</p><h4 class="font-bold text-white mb-2 text-lg">5. Comptes et contenus utilisateurs</h4><p class="mb-6">Le site peut permettre la création de comptes, l'envoi de demandes et la publication d'avis. Les utilisateurs sont responsables des contenus qu'ils transmettent et doivent respecter les présentes conditions d'utilisation.</p><h4 class="font-bold text-white mb-2 text-lg">6. Services tiers</h4><p class="mb-6">Le site utilise notamment GitHub Pages, Firebase et peut intégrer des services tiers tels que Twitch, Google Fonts ou FlagCDN. Ces services disposent de leurs propres conditions et politiques.</p><h4 class="font-bold text-white mb-2 text-lg">7. Droit applicable</h4><p>Le site est exploité dans le respect du droit français applicable. Les informations présentées peuvent être corrigées ou mises à jour lorsque cela est nécessaire.</p>`,
-                confidentialite: `<p class="text-xs text-gray-500 mb-6">Dernière mise à jour : septembre 2026</p><h4 class="font-bold text-white mb-2 text-lg">Responsable du traitement</h4><p class="mb-6">Les traitements liés au site sont réalisés dans le cadre du projet AERIX Esports par son responsable. Le site ne doit pas être présenté comme étant exploité par une association ou une société portant ce nom tant qu'une telle structure n'a pas été officiellement constituée.</p><h4 class="font-bold text-white mb-2 text-lg">Données traitées</h4><p class="mb-2">Selon les fonctionnalités utilisées, le site peut traiter :</p><p class="mb-1">— Données de compte : pseudo et adresse e-mail nécessaires à la création et à la gestion du compte.</p><p class="mb-1">— Demandes de coaching, tickets de contact et échanges associés : informations transmises volontairement pour traiter la demande.</p><p class="mb-1">— Avis publiés : contenu et informations nécessaires à leur affichage et à leur modération.</p><p class="mb-6">— Mesure d'audience : Google Analytics uniquement après consentement lorsque cet outil est activé.</p><h4 class="font-bold text-white mb-2 text-lg">Finalités</h4><p class="mb-6">Les données sont utilisées pour gérer les comptes, répondre aux demandes, gérer les avis et assurer le fonctionnement des fonctionnalités proposées sur le site.</p><h4 class="font-bold text-white mb-2 text-lg">Durées de conservation</h4><p class="mb-6">Les données sont conservées pendant la durée nécessaire aux finalités pour lesquelles elles sont traitées, conformément aux obligations légales applicables et aux règles de conservation définies par le responsable du traitement.</p><h4 class="font-bold text-white mb-2 text-lg">Vos droits</h4><p class="mb-6">Vous disposez, selon les conditions prévues par la réglementation, de droits d'accès, de rectification, d'effacement, de limitation, d'opposition et, lorsque applicable, de portabilité. Pour exercer vos droits, utilisez le moyen de contact officiel indiqué sur le site. Vous pouvez également saisir la CNIL.</p><h4 class="font-bold text-white mb-2 text-lg">Services tiers</h4><p>Le site peut utiliser Firebase, Google Analytics après consentement, Google Fonts, FlagCDN et d'autres services nécessaires à certaines fonctionnalités.</p>`,
-                cgu: `<p class="text-xs text-gray-500 mb-6">Dernière mise à jour : septembre 2026</p><h4 class="font-bold text-white mb-2 text-lg">1. Objet</h4><p class="mb-5">Les présentes conditions définissent les règles d'utilisation du site et de ses fonctionnalités dans le cadre du projet esport AERIX Esports.</p><h4 class="font-bold text-white mb-2 text-lg">2. Compte utilisateur</h4><p class="mb-5">L'utilisateur doit fournir des informations exactes lors de la création de son compte et conserver ses identifiants confidentiels. Le compte est personnel et ne doit pas être utilisé pour usurper l'identité d'une autre personne.</p><h4 class="font-bold text-white mb-2 text-lg">3. Comportement et contenus</h4><p class="mb-5">Il est interdit d'utiliser le site pour publier ou transmettre des contenus illicites, frauduleux, diffamatoires, haineux, menaçants, malveillants ou portant atteinte aux droits de tiers.</p><h4 class="font-bold text-white mb-2 text-lg">4. Avis, demandes et modération</h4><p class="mb-5">Les avis et messages transmis restent sous la responsabilité de leur auteur. Le responsable du site peut modérer, masquer ou supprimer un contenu contraire aux règles applicables ou aux présentes conditions.</p><h4 class="font-bold text-white mb-2 text-lg">5. Coaching et candidatures</h4><p class="mb-5">Les formulaires de coaching, recrutement ou contact constituent des demandes. Leur envoi ne vaut pas automatiquement acceptation, réservation ou engagement définitif.</p><h4 class="font-bold text-white mb-2 text-lg">6. Disponibilité du site</h4><p class="mb-5">Le site peut être temporairement indisponible en raison de maintenance, d'un incident technique ou d'une défaillance d'un service tiers.</p><h4 class="font-bold text-white mb-2 text-lg">7. Suspension d'un compte</h4><p class="mb-5">Un compte peut être suspendu ou supprimé lorsqu'une utilisation est contraire aux présentes conditions, aux règles de sécurité ou au droit applicable.</p><h4 class="font-bold text-white mb-2 text-lg">8. Droit applicable</h4><p>Les présentes conditions sont soumises au droit français applicable.</p>`,
+                mentions: `<p class="text-xs text-gray-500 mb-6">Dernière mise à jour : septembre 2026</p><h4 class="font-bold text-white mb-2 text-lg">1. Éditeur et responsable du site</h4><p class="mb-5">Le présent site présente et exploite le projet esport AERIX Esport. Il est géré par son responsable et ne doit pas être interprété comme le site d'une association ou d'une société juridiquement constituée sous ce nom tant qu'aucune telle structure n'a été officiellement créée.</p><h4 class="font-bold text-white mb-2 text-lg">2. Responsable de publication</h4><p class="mb-6">Le responsable de publication est le responsable du projet AERIX Esport. Les coordonnées nécessaires à l'identification de l'éditeur et du responsable de publication doivent être renseignées dans la version définitive des présentes mentions légales.</p><h4 class="font-bold text-white mb-2 text-lg">3. Hébergement</h4><p class="mb-6">Le site est hébergé par GitHub Pages. Les données applicatives utilisées par le site sont gérées via les services Firebase de Google.</p><h4 class="font-bold text-white mb-2 text-lg">4. Propriété intellectuelle</h4><p class="mb-6">Les contenus, textes, visuels, logos, éléments graphiques et code présents sur le site sont protégés par les règles applicables en matière de propriété intellectuelle, sauf mention contraire. Toute réutilisation non autorisée est susceptible d'être interdite par la loi.</p><h4 class="font-bold text-white mb-2 text-lg">5. Comptes et contenus utilisateurs</h4><p class="mb-6">Le site peut permettre la création de comptes, l'envoi de demandes et la publication d'avis. Les utilisateurs sont responsables des contenus qu'ils transmettent et doivent respecter les présentes conditions d'utilisation.</p><h4 class="font-bold text-white mb-2 text-lg">6. Services tiers</h4><p class="mb-6">Le site utilise notamment GitHub Pages, Firebase et peut intégrer des services tiers tels que Twitch, Google Fonts ou FlagCDN. Ces services disposent de leurs propres conditions et politiques.</p><h4 class="font-bold text-white mb-2 text-lg">7. Droit applicable</h4><p>Le site est exploité dans le respect du droit français applicable. Les informations présentées peuvent être corrigées ou mises à jour lorsque cela est nécessaire.</p>`,
+                confidentialite: `<p class="text-xs text-gray-500 mb-6">Dernière mise à jour : septembre 2026</p><h4 class="font-bold text-white mb-2 text-lg">Responsable du traitement</h4><p class="mb-6">Les traitements liés au site sont réalisés dans le cadre du projet AERIX Esport par son responsable. Le site ne doit pas être présenté comme étant exploité par une association ou une société portant ce nom tant qu'une telle structure n'a pas été officiellement constituée.</p><h4 class="font-bold text-white mb-2 text-lg">Données traitées</h4><p class="mb-2">Selon les fonctionnalités utilisées, le site peut traiter :</p><p class="mb-1">— Données de compte : pseudo et adresse e-mail nécessaires à la création et à la gestion du compte.</p><p class="mb-1">— Demandes de coaching, tickets de contact et échanges associés : informations transmises volontairement pour traiter la demande.</p><p class="mb-1">— Avis publiés : contenu et informations nécessaires à leur affichage et à leur modération.</p><p class="mb-6">— Mesure d'audience : Google Analytics uniquement après consentement lorsque cet outil est activé.</p><h4 class="font-bold text-white mb-2 text-lg">Finalités</h4><p class="mb-6">Les données sont utilisées pour gérer les comptes, répondre aux demandes, gérer les avis et assurer le fonctionnement des fonctionnalités proposées sur le site.</p><h4 class="font-bold text-white mb-2 text-lg">Durées de conservation</h4><p class="mb-6">Les données sont conservées pendant la durée nécessaire aux finalités pour lesquelles elles sont traitées, conformément aux obligations légales applicables et aux règles de conservation définies par le responsable du traitement.</p><h4 class="font-bold text-white mb-2 text-lg">Vos droits</h4><p class="mb-6">Vous disposez, selon les conditions prévues par la réglementation, de droits d'accès, de rectification, d'effacement, de limitation, d'opposition et, lorsque applicable, de portabilité. Pour exercer vos droits, utilisez le moyen de contact officiel indiqué sur le site. Vous pouvez également saisir la CNIL.</p><h4 class="font-bold text-white mb-2 text-lg">Services tiers</h4><p>Le site peut utiliser Firebase, Google Analytics après consentement, Google Fonts, FlagCDN et d'autres services nécessaires à certaines fonctionnalités.</p>`,
+                cgu: `<p class="text-xs text-gray-500 mb-6">Dernière mise à jour : septembre 2026</p><h4 class="font-bold text-white mb-2 text-lg">1. Objet</h4><p class="mb-5">Les présentes conditions définissent les règles d'utilisation du site et de ses fonctionnalités dans le cadre du projet esport AERIX Esport.</p><h4 class="font-bold text-white mb-2 text-lg">2. Compte utilisateur</h4><p class="mb-5">L'utilisateur doit fournir des informations exactes lors de la création de son compte et conserver ses identifiants confidentiels. Le compte est personnel et ne doit pas être utilisé pour usurper l'identité d'une autre personne.</p><h4 class="font-bold text-white mb-2 text-lg">3. Comportement et contenus</h4><p class="mb-5">Il est interdit d'utiliser le site pour publier ou transmettre des contenus illicites, frauduleux, diffamatoires, haineux, menaçants, malveillants ou portant atteinte aux droits de tiers.</p><h4 class="font-bold text-white mb-2 text-lg">4. Avis, demandes et modération</h4><p class="mb-5">Les avis et messages transmis restent sous la responsabilité de leur auteur. Le responsable du site peut modérer, masquer ou supprimer un contenu contraire aux règles applicables ou aux présentes conditions.</p><h4 class="font-bold text-white mb-2 text-lg">5. Coaching et candidatures</h4><p class="mb-5">Les formulaires de coaching, recrutement ou contact constituent des demandes. Leur envoi ne vaut pas automatiquement acceptation, réservation ou engagement définitif.</p><h4 class="font-bold text-white mb-2 text-lg">6. Disponibilité du site</h4><p class="mb-5">Le site peut être temporairement indisponible en raison de maintenance, d'un incident technique ou d'une défaillance d'un service tiers.</p><h4 class="font-bold text-white mb-2 text-lg">7. Suspension d'un compte</h4><p class="mb-5">Un compte peut être suspendu ou supprimé lorsqu'une utilisation est contraire aux présentes conditions, aux règles de sécurité ou au droit applicable.</p><h4 class="font-bold text-white mb-2 text-lg">8. Droit applicable</h4><p>Les présentes conditions sont soumises au droit français applicable.</p>`,
                 cookies: `<p class="text-xs text-gray-500 mb-6">Dernière mise à jour : septembre 2026</p><h4 class="font-bold text-white mb-2 text-lg">1. Cookies et traceurs nécessaires</h4><p class="mb-5">Certains mécanismes techniques nécessaires au fonctionnement du site, à la navigation, à la sécurité ou à la gestion des préférences peuvent être utilisés sans consentement lorsqu'ils sont strictement nécessaires à ces finalités.</p><h4 class="font-bold text-white mb-2 text-lg">2. Mesure d'audience</h4><p class="mb-5">Google Analytics n'est chargé que lorsque l'utilisateur a donné son consentement à la mesure d'audience. Le choix peut être modifié depuis « Gérer les cookies ».</p><h4 class="font-bold text-white mb-2 text-lg">3. Gestion du consentement</h4><p class="mb-5">Le bandeau permet d'accepter, de refuser ou de personnaliser les catégories de cookies concernées. Les préférences sont enregistrées afin d'éviter de redemander le choix à chaque visite lorsque le navigateur autorise le stockage local et les cookies.</p><h4 class="font-bold text-white mb-2 text-lg">4. Services tiers</h4><p>Des services tiers peuvent déposer ou utiliser leurs propres mécanismes techniques lorsqu'une fonctionnalité correspondante est activée, notamment Firebase, Twitch ou les services de contenu externes.</p>`,
             },
             en: {
-                mentions: `<p class="text-xs text-gray-500 mb-6">Last updated: September 2026</p><h4 class="font-bold text-white mb-2 text-lg">1. Website operator</h4><p class="mb-5">This website presents and operates the AERIX Esports esports project. It is managed by its responsible person and must not be presented as the website of an association or company legally incorporated under this name unless such an entity has been officially created.</p><h4 class="font-bold text-white mb-2 text-lg">2. Publication responsibility</h4><p class="mb-6">Publication responsibility lies with the person responsible for the AERIX Esports project. The final legal notice must include the information required to identify the publisher and publication director.</p><h4 class="font-bold text-white mb-2 text-lg">3. Hosting</h4><p class="mb-6">The website is hosted by GitHub Pages. Application data is managed through Google's Firebase services.</p><h4 class="font-bold text-white mb-2 text-lg">4. Intellectual property</h4><p class="mb-6">Website content, text, visuals, logos, graphics and code are protected by applicable intellectual property rules unless otherwise stated.</p><h4 class="font-bold text-white mb-2 text-lg">5. Accounts and user content</h4><p class="mb-6">The website may allow users to create accounts, submit requests and publish reviews. Users are responsible for the content they submit and must comply with these terms.</p><h4 class="font-bold text-white mb-2 text-lg">6. Third-party services</h4><p class="mb-6">The website uses GitHub Pages, Firebase and may integrate third-party services such as Twitch, Google Fonts or FlagCDN.</p><h4 class="font-bold text-white mb-2 text-lg">7. Applicable law</h4><p>The website is operated in accordance with applicable French law.</p>`,
-                confidentialite: `<p class="text-xs text-gray-500 mb-6">Last updated: September 2026</p><h4 class="font-bold text-white mb-2 text-lg">Data controller</h4><p class="mb-6">Processing activities related to this website are carried out within the AERIX Esports project by its responsible person. The website must not be presented as being operated by an association or company under this name unless such an entity has been officially incorporated.</p><h4 class="font-bold text-white mb-2 text-lg">Data processed</h4><p class="mb-2">Depending on the features used, the website may process:</p><p class="mb-1">— Account data: username and email address required to create and manage an account.</p><p class="mb-1">— Coaching requests, contact tickets and related exchanges: information voluntarily submitted to process the request.</p><p class="mb-1">— Published reviews: content and information required for display and moderation.</p><p class="mb-6">— Analytics: Google Analytics only after consent when enabled.</p><h4 class="font-bold text-white mb-2 text-lg">Purposes</h4><p class="mb-6">Data is used to manage accounts, respond to requests, manage reviews and operate website features.</p><h4 class="font-bold text-white mb-2 text-lg">Retention</h4><p class="mb-6">Data is retained for as long as necessary for the purposes for which it is processed, subject to applicable legal obligations and the retention rules defined by the controller.</p><h4 class="font-bold text-white mb-2 text-lg">Your rights</h4><p class="mb-6">Subject to applicable law, you may have rights of access, rectification, erasure, restriction, objection and, where applicable, data portability. You may exercise these rights through the official contact method indicated on the website. You may also contact the CNIL.</p><h4 class="font-bold text-white mb-2 text-lg">Third-party services</h4><p>The website may use Firebase, Google Analytics after consent, Google Fonts, FlagCDN and other services required for certain features.</p>`,
-                cgu: `<p class="text-xs text-gray-500 mb-6">Last updated: September 2026</p><h4 class="font-bold text-white mb-2 text-lg">1. Purpose</h4><p class="mb-5">These terms define the rules for using the website and its features within the AERIX Esports esports project.</p><h4 class="font-bold text-white mb-2 text-lg">2. User accounts</h4><p class="mb-5">Users must provide accurate information when creating an account and keep their credentials confidential. Accounts are personal and must not be used to impersonate another person.</p><h4 class="font-bold text-white mb-2 text-lg">3. Conduct and content</h4><p class="mb-5">Users must not use the website to publish or transmit unlawful, fraudulent, defamatory, hateful, threatening or malicious content, or content that infringes third-party rights.</p><h4 class="font-bold text-white mb-2 text-lg">4. Reviews, requests and moderation</h4><p class="mb-5">Users are responsible for the reviews and messages they submit. The site operator may moderate, hide or remove content that breaches these terms or applicable law.</p><h4 class="font-bold text-white mb-2 text-lg">5. Coaching and applications</h4><p class="mb-5">Coaching, recruitment and contact forms are requests. Submitting a form does not automatically constitute acceptance, a booking or a final commitment.</p><h4 class="font-bold text-white mb-2 text-lg">6. Availability</h4><p class="mb-5">The website may be temporarily unavailable due to maintenance, technical incidents or failures of third-party services.</p><h4 class="font-bold text-white mb-2 text-lg">7. Account suspension</h4><p class="mb-5">An account may be suspended or deleted when its use breaches these terms, security rules or applicable law.</p><h4 class="font-bold text-white mb-2 text-lg">8. Applicable law</h4><p>These terms are governed by applicable French law.</p>`,
+                mentions: `<p class="text-xs text-gray-500 mb-6">Last updated: September 2026</p><h4 class="font-bold text-white mb-2 text-lg">1. Website operator</h4><p class="mb-5">This website presents and operates the AERIX Esport esports project. It is managed by its responsible person and must not be presented as the website of an association or company legally incorporated under this name unless such an entity has been officially created.</p><h4 class="font-bold text-white mb-2 text-lg">2. Publication responsibility</h4><p class="mb-6">Publication responsibility lies with the person responsible for the AERIX Esport project. The final legal notice must include the information required to identify the publisher and publication director.</p><h4 class="font-bold text-white mb-2 text-lg">3. Hosting</h4><p class="mb-6">The website is hosted by GitHub Pages. Application data is managed through Google's Firebase services.</p><h4 class="font-bold text-white mb-2 text-lg">4. Intellectual property</h4><p class="mb-6">Website content, text, visuals, logos, graphics and code are protected by applicable intellectual property rules unless otherwise stated.</p><h4 class="font-bold text-white mb-2 text-lg">5. Accounts and user content</h4><p class="mb-6">The website may allow users to create accounts, submit requests and publish reviews. Users are responsible for the content they submit and must comply with these terms.</p><h4 class="font-bold text-white mb-2 text-lg">6. Third-party services</h4><p class="mb-6">The website uses GitHub Pages, Firebase and may integrate third-party services such as Twitch, Google Fonts or FlagCDN.</p><h4 class="font-bold text-white mb-2 text-lg">7. Applicable law</h4><p>The website is operated in accordance with applicable French law.</p>`,
+                confidentialite: `<p class="text-xs text-gray-500 mb-6">Last updated: September 2026</p><h4 class="font-bold text-white mb-2 text-lg">Data controller</h4><p class="mb-6">Processing activities related to this website are carried out within the AERIX Esport project by its responsible person. The website must not be presented as being operated by an association or company under this name unless such an entity has been officially incorporated.</p><h4 class="font-bold text-white mb-2 text-lg">Data processed</h4><p class="mb-2">Depending on the features used, the website may process:</p><p class="mb-1">— Account data: username and email address required to create and manage an account.</p><p class="mb-1">— Coaching requests, contact tickets and related exchanges: information voluntarily submitted to process the request.</p><p class="mb-1">— Published reviews: content and information required for display and moderation.</p><p class="mb-6">— Analytics: Google Analytics only after consent when enabled.</p><h4 class="font-bold text-white mb-2 text-lg">Purposes</h4><p class="mb-6">Data is used to manage accounts, respond to requests, manage reviews and operate website features.</p><h4 class="font-bold text-white mb-2 text-lg">Retention</h4><p class="mb-6">Data is retained for as long as necessary for the purposes for which it is processed, subject to applicable legal obligations and the retention rules defined by the controller.</p><h4 class="font-bold text-white mb-2 text-lg">Your rights</h4><p class="mb-6">Subject to applicable law, you may have rights of access, rectification, erasure, restriction, objection and, where applicable, data portability. You may exercise these rights through the official contact method indicated on the website. You may also contact the CNIL.</p><h4 class="font-bold text-white mb-2 text-lg">Third-party services</h4><p>The website may use Firebase, Google Analytics after consent, Google Fonts, FlagCDN and other services required for certain features.</p>`,
+                cgu: `<p class="text-xs text-gray-500 mb-6">Last updated: September 2026</p><h4 class="font-bold text-white mb-2 text-lg">1. Purpose</h4><p class="mb-5">These terms define the rules for using the website and its features within the AERIX Esport esports project.</p><h4 class="font-bold text-white mb-2 text-lg">2. User accounts</h4><p class="mb-5">Users must provide accurate information when creating an account and keep their credentials confidential. Accounts are personal and must not be used to impersonate another person.</p><h4 class="font-bold text-white mb-2 text-lg">3. Conduct and content</h4><p class="mb-5">Users must not use the website to publish or transmit unlawful, fraudulent, defamatory, hateful, threatening or malicious content, or content that infringes third-party rights.</p><h4 class="font-bold text-white mb-2 text-lg">4. Reviews, requests and moderation</h4><p class="mb-5">Users are responsible for the reviews and messages they submit. The site operator may moderate, hide or remove content that breaches these terms or applicable law.</p><h4 class="font-bold text-white mb-2 text-lg">5. Coaching and applications</h4><p class="mb-5">Coaching, recruitment and contact forms are requests. Submitting a form does not automatically constitute acceptance, a booking or a final commitment.</p><h4 class="font-bold text-white mb-2 text-lg">6. Availability</h4><p class="mb-5">The website may be temporarily unavailable due to maintenance, technical incidents or failures of third-party services.</p><h4 class="font-bold text-white mb-2 text-lg">7. Account suspension</h4><p class="mb-5">An account may be suspended or deleted when its use breaches these terms, security rules or applicable law.</p><h4 class="font-bold text-white mb-2 text-lg">8. Applicable law</h4><p>These terms are governed by applicable French law.</p>`,
                 cookies: `<p class="text-xs text-gray-500 mb-6">Last updated: September 2026</p><h4 class="font-bold text-white mb-2 text-lg">1. Necessary cookies and trackers</h4><p class="mb-5">Technical mechanisms necessary for website operation, navigation, security or preference management may be used without consent where they are strictly necessary for these purposes.</p><h4 class="font-bold text-white mb-2 text-lg">2. Analytics</h4><p class="mb-5">Google Analytics is loaded only when the user has consented to analytics. This choice can be changed through “Manage cookies”.</p><h4 class="font-bold text-white mb-2 text-lg">3. Consent management</h4><p class="mb-5">The banner allows users to accept, refuse or customize relevant cookie categories. Preferences are stored to avoid requesting the choice on every visit when local storage and cookies are available.</p><h4 class="font-bold text-white mb-2 text-lg">4. Third-party services</h4><p>Third-party services may use their own technical mechanisms when a corresponding feature is enabled, including Firebase, Twitch or external content services.</p>`
             }
         };
@@ -8656,7 +8762,7 @@ document.addEventListener('keydown', function(e) {
 });
 
 // --- GESTION DES THÈMES ---
-let currentTheme = lsGet('aerix_theme') || 'dark';
+let currentTheme = ['dark','light','black-red','white-red'].includes(lsGet('aerix_theme')) ? lsGet('aerix_theme') : 'dark';
 let themeTransitionTimer = null;
 let themeTransitionCloseTimer = null;
 const THEME_META = {
