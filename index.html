@@ -109,15 +109,7 @@ body.theme-light {
     color: #111111 !important;
 }
 
-/* Forcer l'affichage de l'aquarelle pour le thème clair */
-.theme-light #page-bg-layer {
-    background-image: url('background-light.webp') !important;
-    background-size: cover !important;
-    background-position: center !important;
-    background-repeat: no-repeat !important;
-    /* On s'assure qu'aucun fond de couleur ne vient cacher l'image */
-    background-color: transparent !important; 
-}
+/* Fond clair : géré par le bloc final « Fonds AERIX » (sans !important) */
 
 /* Textes */
 .theme-light .text-white { color: #111111 !important; }
@@ -1129,7 +1121,6 @@ body.theme-light {
 
     /* Thème noir & rouge */
     body.theme-black-red { color:#f5f5f5; }
-    .theme-black-red #page-bg-layer { background-image:linear-gradient(to bottom,rgba(4,4,4,.58),rgba(4,4,4,.86)),url('background-black-red.webp') !important; background-size:cover; background-position:center; }
     .theme-black-red .text-aerix-purple { color:#ef5350 !important; }
     .theme-black-red .bg-aerix-purple { background-color:#e53935 !important; }
     .theme-black-red .border-aerix-purple { border-color:rgba(229,57,53,.65) !important; }
@@ -2879,10 +2870,6 @@ body:not(.theme-light):not(.theme-black-red):not(.theme-white-red) [class*="bord
 body:not(.theme-light):not(.theme-black-red):not(.theme-white-red) [class*="bg-aerix-purple/" ] { background-color:rgba(255,255,255,.07) !important; }
 body:not(.theme-light):not(.theme-black-red):not(.theme-white-red) [class~="bg-aerix-purple"] { background-color:#f5f5f5 !important; color:#080808 !important; }
 body:not(.theme-light):not(.theme-black-red):not(.theme-white-red) [class*="hover:border-aerix-purple"]:hover { border-color:rgba(255,255,255,.48) !important; }
-body:not(.theme-light):not(.theme-black-red):not(.theme-white-red) #page-bg-layer {
-    background-image:radial-gradient(ellipse at 50% 5%,rgba(255,255,255,.07),transparent 48%),linear-gradient(180deg,#080808 0%,#050505 58%,#090909 100%) !important;
-    background-size:cover !important;
-}
 .aerix-home-hero {
     position:relative;
     isolation:isolate;
@@ -3087,7 +3074,7 @@ body.theme-light{
   --theme-muted:#4b5563;
   color:var(--theme-text)!important;
 }
-body.theme-light #page-bg-layer{opacity:.32;}
+body.theme-light #page-bg-layer{opacity:1;}
 body.theme-light .glass-panel:not(.effectif-player-card),
 body.theme-light .glass-panel-no-hover{
   background:linear-gradient(135deg,rgba(255,255,255,.82),rgba(255,255,255,.58))!important;
@@ -3870,13 +3857,13 @@ body.theme-white-red #page-annonces .news-card-animated h4 { color:#171717 !impo
 }
 /* Repli CSS si JavaScript n'a pas encore appliqué le thème. */
 body:not(.theme-light):not(.theme-black-red):not(.theme-white-red) #page-bg-layer {
-  background-image: linear-gradient(to bottom, rgba(0,0,0,.42), rgba(0,0,0,.58)), url('background-dark.webp');
+  background-image: linear-gradient(to bottom, rgba(0,0,0,.12), rgba(0,0,0,.28)), url('background-dark.webp');
 }
 body.theme-light #page-bg-layer {
-  background-image: linear-gradient(to bottom, rgba(255,255,255,.28), rgba(255,255,255,.42)), url('background-light.webp');
+  background-image: linear-gradient(to bottom, rgba(255,255,255,.04), rgba(255,255,255,.12)), url('background-light.webp');
 }
 body.theme-black-red #page-bg-layer {
-  background-image: linear-gradient(to bottom, rgba(8,0,2,.32), rgba(8,0,2,.48)), url('background-black-red.webp');
+  background-image: linear-gradient(to bottom, rgba(8,0,2,.14), rgba(8,0,2,.30)), url('background-black-red.webp');
 }
 /* Les panneaux avaient un blur de 30–35 px : coûteux et visuellement laiteux sur PC. */
 .glass-panel, .glass-panel-no-hover {
@@ -4055,7 +4042,7 @@ body.theme-light #shop-container > .glass-panel > div:first-child, body.theme-wh
 </script>
 
     <div id="mouse-glow"></div>
-    <div id="page-bg-layer" class="fixed inset-0 pointer-events-none z-[-2] transition-all duration-700 bg-cover bg-center" style="background-image: linear-gradient(to bottom, rgba(5,5,5,0.65), rgba(5,5,5,0.85)), url('background-dark.webp');"></div>
+    <div id="page-bg-layer" class="fixed inset-0 pointer-events-none z-[-2] transition-all duration-700 bg-cover bg-center" style="background-image: linear-gradient(to bottom, rgba(0,0,0,.12), rgba(0,0,0,.28)), url('background-dark.webp');"></div>
     <div id="toast-container"></div>
 
     <!-- ASSISTANT AERIX -->
@@ -9552,9 +9539,9 @@ function applyTheme(theme){
     if(theme==='light') document.body.classList.add('theme-light');
     if(theme==='black-red') document.body.classList.add('theme-black-red');
     const backgrounds={
-        dark:"linear-gradient(to bottom, rgba(0,0,0,0.42), rgba(0,0,0,0.58)), url('background-dark.webp')",
-        light:"linear-gradient(to bottom, rgba(255,255,255,0.28), rgba(255,255,255,0.42)), url('background-light.webp')",
-        'black-red':"linear-gradient(to bottom, rgba(8,0,2,0.32), rgba(8,0,2,0.48)), url('background-black-red.webp')"
+        dark:"linear-gradient(to bottom, rgba(0,0,0,0.12), rgba(0,0,0,.28)), url('background-dark.webp')",
+        light:"linear-gradient(to bottom, rgba(255,255,255,.04), rgba(255,255,255,.12)), url('background-light.webp')",
+        'black-red':"linear-gradient(to bottom, rgba(8,0,2,.14), rgba(8,0,2,.30)), url('background-black-red.webp')"
     };
     if(bgLayer) {
         bgLayer.style.backgroundImage=backgrounds[theme] || backgrounds.dark;
