@@ -4033,27 +4033,64 @@ body.theme-light #shop-container > .glass-panel > div:first-child, body.theme-wh
 .animate-fade-up.delay-300 { animation-delay:.3s; }
 @media (prefers-reduced-motion:reduce) { .animate-fade-up { animation:none !important; opacity:1 !important; transform:none !important; } }
 
-/* Header : boutons sans cadre ni fond (compte, Discord, thème, langue) */
+/* Header : boutons avec contour rond propre (compte, Discord, thème, langue) */
+body .desktop-header-actions #account-area,
+body .desktop-header-actions > .relative { background:transparent !important; border:0 !important; box-shadow:none !important; padding:0 !important; }
 body .desktop-header-actions #account-area .account-trigger,
 body .desktop-header-actions .desktop-discord-btn,
 body .desktop-header-actions .desktop-theme-btn,
-body .desktop-header-actions .desktop-language-btn,
-body.theme-light .desktop-header-actions > a,
-body.theme-light .desktop-header-actions > .relative > button,
-body.theme-light .desktop-header-actions #account-area > *,
-body.theme-black-red .desktop-header-actions .desktop-discord-btn,
-body.theme-black-red .desktop-header-actions .desktop-theme-btn,
-body.theme-black-red .desktop-header-actions .desktop-language-btn,
-body.theme-black-red .desktop-header-actions #account-area .account-trigger {
-    background:transparent !important;
-    border-color:transparent !important;
-    box-shadow:none !important;
+body .desktop-header-actions .desktop-language-btn {
+    box-sizing:border-box; height:36px; min-height:36px;
+    border-radius:9999px !important;
+    border:1px solid rgba(255,255,255,.22) !important;
+    background:rgba(255,255,255,.05) !important;
+    box-shadow:none !important; outline:none !important;
     -webkit-backdrop-filter:none !important; backdrop-filter:none !important;
+    transition:border-color .25s ease, background .25s ease, color .25s ease;
 }
 body .desktop-header-actions #account-area .account-trigger:hover,
 body .desktop-header-actions .desktop-discord-btn:hover,
 body .desktop-header-actions .desktop-theme-btn:hover,
-body .desktop-header-actions .desktop-language-btn:hover { background:transparent !important; border-color:transparent !important; opacity:.8; }
+body .desktop-header-actions .desktop-language-btn:hover {
+    border-color:rgba(255,255,255,.6) !important; background:rgba(255,255,255,.10) !important;
+}
+body.theme-light .desktop-header-actions #account-area .account-trigger,
+body.theme-light .desktop-header-actions .desktop-discord-btn,
+body.theme-light .desktop-header-actions .desktop-theme-btn,
+body.theme-light .desktop-header-actions .desktop-language-btn {
+    border-color:rgba(17,24,39,.22) !important; background:rgba(255,255,255,.55) !important; color:#111827 !important;
+}
+body.theme-light .desktop-header-actions #account-area .account-trigger:hover,
+body.theme-light .desktop-header-actions .desktop-discord-btn:hover,
+body.theme-light .desktop-header-actions .desktop-theme-btn:hover,
+body.theme-light .desktop-header-actions .desktop-language-btn:hover {
+    border-color:rgba(17,24,39,.45) !important; background:rgba(255,255,255,.8) !important;
+}
+body.theme-black-red .desktop-header-actions #account-area .account-trigger,
+body.theme-black-red .desktop-header-actions .desktop-discord-btn,
+body.theme-black-red .desktop-header-actions .desktop-theme-btn,
+body.theme-black-red .desktop-header-actions .desktop-language-btn { border-color:rgba(229,57,53,.55) !important; background:rgba(229,57,53,.08) !important; }
+body.theme-black-red .desktop-header-actions #account-area .account-trigger:hover,
+body.theme-black-red .desktop-header-actions .desktop-discord-btn:hover,
+body.theme-black-red .desktop-header-actions .desktop-theme-btn:hover,
+body.theme-black-red .desktop-header-actions .desktop-language-btn:hover { border-color:rgba(229,57,53,.9) !important; background:rgba(229,57,53,.16) !important; }
+</style>
+
+<style id="aerix-fix-partners-fx">
+/* Partenaires : même effet que le bouton « Laisser un avis » (néon blanc, léger lift) — plus de zoom ni de halo violet */
+.partner-card-tile, .partner-featured { transition:box-shadow .3s ease, transform .3s ease, border-color .3s ease, background .3s ease !important; }
+.partner-card-tile:hover, .partner-featured:hover,
+body.theme-black-red .partner-card-tile:hover, body.theme-black-red .partner-featured:hover {
+  transform:translateY(-2px) !important;
+  border-color:rgba(255,255,255,.9) !important;
+  box-shadow:0 0 6px rgba(255,255,255,.55), 0 0 18px rgba(255,255,255,.3), 0 0 36px rgba(255,255,255,.18) !important;
+}
+.partner-card-tile img, .partner-card-tile span, .partner-card-tile:hover img, .partner-card-tile:hover span { transform:none !important; filter:none !important; }
+.partner-card:hover::after, .partner-card-tile:hover::after { opacity:0 !important; }
+body.theme-light .partner-card-tile:hover, body.theme-light .partner-featured:hover {
+  border-color:rgba(17,24,39,.18) !important;
+  box-shadow:0 0 0 1px rgba(255,255,255,.9), 0 0 14px rgba(255,255,255,.95), 0 6px 22px rgba(17,24,39,.16) !important;
+}
 </style>
 </head>
 <body class="antialiased selection:bg-purple-500 selection:text-white min-h-screen flex flex-col relative">
@@ -9572,8 +9609,8 @@ function applyTheme(theme){
     if(theme==='light') document.body.classList.add('theme-light');
     if(theme==='black-red') document.body.classList.add('theme-black-red');
     const backgrounds={
-        dark:"linear-gradient(to bottom, rgba(0,0,0,0.12), rgba(0,0,0,.28)), url('background-dark.webp')",
-        light:"linear-gradient(to bottom, rgba(255,255,255,.04), rgba(255,255,255,.12)), url('background-light.webp')",
+        dark:"linear-gradient(to bottom, rgba(0,0,0,0.12), rgba(0,0,0,0.28)), url('background-dark.webp')",
+        light:"linear-gradient(to bottom, rgba(255,255,255,0.04), rgba(255,255,255,0.12)), url('background-light.webp')",
         'black-red':"linear-gradient(to bottom, rgba(8,0,2,.14), rgba(8,0,2,.30)), url('background-black-red.webp')"
     };
     if(bgLayer) {
