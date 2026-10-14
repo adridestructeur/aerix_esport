@@ -4022,6 +4022,39 @@ body.theme-light #shop-container > .glass-panel > div:first-child, body.theme-wh
   #page-partenaires .partners-marquee-track { animation:none !important; }
 }
 </style>
+
+<style id="aerix-fix-hero-header">
+/* Apparition du hero : visible par défaut, l'animation ne fait qu'un fondu d'entrée */
+@keyframes aerixFadeIn { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:none} }
+.animate-fade-up { animation:aerixFadeIn .6s cubic-bezier(.16,1,.3,1) both; }
+.animate-fade-up.delay-75 { animation-delay:.075s; }
+.animate-fade-up.delay-100 { animation-delay:.1s; }
+.animate-fade-up.delay-200 { animation-delay:.2s; }
+.animate-fade-up.delay-300 { animation-delay:.3s; }
+@media (prefers-reduced-motion:reduce) { .animate-fade-up { animation:none !important; opacity:1 !important; transform:none !important; } }
+
+/* Header : boutons sans cadre ni fond (compte, Discord, thème, langue) */
+body .desktop-header-actions #account-area .account-trigger,
+body .desktop-header-actions .desktop-discord-btn,
+body .desktop-header-actions .desktop-theme-btn,
+body .desktop-header-actions .desktop-language-btn,
+body.theme-light .desktop-header-actions > a,
+body.theme-light .desktop-header-actions > .relative > button,
+body.theme-light .desktop-header-actions #account-area > *,
+body.theme-black-red .desktop-header-actions .desktop-discord-btn,
+body.theme-black-red .desktop-header-actions .desktop-theme-btn,
+body.theme-black-red .desktop-header-actions .desktop-language-btn,
+body.theme-black-red .desktop-header-actions #account-area .account-trigger {
+    background:transparent !important;
+    border-color:transparent !important;
+    box-shadow:none !important;
+    -webkit-backdrop-filter:none !important; backdrop-filter:none !important;
+}
+body .desktop-header-actions #account-area .account-trigger:hover,
+body .desktop-header-actions .desktop-discord-btn:hover,
+body .desktop-header-actions .desktop-theme-btn:hover,
+body .desktop-header-actions .desktop-language-btn:hover { background:transparent !important; border-color:transparent !important; opacity:.8; }
+</style>
 </head>
 <body class="antialiased selection:bg-purple-500 selection:text-white min-h-screen flex flex-col relative">
 <script id="aerix-early-theme-init">
@@ -4191,16 +4224,16 @@ body.theme-light #shop-container > .glass-panel > div:first-child, body.theme-wh
         <!-- 1. ACCUEIL -->
         <main id="page-home" class="page-view active px-6 max-w-7xl mx-auto mt-12">
             <div class="aerix-home-hero text-center min-h-[50vh] flex flex-col justify-center mb-20">
-                <div class="aerix-hero-eyebrow animate-fade-up opacity-0" data-i18n="hero_eyebrow">STRUCTURE ESPORT FRANÇAISE · ROCKET LEAGUE &amp; SIM RACING</div>
-                <h1 class="text-4xl sm:text-5xl md:text-7xl font-black text-white tracking-tighter mb-4 leading-tight animate-fade-up opacity-0 flex flex-wrap justify-center items-center gap-x-[0.25em]">
+                <div class="aerix-hero-eyebrow animate-fade-up" data-i18n="hero_eyebrow">STRUCTURE ESPORT FRANÇAISE · ROCKET LEAGUE &amp; SIM RACING</div>
+                <h1 class="text-4xl sm:text-5xl md:text-7xl font-black text-white tracking-tighter mb-4 leading-tight animate-fade-up flex flex-wrap justify-center items-center gap-x-[0.25em]">
                     <span class="inline-block transition-transform duration-300 hover:scale-110 hover:text-aerix-purple cursor-default" data-i18n="hero_title_1">AERIX</span>
                     <span class="text-transparent bg-clip-text bg-gradient-to-r from-gray-400 to-white inline-block transition-transform duration-300 hover:scale-110 hover:text-aerix-purple cursor-default" data-i18n="hero_title_4">Esport</span>
                 </h1>
-                <div class="text-lg sm:text-xl md:text-2xl font-semibold text-gray-300 mb-6 animate-fade-up opacity-0 delay-75" data-i18n="hero_tagline">L'avenir de la Compétition.</div>
-                <p class="mt-2 text-base sm:text-lg text-gray-400 max-w-2xl mx-auto font-light leading-relaxed mb-12 animate-fade-up opacity-0 delay-100" data-i18n="hero_desc">
+                <div class="text-lg sm:text-xl md:text-2xl font-semibold text-gray-300 mb-6 animate-fade-up delay-75" data-i18n="hero_tagline">L'avenir de la Compétition.</div>
+                <p class="mt-2 text-base sm:text-lg text-gray-400 max-w-2xl mx-auto font-light leading-relaxed mb-12 animate-fade-up delay-100" data-i18n="hero_desc">
                     AERIX Esport est une structure française d’esport compétitif évoluant sur Rocket League et le sim racing, avec des équipes engagées sur la scène compétitive.
                 </p>
-                <div class="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6 animate-fade-up opacity-0 delay-200">
+                <div class="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6 animate-fade-up delay-200">
                     <button onclick="navigate('effectifs')" class="px-8 py-3.5 bg-white text-black text-sm font-bold rounded-full hover:bg-gray-200 transition shadow-[0_0_20px_rgba(255,255,255,0.2)]" data-i18n="hero_btn_1">Découvrir les équipes</button>
                     <button onclick="navigate('palmares')" class="px-8 py-3.5 glass-panel text-white text-sm font-bold rounded-full hover:border-aerix-purple transition" data-i18n="hero_btn_2">Notre Palmarès</button>
                     <button onclick="openReviewModal()" class="btn-review-neon px-8 py-3.5 rounded-full text-sm font-bold transition" data-i18n="nav_review">Laisser un avis</button>
@@ -4257,7 +4290,7 @@ body.theme-light #shop-container > .glass-panel > div:first-child, body.theme-wh
 
         <!-- 2. EFFECTIFS -->
         <main id="page-effectifs" class="page-view px-6 max-w-7xl mx-auto">
-            <div class="mb-14 text-center animate-fade-up opacity-0">
+            <div class="mb-14 text-center animate-fade-up">
                 <h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2" data-i18n="roster_subtitle">Divisions</h2>
                 <h3 class="text-4xl font-black text-white mb-8 inline-block transition-transform duration-300 hover:scale-110 hover:text-aerix-purple cursor-default" data-i18n="roster_title">Nos équipes</h3>
                 <div class="flex flex-wrap justify-center gap-3" id="filters-effectifs">
@@ -4273,7 +4306,7 @@ body.theme-light #shop-container > .glass-panel > div:first-child, body.theme-wh
 
         <!-- 3. PALMARÈS / RÉSULTATS -->
         <main id="page-palmares" class="page-view px-6 max-w-7xl mx-auto">
-            <div class="mb-14 text-center animate-fade-up opacity-0">
+            <div class="mb-14 text-center animate-fade-up">
                 <h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2" data-i18n="results_subtitle">Compétitions</h2>
                 <h3 class="text-4xl font-black text-white mb-8 inline-block transition-transform duration-300 hover:scale-110 hover:text-aerix-purple cursor-default" data-i18n="results_title">Nos résultats</h3>
                 <div class="flex flex-wrap justify-center gap-3 mb-4" id="palmares-view-toggle">
@@ -4294,7 +4327,7 @@ body.theme-light #shop-container > .glass-panel > div:first-child, body.theme-wh
 
         <!-- 4. COMPÉTITION -->
         <main id="page-competition" class="page-view px-6 max-w-7xl mx-auto">
-            <div class="mb-14 text-center animate-fade-up opacity-0">
+            <div class="mb-14 text-center animate-fade-up">
                 <h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2">AERIX COMPETITION</h2>
                 <h3 class="text-4xl font-black text-white mb-4 inline-block transition-transform duration-300 hover:scale-110 hover:text-aerix-purple cursor-default">Compétition</h3>
                 <p class="text-gray-400 max-w-2xl mx-auto">Retrouve les prochains matchs et courses ainsi que les dernières performances enregistrées par AERIX.</p>
@@ -4313,7 +4346,7 @@ body.theme-light #shop-container > .glass-panel > div:first-child, body.theme-wh
 
         <!-- 5. PERFORMANCE -->
         <main id="page-performance" class="page-view px-6 max-w-7xl mx-auto">
-            <div class="mb-14 text-center animate-fade-up opacity-0">
+            <div class="mb-14 text-center animate-fade-up">
                 <h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2">AERIX PERFORMANCE</h2>
                 <h3 class="text-4xl font-black text-white mb-4 inline-block transition-transform duration-300 hover:scale-110 hover:text-aerix-purple cursor-default">Performance</h3>
                 <p class="text-gray-400 max-w-2xl mx-auto">Une vue synthétique des effectifs, compétitions et résultats actuellement enregistrés.</p>
@@ -4327,13 +4360,13 @@ body.theme-light #shop-container > .glass-panel > div:first-child, body.theme-wh
 
         <!-- 6. MÉDIA -->
         <main id="page-media" class="page-view px-6 max-w-7xl mx-auto">
-            <div class="mb-14 text-center animate-fade-up opacity-0"><h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2">AERIX MEDIA</h2><h3 class="text-4xl font-black text-white mb-4 inline-block transition-transform duration-300 hover:scale-110 hover:text-aerix-purple cursor-default">Média</h3><p class="text-gray-400 max-w-2xl mx-auto">Photos et contenus visuels publiés depuis les annonces et la galerie AERIX.</p></div>
+            <div class="mb-14 text-center animate-fade-up"><h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2">AERIX MEDIA</h2><h3 class="text-4xl font-black text-white mb-4 inline-block transition-transform duration-300 hover:scale-110 hover:text-aerix-purple cursor-default">Média</h3><p class="text-gray-400 max-w-2xl mx-auto">Photos et contenus visuels publiés depuis les annonces et la galerie AERIX.</p></div>
             <div id="media-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5"></div>
         </main>
 
         <!-- 7. HISTOIRE -->
         <main id="page-histoire" class="page-view px-6 max-w-5xl mx-auto">
-            <div class="text-center mb-20 animate-fade-up opacity-0">
+            <div class="text-center mb-20 animate-fade-up">
                 <h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2" data-i18n="history_subtitle">L'Héritage</h2>
                 <h3 class="text-4xl font-black text-white mb-6 inline-block transition-transform duration-300 hover:scale-110 hover:text-aerix-purple cursor-default" data-i18n="history_title">L'Histoire d'AERIX</h3>
                 <p class="text-gray-400 text-lg max-w-2xl mx-auto font-light" data-i18n="history_desc">Née d'une passion commune pour le sport automobile virtuel et l'esport, AERIX n'a cessé d'évoluer.</p>
@@ -4374,7 +4407,7 @@ body.theme-light #shop-container > .glass-panel > div:first-child, body.theme-wh
 
         <!-- 5. BOUTIQUE -->
         <main id="page-boutique" class="page-view px-6 max-w-7xl mx-auto">
-            <div class="mb-14 text-center animate-fade-up opacity-0">
+            <div class="mb-14 text-center animate-fade-up">
                 <h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2" data-i18n="shop_subtitle">Shop</h2>
                 <h3 class="text-4xl font-black text-white inline-block transition-transform duration-300 hover:scale-110 hover:text-aerix-purple cursor-default" data-i18n="shop_title">Équipement Officiel</h3>
             </div>
@@ -4383,7 +4416,7 @@ body.theme-light #shop-container > .glass-panel > div:first-child, body.theme-wh
 
         <!-- 6. PARTENAIRES -->
         <main id="page-partenaires" class="page-view px-6 max-w-7xl mx-auto text-center mt-12">
-            <div class="partners-hero glass-panel rounded-[2rem] p-7 md:p-10 mb-14 animate-fade-up opacity-0">
+            <div class="partners-hero glass-panel rounded-[2rem] p-7 md:p-10 mb-14 animate-fade-up">
                 <div class="relative z-10">
                     <div class="text-xs font-black text-aerix-purple uppercase tracking-[.22em] mb-3" data-i18n="partners_subtitle">Sponsors & Affiliés</div>
                     <h3 class="text-4xl md:text-5xl font-black text-white tracking-tight inline-block transition-transform duration-300 hover:scale-110 hover:text-aerix-purple cursor-default" data-i18n="partners_title">Partenaires Techniques</h3>
@@ -4403,7 +4436,7 @@ body.theme-light #shop-container > .glass-panel > div:first-child, body.theme-wh
 
         <!-- 7. ANNONCES -->
         <main id="page-annonces" class="page-view px-6 max-w-4xl mx-auto">
-            <div class="mb-14 text-center animate-fade-up opacity-0">
+            <div class="mb-14 text-center animate-fade-up">
                 <h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2" data-i18n="news_subtitle">Actualités</h2>
                 <h3 class="text-4xl font-black text-white mb-8 inline-block transition-transform duration-300 hover:scale-110 hover:text-aerix-purple cursor-default" data-i18n="news_title">Annonces & Mises à jour</h3>
                 <div class="flex flex-wrap justify-center gap-3 mb-4" id="annonces-view-toggle">
