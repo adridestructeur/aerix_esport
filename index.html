@@ -4092,6 +4092,7 @@ body.theme-light .partner-card-tile:hover, body.theme-light .partner-featured:ho
   box-shadow:0 0 0 1px rgba(255,255,255,.9), 0 0 14px rgba(255,255,255,.95), 0 6px 22px rgba(17,24,39,.16) !important;
 }
 </style>
+<style id="aerix-site-settings-css">.page-view.site-section-hidden{display:none!important}body.site-maintenance-active{overflow:hidden!important}</style>
 </head>
 <body class="antialiased selection:bg-purple-500 selection:text-white min-h-screen flex flex-col relative">
 <script id="aerix-early-theme-init">
@@ -4364,6 +4365,17 @@ body.theme-light .partner-card-tile:hover, body.theme-light .partner-featured:ho
 
         <!-- 4. COMPÉTITION -->
         <main id="page-competition" class="page-view px-6 max-w-7xl mx-auto">
+            <section id="aerix-series-card" class="glass-panel rounded-3xl p-6 md:p-9 mb-10 border border-aerix-purple/30 relative overflow-hidden">
+                <div class="absolute inset-0 pointer-events-none opacity-30" style="background:radial-gradient(circle at 90% 10%,rgba(139,92,246,.28),transparent 45%)"></div>
+                <div class="relative flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+                    <div class="max-w-2xl">
+                        <p class="text-xs font-black uppercase tracking-[.24em] text-aerix-purple mb-2">AERIX ESPORT présente</p>
+                        <h3 class="text-3xl md:text-4xl font-black text-white mb-3">AERIX Series <span class="text-aerix-purple">#1</span></h3>
+                        <p class="text-sm md:text-base text-gray-300">Le tournoi Rocket League organisé par AERIX Esport. Retrouve les informations, le suivi et les détails de la compétition sur la page officielle du tournoi.</p>
+                    </div>
+                    <a href="https://liquipedia.net/rocketleague/User:TotoDu2/Aerix_Series/1" target="_blank" rel="noopener noreferrer" class="relative inline-flex items-center justify-center gap-3 px-6 py-4 rounded-xl bg-aerix-purple text-white font-black text-sm hover:opacity-90 transition shadow-lg shrink-0">Voir le tournoi <span aria-hidden="true">↗</span></a>
+                </div>
+            </section>
             <div class="mb-14 text-center animate-fade-up">
                 <h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2">AERIX COMPETITION</h2>
                 <h3 class="text-4xl font-black text-white mb-4 inline-block transition-transform duration-300 hover:scale-110 hover:text-aerix-purple cursor-default">Compétition</h3>
@@ -4927,6 +4939,34 @@ body.theme-light .partner-card-tile:hover, body.theme-light .partner-featured:ho
                 <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('contact')" id="tab-btn-contact" class="admin-tab-btn flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10" data-i18n="contact_form">Contact</button>
                 <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('coaching')" id="tab-btn-coaching" class="admin-tab-btn flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10" data-i18n="nav_coaching">Coaching</button>
                 <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('avis')" id="tab-btn-avis" class="admin-tab-btn flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10" data-i18n="nav_review">Avis</button>
+                <button type="button" onclick="switchAdminTab('site')" id="tab-btn-site" class="admin-tab-btn flex-1 min-w-[120px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10">Réglages du site</button>
+            </div>
+
+            <!-- TAB: RÉGLAGES DU SITE -->
+            <div id="admin-tab-site" class="admin-tab hidden space-y-8">
+                <section class="glass-panel rounded-2xl p-5 md:p-7 space-y-4">
+                    <div><h4 class="text-lg font-black text-white">Visibilité des onglets</h4><p class="text-sm text-gray-400 mt-1">Masque temporairement des pages dans la navigation et empêche leur accès direct. Les données ne sont pas supprimées.</p></div>
+                    <div id="site-visibility-controls" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                        <label class="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3"><input type="checkbox" data-site-section="histoire" class="accent-purple-500 w-4 h-4"><span class="text-sm text-white">Histoire</span></label>
+                        <label class="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3"><input type="checkbox" data-site-section="effectifs" class="accent-purple-500 w-4 h-4"><span class="text-sm text-white">Effectifs</span></label>
+                        <label class="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3"><input type="checkbox" data-site-section="palmares" class="accent-purple-500 w-4 h-4"><span class="text-sm text-white">Palmarès</span></label>
+                        <label class="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3"><input type="checkbox" data-site-section="competition" class="accent-purple-500 w-4 h-4"><span class="text-sm text-white">Compétition</span></label>
+                        <label class="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3"><input type="checkbox" data-site-section="performance" class="accent-purple-500 w-4 h-4"><span class="text-sm text-white">Performance</span></label>
+                        <label class="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3"><input type="checkbox" data-site-section="partenaires" class="accent-purple-500 w-4 h-4"><span class="text-sm text-white">Partenaires</span></label>
+                        <label class="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3"><input type="checkbox" data-site-section="boutique" class="accent-purple-500 w-4 h-4"><span class="text-sm text-white">Boutique</span></label>
+                        <label class="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3"><input type="checkbox" data-site-section="annonces" class="accent-purple-500 w-4 h-4"><span class="text-sm text-white">Actualités</span></label>
+                        <label class="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3"><input type="checkbox" data-site-section="media" class="accent-purple-500 w-4 h-4"><span class="text-sm text-white">Média</span></label>
+                        <label class="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3"><input type="checkbox" data-site-section="coaching" class="accent-purple-500 w-4 h-4"><span class="text-sm text-white">Coaching</span></label>
+                    </div>
+                    <button type="button" onclick="saveSiteSettings()" class="px-5 py-3 rounded-xl bg-aerix-purple text-white text-sm font-black hover:opacity-90">Enregistrer la visibilité</button>
+                </section>
+                <section class="glass-panel rounded-2xl p-5 md:p-7 space-y-4 border border-red-500/20">
+                    <div><h4 class="text-lg font-black text-white">Mode maintenance</h4><p class="text-sm text-gray-400 mt-1">Le public verra une page de maintenance. Les administrateurs autorisés conserveront l’accès au site.</p></div>
+                    <label class="flex items-center gap-3 rounded-xl border border-red-500/20 bg-red-500/5 p-4"><input id="site-maintenance-enabled" type="checkbox" class="accent-red-500 w-5 h-5"><span class="text-sm font-bold text-white">Activer le mode maintenance</span></label>
+                    <div><label for="site-maintenance-message" class="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">Message affiché aux visiteurs</label><textarea id="site-maintenance-message" maxlength="500" rows="3" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white text-sm" placeholder="Le site AERIX est temporairement en maintenance. Nous revenons bientôt."></textarea></div>
+                    <button type="button" onclick="saveSiteSettings()" class="px-5 py-3 rounded-xl bg-red-600 text-white text-sm font-black hover:bg-red-500">Enregistrer les réglages du site</button>
+                </section>
+                <p class="text-xs text-gray-500">Les réglages sont partagés via Firebase Firestore. Les règles Firestore doivent autoriser la lecture publique du document de configuration et réserver son écriture au compte Owner.</p>
             </div>
 
             <!-- TAB: COMPTES -->
@@ -5972,8 +6012,60 @@ body.theme-light .partner-card-tile:hover, body.theme-light .partner-featured:ho
             else updateAdminNotifBadge();
         }
 
+        // RÉGLAGES GLOBAUX DU SITE (Firestore: siteConfig/public)
+        const DEFAULT_SITE_SETTINGS = { hiddenSections: [], maintenance: false, maintenanceMessage: 'Le site AERIX est temporairement en maintenance. Nous revenons bientôt.' };
+        let currentSiteSettings = { ...DEFAULT_SITE_SETTINGS };
+        const SITE_SECTION_IDS = ['histoire','effectifs','palmares','competition','performance','partenaires','boutique','annonces','media','coaching'];
+        function applySiteSettings() {
+            const hidden = new Set(Array.isArray(currentSiteSettings.hiddenSections) ? currentSiteSettings.hiddenSections : []);
+            SITE_SECTION_IDS.forEach(id => {
+                const nav = document.getElementById('nav-' + id);
+                const page = document.getElementById('page-' + id);
+                if (nav) nav.classList.toggle('hidden', hidden.has(id));
+                if (page) page.classList.toggle('site-section-hidden', hidden.has(id));
+                document.querySelectorAll(`[onclick*="navigate('${id}')"]`).forEach(el => el.classList.toggle('hidden', hidden.has(id)));
+                if (id === 'coaching') document.querySelectorAll(`[onclick*="openCoachingModal()"]`).forEach(el => el.classList.toggle('hidden', hidden.has(id)));
+            });
+            const overlay = document.getElementById('site-maintenance-overlay');
+            const message = document.getElementById('site-maintenance-overlay-message');
+            const blocked = !!currentSiteSettings.maintenance && !hasAdminAccess();
+            if (message) message.textContent = currentSiteSettings.maintenanceMessage || DEFAULT_SITE_SETTINGS.maintenanceMessage;
+            if (overlay) { overlay.classList.toggle('hidden', !blocked); overlay.classList.toggle('flex', blocked); }
+            document.body.classList.toggle('site-maintenance-active', blocked);
+            if (document.getElementById('site-maintenance-enabled')) document.getElementById('site-maintenance-enabled').checked = !!currentSiteSettings.maintenance;
+            if (document.getElementById('site-maintenance-message')) document.getElementById('site-maintenance-message').value = currentSiteSettings.maintenanceMessage || DEFAULT_SITE_SETTINGS.maintenanceMessage;
+            document.querySelectorAll('[data-site-section]').forEach(input => { input.checked = hidden.has(input.dataset.siteSection); });
+            const activePage = document.querySelector('.page-view.active');
+            if (activePage && activePage.classList.contains('site-section-hidden')) {
+                const home = document.getElementById('page-home');
+                document.querySelectorAll('.page-view').forEach(el => el.classList.remove('active'));
+                if (home) home.classList.add('active');
+                document.querySelectorAll('#nav-container .nav-btn').forEach(el => el.classList.toggle('active', el.id === 'nav-home'));
+                if (typeof refreshNavPill === 'function') refreshNavPill();
+            }
+        }
+        async function saveSiteSettings() {
+            if (!isOwner()) { showToast('Seul le Owner peut modifier les réglages du site.', 'error'); return; }
+            const hiddenSections = [...document.querySelectorAll('[data-site-section]:checked')].map(input => input.dataset.siteSection);
+            const maintenance = !!document.getElementById('site-maintenance-enabled')?.checked;
+            const maintenanceMessage = (document.getElementById('site-maintenance-message')?.value || '').trim() || DEFAULT_SITE_SETTINGS.maintenanceMessage;
+            try {
+                await db.collection('siteConfig').doc('public').set({ hiddenSections, maintenance, maintenanceMessage, updatedAt: firebase.firestore.FieldValue.serverTimestamp(), updatedBy: currentUser.uid }, { merge: true });
+                currentSiteSettings = { hiddenSections, maintenance, maintenanceMessage };
+                applySiteSettings();
+                showToast('Réglages du site enregistrés.', 'success');
+            } catch (error) {
+                console.error('saveSiteSettings', error);
+                showToast('Échec de l’enregistrement. Vérifie les règles Firestore.', 'error');
+            }
+        }
+
         // INITIALISATION BDD
         function startSync() {
+            db.collection('siteConfig').doc('public').onSnapshot(snapshot => {
+                currentSiteSettings = snapshot.exists ? { ...DEFAULT_SITE_SETTINGS, ...snapshot.data() } : { ...DEFAULT_SITE_SETTINGS };
+                applySiteSettings();
+            }, error => { console.warn('siteConfig indisponible; réglages par défaut appliqués.', error); currentSiteSettings = { ...DEFAULT_SITE_SETTINGS }; applySiteSettings(); });
             db.collection("events").onSnapshot((snapshot) => { globalEvents = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); savePublicCollectionCache("events", globalEvents); renderUpcomingEvents(); renderCompetitionPage(); renderPerformancePage(); }, () => { globalEvents = []; renderUpcomingEvents(); renderCompetitionPage(); renderPerformancePage(); });
             db.collection("shop").onSnapshot((snapshot) => { globalShop = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); savePublicCollectionCache("shop", globalShop); scheduleRender(renderShop); scheduleAdminRender(); }, (e) => console.error('shop', e));
             db.collection("effectifs").onSnapshot((snapshot) => { globalEffectifs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); savePublicCollectionCache("effectifs", globalEffectifs); scheduleRender(renderEffectifs); renderPerformancePage(); scheduleAdminRender(); }, (e) => console.error('effectifs', e));
@@ -9219,6 +9311,7 @@ function checkAdminSessionTimeout() {
             const partenairesBtn = document.getElementById('tab-btn-partenaires');
             const performanceBtn = document.getElementById('tab-btn-performance');
             const mediaBtn = document.getElementById('tab-btn-media');
+            const siteBtn = document.getElementById('tab-btn-site');
             if (comptesBtn) comptesBtn.classList.toggle('hidden', !isOwner());
             if (contactBtn) contactBtn.classList.toggle('hidden', !hasAdminAccess());
             if (coachingBtn) coachingBtn.classList.toggle('hidden', !hasAdminAccess());
@@ -9226,6 +9319,7 @@ function checkAdminSessionTimeout() {
             if (evenementsBtn) evenementsBtn.classList.toggle('hidden', !hasAdminAccess());
             if (performanceBtn) performanceBtn.classList.toggle('hidden', !hasAdminAccess());
             if (mediaBtn) mediaBtn.classList.toggle('hidden', !hasAdminAccess());
+            if (siteBtn) siteBtn.classList.toggle('hidden', !isOwner());
             // Boutique & Sponsors : réservés au rôle Owner, masqués pour les Admin.
             if (boutiqueBtn) boutiqueBtn.classList.toggle('hidden', !isOwner());
             if (partenairesBtn) partenairesBtn.classList.toggle('hidden', !isOwner());
@@ -9259,7 +9353,7 @@ function checkAdminSessionTimeout() {
 
         function switchAdminTab(tab) {
             if (tab === 'comptes' && !isOwner()) tab = 'effectifs';
-            if ((tab === 'boutique' || tab === 'partenaires') && !isOwner()) tab = 'effectifs';
+            if ((tab === 'boutique' || tab === 'partenaires' || tab === 'site') && !isOwner()) tab = 'effectifs';
             if ((tab === 'evenements' || tab === 'contact' || tab === 'coaching' || tab === 'avis') && !hasAdminAccess()) tab = 'effectifs';
             if ((tab === 'performance' || tab === 'media') && !hasAdminAccess()) tab = 'effectifs';
             const target = document.getElementById('admin-tab-' + tab);
@@ -9275,7 +9369,7 @@ function checkAdminSessionTimeout() {
             if (tab === 'performance') renderAdminPerformance();
             if (tab === 'media') renderAdminLists();
             if (tab === 'contact' || tab === 'coaching' || tab === 'avis') markAdminTicketsAsRead(tab);
-            ['comptes', 'boutique', 'effectifs', 'palmares', 'evenements', 'performance', 'media', 'partenaires', 'annonces', 'contact', 'coaching', 'avis'].forEach(t => {
+            ['comptes', 'boutique', 'effectifs', 'palmares', 'evenements', 'performance', 'media', 'partenaires', 'annonces', 'contact', 'coaching', 'avis', 'site'].forEach(t => {
                 const btn = document.getElementById('tab-btn-' + t);
                 if(btn) {
                     btn.classList.remove('active', 'text-white');
@@ -9645,5 +9739,14 @@ function toggleTheme(){
 }
 document.addEventListener('DOMContentLoaded',()=>applyTheme(currentTheme));
     </script>
+    <div id="site-maintenance-overlay" class="hidden fixed inset-0 z-[95] items-center justify-center p-6 bg-[#050505] text-center" role="status" aria-live="polite">
+        <div class="max-w-xl w-full">
+            <div class="mx-auto mb-7 w-16 h-16 rounded-2xl border border-aerix-purple/40 bg-aerix-purple/10 flex items-center justify-center text-3xl">⚙</div>
+            <p class="text-xs font-black uppercase tracking-[.28em] text-aerix-purple mb-3">AERIX ESPORT</p>
+            <h1 class="text-3xl md:text-5xl font-black text-white mb-5">Site en maintenance</h1>
+            <p id="site-maintenance-overlay-message" class="text-gray-300 leading-relaxed mb-8">Le site AERIX est temporairement en maintenance. Nous revenons bientôt.</p>
+            <button type="button" onclick="openAccountModal(); showAccountLogin()" class="px-5 py-3 rounded-xl border border-white/15 bg-white/5 text-white text-sm font-bold hover:bg-white/10">Connexion administrateur</button>
+        </div>
+    </div>
 </body>
 </html>
