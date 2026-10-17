@@ -4092,7 +4092,7 @@ body.theme-light .partner-card-tile:hover, body.theme-light .partner-featured:ho
   box-shadow:0 0 0 1px rgba(255,255,255,.9), 0 0 14px rgba(255,255,255,.95), 0 6px 22px rgba(17,24,39,.16) !important;
 }
 </style>
-<style id="aerix-site-settings-css">.page-view.site-section-hidden{display:none!important}body.site-maintenance-active{overflow:hidden!important}body.site-maintenance-active>.site-main,body.site-maintenance-active>nav,body.site-maintenance-active>header{pointer-events:none!important}</style>
+<style id="aerix-site-settings-css">.page-view.site-section-hidden{display:none!important}body.site-maintenance-active{overflow:hidden!important}body.site-maintenance-active>*:not(#site-maintenance-overlay){display:none!important}#site-maintenance-overlay{animation:none!important;transition:none!important}#site-maintenance-overlay-message{animation:none!important;opacity:1!important;transform:none!important}</style>
 </head>
 <body class="antialiased selection:bg-purple-500 selection:text-white min-h-screen flex flex-col relative">
 <script id="aerix-early-theme-init">
@@ -4392,16 +4392,17 @@ body.theme-light .partner-card-tile:hover, body.theme-light .partner-featured:ho
                 <h2 class="text-4xl md:text-5xl font-black text-white mb-4">Nos tournois</h2>
                 <p class="text-gray-400 max-w-2xl mx-auto">Retrouve les informations et les liens officiels des tournois organisés par AERIX Esport.</p>
             </div>
-            <section id="aerix-series-card" class="glass-panel rounded-3xl p-6 md:p-9 mb-10 border border-aerix-purple/30 relative overflow-hidden">
-                <div class="absolute inset-0 pointer-events-none opacity-30" style="background:radial-gradient(circle at 90% 10%,rgba(139,92,246,.28),transparent 45%)"></div>
-                <div class="relative flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-                    <div class="max-w-2xl">
-                        <p class="text-xs font-black uppercase tracking-[.24em] text-aerix-purple mb-2">AERIX ESPORT présente</p>
-                        <h3 class="text-3xl md:text-4xl font-black text-white mb-3">AERIX Series <span class="text-aerix-purple">#1</span></h3>
-                        <p class="text-sm md:text-base text-gray-300">Le tournoi Rocket League organisé par AERIX Esport. Retrouve les informations, le suivi et les détails de la compétition sur la page officielle du tournoi.</p>
-                    </div>
-                    <a href="https://liquipedia.net/rocketleague/User:TotoDu2/Aerix_Series/1" target="_blank" rel="noopener noreferrer" class="relative inline-flex items-center justify-center gap-3 px-6 py-4 rounded-xl bg-aerix-purple text-white font-black text-sm hover:opacity-90 transition shadow-lg shrink-0">Voir le tournoi <span aria-hidden="true">↗</span></a>
+            <section id="aerix-series-card" class="glass-panel rounded-3xl p-6 md:p-9 mb-8 border border-aerix-purple/30">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div><p class="text-xs font-black uppercase tracking-[.24em] text-aerix-purple mb-2">AERIX ESPORT PRÉSENTE</p><h3 class="text-3xl md:text-4xl font-black text-white">AERIX Series <span class="text-aerix-purple">#1</span></h3><p class="text-sm text-gray-300 mt-2">Tableau du tournoi mis à jour automatiquement après la saisie des scores.</p></div>
+                    <a href="https://liquipedia.net/rocketleague/User:TotoDu2/Aerix_Series/1" target="_blank" rel="noopener noreferrer" class="inline-flex justify-center gap-2 px-5 py-3 rounded-xl bg-white/10 text-white font-bold text-sm hover:bg-white/15">Page Liquipedia ↗</a>
                 </div>
+            </section>
+            <section class="glass-panel rounded-3xl p-5 md:p-7 mb-8">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-5"><div><p class="text-xs uppercase tracking-widest font-black text-aerix-purple">Bracket officiel</p><h3 class="text-2xl font-black text-white">Tableau à élimination directe</h3><p class="text-sm text-gray-400">8 équipes · quarts de finale · demi-finales · finale</p></div><div id="tournament-admin-actions" class="hidden flex flex-wrap gap-2"><button onclick="saveTournamentBracket()" class="px-4 py-2 rounded-lg bg-aerix-purple text-white font-bold text-sm">Enregistrer le tableau</button><button onclick="resetTournamentBracket()" class="px-4 py-2 rounded-lg bg-white/10 text-white font-bold text-sm">Réinitialiser</button></div></div>
+                <div id="tournament-admin-editor" class="hidden mb-6 p-4 rounded-2xl border border-white/10 bg-black/20"><p class="font-bold text-white mb-3">Configuration des équipes (nom et URL du logo)</p><div id="tournament-team-editor" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div><p class="text-xs text-gray-500 mt-3">Pour les logos, utilise une URL d’image publique. Les scores sont modifiables directement dans le tableau.</p></div>
+                <div id="tournament-bracket" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+                <p id="tournament-status" class="text-xs text-gray-500 mt-4">Chargement du tableau…</p>
             </section>
         </main>
 
@@ -6074,6 +6075,7 @@ body.theme-light .partner-card-tile:hover, body.theme-light .partner-featured:ho
             try {
                 await db.collection('siteConfig').doc('public').set({ hiddenSections, maintenance, maintenanceMessage, updatedAt: firebase.firestore.FieldValue.serverTimestamp(), updatedBy: currentUser.uid }, { merge: true });
                 currentSiteSettings = { hiddenSections, maintenance, maintenanceMessage };
+                try { localStorage.setItem('aerixSiteSettingsCache', JSON.stringify(currentSiteSettings)); } catch(e) {}
                 applySiteSettings();
                 showToast('Réglages du site enregistrés.', 'success');
             } catch (error) {
@@ -6082,10 +6084,42 @@ body.theme-light .partner-card-tile:hover, body.theme-light .partner-featured:ho
             }
         }
 
+        // TABLEAU TOURNOI : données partagées dans Firestore (tournaments/aerix-series-1)
+        const TOURNAMENT_DOC = 'aerix-series-1';
+        let tournamentData = null;
+        const defaultTournament = () => ({ teams: Array.from({length:8}, (_,i)=>({name:`Équipe ${i+1}`,logo:''})), scores: Array.from({length:7},()=>({a:'',b:''})) });
+        function tournamentWinner(matchIndex, a, b, data) {
+            const sc = data.scores?.[matchIndex] || {};
+            if (sc.a === '' || sc.b === '' || sc.a == null || sc.b == null || Number(sc.a) === Number(sc.b)) return null;
+            return Number(sc.a) > Number(sc.b) ? a : b;
+        }
+        function buildTournamentRounds(data) {
+            const teams = data.teams || defaultTournament().teams;
+            const q = Array.from({length:4}, (_,i)=>({a:teams[i*2],b:teams[i*2+1],index:i}));
+            const semi = Array.from({length:2}, (_,i)=>({a:tournamentWinner(i*2,q[i*2].a,q[i*2].b,data),b:tournamentWinner(i*2+1,q[i*2+1].a,q[i*2+1].b,data),index:4+i}));
+            const final = {a:tournamentWinner(4,semi[0].a,semi[0].b,data),b:tournamentWinner(5,semi[1].a,semi[1].b,data),index:6};
+            return [{title:'Quarts de finale',matches:q},{title:'Demi-finales',matches:semi},{title:'Grande finale',matches:[final]}];
+        }
+        function teamMarkup(team) { if(!team) return '<span class="text-gray-600 italic">En attente</span>'; return `${team.logo ? `<img src="${escapeHtml(team.logo)}" alt="" class="w-7 h-7 object-contain rounded-md" onerror="this.style.display='none'">` : '<span class="w-7 h-7 rounded-md bg-white/10 flex items-center justify-center text-[10px]">RL</span>'}<span class="truncate">${escapeHtml(team.name || 'Équipe')}</span>`; }
+        function renderTournamentBracket() {
+            const root=document.getElementById('tournament-bracket'); if(!root) return;
+            const data=tournamentData || defaultTournament(); const rounds=buildTournamentRounds(data);
+            root.innerHTML=rounds.map(round=>`<div class="rounded-2xl bg-black/20 border border-white/10 p-3"><h4 class="text-xs uppercase tracking-widest font-black text-aerix-purple mb-3">${round.title}</h4><div class="space-y-3">${round.matches.map(m=>{const sc=data.scores?.[m.index]||{};const editable=hasAdminAccess();return `<div class="rounded-xl border border-white/10 overflow-hidden"><div class="flex items-center gap-2 px-3 py-2 bg-white/[.03] text-sm text-white">${teamMarkup(m.a)}<span class="ml-auto font-black text-xs text-gray-400">${sc.a!==''&&sc.a!=null?escapeHtml(String(sc.a)):'–'}</span></div><div class="h-px bg-white/10"></div><div class="flex items-center gap-2 px-3 py-2 bg-white/[.03] text-sm text-white">${teamMarkup(m.b)}<span class="ml-auto font-black text-xs text-gray-400">${sc.b!==''&&sc.b!=null?escapeHtml(String(sc.b)):'–'}</span></div>${editable?`<div class="grid grid-cols-2 gap-2 p-2 bg-black/20"><label class="text-[10px] text-gray-500">Score équipe A<input type="number" min="0" max="99" value="${sc.a??''}" onchange="updateTournamentScore(${m.index},'a',this.value)" class="block w-full mt-1 bg-black/40 border border-white/10 rounded-lg px-2 py-1 text-white text-sm"></label><label class="text-[10px] text-gray-500">Score équipe B<input type="number" min="0" max="99" value="${sc.b??''}" onchange="updateTournamentScore(${m.index},'b',this.value)" class="block w-full mt-1 bg-black/40 border border-white/10 rounded-lg px-2 py-1 text-white text-sm"></label></div>`:''}</div>`}).join('')}</div></div>`).join('');
+            const isAdmin=hasAdminAccess(); document.getElementById('tournament-admin-actions')?.classList.toggle('hidden',!isAdmin); document.getElementById('tournament-admin-editor')?.classList.toggle('hidden',!isAdmin);
+            if(isAdmin){const ed=document.getElementById('tournament-team-editor'); if(ed && !ed.dataset.ready){ed.innerHTML=(data.teams||defaultTournament().teams).map((t,i)=>`<div class="grid grid-cols-1 gap-2 rounded-xl border border-white/10 p-3"><label class="text-xs text-gray-400">Équipe ${i+1}<input data-team-name="${i}" value="${escapeHtml(t.name||'')}" maxlength="60" class="block w-full mt-1 bg-black/40 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"></label><label class="text-xs text-gray-400">URL du logo<input data-team-logo="${i}" value="${escapeHtml(t.logo||'')}" placeholder="https://…" class="block w-full mt-1 bg-black/40 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"></label></div>`).join(''); ed.dataset.ready='1';}}
+            const status=document.getElementById('tournament-status'); if(status) status.textContent=isAdmin?'Mode administration : modifie les équipes et saisis les scores. Le vainqueur avance automatiquement au tour suivant.':'Tableau actualisé en direct.';
+        }
+        async function updateTournamentScore(index, side, value){ if(!hasAdminAccess()){showToast('Accès administrateur requis.','error');return;} if(!tournamentData)tournamentData=defaultTournament(); tournamentData.scores[index][side]=value===''?'':String(Math.max(0,Math.min(99,Number(value)||0))); renderTournamentBracket(); try{await db.collection('tournaments').doc(TOURNAMENT_DOC).set({...tournamentData,updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:currentUser.uid});}catch(e){console.error(e);showToast('Impossible d’enregistrer le score. Vérifie les règles Firestore.','error');}}
+        async function saveTournamentBracket(){ if(!isOwner()){showToast('Seul le Owner peut modifier les équipes.','error');return;} const names=[...document.querySelectorAll('[data-team-name]')]; const logos=[...document.querySelectorAll('[data-team-logo]')]; tournamentData=tournamentData||defaultTournament(); tournamentData.teams=names.map((el,i)=>({name:el.value.trim()||`Équipe ${i+1}`,logo:logos[i]?.value.trim()||''})); try{await db.collection('tournaments').doc(TOURNAMENT_DOC).set({...tournamentData,updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:currentUser.uid});showToast('Tableau enregistré.','success');renderTournamentBracket();}catch(e){console.error(e);showToast('Échec de l’enregistrement du tableau. Vérifie les règles Firestore.','error');}}
+        async function resetTournamentBracket(){if(!isOwner())return; if(!confirm('Réinitialiser les équipes et tous les scores ?'))return; tournamentData=defaultTournament(); try{await db.collection('tournaments').doc(TOURNAMENT_DOC).set({...tournamentData,updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:currentUser.uid});renderTournamentBracket();}catch(e){showToast('Échec de la réinitialisation.','error');}}
+        function subscribeTournament(){db.collection('tournaments').doc(TOURNAMENT_DOC).onSnapshot(snap=>{tournamentData=snap.exists?{...defaultTournament(),...snap.data()}:defaultTournament();const ed=document.getElementById('tournament-team-editor');if(ed)ed.dataset.ready='';renderTournamentBracket();},e=>{console.warn('Tournament sync',e);tournamentData=defaultTournament();renderTournamentBracket();});}
+
         // INITIALISATION BDD
         function startSync() {
+            subscribeTournament();
             db.collection('siteConfig').doc('public').onSnapshot(snapshot => {
                 currentSiteSettings = snapshot.exists ? { ...DEFAULT_SITE_SETTINGS, ...snapshot.data() } : { ...DEFAULT_SITE_SETTINGS };
+                try { localStorage.setItem('aerixSiteSettingsCache', JSON.stringify(currentSiteSettings)); } catch(e) {}
                 applySiteSettings();
             }, error => { console.warn('siteConfig indisponible; réglages par défaut appliqués.', error); currentSiteSettings = { ...DEFAULT_SITE_SETTINGS }; applySiteSettings(); });
             db.collection("events").onSnapshot((snapshot) => { globalEvents = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); savePublicCollectionCache("events", globalEvents); renderUpcomingEvents(); renderCompetitionPage(); renderPerformancePage(); }, () => { globalEvents = []; renderUpcomingEvents(); renderCompetitionPage(); renderPerformancePage(); });
@@ -9761,6 +9795,10 @@ function toggleTheme(){
 }
 document.addEventListener('DOMContentLoaded',()=>applyTheme(currentTheme));
     </script>
+    <script>
+    (function(){try{const s=JSON.parse(localStorage.getItem('aerixSiteSettingsCache')||'null');if(s&&s.maintenance){document.documentElement.classList.add('aerix-maintenance-preboot');document.addEventListener('DOMContentLoaded',()=>{const o=document.getElementById('site-maintenance-overlay'),m=document.getElementById('site-maintenance-overlay-message');if(m)m.textContent=s.maintenanceMessage||'Le site AERIX est temporairement en maintenance. Nous revenons bientôt.';if(o){o.classList.remove('hidden');o.classList.add('flex');o.style.display='flex';o.style.visibility='visible';o.style.pointerEvents='auto';}document.body.classList.add('site-maintenance-active');});}}catch(e){}})();
+    </script>
+    <style>.aerix-maintenance-preboot body>*:not(#site-maintenance-overlay){display:none!important}.aerix-maintenance-preboot #site-maintenance-overlay{display:flex!important;visibility:visible!important;animation:none!important}</style>
     <div id="site-maintenance-overlay" class="hidden fixed inset-0 z-[99999] items-center justify-center p-6 bg-[#050505] text-center" role="status" aria-live="polite">
         <div class="max-w-2xl w-full mx-auto">
             <p id="site-maintenance-overlay-message" class="text-lg md:text-2xl font-semibold text-white leading-relaxed">Le site AERIX est temporairement en maintenance. Nous revenons bientôt.</p>
