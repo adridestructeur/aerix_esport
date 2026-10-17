@@ -4092,7 +4092,7 @@ body.theme-light .partner-card-tile:hover, body.theme-light .partner-featured:ho
   box-shadow:0 0 0 1px rgba(255,255,255,.9), 0 0 14px rgba(255,255,255,.95), 0 6px 22px rgba(17,24,39,.16) !important;
 }
 </style>
-<style id="aerix-site-settings-css">.page-view.site-section-hidden{display:none!important}body.site-maintenance-active{overflow:hidden!important}</style>
+<style id="aerix-site-settings-css">.page-view.site-section-hidden{display:none!important}body.site-maintenance-active{overflow:hidden!important}body.site-maintenance-active>.site-main,body.site-maintenance-active>nav,body.site-maintenance-active>header{pointer-events:none!important}</style>
 </head>
 <body class="antialiased selection:bg-purple-500 selection:text-white min-h-screen flex flex-col relative">
 <script id="aerix-early-theme-init">
@@ -4157,6 +4157,7 @@ body.theme-light .partner-card-tile:hover, body.theme-light .partner-featured:ho
                 <button id="nav-effectifs" onclick="navigate('effectifs')" class="nav-btn hover:text-white" data-i18n="nav_effectifs">Effectifs</button>
                 <button id="nav-palmares" onclick="navigate('palmares')" class="nav-btn hover:text-white" data-i18n="nav_palmares">Palmarès</button>
                 <button id="nav-competition" onclick="navigate('competition')" class="nav-btn hover:text-white" data-i18n="nav_competition">Compétition</button>
+                <button id="nav-tournoi" onclick="navigate('tournoi')" class="nav-btn hover:text-white">Tournoi</button>
                 <button id="nav-performance" onclick="navigate('performance')" class="nav-btn hover:text-white" data-i18n="nav_performance">Performance</button>
                 <button id="nav-partenaires" onclick="navigate('partenaires')" class="nav-btn hover:text-white" data-i18n="nav_partenaires">Partenaires</button>
                 <button id="nav-boutique" onclick="navigate('boutique')" class="nav-btn hover:text-white" data-i18n="nav_boutique">Boutique</button>
@@ -4212,6 +4213,7 @@ body.theme-light .partner-card-tile:hover, body.theme-light .partner-featured:ho
             <button onclick="navigate('effectifs'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_effectifs">Effectifs</button>
             <button onclick="navigate('palmares'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_palmares">Palmarès</button>
             <button onclick="navigate('competition'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_competition">Compétition</button>
+            <button onclick="navigate('tournoi'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition">Tournoi</button>
             <button onclick="navigate('performance'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_performance">Performance</button>
             <button onclick="navigate('partenaires'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_partenaires">Partenaires</button>
             <button onclick="navigate('boutique'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_boutique">Boutique</button>
@@ -4365,17 +4367,7 @@ body.theme-light .partner-card-tile:hover, body.theme-light .partner-featured:ho
 
         <!-- 4. COMPÉTITION -->
         <main id="page-competition" class="page-view px-6 max-w-7xl mx-auto">
-            <section id="aerix-series-card" class="glass-panel rounded-3xl p-6 md:p-9 mb-10 border border-aerix-purple/30 relative overflow-hidden">
-                <div class="absolute inset-0 pointer-events-none opacity-30" style="background:radial-gradient(circle at 90% 10%,rgba(139,92,246,.28),transparent 45%)"></div>
-                <div class="relative flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-                    <div class="max-w-2xl">
-                        <p class="text-xs font-black uppercase tracking-[.24em] text-aerix-purple mb-2">AERIX ESPORT présente</p>
-                        <h3 class="text-3xl md:text-4xl font-black text-white mb-3">AERIX Series <span class="text-aerix-purple">#1</span></h3>
-                        <p class="text-sm md:text-base text-gray-300">Le tournoi Rocket League organisé par AERIX Esport. Retrouve les informations, le suivi et les détails de la compétition sur la page officielle du tournoi.</p>
-                    </div>
-                    <a href="https://liquipedia.net/rocketleague/User:TotoDu2/Aerix_Series/1" target="_blank" rel="noopener noreferrer" class="relative inline-flex items-center justify-center gap-3 px-6 py-4 rounded-xl bg-aerix-purple text-white font-black text-sm hover:opacity-90 transition shadow-lg shrink-0">Voir le tournoi <span aria-hidden="true">↗</span></a>
-                </div>
-            </section>
+
             <div class="mb-14 text-center animate-fade-up">
                 <h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2">AERIX COMPETITION</h2>
                 <h3 class="text-4xl font-black text-white mb-4 inline-block transition-transform duration-300 hover:scale-110 hover:text-aerix-purple cursor-default">Compétition</h3>
@@ -4391,6 +4383,26 @@ body.theme-light .partner-card-tile:hover, body.theme-light .partner-featured:ho
                     <div id="competition-results" class="space-y-4"></div>
                 </section>
             </div>
+        </main>
+
+        <!-- PAGE TOURNOI -->
+        <main id="page-tournoi" class="page-view px-6 max-w-7xl mx-auto">
+            <div class="mb-10 text-center animate-fade-up">
+                <p class="text-xs font-black uppercase tracking-[.24em] text-aerix-purple mb-3">AERIX ESPORT · TOURNOI OFFICIEL</p>
+                <h2 class="text-4xl md:text-5xl font-black text-white mb-4">Nos tournois</h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">Retrouve les informations et les liens officiels des tournois organisés par AERIX Esport.</p>
+            </div>
+            <section id="aerix-series-card" class="glass-panel rounded-3xl p-6 md:p-9 mb-10 border border-aerix-purple/30 relative overflow-hidden">
+                <div class="absolute inset-0 pointer-events-none opacity-30" style="background:radial-gradient(circle at 90% 10%,rgba(139,92,246,.28),transparent 45%)"></div>
+                <div class="relative flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+                    <div class="max-w-2xl">
+                        <p class="text-xs font-black uppercase tracking-[.24em] text-aerix-purple mb-2">AERIX ESPORT présente</p>
+                        <h3 class="text-3xl md:text-4xl font-black text-white mb-3">AERIX Series <span class="text-aerix-purple">#1</span></h3>
+                        <p class="text-sm md:text-base text-gray-300">Le tournoi Rocket League organisé par AERIX Esport. Retrouve les informations, le suivi et les détails de la compétition sur la page officielle du tournoi.</p>
+                    </div>
+                    <a href="https://liquipedia.net/rocketleague/User:TotoDu2/Aerix_Series/1" target="_blank" rel="noopener noreferrer" class="relative inline-flex items-center justify-center gap-3 px-6 py-4 rounded-xl bg-aerix-purple text-white font-black text-sm hover:opacity-90 transition shadow-lg shrink-0">Voir le tournoi <span aria-hidden="true">↗</span></a>
+                </div>
+            </section>
         </main>
 
         <!-- 5. PERFORMANCE -->
@@ -4951,6 +4963,7 @@ body.theme-light .partner-card-tile:hover, body.theme-light .partner-featured:ho
                         <label class="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3"><input type="checkbox" data-site-section="effectifs" class="accent-purple-500 w-4 h-4"><span class="text-sm text-white">Effectifs</span></label>
                         <label class="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3"><input type="checkbox" data-site-section="palmares" class="accent-purple-500 w-4 h-4"><span class="text-sm text-white">Palmarès</span></label>
                         <label class="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3"><input type="checkbox" data-site-section="competition" class="accent-purple-500 w-4 h-4"><span class="text-sm text-white">Compétition</span></label>
+                        <label class="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3"><input type="checkbox" data-site-section="tournoi" class="accent-purple-500 w-4 h-4"><span class="text-sm text-white">Tournoi</span></label>
                         <label class="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3"><input type="checkbox" data-site-section="performance" class="accent-purple-500 w-4 h-4"><span class="text-sm text-white">Performance</span></label>
                         <label class="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3"><input type="checkbox" data-site-section="partenaires" class="accent-purple-500 w-4 h-4"><span class="text-sm text-white">Partenaires</span></label>
                         <label class="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3"><input type="checkbox" data-site-section="boutique" class="accent-purple-500 w-4 h-4"><span class="text-sm text-white">Boutique</span></label>
@@ -6015,7 +6028,7 @@ body.theme-light .partner-card-tile:hover, body.theme-light .partner-featured:ho
         // RÉGLAGES GLOBAUX DU SITE (Firestore: siteConfig/public)
         const DEFAULT_SITE_SETTINGS = { hiddenSections: [], maintenance: false, maintenanceMessage: 'Le site AERIX est temporairement en maintenance. Nous revenons bientôt.' };
         let currentSiteSettings = { ...DEFAULT_SITE_SETTINGS };
-        const SITE_SECTION_IDS = ['histoire','effectifs','palmares','competition','performance','partenaires','boutique','annonces','media','coaching'];
+        const SITE_SECTION_IDS = ['histoire','effectifs','palmares','competition','tournoi','performance','partenaires','boutique','annonces','media','coaching'];
         function applySiteSettings() {
             const hidden = new Set(Array.isArray(currentSiteSettings.hiddenSections) ? currentSiteSettings.hiddenSections : []);
             SITE_SECTION_IDS.forEach(id => {
@@ -6028,9 +6041,18 @@ body.theme-light .partner-card-tile:hover, body.theme-light .partner-featured:ho
             });
             const overlay = document.getElementById('site-maintenance-overlay');
             const message = document.getElementById('site-maintenance-overlay-message');
-            const blocked = !!currentSiteSettings.maintenance && !hasAdminAccess();
+            const maintenancePreview = new URLSearchParams(window.location.search).get('maintenancePreview') === '1' && hasAdminAccess();
+            const blocked = !!currentSiteSettings.maintenance && !maintenancePreview;
+            // Le mode maintenance masque le site à tout le monde. Un administrateur connecté
+            // peut ajouter ?maintenancePreview=1 à l'URL pour reprendre la main sur le site.
             if (message) message.textContent = currentSiteSettings.maintenanceMessage || DEFAULT_SITE_SETTINGS.maintenanceMessage;
-            if (overlay) { overlay.classList.toggle('hidden', !blocked); overlay.classList.toggle('flex', blocked); }
+            if (overlay) {
+                overlay.classList.toggle('hidden', !blocked);
+                overlay.classList.toggle('flex', blocked);
+                overlay.style.display = blocked ? 'flex' : 'none';
+                overlay.style.visibility = blocked ? 'visible' : 'hidden';
+                overlay.style.pointerEvents = blocked ? 'auto' : 'none';
+            }
             document.body.classList.toggle('site-maintenance-active', blocked);
             if (document.getElementById('site-maintenance-enabled')) document.getElementById('site-maintenance-enabled').checked = !!currentSiteSettings.maintenance;
             if (document.getElementById('site-maintenance-message')) document.getElementById('site-maintenance-message').value = currentSiteSettings.maintenanceMessage || DEFAULT_SITE_SETTINGS.maintenanceMessage;
@@ -9739,13 +9761,9 @@ function toggleTheme(){
 }
 document.addEventListener('DOMContentLoaded',()=>applyTheme(currentTheme));
     </script>
-    <div id="site-maintenance-overlay" class="hidden fixed inset-0 z-[95] items-center justify-center p-6 bg-[#050505] text-center" role="status" aria-live="polite">
-        <div class="max-w-xl w-full">
-            <div class="mx-auto mb-7 w-16 h-16 rounded-2xl border border-aerix-purple/40 bg-aerix-purple/10 flex items-center justify-center text-3xl">⚙</div>
-            <p class="text-xs font-black uppercase tracking-[.28em] text-aerix-purple mb-3">AERIX ESPORT</p>
-            <h1 class="text-3xl md:text-5xl font-black text-white mb-5">Site en maintenance</h1>
-            <p id="site-maintenance-overlay-message" class="text-gray-300 leading-relaxed mb-8">Le site AERIX est temporairement en maintenance. Nous revenons bientôt.</p>
-            <button type="button" onclick="openAccountModal(); showAccountLogin()" class="px-5 py-3 rounded-xl border border-white/15 bg-white/5 text-white text-sm font-bold hover:bg-white/10">Connexion administrateur</button>
+    <div id="site-maintenance-overlay" class="hidden fixed inset-0 z-[99999] items-center justify-center p-6 bg-[#050505] text-center" role="status" aria-live="polite">
+        <div class="max-w-2xl w-full mx-auto">
+            <p id="site-maintenance-overlay-message" class="text-lg md:text-2xl font-semibold text-white leading-relaxed">Le site AERIX est temporairement en maintenance. Nous revenons bientôt.</p>
         </div>
     </div>
 </body>
