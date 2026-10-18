@@ -4094,52 +4094,38 @@ body.theme-light .partner-card-tile:hover, body.theme-light .partner-featured:ho
 </style>
 <style id="aerix-site-settings-css">.page-view.site-section-hidden{display:none!important}body.site-maintenance-active{overflow:hidden!important}body.site-maintenance-active>*:not(#site-maintenance-overlay){display:none!important}#site-maintenance-overlay{animation:none!important;transition:none!important}#site-maintenance-overlay-message{animation:none!important;opacity:1!important;transform:none!important}</style>
 
-<style id="aerix-tournament-pro-style">
-.tournament-shell{background:linear-gradient(145deg,rgba(24,24,28,.98),rgba(10,10,12,.98));border:1px solid rgba(255,255,255,.12);border-radius:18px;overflow:hidden;box-shadow:0 18px 55px rgba(0,0,0,.22)}
-.tournament-toolbar{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:25px 28px;border-bottom:1px solid rgba(255,255,255,.08);background:linear-gradient(90deg,rgba(139,92,246,.10),transparent 55%)}
-.tournament-kicker{font-size:10px;font-weight:800;letter-spacing:.19em;color:#a78bfa;margin-bottom:7px}
-.tournament-heading{font-size:clamp(23px,3vw,32px);line-height:1.15;font-weight:850;letter-spacing:-.035em;color:#fff}
-.tournament-subtitle{margin-top:9px;font-size:12px;color:#96969f}.tournament-subtitle span{color:#a78bfa;margin:0 7px}
-.tournament-actions{display:flex;gap:8px;flex-wrap:wrap}.tournament-actions button{font-size:12px;font-weight:750;padding:10px 14px;border-radius:8px;transition:background .15s}.tournament-save{background:#a78bfa;color:#100c19}.tournament-save:hover{background:#c4b5fd}.tournament-reset{background:rgba(255,255,255,.07);color:#ddd;border:1px solid rgba(255,255,255,.1)}.tournament-reset:hover{background:rgba(255,255,255,.12)}
-.tournament-editor{margin:20px 24px 0;padding:18px;background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.09);border-radius:12px}.tournament-editor-title{font-size:13px;font-weight:800;color:#f4f4f5;margin-bottom:14px}.tournament-editor-title span{font-weight:400;color:#777782;margin-left:8px}.tournament-editor label{font-size:10px!important;letter-spacing:.02em}.tournament-editor input{border-radius:7px!important;background:#0b0b0d!important;border-color:#33333b!important}.tournament-help{font-size:10px;color:#777782;margin-top:12px}
-.tournament-bracket-viewport{overflow-x:auto;padding:26px 24px 30px;scrollbar-color:#444 #151518;scrollbar-width:thin}.tournament-bracket{display:grid;grid-template-columns:minmax(220px,1fr) minmax(220px,1fr) minmax(220px,1fr);gap:42px;min-width:740px;align-items:stretch}
-.tournament-round{position:relative;display:flex;flex-direction:column;min-width:0}.tournament-round-head{display:flex;align-items:center;gap:10px;margin-bottom:18px;padding-bottom:11px;border-bottom:1px solid rgba(255,255,255,.11)}.tournament-round-num{display:grid;place-items:center;width:25px;height:25px;border-radius:7px;background:rgba(167,139,250,.15);border:1px solid rgba(167,139,250,.25);font-size:10px;font-weight:850;color:#c4b5fd}.tournament-round-name{font-size:11px;font-weight:850;letter-spacing:.12em;text-transform:uppercase;color:#e7e7eb}.tournament-round-count{margin-left:auto;font-size:10px;color:#696974}
-.tournament-round-matches{display:flex;flex-direction:column;justify-content:space-around;gap:22px;flex:1}.tournament-match{position:relative;border:1px solid #303036;background:linear-gradient(110deg,#1a1a1e,#141416);border-radius:9px;overflow:visible;transition:border-color .16s,transform .16s}.tournament-match:hover{border-color:rgba(167,139,250,.55);transform:translateY(-1px)}.tournament-match:after{content:"";position:absolute;right:-22px;top:50%;width:21px;border-top:1px solid #45454d}.tournament-round:last-child .tournament-match:after{display:none}
-.tournament-team-row{display:flex;align-items:center;gap:9px;min-height:39px;padding:7px 10px;color:#d9d9df;font-size:12px}.tournament-team-row+ .tournament-team-row{border-top:1px solid rgba(255,255,255,.065)}.tournament-team-row.is-winner{background:rgba(167,139,250,.09);color:#fff}.tournament-team-row.is-winner .tournament-team-name{font-weight:800}.tournament-team-logo{width:22px;height:22px;flex:0 0 22px;object-fit:contain;border-radius:5px;background:#242429;padding:2px}.tournament-team-placeholder{width:22px;height:22px;flex:0 0 22px;border-radius:5px;display:grid;place-items:center;background:#29292f;color:#858590;font-size:9px;font-weight:900}.tournament-team-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.tournament-score{margin-left:auto;min-width:20px;text-align:right;font-size:12px;font-weight:850;color:#8e8e99;font-variant-numeric:tabular-nums}.tournament-team-row.is-winner .tournament-score{color:#c4b5fd}.tournament-score-editor{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:9px;background:rgba(0,0,0,.2);border-top:1px solid rgba(255,255,255,.06)}.tournament-score-editor label{font-size:9px;color:#777782}.tournament-score-editor input{width:100%;margin-top:4px;background:#09090b;border:1px solid #34343b;border-radius:6px;padding:6px 8px;color:white;font-size:12px;outline:none}.tournament-score-editor input:focus{border-color:#a78bfa}.tournament-round:nth-child(2) .tournament-round-matches{padding-top:38px;padding-bottom:38px}.tournament-round:nth-child(3) .tournament-round-matches{padding-top:125px;padding-bottom:125px}.tournament-footer{display:flex;align-items:center;gap:9px;padding:13px 25px;border-top:1px solid rgba(255,255,255,.07);background:rgba(0,0,0,.16)}.tournament-footer p{font-size:10px;color:#777782}.live-dot{width:6px;height:6px;border-radius:50%;background:#a78bfa;box-shadow:0 0 9px rgba(167,139,250,.7)}
-@media(max-width:700px){.tournament-toolbar{padding:20px;align-items:flex-start;flex-direction:column}.tournament-bracket-viewport{padding:20px 16px}.tournament-bracket{gap:30px;min-width:720px}.tournament-round:nth-child(2) .tournament-round-matches{padding-top:28px;padding-bottom:28px}.tournament-round:nth-child(3) .tournament-round-matches{padding-top:100px;padding-bottom:100px}.tournament-editor{margin:16px 14px 0;padding:13px}}
-
-.tournament-day-tabs{display:flex;gap:10px;padding:16px 24px 0}.tournament-day-tab{flex:1;text-align:left;padding:13px 16px;border:1px solid #34343b;border-radius:9px;background:#151518;color:#a1a1aa;font-size:11px;font-weight:900;letter-spacing:.1em}.tournament-day-tab span{display:block;font-size:10px;letter-spacing:0;font-weight:500;margin-top:5px;color:#777782}.tournament-day-tab.active{border-color:#a78bfa;background:rgba(139,92,246,.12);color:#fff}.tournament-day-tab.active span{color:#c4b5fd}.tournament-group-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;min-width:900px}.tournament-group-panel{border:1px solid #303036;border-radius:12px;padding:15px;background:rgba(0,0,0,.15);min-width:0}.tournament-group-title{display:flex;align-items:center;justify-content:space-between;font-size:18px;font-weight:900;color:#fff;margin-bottom:5px}.tournament-group-subtitle{font-size:10px;color:#777782;margin-bottom:16px}.tournament-stage-grid{display:grid;grid-template-columns:repeat(3,minmax(150px,1fr));gap:12px}.tournament-stage-col{min-width:0}.tournament-stage-label{font-size:9px;text-transform:uppercase;letter-spacing:.08em;font-weight:850;color:#a1a1aa;background:#242428;border-radius:5px;padding:8px;margin-bottom:10px;text-align:center}.tournament-stage-list{display:flex;flex-direction:column;gap:10px}.tournament-stage-list .tournament-match:after{display:none}.tournament-stage-list .tournament-match{border-radius:5px}.tournament-stage-list .tournament-team-row{min-height:29px;padding:5px 7px;font-size:10px;gap:6px}.tournament-stage-list .tournament-team-logo,.tournament-stage-list .tournament-team-placeholder{width:18px;height:18px;flex-basis:18px}.tournament-stage-list .tournament-score{font-size:10px;min-width:12px}.tournament-stage-list .tournament-score-editor{padding:6px;gap:5px}.tournament-stage-list .tournament-score-editor input{padding:4px;font-size:10px}.tournament-qualification{margin-top:14px;padding:10px;border-radius:7px;background:#111114;border:1px solid #2e2e35}.tournament-qualification h5{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:#a78bfa;font-weight:900;margin-bottom:7px}.tournament-qualified-row{display:flex;gap:8px;align-items:center;padding:6px 0;border-top:1px solid #242429;font-size:10px;color:#d4d4d8}.tournament-qualified-row b{color:#a78bfa;width:20px}.tournament-playoffs{display:grid;grid-template-columns:repeat(3,minmax(180px,1fr));gap:22px;min-width:680px}.tournament-playoff-round{display:flex;flex-direction:column;gap:15px}.tournament-playoff-title{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.12em;color:#ddd;padding:10px;background:#242428;border-radius:5px;text-align:center}.tournament-playoff-round:nth-child(2){padding-top:70px}.tournament-playoff-round:nth-child(3){padding-top:170px}.tournament-match-note{font-size:9px;color:#73737d;padding:5px 8px;border-top:1px solid #242429}.tournament-day-panel[hidden]{display:none!important}@media(max-width:700px){.tournament-day-tabs{padding:12px 14px 0}.tournament-day-tab{padding:11px}.tournament-group-grid{gap:12px}.tournament-group-panel{padding:10px}.tournament-stage-grid{gap:7px}.tournament-playoff-round:nth-child(2){padding-top:50px}.tournament-playoff-round:nth-child(3){padding-top:120px}}
+<style id="aerix-tournament-liquipedia">
+.tn{--tn-bg:#101012;--tn-box:#1a1a1d;--tn-box2:#232327;--tn-line:#55555e;--tn-border:#303035;--tn-head:#27272b;--tn-text:#e8e8ec;--tn-muted:#8b8b95;--tn-accent:var(--aerix-accent,#8B5CF6);--tn-accent-rgb:var(--aerix-accent-rgb,139,92,246);background:var(--tn-bg);border:1px solid var(--tn-border);border-radius:14px;padding:26px 24px 18px;color:var(--tn-text)}
+body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;--tn-box2:#eeeef2;--tn-line:#a8a8b3;--tn-border:#d6d6dd;--tn-head:#e6e6ec;--tn-text:#1f2430;--tn-muted:#6b7280}
+.tn-head{margin-bottom:26px}.tn-kicker{font-size:10px;font-weight:800;letter-spacing:.2em;color:var(--tn-accent);margin-bottom:6px}.tn-title{font-size:clamp(22px,3vw,30px);font-weight:900;letter-spacing:-.03em;color:var(--tn-text);line-height:1.1}.tn-sub{margin-top:8px;font-size:12px;color:var(--tn-muted)}
+.tn-block+.tn-block{margin-top:34px}
+.tn-section-title{line-height:1.2;display:flex;align-items:center;gap:10px;font-size:20px;font-weight:800;color:var(--tn-text);margin:0 0 16px}.tn-section-title:before{content:"";width:4px;height:19px;border-radius:2px;background:var(--tn-accent)}
+.tn-groups{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:30px 34px}
+@media(max-width:1239px){.tn-groups{grid-template-columns:minmax(0,1fr)}}
+.tn-group-head{display:flex;align-items:center;justify-content:space-between;margin:0 0 14px;padding-bottom:8px;line-height:1.2;border-bottom:1px solid var(--tn-border)}.tn-group-head h5{font-size:15px;font-weight:800;color:var(--tn-text);margin:0;line-height:1.2}.tn-group-head span{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--tn-muted)}
+.tn-scroll{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;padding-bottom:10px;scrollbar-width:thin;scrollbar-color:var(--tn-border) transparent}
+.tn-canvas{position:relative}
+.tn-lines{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
+.tn-lines path{fill:none;stroke:var(--tn-line);stroke-width:1.5;shape-rendering:crispEdges;stroke-linejoin:round}
+.tn-lines path.on{stroke:var(--tn-accent)}
+.tn-colhead{position:absolute;width:124px;height:24px;display:flex;align-items:center;justify-content:center;background:var(--tn-head);color:var(--tn-text);font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;border-radius:3px;white-space:nowrap}
+.tn-match,.tn-qual{position:absolute;width:124px;box-sizing:border-box;background:var(--tn-box);border:1px solid var(--tn-border);border-radius:3px;overflow:hidden;transition:border-color .15s}
+.tn-match{height:44px;display:flex;flex-direction:column}.tn-match:hover{border-color:rgba(var(--tn-accent-rgb),.75)}
+.tn-row{flex:1;min-height:0;display:flex;align-items:center;gap:6px;padding-left:6px;font-size:11.5px;color:var(--tn-muted);min-width:0}
+.tn-row+.tn-row{border-top:1px solid var(--tn-border)}
+.tn-row.win{color:var(--tn-text);font-weight:700;background:rgba(var(--tn-accent-rgb),.12)}.tn-row.lose{opacity:.6}
+.tn-logo,.tn-logo-ph{width:15px;height:15px;flex:0 0 15px;object-fit:contain}.tn-logo-ph{border-radius:3px;background:var(--tn-box2)}
+.tn-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.tn-name.ph{font-style:italic;font-weight:400;opacity:.85}
+.tn-score{align-self:stretch;width:24px;display:flex;align-items:center;justify-content:center;background:var(--tn-box2);border-left:1px solid var(--tn-border);font-size:11.5px;font-weight:800;font-variant-numeric:tabular-nums}
+.tn-row.win .tn-score{background:var(--tn-accent);color:#fff;border-left-color:var(--tn-accent)}
+.tn-qual{height:26px;display:flex;align-items:center;gap:6px;padding:0 6px;font-size:11.5px;color:var(--tn-muted)}.tn-qual.filled{color:var(--tn-text);font-weight:700;border-color:rgba(var(--tn-accent-rgb),.7);background:rgba(var(--tn-accent-rgb),.10)}
+.tn-qual.champ{height:30px;border-color:var(--tn-accent);background:rgba(var(--tn-accent-rgb),.16);color:var(--tn-text);font-weight:800}
+.tn-hint{display:none;font-size:10px;color:var(--tn-muted);text-align:center;margin:2px 0 0}
+@media(max-width:700px){.tn{padding:20px 14px 14px;border-radius:12px}.tn-hint{display:block}}
+.tn-footer{display:flex;align-items:center;gap:9px;margin-top:22px;padding-top:14px;border-top:1px solid var(--tn-border)}.tn-footer p{font-size:11px;color:var(--tn-muted)}.tn-live{width:6px;height:6px;border-radius:50%;background:var(--tn-accent);box-shadow:0 0 8px rgba(var(--tn-accent-rgb),.7)}
 </style>
 
 
-<style id="aerix-liquipedia-bracket-overrides">
-.tournament-group-tabs{display:flex;gap:8px;margin:14px 0 16px;align-items:center}
-.tournament-group-tab{background:#242428;border:1px solid #34343a;color:#c8c8ce;padding:9px 24px;border-radius:5px;font-size:11px;font-weight:850;letter-spacing:.08em;transition:background .15s,border-color .15s}
-.tournament-group-tab:hover{border-color:#8b5cf6}.tournament-group-tab.active{background:#6d28d9;border-color:#8b5cf6;color:#fff}
-.tournament-bracket-viewport{overflow-x:auto;overflow-y:hidden;padding:0 0 12px}
-.tournament-group-grid{display:block;min-width:0}
-.tournament-group-panel{padding:0;border:0;border-radius:0;background:transparent;min-width:1160px}
-.tournament-group-panel-head{display:flex;align-items:baseline;justify-content:space-between;margin:0 0 12px}
-.tournament-group-panel-head .tournament-group-title{font-size:19px;margin:0;color:#e4e4e7}
-.tournament-group-panel-head>span{font-size:10px;color:#888894;font-weight:700;letter-spacing:.1em}
-.tournament-liquipedia-grid{display:grid;grid-template-columns:120px 120px 120px 120px 120px 120px 120px 120px;gap:12px;align-items:start;min-width:1044px}
-.tournament-liquipedia-grid .tournament-stage-col{min-width:0}
-.tournament-liquipedia-grid .tournament-stage-label{height:31px;display:flex;align-items:center;justify-content:center;padding:4px 5px;font-size:9px;letter-spacing:0;background:#28282b;color:#ddd;border-radius:2px;margin-bottom:8px;white-space:normal;line-height:1.1}
-.tournament-liquipedia-grid .tournament-stage-list{gap:10px}
-.tournament-liquipedia-grid .tournament-stage-list .tournament-match{background:#151516;border:1px solid #303034;border-radius:0;box-shadow:none}
-.tournament-liquipedia-grid .tournament-stage-list .tournament-team-row{min-height:20px;padding:3px 5px;font-size:9px;background:#19191a;border-bottom:1px solid #29292c}
-.tournament-liquipedia-grid .tournament-stage-list .tournament-team-row:last-of-type{border-bottom:0}
-.tournament-liquipedia-grid .tournament-stage-list .tournament-team-logo,.tournament-liquipedia-grid .tournament-stage-list .tournament-team-placeholder{width:14px;height:14px;flex-basis:14px}
-.tournament-liquipedia-grid .tournament-stage-list .tournament-score{font-size:9px;min-width:10px}
-.tournament-liquipedia-grid .tournament-stage-list .tournament-score-editor{padding:4px;gap:3px;grid-template-columns:1fr 1fr}
-.tournament-liquipedia-grid .tournament-stage-list .tournament-score-editor label{font-size:8px}
-.tournament-liquipedia-grid .tournament-stage-list .tournament-score-editor input{padding:3px;font-size:9px;min-width:0}
-.tournament-liquipedia-grid .tournament-stage-list .tournament-match-note{font-size:8px;padding:3px;color:#7d7d86}
-.tournament-qual-slot{min-height:43px;background:#19191a;border:1px solid #303034;margin-bottom:10px;display:flex;flex-direction:column;justify-content:center;padding:5px;gap:3px}
-.tournament-qual-slot .tournament-team-row{min-height:18px!important;padding:0!important;background:transparent!important;border:0!important;font-size:9px!important}
-.tournament-qual-slot>span{font-size:8px;color:#777782}
-@media(max-width:700px){.tournament-liquipedia-grid{grid-template-columns:repeat(8,120px)}.tournament-group-panel{min-width:1044px}.tournament-group-tabs{position:sticky;left:0}}
-</style>
 </head>
 <body class="antialiased selection:bg-purple-500 selection:text-white min-h-screen flex flex-col relative">
 <script id="aerix-early-theme-init">
@@ -4445,11 +4431,11 @@ body.theme-light .partner-card-tile:hover, body.theme-light .partner-featured:ho
                     <a href="https://liquipedia.net/rocketleague/User:TotoDu2/Aerix_Series/1" target="_blank" rel="noopener noreferrer" class="inline-flex justify-center gap-2 px-5 py-3 rounded-xl bg-white/10 text-white font-bold text-sm hover:bg-white/15">Page Liquipedia ↗</a>
                 </div>
             </section>
-            <section class="tournament-shell mb-8">
-                <div class="tournament-toolbar"><div><p class="tournament-kicker">AERIX SERIES · OFFICIAL BRACKET</p><h3 class="tournament-heading">Tableau du tournoi</h3><p class="tournament-subtitle">16 équipes <span>•</span> Day 1 : Group Stage <span>•</span> Day 2 : Playoffs</p></div><div id="tournament-admin-actions" class="hidden tournament-actions"><button onclick="saveTournamentBracket()" class="tournament-save">Enregistrer</button><button onclick="resetTournamentBracket()" class="tournament-reset">Réinitialiser</button></div></div>
-                <div id="tournament-admin-editor" class="hidden tournament-editor"><div class="tournament-editor-title">Configuration des équipes <span>Nom et logo public</span></div><div id="tournament-team-editor" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div><p class="tournament-help">Ajoute le nom de chaque équipe et l’URL directe de son logo. Les scores se saisissent dans les matchs.</p></div>
-                <div class="tournament-day-tabs"><button class="tournament-day-tab active" onclick="showTournamentDay(1,this)">DAY 1 <span>Group Stage</span></button><button class="tournament-day-tab" onclick="showTournamentDay(2,this)">DAY 2 <span>Playoffs</span></button></div><div id="tournament-group-tabs" class="tournament-group-tabs"><button class="tournament-group-tab active" onclick="showTournamentGroup(0,this)">GROUP A</button><button class="tournament-group-tab" onclick="showTournamentGroup(1,this)">GROUP B</button></div><div class="tournament-bracket-viewport"><div id="tournament-bracket" class="tournament-bracket tournament-groups" data-day="1" data-group="0"></div></div>
-                <div class="tournament-footer"><span class="live-dot"></span><p id="tournament-status">Synchronisation du tableau…</p></div>
+            <section id="tournament-board" class="tn mb-8">
+                <div class="tn-head"><p class="tn-kicker">AERIX SERIES · OFFICIAL BRACKET</p><h3 class="tn-title">Tableau du tournoi</h3><p class="tn-sub">16 équipes · Group Stage (double élimination) · Playoffs</p></div>
+                <div class="tn-block"><h4 class="tn-section-title">Group Stage</h4><div id="tournament-groups" class="tn-groups"></div></div>
+                <div class="tn-block"><h4 class="tn-section-title">Playoffs</h4><div id="tournament-playoffs"></div></div>
+                <div class="tn-footer"><span class="tn-live"></span><p id="tournament-status">Synchronisation du tableau…</p></div>
             </section>
         </main>
 
@@ -4992,6 +4978,7 @@ body.theme-light .partner-card-tile:hover, body.theme-light .partner-featured:ho
                 <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('effectifs')" id="tab-btn-effectifs" class="admin-tab-btn flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10">Effectifs</button>
                 <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('palmares')" id="tab-btn-palmares" class="admin-tab-btn flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10">Résultats</button>
                 <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('evenements')" id="tab-btn-evenements" class="admin-tab-btn flex-1 min-w-[120px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10">Compétition</button>
+                <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('tournois')" id="tab-btn-tournois" class="admin-tab-btn flex-1 min-w-[118px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10">Tournois</button>
                 <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('performance')" id="tab-btn-performance" class="admin-tab-btn flex-1 min-w-[118px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10">Performance</button>
                 <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('media')" id="tab-btn-media" class="admin-tab-btn flex-1 min-w-[118px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10">Média</button>
                 <button type="button" draggable="true" ondragstart="dragTab(event)" ondrop="dropTab(event)" ondragover="allowDropTab(event)" ondragend="dragEndTab(event)" onclick="switchAdminTab('annonces')" id="tab-btn-annonces" class="admin-tab-btn flex-1 min-w-[100px] py-3 text-xs font-bold rounded-xl text-gray-400 hover:text-white transition cursor-pointer relative z-10">Actualités</button>
@@ -5318,6 +5305,40 @@ body.theme-light .partner-card-tile:hover, body.theme-light .partner-featured:ho
                     <button type="button" id="event-drop-zone" onclick="document.getElementById('event-img-input').click()" class="bg-white/5 border border-dashed border-white/20 text-gray-400 hover:text-white hover:border-white/40 text-xs font-bold px-4 py-4 rounded-xl w-full mb-6 transition">+ Ajouter une image de l'événement (16:9) — ou glisser-déposer ici</button>
                     <input type="file" id="event-img-input" accept="image/*" class="hidden">
                     <div class="flex gap-3"><button id="event-cancel-btn" type="button" onclick="resetEventForm()" class="hidden px-6 py-3.5 bg-white/5 border border-white/10 hover:bg-white/10 text-white rounded-xl text-sm font-bold transition">Annuler</button><button type="button" onclick="saveEvent()" class="flex-1 bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition shadow-[0_0_15px_rgba(139,92,246,0.3)]">Enregistrer l'événement</button></div>
+                </div>
+            </div>
+
+            <!-- TAB: TOURNOIS -->
+            <div id="admin-tab-tournois" class="admin-tab hidden space-y-8">
+                <div class="glass-panel glass-panel-form p-6 rounded-2xl border border-white/5">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                        <div>
+                            <h4 class="text-lg font-bold text-white mb-1">Tournoi · AERIX Series #1</h4>
+                            <p class="text-xs text-gray-500">Les équipes et les scores se gèrent uniquement ici. Chaque score saisi est enregistré dans Firestore et les vainqueurs avancent automatiquement dans le tableau public.</p>
+                        </div>
+                        <div id="admin-tournament-owner-actions" class="flex flex-wrap gap-2">
+                            <button type="button" onclick="saveTournamentBracket()" class="px-4 py-2.5 rounded-xl bg-aerix-purple text-white text-xs font-bold hover:opacity-90 transition">Enregistrer les équipes</button>
+                            <button type="button" onclick="resetTournamentScores()" class="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-gray-300 text-xs font-bold hover:bg-white/10 transition">Effacer les scores</button>
+                            <button type="button" onclick="resetTournamentBracket()" class="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-gray-300 text-xs font-bold hover:bg-white/10 transition">Tout réinitialiser</button>
+                        </div>
+                    </div>
+                    <p id="admin-tournament-status" class="text-[11px] text-gray-500 mt-3"></p>
+                </div>
+                <div class="glass-panel glass-panel-form p-6 rounded-2xl border border-white/5">
+                    <h5 class="text-sm font-bold text-white mb-1">Équipes</h5>
+                    <p id="admin-tournament-teams-note" class="text-xs text-gray-500 mb-5"></p>
+                    <div id="admin-tournament-teams" class="grid grid-cols-1 lg:grid-cols-2 gap-6"></div>
+                </div>
+                <div class="glass-panel glass-panel-form p-6 rounded-2xl border border-white/5">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-5">
+                        <div><h5 class="text-sm font-bold text-white mb-1">Scores des matchs</h5><p class="text-xs text-gray-500">Un match devient saisissable dès que ses deux équipes sont connues. Les scores égaux ne désignent pas de vainqueur.</p></div>
+                        <div class="flex gap-2">
+                            <button type="button" data-tn-stage="A" onclick="setAdminTournamentStage('A')" class="px-4 py-2 rounded-xl text-xs font-bold transition">Group A</button>
+                            <button type="button" data-tn-stage="B" onclick="setAdminTournamentStage('B')" class="px-4 py-2 rounded-xl text-xs font-bold transition">Group B</button>
+                            <button type="button" data-tn-stage="P" onclick="setAdminTournamentStage('P')" class="px-4 py-2 rounded-xl text-xs font-bold transition">Playoffs</button>
+                        </div>
+                    </div>
+                    <div id="admin-tournament-matches" class="space-y-7"></div>
                 </div>
             </div>
 
@@ -6157,37 +6178,183 @@ body.theme-light .partner-card-tile:hover, body.theme-light .partner-featured:ho
         function getTournamentMatchResult(id,data,defs,stack=new Set()) {if(!id||stack.has(id))return {winner:null,loser:null};stack.add(id);const m=defs.byId[id];if(!m)return {winner:null,loser:null};const a=resolveTournamentSlot(m.a,data,defs,stack),b=resolveTournamentSlot(m.b,data,defs,stack);const sc=data.scores?.[id]||{};let winner=null,loser=null;if(a&&b&&sc.a!==''&&sc.b!==''&&sc.a!=null&&sc.b!=null&&Number(sc.a)!==Number(sc.b)){winner=Number(sc.a)>Number(sc.b)?a:b;loser=winner===a?b:a;}stack.delete(id);return {a,b,winner,loser,score:sc};}
         function resolveTournamentSlot(slot,data,defs,stack=new Set()){if(!slot)return null;if(slot.teamIndex!=null)return data.teams?.[slot.teamIndex]||null;if(slot.winner||slot.loser){const r=getTournamentMatchResult(slot.winner||slot.loser,data,defs,new Set(stack));return slot.winner?r.winner:r.loser;}if(slot.rank){const ranks=getGroupRanks(slot.rank.group,data,defs);return ranks[slot.rank.place-1]||null;}return null;}
         function getGroupRanks(group,data,defs){const p=`g${group}`;const final=getTournamentMatchResult(`${p}uf`,data,defs);const lower=getTournamentMatchResult(`${p}lf`,data,defs);return [final.winner||null,final.loser||null,lower.winner||null];}
-        function teamMarkup(team){if(!team)return '<span class="text-gray-600 italic">En attente</span>';return `${team.logo?`<img src="${escapeHtml(team.logo)}" alt="" class="tournament-team-logo" onerror="this.style.display='none'">`:'<span class="tournament-team-placeholder">RL</span>'}<span class="tournament-team-name">${escapeHtml(team.name||'Équipe')}</span>`;}
-        function renderTournamentMatch(m,defs,data){const r=getTournamentMatchResult(m.id,data,defs);const admin=hasAdminAccess();const row=(team,side)=>`<div class="tournament-team-row ${r.winner&&team&&r.winner===team?'is-winner':''}">${teamMarkup(team)}<span class="tournament-score">${r.score?.[side]!==''&&r.score?.[side]!=null?escapeHtml(String(r.score[side])):'–'}</span></div>`;return `<div class="tournament-match">${row(r.a,'a')}${row(r.b,'b')}${admin?`<div class="tournament-score-editor"><label>Score A<input type="number" min="0" max="99" aria-label="Score A ${escapeHtml(m.label)}" value="${r.score?.a??''}" onchange="updateTournamentScore('${m.id}','a',this.value)"></label><label>Score B<input type="number" min="0" max="99" aria-label="Score B ${escapeHtml(m.label)}" value="${r.score?.b??''}" onchange="updateTournamentScore('${m.id}','b',this.value)"></label></div>`:`<div class="tournament-match-note">${escapeHtml(m.label)}</div>`}</div>`;}
-        function renderStageColumn(title,matches,defs,data){return `<div class="tournament-stage-col"><div class="tournament-stage-label">${title}</div><div class="tournament-stage-list">${matches.map(m=>renderTournamentMatch(m,defs,data)).join('')}</div></div>`;}
-        function renderGroupPanel(g,defs,data,group){
-          const upper=getTournamentMatchResult(g.ubf[0].id,data,defs).winner;
-          const lower=getTournamentMatchResult(g.lbf[0].id,data,defs).winner;
-          return `<section class="tournament-group-panel"><div class="tournament-group-panel-head"><h4 class="tournament-group-title">${g.title}</h4><span>DAY 1 · GROUP STAGE · 8 TEAMS</span></div><div class="tournament-liquipedia-grid">
-            ${renderStageColumn('UB Quarterfinals',g.ubqf,defs,data)}
-            ${renderStageColumn('UB Semifinals',g.ubsf,defs,data)}
-            ${renderStageColumn('Upper Bracket Final',g.ubf,defs,data)}
-            <div class="tournament-stage-col"><div class="tournament-stage-label">Qualified</div><div class="tournament-qual-slot">${teamMarkup(upper)}<span>Upper bracket winner</span></div><div class="tournament-qual-slot">${teamMarkup(lower)}<span>Lower bracket winner</span></div></div>
-            ${renderStageColumn('LB Quarterfinals',g.lbqf,defs,data)}
-            ${renderStageColumn('LB Semifinals',g.lbsf,defs,data)}
-            ${renderStageColumn('Lower Bracket Final',g.lbf,defs,data)}
-            <div class="tournament-stage-col"><div class="tournament-stage-label">Qualified</div><div class="tournament-qual-slot">${teamMarkup(upper)}<span>Upper bracket</span></div><div class="tournament-qual-slot">${teamMarkup(lower)}<span>Lower bracket</span></div></div>
-          </div></section>`;
+        /* ===== TOURNOI : rendu public façon Liquipedia (lecture seule) ===== */
+        const TN={W:124,GAP:22,H:44,PITCH:60,TOP:34,QH:26};
+        function tnNormalize(){let d=tournamentData||defaultTournament();if(d.schemaVersion!==2||!Array.isArray(d.teams)||d.teams.length!==16)d=defaultTournament();if(!d.scores||Array.isArray(d.scores))d.scores={};return d;}
+        function tnEnsure(){tournamentData=tnNormalize();return tournamentData;}
+        function tnSlotLabel(slot){return slot&&slot.rank?`Group ${slot.rank.group===0?'A':'B'} #${slot.rank.place}`:'';}
+        function tnTeamCell(team,label){
+          if(!team)return `<span class="tn-logo-ph"></span><span class="tn-name ph">${escapeHtml(label||'')}</span>`;
+          const logo=team.logo?`<img class="tn-logo" src="${escapeHtml(team.logo)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">`:'<span class="tn-logo-ph"></span>';
+          return `${logo}<span class="tn-name" title="${escapeHtml(team.name||'')}">${escapeHtml(team.name||'Équipe')}</span>`;
         }
-        function showTournamentGroup(group,button){const root=document.getElementById('tournament-bracket');if(root)root.dataset.group=String(group);document.querySelectorAll('.tournament-group-tab').forEach(b=>b.classList.toggle('active',b===button));renderTournamentBracket(1);}
-        function showTournamentDay(day,button){document.querySelectorAll('.tournament-day-tab').forEach(b=>b.classList.toggle('active',b===button));const root=document.getElementById('tournament-bracket');if(root)root.dataset.day=String(day);document.getElementById('tournament-group-tabs')?.classList.toggle('hidden',String(day)!=='1');renderTournamentBracket(day);}
-        function renderTournamentBracket(forcedDay){const root=document.getElementById('tournament-bracket');if(!root)return;let data=tournamentData||defaultTournament();if(data.schemaVersion!==2||!Array.isArray(data.teams)||data.teams.length!==16)data=defaultTournament();if(!data.scores||Array.isArray(data.scores))data.scores={};const defs=tournamentMatchMap();const day=String(forcedDay||root.dataset.day||'1');root.dataset.day=day;
-          if(day==='1'){const group=Number(root.dataset.group||0)===1?1:0;root.innerHTML=renderGroupPanel(group===0?defs.A:defs.B,defs,data,group);}
-          else {const qf=defs.all.filter(m=>m.id.startsWith('p-qf')),sf=defs.all.filter(m=>m.id.startsWith('p-sf')),final=defs.all.filter(m=>m.id==='p-final');root.innerHTML=`<div class="tournament-playoffs">${[["Quarterfinals",qf],["Semifinals",sf],["Grand Final",final]].map(([title,matches])=>`<div class="tournament-playoff-round"><div class="tournament-playoff-title">${title}</div>${matches.map(m=>renderTournamentMatch(m,defs,data)).join('')}</div>`).join('')}</div>`;}
-          const isAdmin=hasAdminAccess();document.getElementById('tournament-admin-actions')?.classList.toggle('hidden',!isAdmin);document.getElementById('tournament-admin-editor')?.classList.toggle('hidden',!isAdmin);
-          if(isAdmin){const ed=document.getElementById('tournament-team-editor');if(ed&&!ed.dataset.ready){ed.innerHTML=data.teams.map((t,i)=>`<div class="grid grid-cols-1 gap-2 rounded-lg border border-white/10 p-3"><label class="text-xs text-gray-400">${i<8?'Group A':'Group B'} · Équipe ${String(i%8+1).padStart(2,'0')}<input data-team-name="${i}" value="${escapeHtml(t.name||'')}" maxlength="60" class="block w-full mt-1 bg-black/40 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"></label><label class="text-xs text-gray-400">URL du logo<input data-team-logo="${i}" value="${escapeHtml(t.logo||'')}" placeholder="https://exemple.fr/logo.png" class="block w-full mt-1 bg-black/40 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"></label></div>`).join('');ed.dataset.ready='1';}}
-          const status=document.getElementById('tournament-status');if(status)status.textContent=isAdmin?'Administration activée · Day 1 : Group A/B · Day 2 : Playoffs. Les vainqueurs avancent automatiquement.':'Tableau synchronisé · Day 1 : Group Stage · Day 2 : Playoffs.';
+        function tnMatchBox(m,defs,data,x,y){
+          const r=getTournamentMatchResult(m.id,data,defs),sc=r.score||{};
+          const val=v=>v!==''&&v!=null?escapeHtml(String(v)):'';
+          const row=(team,side,slot)=>{const win=!!(r.winner&&team&&r.winner===team),lose=!!(r.winner&&team&&r.loser===team);return `<div class="tn-row${win?' win':''}${lose?' lose':''}">${tnTeamCell(team,tnSlotLabel(slot))}<span class="tn-score">${val(sc[side])}</span></div>`;};
+          return `<div class="tn-match" style="left:${x}px;top:${y}px" title="${escapeHtml(m.label)}">${row(r.a,'a',m.a)}${row(r.b,'b',m.b)}</div>`;
         }
+        function tnQual(team,n,x,y,champ){return `<div class="tn-qual${team?' filled':''}${champ?' champ':''}" style="left:${x}px;top:${y}px">${tnTeamCell(team,champ?'Champion':'#'+n)}</div>`;}
+        function tnCanvas(w,h,inner,paths){return `<div class="tn-scroll"><div class="tn-canvas" style="width:${w}px;height:${h}px"><svg class="tn-lines" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true">${paths.join('')}</svg>${inner}</div></div><p class="tn-hint">← Fais glisser pour voir tout le tableau →</p>`;}
+        function tnGeo(data,defs){
+          const W=TN.W,GAP=TN.GAP,H=TN.H,x=c=>c*(W+GAP);
+          const pos={},boxes=[],paths=[];
+          const won=id=>!!getTournamentMatchResult(id,data,defs).winner;
+          const place=(m,c,top)=>{pos[m.id]={l:x(c),r:x(c)+W,top,cy:top+H/2};boxes.push(tnMatchBox(m,defs,data,x(c),top));};
+          const elbow=(from,to,on)=>{const mx=from.r+GAP/2;return `<path class="${on?'on':''}" d="M${from.r} ${from.cy}H${mx}V${to.cy}H${to.l}"/>`;};
+          const straight=(from,toL,y,on)=>`<path class="${on?'on':''}" d="M${from.r} ${y}H${toL}"/>`;
+          const head=(c,y,t)=>`<div class="tn-colhead" style="left:${x(c)}px;top:${y}px">${t}</div>`;
+          return {W,GAP,H,x,pos,boxes,paths,won,place,elbow,straight,head};
+        }
+        function tnGroupHtml(g,gi,defs,data){
+          const G=tnGeo(data,defs),{H,x,pos,boxes,paths,won,place,elbow,straight,head}=G,heads=[];
+          const y0=TN.TOP;
+          heads.push(head(0,0,'UB Quarterfinals'),head(1,0,'UB Semifinals'),head(2,0,'Upper Bracket Final'),head(3,0,'Qualified'));
+          g.ubqf.forEach((m,i)=>place(m,0,y0+i*TN.PITCH));
+          g.ubsf.forEach((m,i)=>{const a=pos[g.ubqf[2*i].id],b=pos[g.ubqf[2*i+1].id];place(m,1,(a.cy+b.cy)/2-H/2);});
+          {const a=pos[g.ubsf[0].id],b=pos[g.ubsf[1].id];place(g.ubf[0],2,(a.cy+b.cy)/2-H/2);}
+          g.ubqf.forEach((m,i)=>paths.push(elbow(pos[m.id],pos[g.ubsf[i>>1].id],won(m.id))));
+          g.ubsf.forEach(m=>paths.push(elbow(pos[m.id],pos[g.ubf[0].id],won(m.id))));
+          const ranks=getGroupRanks(gi,data,defs),F=pos[g.ubf[0].id],q1=F.cy-14,q2=F.cy+14,qx=x(3),mx=F.r+TN.GAP/2;
+          boxes.push(tnQual(ranks[0],1,qx,q1-TN.QH/2),tnQual(ranks[1],2,qx,q2-TN.QH/2));
+          paths.push(`<path class="${won(g.ubf[0].id)?'on':''}" d="M${F.r} ${F.cy}H${mx}M${mx} ${q1}V${q2}M${mx} ${q1}H${qx}M${mx} ${q2}H${qx}"/>`);
+          const ly=y0+3*TN.PITCH+H+24,lt=ly+TN.TOP;
+          heads.push(head(0,ly,'LB Quarterfinals'),head(1,ly,'LB Semifinals'),head(2,ly,'Lower Bracket Final'),head(3,ly,'Qualified'));
+          g.lbqf.forEach((m,i)=>place(m,0,lt+i*70));
+          g.lbsf.forEach((m,i)=>{const q=pos[g.lbqf[i].id];place(m,1,q.cy-H/4);});
+          {const a=pos[g.lbsf[0].id],b=pos[g.lbsf[1].id];place(g.lbf[0],2,(a.cy+b.cy)/2-H/2);}
+          g.lbqf.forEach((m,i)=>{const q=pos[m.id],s=pos[g.lbsf[i].id];paths.push(straight(q,s.l,q.cy,won(m.id)));paths.push(`<path d="M${s.l-8} ${s.top+H*0.75}H${s.l}"/>`);});
+          g.lbsf.forEach(m=>paths.push(elbow(pos[m.id],pos[g.lbf[0].id],won(m.id))));
+          const LF=pos[g.lbf[0].id];
+          boxes.push(tnQual(ranks[2],3,qx,LF.cy-TN.QH/2));
+          paths.push(straight(LF,qx,LF.cy,won(g.lbf[0].id)));
+          return tnCanvas(4*G.W+3*G.GAP,lt+70+H+4,heads.join('')+boxes.join(''),paths);
+        }
+        function tnPlayoffsHtml(defs,data){
+          const G=tnGeo(data,defs),{H,x,pos,boxes,paths,won,place,elbow,straight,head}=G;
+          const qf=defs.all.filter(m=>m.id.startsWith('p-qf')),sf=defs.all.filter(m=>m.id.startsWith('p-sf')),fin=defs.all.find(m=>m.id==='p-final');
+          const heads=[head(0,0,'Quarterfinals'),head(1,0,'Semifinals'),head(2,0,'Grand Final'),head(3,0,'Champion')];
+          qf.forEach((m,i)=>place(m,0,66+i*70));
+          sf.forEach((m,i)=>{const q=pos[qf[i].id];place(m,1,q.cy-H*0.75);});
+          {const a=pos[sf[0].id],b=pos[sf[1].id];place(fin,2,(a.cy+b.cy)/2-H/2);}
+          qf.forEach((m,i)=>{const q=pos[m.id];paths.push(straight(q,pos[sf[i].id].l,q.cy,won(m.id)));});
+          sf.forEach(m=>paths.push(elbow(pos[m.id],pos[fin.id],won(m.id))));
+          const F=pos[fin.id],champ=getTournamentMatchResult(fin.id,data,defs).winner;
+          boxes.push(tnQual(champ,1,x(3),F.cy-15,true));
+          paths.push(straight(F,x(3),F.cy,won(fin.id)));
+          return tnCanvas(4*G.W+3*G.GAP,66+70+H+8,heads.join('')+boxes.join(''),paths);
+        }
+        function tnUpdatedText(){try{const t=tournamentData&&tournamentData.updatedAt;const d=t&&t.toDate?t.toDate():null;if(d)return 'Dernière mise à jour : '+d.toLocaleString('fr-FR',{dateStyle:'long',timeStyle:'short'});}catch(e){}return '';}
+        function renderTournamentBracket(){
+          const gRoot=document.getElementById('tournament-groups'),pRoot=document.getElementById('tournament-playoffs');
+          if(!gRoot||!pRoot)return;
+          const data=tnNormalize(),defs=tournamentMatchMap();
+          gRoot.innerHTML=[defs.A,defs.B].map((g,i)=>`<div class="tn-group"><div class="tn-group-head"><h5>${g.title}</h5><span>8 équipes · double élimination</span></div>${tnGroupHtml(g,i,defs,data)}</div>`).join('');
+          pRoot.innerHTML=tnPlayoffsHtml(defs,data);
+          const st=document.getElementById('tournament-status');if(st)st.textContent='Tableau synchronisé en temps réel.'+(tnUpdatedText()?' '+tnUpdatedText()+'.':'');
+        }
+
+        /* ===== TOURNOI : console d'administration ===== */
+        let adminTnStage='A';
+        function tnStageMatches(stage,defs){
+          if(stage==='P')return [['Quarterfinals',defs.all.filter(m=>m.id.startsWith('p-qf'))],['Semifinals',defs.all.filter(m=>m.id.startsWith('p-sf'))],['Grand Final',defs.all.filter(m=>m.id==='p-final')]];
+          const g=stage==='B'?defs.B:defs.A;
+          return [['Upper Bracket · Quarterfinals',g.ubqf],['Upper Bracket · Semifinals',g.ubsf],['Upper Bracket Final',g.ubf],['Lower Bracket · Quarterfinals',g.lbqf],['Lower Bracket · Semifinals',g.lbsf],['Lower Bracket Final',g.lbf]];
+        }
+        function tnAdminTeam(team,label){
+          if(!team)return `<span class="italic text-gray-500 truncate">${escapeHtml(label||'En attente')}</span>`;
+          const logo=team.logo?`<img src="${escapeHtml(team.logo)}" alt="" class="w-5 h-5 object-contain shrink-0" onerror="this.style.visibility='hidden'">`:'<span class="w-5 h-5 rounded bg-white/10 shrink-0"></span>';
+          return `${logo}<span class="truncate">${escapeHtml(team.name||'Équipe')}</span>`;
+        }
+        function adminMatchCard(m){
+          const inp=s=>`<input type="number" inputmode="numeric" min="0" max="99" data-tn-score="${m.id}:${s}" aria-label="Score ${s.toUpperCase()} · ${escapeHtml(m.label)}" onchange="updateTournamentScore('${m.id}','${s}',this.value)" class="w-16 bg-black/50 border border-white/10 rounded-lg px-2 py-2 text-white text-sm text-center font-bold outline-none focus:border-aerix-purple transition disabled:opacity-40">`;
+          const row=s=>`<div class="flex items-center gap-2 py-1"><div class="flex items-center gap-2 min-w-0 flex-1 text-sm text-gray-400" data-tn-name="${m.id}:${s}"></div>${inp(s)}</div>`;
+          return `<div class="rounded-xl border border-white/10 bg-black/30 p-3" data-tn-match="${m.id}"><div class="text-[10px] uppercase tracking-widest text-gray-500 mb-2">${escapeHtml(m.label)}</div>${row('a')}${row('b')}<div class="text-[10px] mt-1 text-gray-500" data-tn-result="${m.id}"></div></div>`;
+        }
+        function refreshAdminTournament(defs,data){
+          defs=defs||tournamentMatchMap();data=data||tnNormalize();
+          document.querySelectorAll('#admin-tournament-matches [data-tn-match]').forEach(card=>{
+            const id=card.dataset.tnMatch,m=defs.byId[id];if(!m)return;
+            const r=getTournamentMatchResult(id,data,defs),ready=!!(r.a&&r.b);
+            ['a','b'].forEach(s=>{
+              const team=r[s],isWin=!!(r.winner&&r.winner===team);
+              const nameEl=card.querySelector(`[data-tn-name="${id}:${s}"]`);
+              if(nameEl){nameEl.innerHTML=tnAdminTeam(team,tnSlotLabel(m[s]));nameEl.classList.toggle('text-white',isWin);nameEl.classList.toggle('font-bold',isWin);nameEl.classList.toggle('text-gray-400',!isWin);}
+              const inp=card.querySelector(`[data-tn-score="${id}:${s}"]`);
+              if(inp){inp.disabled=!ready;inp.title=ready?'':'En attente des équipes';if(document.activeElement!==inp){const v=r.score&&r.score[s];inp.value=v==null?'':v;}}
+            });
+            const res=card.querySelector(`[data-tn-result="${id}"]`);
+            if(res){const sc=r.score||{},filled=sc.a!==''&&sc.a!=null&&sc.b!==''&&sc.b!=null;res.textContent=r.winner?`Vainqueur : ${r.winner.name}`:!ready?'En attente des équipes':(filled&&Number(sc.a)===Number(sc.b)?'Égalité : un vainqueur est requis':'Score à saisir');}
+          });
+        }
+        function setAdminTournamentStage(stage){adminTnStage=stage;renderAdminTournament(false,true);}
+        function renderAdminTournament(forceTeams,forceMatches){
+          const wrap=document.getElementById('admin-tab-tournois');if(!wrap)return;
+          const data=tnNormalize(),defs=tournamentMatchMap(),owner=isOwner();
+          const ownerBox=document.getElementById('admin-tournament-owner-actions');if(ownerBox)ownerBox.classList.toggle('hidden',!owner);
+          const note=document.getElementById('admin-tournament-teams-note');if(note)note.textContent=owner?'Nom et URL directe du logo de chaque équipe. Clique sur « Enregistrer les équipes » pour publier les changements.':'Lecture seule : seul le Owner peut modifier les équipes. Tu peux saisir les scores ci-dessous.';
+          const stat=document.getElementById('admin-tournament-status');if(stat)stat.textContent=tnUpdatedText();
+          document.querySelectorAll('[data-tn-stage]').forEach(b=>{const on=b.dataset.tnStage===adminTnStage;b.classList.toggle('bg-aerix-purple',on);b.classList.toggle('text-white',on);b.classList.toggle('bg-white/5',!on);b.classList.toggle('text-gray-400',!on);});
+          const teamsEl=document.getElementById('admin-tournament-teams');
+          if(teamsEl){
+            const sig=JSON.stringify(data.teams)+(owner?'1':'0');
+            if(forceTeams===true&&!teamsEl.dataset.sig||teamsEl.dataset.sig!==sig){
+              const card=(t,i)=>`<div class="rounded-xl border border-white/10 bg-black/30 p-3 space-y-2"><div class="flex items-center gap-3"><span class="w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center overflow-hidden shrink-0">${t.logo?`<img src="${escapeHtml(t.logo)}" alt="" class="w-7 h-7 object-contain" onerror="this.style.display='none'">`:`<span class="text-[10px] text-gray-500 font-black">${String(i%8+1).padStart(2,'0')}</span>`}</span><input data-team-name="${i}" value="${escapeHtml(t.name||'')}" maxlength="60" ${owner?'':'disabled'} placeholder="Nom de l’équipe" class="flex-1 min-w-0 bg-black/50 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm font-bold outline-none focus:border-aerix-purple transition disabled:opacity-60"></div><input data-team-logo="${i}" value="${escapeHtml(t.logo||'')}" ${owner?'':'disabled'} placeholder="https://exemple.fr/logo.png" class="w-full bg-black/50 border border-white/10 rounded-xl px-3 py-2 text-gray-300 text-xs outline-none focus:border-aerix-purple transition disabled:opacity-60"></div>`;
+              const col=(title,from)=>`<div><h6 class="text-[11px] font-black uppercase tracking-widest text-gray-400 mb-3">${title}</h6><div class="space-y-3">${data.teams.slice(from,from+8).map((t,k)=>card(t,from+k)).join('')}</div></div>`;
+              teamsEl.innerHTML=col('Group A',0)+col('Group B',8);teamsEl.dataset.sig=sig;
+            }
+          }
+          const mEl=document.getElementById('admin-tournament-matches');
+          if(mEl&&(forceMatches||mEl.dataset.stage!==adminTnStage)){
+            mEl.dataset.stage=adminTnStage;
+            mEl.innerHTML=tnStageMatches(adminTnStage,defs).map(([title,ms])=>`<div><h6 class="text-[11px] font-black uppercase tracking-widest text-gray-400 mb-3">${title}</h6><div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">${ms.map(adminMatchCard).join('')}</div></div>`).join('');
+          }
+          refreshAdminTournament(defs,data);
+        }
+
+        /* ===== TOURNOI : persistance Firestore ===== */
         async function persistTournament(){try{await db.collection('tournaments').doc(TOURNAMENT_DOC).set({...tournamentData,updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:currentUser.uid});}catch(e){console.error(e);showToast('Impossible d’enregistrer le tournoi. Vérifie les règles Firestore.','error');}}
-        async function updateTournamentScore(matchId,side,value){if(!hasAdminAccess()){showToast('Accès administrateur requis.','error');return;}if(!tournamentData||tournamentData.schemaVersion!==2)tournamentData=defaultTournament();if(!tournamentData.scores||Array.isArray(tournamentData.scores))tournamentData.scores={};const sc=tournamentData.scores[matchId]||{a:'',b:''};sc[side]=value===''?'':String(Math.max(0,Math.min(99,Number(value)||0)));tournamentData.scores[matchId]=sc;renderTournamentBracket();await persistTournament();}
-        async function saveTournamentBracket(){if(!isOwner()){showToast('Seul le Owner peut modifier les équipes.','error');return;}const names=[...document.querySelectorAll('[data-team-name]')],logos=[...document.querySelectorAll('[data-team-logo]')];tournamentData=tournamentData&&tournamentData.schemaVersion===2?tournamentData:defaultTournament();tournamentData.teams=names.map((el,i)=>({name:el.value.trim()||`Équipe ${i+1}`,logo:logos[i]?.value.trim()||''}));tournamentData.schemaVersion=2;tournamentData.scores=tournamentData.scores||{};await persistTournament();showToast('Groupes et équipes enregistrés.','success');renderTournamentBracket();}
-        async function resetTournamentBracket(){if(!isOwner())return;if(!confirm('Réinitialiser les 16 équipes et tous les scores ?'))return;tournamentData=defaultTournament();const ed=document.getElementById('tournament-team-editor');if(ed)ed.dataset.ready='';await persistTournament();renderTournamentBracket();}
-        function subscribeTournament(){db.collection('tournaments').doc(TOURNAMENT_DOC).onSnapshot(snap=>{const raw=snap.exists?snap.data():null;tournamentData=raw&&raw.schemaVersion===2?{...defaultTournament(),...raw}:defaultTournament();const ed=document.getElementById('tournament-team-editor');if(ed)ed.dataset.ready='';renderTournamentBracket();},e=>{console.warn('Tournament sync',e);tournamentData=defaultTournament();renderTournamentBracket();});}
+        async function updateTournamentScore(matchId,side,value){
+          if(!hasAdminAccess()){showToast('Accès administrateur requis.','error');return;}
+          const d=tnEnsure();
+          const sc=d.scores[matchId]||{a:'',b:''};
+          sc[side]=value===''?'':String(Math.max(0,Math.min(99,Number(value)||0)));
+          d.scores[matchId]=sc;
+          renderTournamentBracket();refreshAdminTournament();
+          await persistTournament();
+        }
+        async function saveTournamentBracket(){
+          if(!isOwner()){showToast('Seul le Owner peut modifier les équipes.','error');return;}
+          const names=[...document.querySelectorAll('[data-team-name]')],logos=[...document.querySelectorAll('[data-team-logo]')];
+          const d=tnEnsure();
+          d.teams=names.map((el,i)=>({name:el.value.trim()||`Équipe ${i+1}`,logo:logos[i]?.value.trim()||''}));
+          d.schemaVersion=2;d.scores=d.scores||{};
+          await persistTournament();
+          showToast('Équipes enregistrées.','success');
+          renderTournamentBracket();renderAdminTournament(true,false);
+        }
+        async function resetTournamentScores(){
+          if(!isOwner())return;
+          if(!confirm('Effacer tous les scores du tournoi ? Les équipes sont conservées.'))return;
+          tnEnsure().scores={};
+          renderTournamentBracket();renderAdminTournament(false,true);
+          await persistTournament();
+        }
+        async function resetTournamentBracket(){
+          if(!isOwner())return;
+          if(!confirm('Réinitialiser les 16 équipes et tous les scores ?'))return;
+          tournamentData=defaultTournament();
+          const ed=document.getElementById('admin-tournament-teams');if(ed)ed.dataset.sig='';
+          await persistTournament();
+          renderTournamentBracket();renderAdminTournament(true,true);
+        }
+        function subscribeTournament(){
+          db.collection('tournaments').doc(TOURNAMENT_DOC).onSnapshot(snap=>{
+            const raw=snap.exists?snap.data():null;
+            tournamentData=raw&&raw.schemaVersion===2?{...defaultTournament(),...raw}:defaultTournament();
+            renderTournamentBracket();renderAdminTournament(false,false);
+          },e=>{console.warn('Tournament sync',e);tournamentData=defaultTournament();renderTournamentBracket();renderAdminTournament(false,false);});
+        }
 
         // INITIALISATION BDD
         function startSync() {
@@ -9443,6 +9610,8 @@ function checkAdminSessionTimeout() {
             const performanceBtn = document.getElementById('tab-btn-performance');
             const mediaBtn = document.getElementById('tab-btn-media');
             const siteBtn = document.getElementById('tab-btn-site');
+            const tournoisBtn = document.getElementById('tab-btn-tournois');
+            if (tournoisBtn) tournoisBtn.classList.toggle('hidden', !hasAdminAccess());
             if (comptesBtn) comptesBtn.classList.toggle('hidden', !isOwner());
             if (contactBtn) contactBtn.classList.toggle('hidden', !hasAdminAccess());
             if (coachingBtn) coachingBtn.classList.toggle('hidden', !hasAdminAccess());
@@ -9486,7 +9655,7 @@ function checkAdminSessionTimeout() {
             if (tab === 'comptes' && !isOwner()) tab = 'effectifs';
             if ((tab === 'boutique' || tab === 'partenaires' || tab === 'site') && !isOwner()) tab = 'effectifs';
             if ((tab === 'evenements' || tab === 'contact' || tab === 'coaching' || tab === 'avis') && !hasAdminAccess()) tab = 'effectifs';
-            if ((tab === 'performance' || tab === 'media') && !hasAdminAccess()) tab = 'effectifs';
+            if ((tab === 'performance' || tab === 'media' || tab === 'tournois') && !hasAdminAccess()) tab = 'effectifs';
             const target = document.getElementById('admin-tab-' + tab);
             if(!target) return;
             document.querySelectorAll('.admin-tab').forEach(t => {
@@ -9498,9 +9667,10 @@ function checkAdminSessionTimeout() {
             target.classList.add('animate-tab-change');
             if (tab === 'coaching') renderAdminCoachingCalendar();
             if (tab === 'performance') renderAdminPerformance();
+            if (tab === 'tournois') renderAdminTournament(true, true);
             if (tab === 'media') renderAdminLists();
             if (tab === 'contact' || tab === 'coaching' || tab === 'avis') markAdminTicketsAsRead(tab);
-            ['comptes', 'boutique', 'effectifs', 'palmares', 'evenements', 'performance', 'media', 'partenaires', 'annonces', 'contact', 'coaching', 'avis', 'site'].forEach(t => {
+            ['comptes', 'boutique', 'effectifs', 'palmares', 'evenements', 'tournois', 'performance', 'media', 'partenaires', 'annonces', 'contact', 'coaching', 'avis', 'site'].forEach(t => {
                 const btn = document.getElementById('tab-btn-' + t);
                 if(btn) {
                     btn.classList.remove('active', 'text-white');
