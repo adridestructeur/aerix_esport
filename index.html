@@ -5343,7 +5343,8 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
                 <div class="glass-panel glass-panel-form p-6 rounded-2xl border border-white/5">
                     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-5">
                         <div><h5 class="text-sm font-bold text-white mb-1">Scores des matchs</h5><p class="text-xs text-gray-500">Saisis le score de chaque match (manche) : groupes en BO5, playoffs en BO7. Le score de la série et le vainqueur se calculent automatiquement. Un match devient saisissable dès que ses deux équipes sont connues.</p></div>
-                        <div class="flex gap-2">
+                        <div class="flex flex-wrap gap-2">
+                            <button id="tn-discord-create-btn" type="button" onclick="createTournamentDiscordChannels()" class="px-4 py-2 rounded-xl text-xs font-bold bg-aerix-purple text-white hover:opacity-90 transition">Créer les salons Discord</button>
                             <button type="button" data-tn-stage="A" onclick="setAdminTournamentStage('A')" class="px-4 py-2 rounded-xl text-xs font-bold transition">Group A</button>
                             <button type="button" data-tn-stage="B" onclick="setAdminTournamentStage('B')" class="px-4 py-2 rounded-xl text-xs font-bold transition">Group B</button>
                             <button type="button" data-tn-stage="P" onclick="setAdminTournamentStage('P')" class="px-4 py-2 rounded-xl text-xs font-bold transition">Playoffs</button>
@@ -6166,7 +6167,7 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
         // AERIX SERIES : Group Stage en double élimination (Day 1) puis playoffs (Day 2).
         const TOURNAMENT_DOC = 'aerix-series-1';
         let tournamentData = null;
-        const defaultTournament = () => ({ schemaVersion: 2, teams: Array.from({length:16},(_,i)=>({name:`Équipe ${i+1}`,logo:''})), scores: {} });
+        const defaultTournament = () => ({ schemaVersion: 2, teams: Array.from({length:16},(_,i)=>({name:`Équipe ${i+1}`,logo:''})), scores: {}, discordSync: { matches: [] } });
         function matchDef(id, label, a, b){return {id,label,a,b};}
         function groupDefs(group){
             const t=Array.from({length:8},(_,i)=>({teamIndex:group*8+i}));
@@ -6378,7 +6379,33 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
         function tnLogoPicked(input){const f=input.files&&input.files[0],i=tnLogoIdx;input.value='';if(!f||i==null)return;openCropper(f,NaN,b=>{tnSetLogoValue(i,b);showToast('Logo importé. Clique sur « Enregistrer les équipes » pour publier.','success');},400,0.85);}
         function tnClearLogo(i){if(isOwner())tnSetLogoValue(i,'');}
         /* ===== TOURNOI : persistance Firestore ===== */
-        async function persistTournament(){if(JSON.stringify(tournamentData).length>900000){showToast('Les logos sont trop lourds pour Firestore (limite ~1 Mo). Réimporte des logos plus petits.','error');return;}try{await db.collection('tournaments').doc(TOURNAMENT_DOC).set({...tournamentData,updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:currentUser.uid});}catch(e){console.error(e);showToast('Impossible d’enregistrer le tournoi. Vérifie les règles Firestore.','error');}}
+        function buildDiscordSyncMatches(){
+          const data=tnNormalize(),defs=tournamentMatchMap(),out=[];
+          for(const m of defs.all){
+            const r=getTournamentMatchResult(m.id,data,defs);
+            if(!r.a||!r.b||!r.a.name||!r.b.name)continue;
+            const phase=m.id.startsWith('p-')?'Playoffs':'Group Stage';
+            const group=phase==='Playoffs'?'':(m.id.startsWith('g0')?'A':'B');
+            out.push({id:m.id,label:m.label,team1:r.a.name,team2:r.b.name,phase,group,format:phase==='Playoffs'?'BO7':'BO5',winner:r.winner?.name||null,loser:r.loser?.name||null,completed:!!r.winner});
+          }
+          return out;
+        }
+        async function createTournamentDiscordChannels(){
+          if(!isOwner()){showToast('Seul le Owner peut lancer la création des salons Discord.','error');return;}
+          if(!currentUser){showToast('Connecte-toi pour continuer.','error');return;}
+          const names=tnNormalize().teams.map(t=>(t.name||'').trim());
+          if(names.length!==16||names.some(n=>!n)||names.some(n=>/^Équipe\s+\d+$/i.test(n))){showToast('Renseigne et enregistre les 16 équipes avant de créer les salons.','error');return;}
+          const matches=buildDiscordSyncMatches();
+          if(!matches.length){showToast('Aucun match disponible : vérifie les équipes et le tableau.','error');return;}
+          const btn=document.getElementById('tn-discord-create-btn');if(btn){btn.disabled=true;btn.textContent='Demande envoyée…';}
+          try{
+            tournamentData=tnEnsure();
+            tournamentData.discordSync={matches,requestId:`${Date.now()}-${Math.random().toString(36).slice(2,10)}`,requestedAt:new Date().toISOString(),requestedBy:currentUser.uid};
+            const saved=await persistTournament();
+            if(saved)showToast(`Demande envoyée au bot : ${matches.length} match(s) actuellement disponibles. Les suivants seront créés après validation des scores.`, 'success');
+          }finally{if(btn){btn.disabled=false;btn.textContent='Créer les salons Discord';}}
+        }
+        async function persistTournament(){if(JSON.stringify(tournamentData).length>900000){showToast('Les logos sont trop lourds pour Firestore (limite ~1 Mo). Réimporte des logos plus petits.','error');return false;}try{const payload={...tournamentData,discordSync:{...(tournamentData.discordSync||{}),matches:buildDiscordSyncMatches()},updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:currentUser.uid};await db.collection('tournaments').doc(TOURNAMENT_DOC).set(payload);return true;}catch(e){console.error(e);showToast('Impossible d’enregistrer le tournoi. Vérifie les règles Firestore.','error');return false;}}
         async function updateTournamentGame(matchId,idx,side,value){
           if(!hasAdminAccess()){showToast('Accès administrateur requis.','error');return;}
           const d=tnEnsure(),bo=tnBo(matchId),prev=d.scores[matchId]||{};
