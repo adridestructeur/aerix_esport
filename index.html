@@ -6169,7 +6169,9 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
         const defaultTournament = () => ({ schemaVersion: 2, teams: Array.from({length:16},(_,i)=>({name:`Équipe ${i+1}`,logo:''})), scores: {}, discordSync: { matches: [] } });
         function matchDef(id, label, a, b){return {id,label,a,b};}
         function groupDefs(group){
-            const t=Array.from({length:8},(_,i)=>({teamIndex:group*8+i}));
+            // Placement des seeds selon le bracket officiel : A = 1,15,7,9,3,13,5,11 ; B = 2,16,8,10,4,14,6,12.
+            const seeds=group===0?[0,14,6,8,2,12,4,10]:[1,15,7,9,3,13,5,11];
+            const t=seeds.map(teamIndex=>({teamIndex}));
             return {
               title:group===0?'Group A':'Group B',
               ubqf:[matchDef(`g${group}uq1`,'UB Quarterfinal 1',t[0],t[1]),matchDef(`g${group}uq2`,'UB Quarterfinal 2',t[2],t[3]),matchDef(`g${group}uq3`,'UB Quarterfinal 3',t[4],t[5]),matchDef(`g${group}uq4`,'UB Quarterfinal 4',t[6],t[7])],
