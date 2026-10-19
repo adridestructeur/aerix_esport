@@ -5344,7 +5344,6 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
                     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-5">
                         <div><h5 class="text-sm font-bold text-white mb-1">Scores des matchs</h5><p class="text-xs text-gray-500">Saisis le score de chaque match (manche) : groupes en BO5, playoffs en BO7. Le score de la série et le vainqueur se calculent automatiquement. Un match devient saisissable dès que ses deux équipes sont connues.</p></div>
                         <div class="flex flex-wrap gap-2">
-                            <button id="tn-discord-create-btn" type="button" onclick="createTournamentDiscordChannels()" class="px-4 py-2 rounded-xl text-xs font-bold bg-aerix-purple text-white hover:opacity-90 transition">Créer les salons Discord</button>
                             <button type="button" data-tn-stage="A" onclick="setAdminTournamentStage('A')" class="px-4 py-2 rounded-xl text-xs font-bold transition">Group A</button>
                             <button type="button" data-tn-stage="B" onclick="setAdminTournamentStage('B')" class="px-4 py-2 rounded-xl text-xs font-bold transition">Group B</button>
                             <button type="button" data-tn-stage="P" onclick="setAdminTournamentStage('P')" class="px-4 py-2 rounded-xl text-xs font-bold transition">Playoffs</button>
@@ -6324,7 +6323,7 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
           const gin=(i,s)=>`<input type="number" inputmode="numeric" min="0" max="99" data-tn-game="${m.id}:${i}:${s}" aria-label="Match ${i+1} · score ${s==='a'?'A':'B'} · ${escapeHtml(m.label)}" onchange="updateTournamentGame('${m.id}',${i},'${s}',this.value)" class="w-14 bg-black/50 border border-white/10 rounded-lg px-1 py-1.5 text-white text-sm text-center font-bold outline-none focus:border-aerix-purple transition disabled:opacity-40">`;
           const team=s=>`<div class="flex items-center gap-2 py-1"><div class="flex items-center gap-2 min-w-0 flex-1 text-sm text-gray-400" data-tn-name="${m.id}:${s}"></div><span class="min-w-[1.75rem] text-center text-lg font-black text-white" data-tn-series="${m.id}:${s}">–</span></div>`;
           const games=Array.from({length:bo},(_,i)=>`<div class="flex items-center justify-between gap-2"><span class="text-[10px] text-gray-500 uppercase tracking-widest w-14">Match ${i+1}</span>${gin(i,'a')}<span class="text-gray-600">-</span>${gin(i,'b')}</div>`).join('');
-          return `<div class="rounded-xl border border-white/10 bg-black/30 p-4" data-tn-match="${m.id}"><div class="flex items-center justify-between mb-3"><span class="text-[10px] uppercase tracking-widest text-gray-500">${escapeHtml(m.label)}</span><span class="text-[10px] font-black px-2 py-0.5 rounded-full bg-aerix-purple/15 text-aerix-purple border border-aerix-purple/30">BO${bo}</span></div>${team('a')}${team('b')}<div class="mt-3 pt-3 border-t border-white/10 space-y-2">${games}</div><div class="text-[10px] mt-3 text-gray-500" data-tn-result="${m.id}"></div></div>`;
+          return `<div class="rounded-xl border border-white/10 bg-black/30 p-4" data-tn-match="${m.id}"><div class="flex items-center justify-between mb-3"><span class="text-[10px] uppercase tracking-widest text-gray-500">${escapeHtml(m.label)}</span><span class="text-[10px] font-black px-2 py-0.5 rounded-full bg-aerix-purple/15 text-aerix-purple border border-aerix-purple/30">BO${bo}</span></div>${team('a')}${team('b')}<div class="mt-3 pt-3 border-t border-white/10 space-y-2">${games}</div><div class="text-[10px] mt-3 text-gray-500" data-tn-result="${m.id}"></div><button type="button" data-tn-discord="${m.id}" onclick="createTournamentDiscordChannel('${m.id}')" disabled class="mt-3 w-full px-3 py-2 rounded-lg text-xs font-bold bg-aerix-purple text-white hover:opacity-90 transition disabled:opacity-30 disabled:cursor-not-allowed">Créer le salon Discord</button><div class="text-[10px] mt-2 text-gray-500" data-tn-discord-status="${m.id}">En attente des deux équipes</div></div>`;
         }
         function refreshAdminTournament(defs,data){
           defs=defs||tournamentMatchMap();data=data||tnNormalize();
@@ -6346,6 +6345,12 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
             });
             const res=card.querySelector(`[data-tn-result="${id}"]`);
             if(res){const started=r.score&&r.score.a!==''&&r.score.a!=null;res.textContent=r.winner?`Vainqueur : ${r.winner.name} (${r.score.a}-${r.score.b})`:!ready?'En attente des équipes':started?`Série en cours : ${r.score.a}-${r.score.b} (premier à ${Math.ceil(r.bo/2)})`:'Aucun match saisi';}
+            const createBtn=card.querySelector(`[data-tn-discord="${id}"]`);
+            const syncState=(data.discordSync||{}),requestedIds=Array.isArray(syncState.requestedMatchIds)?syncState.requestedMatchIds:[];
+            const validTeams=ready&&r.a.name&&r.b.name&&!/^Équipe\s+\d+$/i.test(r.a.name)&&!/^Équipe\s+\d+$/i.test(r.b.name);
+            if(createBtn){createBtn.disabled=!validTeams;createBtn.textContent=requestedIds.includes(id)?'Salon demandé / synchronisé':'Créer le salon Discord';}
+            const syncStatus=card.querySelector(`[data-tn-discord-status="${id}"]`);
+            if(syncStatus)syncStatus.textContent=!validTeams?'Disponible après validation des deux équipes':requestedIds.includes(id)?'Demande envoyée au bot':'Les deux équipes sont validées';
           });
         }
         function setAdminTournamentStage(stage){adminTnStage=stage;renderAdminTournament(false,true);}
@@ -6390,28 +6395,41 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
           }
           return out;
         }
-        async function createTournamentDiscordChannels(){
-          if(!isOwner()){showToast('Seul le Owner peut lancer la création des salons Discord.','error');return;}
+        async function createTournamentDiscordChannel(matchId){
+          if(!isOwner()){showToast('Seul le Owner peut créer les salons Discord.','error');return;}
           if(!currentUser){showToast('Connecte-toi pour continuer.','error');return;}
-          const names=tnNormalize().teams.map(t=>(t.name||'').trim());
-          if(names.length!==16||names.some(n=>!n)||names.some(n=>/^Équipe\s+\d+$/i.test(n))){showToast('Renseigne et enregistre les 16 équipes avant de créer les salons.','error');return;}
-          const matches=buildDiscordSyncMatches();
-          if(!matches.length){showToast('Aucun match disponible : vérifie les équipes et le tableau.','error');return;}
-          const btn=document.getElementById('tn-discord-create-btn');if(btn){btn.disabled=true;btn.textContent='Demande envoyée…';}
+          const defs=tournamentMatchMap(),m=defs.byId[matchId],data=tnNormalize();
+          if(!m){showToast('Match introuvable.','error');return;}
+          const r=getTournamentMatchResult(matchId,data,defs);
+          const validTeams=!!(r.a&&r.b&&r.a.name&&r.b.name&&!/^Équipe\s+\d+$/i.test(r.a.name)&&!/^Équipe\s+\d+$/i.test(r.b.name));
+          if(!validTeams){showToast('Ce salon sera disponible lorsque les deux équipes seront validées.','error');return;}
+          const card=document.querySelector(`[data-tn-match="${matchId}"]`),btn=card&&card.querySelector(`[data-tn-discord="${matchId}"]`);
+          if(btn){btn.disabled=true;btn.textContent='Demande envoyée…';}
           try{
             tournamentData=tnEnsure();
-            tournamentData.discordSync={matches,requestId:`${Date.now()}-${Math.random().toString(36).slice(2,10)}`,requestedAt:new Date().toISOString(),requestedBy:currentUser.uid};
-            const saved=await persistTournament();
-            if(saved)showToast(`Demande envoyée au bot : ${matches.length} match(s) actuellement disponibles. Les suivants seront créés après validation des scores.`, 'success');
-          }finally{if(btn){btn.disabled=false;btn.textContent='Créer les salons Discord';}}
+            const sync=tournamentData.discordSync||{};
+            const requestedMatchIds=Array.isArray(sync.requestedMatchIds)?sync.requestedMatchIds:[];
+            if(!requestedMatchIds.includes(matchId))requestedMatchIds.push(matchId);
+            tournamentData.discordSync={...sync,requestedMatchIds,requestId:`${Date.now()}-${Math.random().toString(36).slice(2,10)}`,requestedAt:new Date().toISOString(),requestedBy:currentUser.uid};
+            await persistTournament();
+            refreshAdminTournament();
+            showToast(`Demande envoyée pour le match ${m.label}.`,'success');
+          }finally{refreshAdminTournament();}
         }
-        async function persistTournament(){if(JSON.stringify(tournamentData).length>900000){showToast('Les logos sont trop lourds pour Firestore (limite ~1 Mo). Réimporte des logos plus petits.','error');return false;}try{const payload={...tournamentData,discordSync:{...(tournamentData.discordSync||{}),matches:buildDiscordSyncMatches()},updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:currentUser.uid};await db.collection('tournaments').doc(TOURNAMENT_DOC).set(payload);return true;}catch(e){console.error(e);showToast('Impossible d’enregistrer le tournoi. Vérifie les règles Firestore.','error');return false;}}
+        async function persistTournament(){if(JSON.stringify(tournamentData).length>900000){showToast('Les logos sont trop lourds pour Firestore (limite ~1 Mo). Réimporte des logos plus petits.','error');return;}try{const sync=tournamentData.discordSync||{};const requestedMatchIds=Array.isArray(sync.requestedMatchIds)?sync.requestedMatchIds:[];const payload={...tournamentData,discordSync:{...sync,requestedMatchIds,matches:buildDiscordSyncMatches().map(m=>({...m,createRequested:requestedMatchIds.includes(m.id)}))},updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:currentUser.uid};await db.collection('tournaments').doc(TOURNAMENT_DOC).set(payload);}catch(e){console.error(e);showToast('Impossible d’enregistrer le tournoi. Vérifie les règles Firestore.','error');}}
         async function updateTournamentGame(matchId,idx,side,value){
           if(!hasAdminAccess()){showToast('Accès administrateur requis.','error');return;}
-          const d=tnEnsure(),bo=tnBo(matchId),prev=d.scores[matchId]||{};
+          const d=tnEnsure(),defs=tournamentMatchMap(),bo=tnBo(matchId),prev=d.scores[matchId]||{};
+          const readyBefore=new Set(defs.all.filter(m=>{const r=getTournamentMatchResult(m.id,d,defs);return !!(r.a&&r.b&&r.a.name&&r.b.name);}).map(m=>m.id));
           const games=Array.from({length:bo},(_,i)=>{const g=(Array.isArray(prev.games)&&prev.games[i])||{};return {a:g.a==null?'':g.a,b:g.b==null?'':g.b};});
           games[idx][side]=value===''?'':String(Math.max(0,Math.min(99,Number(value)||0)));
           d.scores[matchId]={games};
+          // Lorsqu'un score validé qualifie une équipe et débloque un match suivant,
+          // le salon de ce nouveau match est demandé automatiquement.
+          const readyAfter=defs.all.filter(m=>{const r=getTournamentMatchResult(m.id,d,defs);return !!(r.a&&r.b&&r.a.name&&r.b.name);}).map(m=>m.id);
+          const sync=d.discordSync||{},requested=Array.isArray(sync.requestedMatchIds)?sync.requestedMatchIds:[];
+          const newlyReady=readyAfter.filter(id=>!readyBefore.has(id)&&!requested.includes(id));
+          if(newlyReady.length){d.discordSync={...sync,requestedMatchIds:[...requested,...newlyReady],requestId:`${Date.now()}-${Math.random().toString(36).slice(2,10)}`,requestedAt:new Date().toISOString(),requestedBy:currentUser?.uid||''};}
           renderTournamentBracket();refreshAdminTournament();
           await persistTournament();
         }
