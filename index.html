@@ -5969,7 +5969,13 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
                 'Accueil':'Home','Effectifs':'Rosters','Palmarès':'Results','Histoire':'History','Boutique':'Shop','Partenaires':'Partners','Annonces':'News',
                 'Découvrir les équipes':'Discover Rosters','Notre Palmarès':'Our Achievements','Performance & Élite':'Elite Performance',"Esprit d'équipe":'Team Spirit',
                 "Cohésion, communication stratégique et la force d'un collectif uni pour surmonter tous les défis.":'Cohesion, strategic communication, and the strength of a united team to overcome every challenge.',
-                'Nos équipes':'Our Rosters','Compétitions':'Competitions','Résultats & Palmarès':'Results & Achievements',"L'Héritage":'The Legacy',
+                'Nos équipes':'Our Rosters','Compétitions':'Competitions','Résultats & Palmarès':'Results & Achievements',
+                'Nos tournois':'Our Tournaments','Retrouve les informations et les liens officiels des tournois organisés par AERIX Esport.':'Find information and official links for tournaments organized by AERIX Esport.',
+                'AERIX ESPORT · TOURNOI OFFICIEL':'AERIX ESPORT · OFFICIAL TOURNAMENT','AERIX ESPORT PRÉSENTE':'PRESENTED BY AERIX ESPORT',
+                'Tableau du tournoi mis à jour automatiquement après la saisie des scores.':'Tournament bracket automatically updated after scores are entered.',
+                'Tableau du tournoi':'Tournament Bracket','16 équipes · Group Stage (double élimination) · Playoffs':'16 teams · Group Stage (double elimination) · Playoffs',
+                'Synchronisation du tableau…':'Synchronizing bracket…','Enregistrer l’événement':'Save event',
+"L'Héritage":'The Legacy',
                 "Née d'une passion commune pour le sport automobile virtuel et l'esport, AERIX n'a cessé d'évoluer.":'Born from a shared passion for virtual motorsport and esports, AERIX has continuously evolved.',
                 'Décembre 2025':'December 2025','La Genèse sur les circuits':'The Genesis on the circuits','Février 2026':'February 2026',"L'ère de l'Endurance":'The Endurance Era','Mai 2026':'May 2026','L’expansion Esport':'Esports Expansion',"L'expansion Esport":'Esports Expansion','Juin 2026':'June 2026',"L'arrivée d'iRacing":'The arrival of iRacing','Août 2026':'August 2026',"L'arrivée de RBR":'The arrival of RBR',
                 "Lancement officiel d'un championnat sur Assetto Corsa Competizione (ACC).":'Official launch of a championship on Assetto Corsa Competizione (ACC).',
@@ -7215,8 +7221,8 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
             let __html = '';
             
             filtered.forEach((a, index) => {
-                const descHtml = aerixRichHtml(a.desc, a.descFormat);
-                const imgHTML = a.image ? `<button type="button" class="announcement-image-button w-full md:w-1/3 shrink-0 h-48 md:h-auto border-r border-white/5 overflow-hidden cursor-zoom-in group/image" onclick="event.stopPropagation(); openImageViewer(decodeURIComponent('${encodeURIComponent(a.image)}'), decodeURIComponent('${encodeURIComponent(a.title || '')}'))" aria-label="Ouvrir l'image de l'annonce"><img loading="lazy" decoding="async" src="${escapeHtml(a.image)}" loading="lazy" alt="${escapeHtml(a.title || 'Image AERIX')}" class="news-img w-full h-full object-cover transition duration-500 group-hover/image:scale-105"></button>` : '';
+                const articleTitle = (currentLang === 'en' && a.title_en) ? a.title_en : a.title;\n                const articleDesc = (currentLang === 'en' && a.desc_en) ? a.desc_en : a.desc;\n                const descHtml = aerixRichHtml(articleDesc, a.descFormat);
+                const imgHTML = a.image ? `<button type="button" class="announcement-image-button w-full md:w-1/3 shrink-0 h-48 md:h-auto border-r border-white/5 overflow-hidden cursor-zoom-in group/image" onclick="event.stopPropagation(); openImageViewer(decodeURIComponent('${encodeURIComponent(a.image)}'), decodeURIComponent('${encodeURIComponent(a.title || '')}'))" aria-label="Ouvrir l'image de l'annonce"><img loading="lazy" decoding="async" src="${escapeHtml(a.image)}" loading="lazy" alt="${escapeHtml(articleTitle || 'AERIX image')}" class="news-img w-full h-full object-cover transition duration-500 group-hover/image:scale-105"></button>` : '';
                 __html += `
                     <div id="annonce-${escapeHtml(a.id || '')}" class="news-card-animated group cursor-pointer glass-panel rounded-3xl overflow-hidden reveal delay-${(index%3)*100} flex flex-col md:flex-row border-l-2 border-l-aerix-purple/50 hover:border-l-aerix-purple transition-colors">
                         ${imgHTML}
@@ -7226,7 +7232,7 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
                                 <span class="text-xs font-bold text-gray-500 flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> ${escapeHtml(a.date)}</span>
                                 <button type="button" class="share-btn ml-auto" onclick="event.stopPropagation(); shareItem('annonces', decodeURIComponent('${encodeURIComponent(a.id || '')}'), decodeURIComponent('${encodeURIComponent(a.title || '')}'))" aria-label="${currentLang === 'en' ? 'Share this post' : 'Partager cette annonce'}"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg><span>${currentLang === 'en' ? 'Share' : 'Partager'}</span></button>
                             </div>
-                            <h4 class="text-2xl font-black text-white mb-4 leading-tight tracking-tight group-hover:text-amber-400 transition-colors" data-translate-src="${escapeHtml(a.title || '')}">${escapeHtml(a.title)}</h4>
+                            <h4 class="text-2xl font-black text-white mb-4 leading-tight tracking-tight group-hover:text-amber-400 transition-colors" data-translate-src="${escapeHtml(articleTitle || '')}">${escapeHtml(articleTitle)}</h4>
                             <div class="text-sm text-gray-400 rich-editor-content aerix-md" data-translate-src="${escapeHtml(descHtml)}">${descHtml}</div>
                         </div>
                     </div>`;
