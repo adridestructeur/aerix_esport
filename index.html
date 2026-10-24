@@ -3610,6 +3610,10 @@ body.theme-white-red #page-palmares #palmares-container .text-gray-500 { color:#
 }
 #page-competition #competition-upcoming > button img { width:100%; height:100%; max-height:none; object-fit:cover; object-position:center; display:block; }
 #page-competition #competition-upcoming > button .p-5 { padding:1.1rem; }
+/* Bouton « Partager » + surbrillance d'un élément ouvert via lien direct */
+.share-btn { display:inline-flex; align-items:center; gap:.4rem; padding:.4rem .8rem; border-radius:9999px; font-size:.7rem; font-weight:700; color:#d1d5db; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.12); cursor:pointer; transition:background .2s ease,color .2s ease,border-color .2s ease; }
+.share-btn:hover { background:rgba(var(--aerix-ui-accent-rgb),.9); border-color:transparent; color:#fff; }
+.share-highlight { box-shadow:0 0 0 2px rgba(var(--aerix-ui-accent-rgb),.85), 0 0 44px rgba(var(--aerix-ui-accent-rgb),.35) !important; transition:box-shadow .4s ease; }
 #page-competition #competition-results > .glass-panel {
   border-radius:15px !important;
   border-color:var(--aerix-ui-border) !important;
@@ -4632,6 +4636,7 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
     <!-- MODAL : ARTICLE ÉVÉNEMENT / COMPÉTITION -->
     <div id="event-article-modal" class="fixed inset-0 z-[120] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl" role="dialog" aria-modal="true" aria-label="Détail de l'événement">
         <div class="glass-panel-no-hover w-full max-w-5xl max-h-[94vh] overflow-y-auto rounded-[2rem] shadow-2xl relative">
+            <button type="button" id="event-article-share" class="absolute top-6 right-20 z-50 bg-black/60 h-10 px-4 rounded-full flex items-center gap-2 text-white text-xs font-bold border border-white/20 backdrop-blur-md hover:text-aerix-purple transition" aria-label="Partager"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg><span class="hidden sm:inline">Partager</span></button>
             <button onclick="closeEventArticle()" class="absolute top-6 right-6 text-white hover:text-aerix-purple z-50 bg-black/60 w-10 h-10 rounded-full flex items-center justify-center border border-white/20 backdrop-blur-md transition">✕</button>
             <div id="event-article-img-wrap" class="w-full aspect-video bg-[#050505] overflow-hidden border-b border-white/10 hidden">
                 <img loading="lazy" decoding="async" id="event-article-img" src="" class="w-full h-full object-cover" alt="Image de l'événement AERIX">
@@ -4657,6 +4662,7 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
     <!-- MODAL : ARTICLE RÉSULTAT (PALMARÈS) -->
     <div id="palmares-article-modal" class="fixed inset-0 z-[120] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl" role="dialog" aria-modal="true" aria-label="Fenêtre de dialogue">
         <div class="glass-panel-no-hover w-full max-w-3xl max-h-[92vh] overflow-y-auto rounded-[2rem] shadow-2xl relative">
+            <button type="button" id="palmares-article-share" class="absolute top-6 right-20 z-50 bg-black/60 h-10 px-4 rounded-full flex items-center gap-2 text-white text-xs font-bold border border-white/20 backdrop-blur-md hover:text-aerix-purple transition" aria-label="Partager"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg><span class="hidden sm:inline">Partager</span></button>
             <button onclick="closePalmaresArticle()" class="absolute top-6 right-6 text-white hover:text-aerix-purple z-50 bg-black/50 w-10 h-10 rounded-full flex items-center justify-center border border-white/20 backdrop-blur-md transition">✕</button>
             <div id="palmares-article-img-wrap" class="w-full aspect-video bg-[#050505] overflow-hidden border-b border-white/10 hidden">
                 <img loading="lazy" decoding="async" id="palmares-article-img" src="" class="w-full h-full object-cover" alt="Image AERIX">
@@ -7134,6 +7140,8 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
             document.getElementById('palmares-article-desc').innerHTML = item.desc || '<p class="text-gray-500 italic">Aucun article rédigé pour ce résultat.</p>';
 
             document.getElementById('palmares-article-modal').classList.remove('hidden');
+            const shareP = document.getElementById('palmares-article-share');
+            if (shareP) shareP.onclick = () => shareItem('palmares', id, item.title);
             translateDynamicContent();
         }
         function closePalmaresArticle() { document.getElementById('palmares-article-modal').classList.add('hidden'); }
@@ -7165,12 +7173,13 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
             filtered.forEach((a, index) => {
                 const imgHTML = a.image ? `<button type="button" class="announcement-image-button w-full md:w-1/3 shrink-0 h-48 md:h-auto border-r border-white/5 overflow-hidden cursor-zoom-in group/image" onclick="event.stopPropagation(); openImageViewer(decodeURIComponent('${encodeURIComponent(a.image)}'), decodeURIComponent('${encodeURIComponent(a.title || '')}'))" aria-label="Ouvrir l'image de l'annonce"><img loading="lazy" decoding="async" src="${escapeHtml(a.image)}" loading="lazy" alt="${escapeHtml(a.title || 'Image AERIX')}" class="news-img w-full h-full object-cover transition duration-500 group-hover/image:scale-105"></button>` : '';
                 __html += `
-                    <div class="news-card-animated group cursor-pointer glass-panel rounded-3xl overflow-hidden reveal delay-${(index%3)*100} flex flex-col md:flex-row border-l-2 border-l-aerix-purple/50 hover:border-l-aerix-purple transition-colors">
+                    <div id="annonce-${escapeHtml(a.id || '')}" class="news-card-animated group cursor-pointer glass-panel rounded-3xl overflow-hidden reveal delay-${(index%3)*100} flex flex-col md:flex-row border-l-2 border-l-aerix-purple/50 hover:border-l-aerix-purple transition-colors">
                         ${imgHTML}
                         <div class="p-8 w-full">
                             <div class="flex gap-3 items-center mb-3">
                                 ${getGameBadge(a.game)}
                                 <span class="text-xs font-bold text-gray-500 flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> ${escapeHtml(a.date)}</span>
+                                <button type="button" class="share-btn ml-auto" onclick="event.stopPropagation(); shareItem('annonces', decodeURIComponent('${encodeURIComponent(a.id || '')}'), decodeURIComponent('${encodeURIComponent(a.title || '')}'))" aria-label="${currentLang === 'en' ? 'Share this post' : 'Partager cette annonce'}"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg><span>${currentLang === 'en' ? 'Share' : 'Partager'}</span></button>
                             </div>
                             <h4 class="text-2xl font-black text-white mb-4 leading-tight tracking-tight group-hover:text-amber-400 transition-colors" data-translate-src="${escapeHtml(a.title || '')}">${escapeHtml(a.title)}</h4>
                             <div class="text-sm text-gray-400 leading-relaxed rich-editor-content" data-translate-src="${escapeHtml(a.desc || '')}">${a.desc}</div>
@@ -9277,6 +9286,8 @@ function checkAdminSessionTimeout() {
             }
             desc.innerHTML = item.description ? escapeHtml(item.description).replace(/\n/g, '<br>') : '<p class="text-gray-500 italic">Aucune description disponible pour cet événement.</p>';
             modal.classList.remove('hidden');
+            const shareE = document.getElementById('event-article-share');
+            if (shareE) shareE.onclick = () => shareItem('competition', id, item.title);
             translateDynamicContent();
         }
         function closeEventArticle() {
@@ -9800,9 +9811,71 @@ function checkAdminSessionTimeout() {
         window.addEventListener('resize', refreshAdminTabPill, { passive: true });
 
 
+        // PARTAGE / LIENS DIRECTS  (format : #page/ID, ex. #annonces/abc123)
+        function buildShareUrl(page, id) {
+            return window.location.href.split('#')[0] + '#' + page + '/' + encodeURIComponent(id);
+        }
+        async function shareItem(page, id, title) {
+            const url = buildShareUrl(page, id);
+            const en = currentLang === 'en';
+            if (navigator.share && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+                try { await navigator.share({ title: title || 'AERIX Esport', url }); return; }
+                catch (e) { if (e && e.name === 'AbortError') return; }
+            }
+            try { await navigator.clipboard.writeText(url); }
+            catch (e) {
+                const ta = document.createElement('textarea');
+                ta.value = url; ta.style.cssText = 'position:fixed;opacity:0';
+                document.body.appendChild(ta); ta.select();
+                try { document.execCommand('copy'); } catch (_) {}
+                ta.remove();
+            }
+            showToast(en ? 'Link copied!' : 'Lien copié !');
+        }
+        let pendingDeepLink = null, deepLinkTimer = null;
+        function resolveDeepLink() {
+            const d = pendingDeepLink; if (!d) return true;
+            if (d.page === 'annonces') {
+                if (!(globalAnnonces || []).some(a => a.id === d.id)) return false;
+                let el = document.getElementById('annonce-' + d.id);
+                if (!el) {
+                    if (annoncesView !== 'liste') setAnnoncesView('liste');
+                    if (currentFilters.annonces !== 'Tous') setFilter('annonces', 'Tous'); else renderAnnonces();
+                    el = document.getElementById('annonce-' + d.id);
+                    if (!el) return false;
+                }
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                el.classList.add('share-highlight');
+                setTimeout(() => el.classList.remove('share-highlight'), 3500);
+            } else if (d.page === 'palmares') {
+                if (!(globalPalmares || []).some(p => p.id === d.id)) return false;
+                openPalmaresArticle(d.id);
+            } else if (d.page === 'competition') {
+                if (!(globalEvents || []).some(e => e.id === d.id)) return false;
+                openEventArticle(d.id);
+            }
+            pendingDeepLink = null;
+            return true;
+        }
+        // Les données arrivent de Firebase après le chargement : on réessaie jusqu'à ~18 s.
+        function startDeepLink(page, id) {
+            pendingDeepLink = { page, id };
+            clearInterval(deepLinkTimer);
+            let tries = 0;
+            deepLinkTimer = setInterval(() => {
+                tries++;
+                if (resolveDeepLink() || tries > 60) { clearInterval(deepLinkTimer); pendingDeepLink = null; }
+            }, 300);
+        }
         function navigateFromHash() {
-            const pageId = (window.location.hash || '#home').slice(1) || 'home';
-            navigate(document.getElementById('page-' + pageId) ? pageId : 'home', false);
+            const raw = (window.location.hash || '#home').slice(1) || 'home';
+            const parts = raw.split('/');
+            const pageId = parts[0] || 'home';
+            let itemId = '';
+            try { itemId = parts.length > 1 ? decodeURIComponent(parts.slice(1).join('/')) : ''; } catch (e) {}
+            const target = document.getElementById('page-' + pageId) ? pageId : 'home';
+            navigate(target, false);
+            if (itemId && ['annonces', 'palmares', 'competition'].includes(target)) startDeepLink(target, itemId);
         }
         window.addEventListener('hashchange', navigateFromHash);
         window.addEventListener('popstate', navigateFromHash);
