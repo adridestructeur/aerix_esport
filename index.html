@@ -10,7 +10,10 @@
     <meta name="robots" content="index, follow, max-image-preview:large">
     <meta name="author" content="AERIX Esport">
     <link rel="canonical" href="https://aerix-esport.com/">
-    <!-- Important : le site est une SPA. Les onglets/hash ne constituent pas des URL SEO indépendantes. -->
+    <link rel="alternate" hreflang="fr-FR" href="https://aerix-esport.com/fr/">
+    <link rel="alternate" hreflang="en-GB" href="https://aerix-esport.com/en/">
+    <link rel="alternate" hreflang="x-default" href="https://aerix-esport.com/fr/">
+    <!-- Routes dédiées par langue et rubrique ; les balises hreflang sont actualisées selon la route. -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -6080,9 +6083,40 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
                 boutique: ["AERIX Esport Official Shop", "Discover official AERIX Esport merchandise and products."]
             }
         };
+        const AERIX_ROUTE_SLUGS = {
+            fr: { home: "", effectifs: "equipes", palmares: "palmares", histoire: "histoire", competition: "competitions", tournoi: "tournois", performance: "performance", partenaires: "partenaires", annonces: "actualites", media: "medias", boutique: "boutique" },
+            en: { home: "", effectifs: "teams", palmares: "achievements", histoire: "about", competition: "competitions", tournoi: "tournaments", performance: "performance", partenaires: "partners", annonces: "news", media: "media", boutique: "shop" }
+        };
+        function aerixRoute(lang = currentLang, pageId = "home") {
+            const prefix = lang === "en" ? "en" : "fr";
+            const slug = AERIX_ROUTE_SLUGS[prefix][pageId] || "";
+            return `/${prefix}/${slug ? slug + "/" : ""}`;
+        }
+        function aerixRouteFromPath() {
+            const parts = location.pathname.split("/").filter(Boolean);
+            const lang = parts[0] === "en" ? "en" : "fr";
+            const slug = parts[1] || "";
+            const pageId = Object.entries(AERIX_ROUTE_SLUGS[lang]).find(([, value]) => value === slug)?.[0] || "home";
+            return { lang, pageId, isRoute: parts.length > 0 && ["fr", "en"].includes(parts[0]) };
+        }
+        function updateAlternateLinks(lang, pageId) {
+            const fr = aerixRoute("fr", pageId);
+            const en = aerixRoute("en", pageId);
+            const links = [
+                ["fr-FR", fr], ["en-GB", en], ["x-default", fr]
+            ];
+            links.forEach(([hreflang, href]) => {
+                let el = document.querySelector(`link[rel="alternate"][hreflang="${hreflang}"]`);
+                if (!el) { el = document.createElement("link"); el.rel = "alternate"; el.hreflang = hreflang; document.head.appendChild(el); }
+                el.href = new URL(href, location.origin).href;
+            });
+        }
         function updateDocumentSEO(lang = currentLang, pageId = "home") {
             const meta = (AERIX_SEO_META[lang] || AERIX_SEO_META.fr)[pageId] || AERIX_SEO_META[lang].home;
             document.title = meta[0];
+            const canonical = document.querySelector('link[rel="canonical"]');
+            if (canonical) canonical.href = new URL(aerixRoute(lang, pageId), location.origin).href;
+            updateAlternateLinks(lang, pageId);
             const setMeta = (selector, value, attr = "content") => {
                 const node = document.querySelector(selector);
                 if (node) node.setAttribute(attr, value);
@@ -6158,7 +6192,7 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
 
                 // 2) Compatibilité avec les anciens blocs sans data-i18n.
                 translateStaticUI();
-                updateDocumentSEO(lang, (location.hash || "#home").slice(1));
+                updateDocumentSEO(lang, aerixRouteFromPath().pageId);
                 translateUnmappedStaticText(lang);
                 translateAccessibilityUI();
                 refreshAssistantTranslations();
@@ -6192,7 +6226,11 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
             // d'appliquer les traductions, puis encore ~0,7 s pour que le changement
             // soit lisible avant la disparition de l'overlay.
             languageTransitionTimer = setTimeout(() => {
+                const currentPage = aerixRouteFromPath().pageId;
+                history.pushState({ page: currentPage, lang }, "", aerixRoute(lang, currentPage));
+                currentLang = lang;
                 applyLanguageContent(lang);
+                updateDocumentSEO(lang, currentPage);
 
                 // 3) Contenus dynamiques.
                 if (typeof globalEffectifs !== 'undefined') renderEffectifs();
@@ -9600,8 +9638,8 @@ function checkAdminSessionTimeout() {
                 el.style.animation = '';
             });
 
-            if (pushHistory && window.location.hash !== '#' + pageId) {
-                history.pushState({ page: pageId }, '', '#' + pageId);
+            if (pushHistory && window.location.pathname !== aerixRoute(currentLang, pageId)) {
+                history.pushState({ page: pageId, lang: currentLang }, '', aerixRoute(currentLang, pageId));
             }
             trackPageView(pageId);
             updateDocumentSEO(currentLang, pageId);
@@ -10250,6 +10288,16 @@ function checkAdminSessionTimeout() {
             }, 300);
         }
         function navigateFromHash() {
+            const route = aerixRouteFromPath();
+            if (route.isRoute) {
+                if (typeof currentLang !== 'undefined' && currentLang !== route.lang) {
+                    currentLang = route.lang;
+                    lsSet('aerix_lang', route.lang);
+                    if (typeof applyLanguageContent === 'function') applyLanguageContent(route.lang);
+                }
+                navigate(route.pageId, false);
+                return;
+            }
             const raw = (window.location.hash || '#home').slice(1) || 'home';
             const parts = raw.split('/');
             const pageId = parts[0] || 'home';
@@ -10474,6 +10522,11 @@ function checkAdminSessionTimeout() {
             if (typeof aerixAssistantOpen !== 'undefined' && aerixAssistantOpen) toggleAerixAssistant(false);
         });
 
+        const initialAERIXRoute = aerixRouteFromPath();
+        if (initialAERIXRoute.isRoute) {
+            currentLang = initialAERIXRoute.lang;
+            lsSet('aerix_lang', currentLang);
+        }
         applyLanguageContent(currentLang);
         updateLanguageMenuUI(currentLang);
         renderAccountArea();
@@ -10490,7 +10543,7 @@ function checkAdminSessionTimeout() {
         // Premier rendu immédiat de la banderole ; Firebase la met ensuite à jour.
         renderPartnersMarquee();
         // Hash routing : ouverture directe d'une section et conservation de l'historique navigateur.
-        if (window.location.hash) navigateFromHash(); else navigate('home', false);
+        if (window.location.hash || initialAERIXRoute.isRoute) navigateFromHash(); else navigate('home', false);
         requestAnimationFrame(() => {
             const active = document.querySelector('.page-view.active');
             updateNavPill(document.getElementById('nav-' + (active ? active.id.replace('page-', '') : 'home')));
