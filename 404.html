@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redirection — AERIX Esport</title>
+  <meta name="robots" content="noindex">
+</head>
+<body>
+  <p>Redirection vers AERIX Esport…</p>
+  <script>
+    (() => {
+      const parts = location.pathname.split('/').filter(Boolean);
+      const lang = parts[0] === 'en' ? 'en' : 'fr';
+      const slug = parts[1] || '';
+      const pages = {
+        fr: { equipes: 'effectifs', palmares: 'palmares', histoire: 'histoire', competitions: 'competition', tournois: 'tournoi', performance: 'performance', partenaires: 'partenaires', actualites: 'annonces', medias: 'media', boutique: 'boutique' },
+        en: { teams: 'effectifs', achievements: 'palmares', about: 'histoire', competitions: 'competition', tournaments: 'tournoi', performance: 'performance', partners: 'partenaires', news: 'annonces', media: 'media', shop: 'boutique' }
+      };
+      const params = new URLSearchParams(location.search);
+      params.set('lang', lang);
+      if (slug && pages[lang][slug]) params.set('page', slug);
+      else params.delete('page');
+      location.replace('/?' + params.toString() + location.hash);
+    })();
+  </script>
+</body>
+</html>

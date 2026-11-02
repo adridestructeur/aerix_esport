@@ -10,10 +10,10 @@
     <meta name="robots" content="index, follow, max-image-preview:large">
     <meta name="author" content="AERIX Esport">
     <link rel="canonical" href="https://aerix-esport.com/">
-    <link rel="alternate" hreflang="fr-FR" href="https://aerix-esport.com/fr/">
-    <link rel="alternate" hreflang="en-GB" href="https://aerix-esport.com/en/">
-    <link rel="alternate" hreflang="x-default" href="https://aerix-esport.com/fr/">
-    <!-- Routes dédiées par langue et rubrique ; les balises hreflang sont actualisées selon la route. -->
+    <link rel="alternate" hreflang="fr-FR" href="https://aerix-esport.com/?lang=fr">
+    <link rel="alternate" hreflang="en-GB" href="https://aerix-esport.com/?lang=en">
+    <link rel="alternate" hreflang="x-default" href="https://aerix-esport.com/?lang=fr">
+    <!-- Routes linguistiques compatibles GitHub Pages via paramètres URL ; hreflang actualisés selon la page. -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -6098,17 +6098,34 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
             fr: { home: "", effectifs: "equipes", palmares: "palmares", histoire: "histoire", competition: "competitions", tournoi: "tournois", performance: "performance", partenaires: "partenaires", annonces: "actualites", media: "medias", boutique: "boutique" },
             en: { home: "", effectifs: "teams", palmares: "achievements", histoire: "about", competition: "competitions", tournoi: "tournaments", performance: "performance", partenaires: "partners", annonces: "news", media: "media", boutique: "shop" }
         };
+        // GitHub Pages sert uniquement les fichiers/dossiers présents dans le dépôt.
+        // Les routes en query string évitent donc les 404 sur /fr/ et /en/.
         function aerixRoute(lang = currentLang, pageId = "home") {
             const prefix = lang === "en" ? "en" : "fr";
             const slug = AERIX_ROUTE_SLUGS[prefix][pageId] || "";
-            return `/${prefix}/${slug ? slug + "/" : ""}`;
+            const params = new URLSearchParams();
+            params.set("lang", prefix);
+            if (slug) params.set("page", slug);
+            return `/?${params.toString()}`;
         }
         function aerixRouteFromPath() {
+            const params = new URLSearchParams(location.search);
+            const queryLang = params.get("lang");
+            if (queryLang === "fr" || queryLang === "en") {
+                const lang = queryLang;
+                const slug = params.get("page") || "";
+                const pageId = Object.entries(AERIX_ROUTE_SLUGS[lang]).find(([, value]) => value === slug)?.[0] || "home";
+                return { lang, pageId, isRoute: true };
+            }
+            // Compatibilité avec les anciennes routes si elles sont ouvertes depuis un ancien cache.
             const parts = location.pathname.split("/").filter(Boolean);
-            const lang = parts[0] === "en" ? "en" : "fr";
-            const slug = parts[1] || "";
-            const pageId = Object.entries(AERIX_ROUTE_SLUGS[lang]).find(([, value]) => value === slug)?.[0] || "home";
-            return { lang, pageId, isRoute: parts.length > 0 && ["fr", "en"].includes(parts[0]) };
+            if (parts.length > 0 && ["fr", "en"].includes(parts[0])) {
+                const lang = parts[0];
+                const slug = parts[1] || "";
+                const pageId = Object.entries(AERIX_ROUTE_SLUGS[lang]).find(([, value]) => value === slug)?.[0] || "home";
+                return { lang, pageId, isRoute: true };
+            }
+            return { lang: currentLang === "en" ? "en" : "fr", pageId: "home", isRoute: false };
         }
         function updateAlternateLinks(lang, pageId) {
             const fr = aerixRoute("fr", pageId);
@@ -9665,8 +9682,9 @@ function checkAdminSessionTimeout() {
                 el.style.animation = '';
             });
 
-            if (pushHistory && window.location.pathname !== aerixRoute(currentLang, pageId)) {
-                history.pushState({ page: pageId, lang: currentLang }, '', aerixRoute(currentLang, pageId));
+            const nextRoute = aerixRoute(currentLang, pageId);
+            if (pushHistory && `${window.location.pathname}${window.location.search}` !== nextRoute) {
+                history.pushState({ page: pageId, lang: currentLang }, '', nextRoute);
             }
             trackPageView(pageId);
             updateDocumentSEO(currentLang, pageId);
