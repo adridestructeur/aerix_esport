@@ -6310,7 +6310,10 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
                 const nav = document.getElementById('nav-' + id);
                 const page = document.getElementById('page-' + id);
                 const defaults = DEFAULT_SITE_NAV_LABELS[currentLang] || DEFAULT_SITE_NAV_LABELS.fr;
-                const label = String(currentSiteSettings.navLabels?.[id] || '').trim() || defaults[id];
+                // Les libellés personnalisés sont enregistrés en français.
+                // En anglais, on conserve les traductions natives du site.
+                const customLabel = String(currentSiteSettings.navLabels?.[id] || '').trim();
+                const label = currentLang === 'fr' && customLabel ? customLabel : defaults[id];
                 document.querySelectorAll(`[data-site-nav-label="${id}"]`).forEach(el => { el.textContent = label; });
                 if (nav) nav.classList.toggle('hidden', hidden.has(id));
                 if (page) page.classList.toggle('site-section-hidden', hidden.has(id));
@@ -6336,7 +6339,9 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
             if (document.getElementById('site-maintenance-message')) document.getElementById('site-maintenance-message').value = currentSiteSettings.maintenanceMessage || DEFAULT_SITE_SETTINGS.maintenanceMessage;
             document.querySelectorAll('[data-site-section]').forEach(input => { input.checked = hidden.has(input.dataset.siteSection); });
             document.querySelectorAll('[data-site-nav-input]').forEach(input => {
-                const defaults = DEFAULT_SITE_NAV_LABELS[currentLang] || DEFAULT_SITE_NAV_LABELS.fr;
+                // Le panneau Owner édite les libellés français ; les libellés anglais
+                // restent gérés par le dictionnaire de traduction du site.
+                const defaults = DEFAULT_SITE_NAV_LABELS.fr;
                 input.value = currentSiteSettings.navLabels?.[input.dataset.siteNavInput] || defaults[input.dataset.siteNavInput] || '';
             });
             const activePage = document.querySelector('.page-view.active');
