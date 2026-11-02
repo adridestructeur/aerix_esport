@@ -4120,20 +4120,19 @@ body.theme-black-red .desktop-header-actions .desktop-language-btn:hover { borde
 </style>
 
 <style id="aerix-fix-partners-fx">
-/* Partenaires : même effet que le bouton « Laisser un avis » (néon blanc, léger lift) — plus de zoom ni de halo violet */
-.partner-card-tile, .partner-featured { transition:box-shadow .3s ease, transform .3s ease, border-color .3s ease, background .3s ease !important; }
-.partner-card-tile:hover, .partner-featured:hover,
-body.theme-black-red .partner-card-tile:hover, body.theme-black-red .partner-featured:hover {
-  transform:translateY(-2px) !important;
-  border-color:rgba(255,255,255,.9) !important;
-  box-shadow:0 0 6px rgba(255,255,255,.55), 0 0 18px rgba(255,255,255,.3), 0 0 36px rgba(255,255,255,.18) !important;
-}
-.partner-card-tile img, .partner-card-tile span, .partner-card-tile:hover img, .partner-card-tile:hover span { transform:none !important; filter:none !important; }
-.partner-card:hover::after, .partner-card-tile:hover::after { opacity:0 !important; }
-body.theme-light .partner-card-tile:hover, body.theme-light .partner-featured:hover {
-  border-color:rgba(17,24,39,.18) !important;
-  box-shadow:0 0 0 1px rgba(255,255,255,.9), 0 0 14px rgba(255,255,255,.95), 0 6px 22px rgba(17,24,39,.16) !important;
-}
+/* Partenaires : zoom léger du logo et halo violet au survol. */
+.partner-card-tile,.partner-featured{transition:box-shadow .28s ease,transform .28s ease,border-color .28s ease,background .28s ease!important}
+.partner-card-tile:hover,.partner-featured:hover{transform:translateY(-2px) scale(1.015)!important;border-color:rgba(139,92,246,.62)!important;box-shadow:0 0 0 1px rgba(139,92,246,.16),0 0 16px rgba(139,92,246,.24),0 0 30px rgba(139,92,246,.14)!important}
+.partner-card-tile img,.partner-featured img{transition:transform .28s cubic-bezier(.2,.7,.2,1),filter .28s ease!important}
+.partner-card-tile:hover img,.partner-featured:hover img{transform:scale(1.075)!important;filter:drop-shadow(0 0 7px rgba(139,92,246,.38))!important}
+.partner-card-tile span{transition:transform .28s ease,text-shadow .28s ease!important}
+.partner-card-tile:hover span{transform:scale(1.035)!important;text-shadow:0 0 12px rgba(139,92,246,.38)!important}
+.partner-card:hover::after,.partner-card-tile:hover::after{opacity:0!important}
+body.theme-light .partner-card-tile:hover,body.theme-light .partner-featured:hover{border-color:rgba(139,92,246,.48)!important;box-shadow:0 0 0 1px rgba(139,92,246,.12),0 0 18px rgba(139,92,246,.18),0 6px 22px rgba(17,24,39,.12)!important}
+#nav-more-menu button.is-current{color:#fff!important;background:rgba(139,92,246,.18)!important;border:1px solid rgba(139,92,246,.42)!important}
+#mobile-menu button.is-current{background:rgba(139,92,246,.16)!important;border-color:rgba(139,92,246,.42)!important;color:#fff!important}
+body.theme-light #nav-more-menu button.is-current,body.theme-light #mobile-menu button.is-current{color:#171717!important}
+body.theme-white-red #nav-more-menu button.is-current,body.theme-white-red #mobile-menu button.is-current{color:#171717!important;background:rgba(229,57,53,.12)!important;border-color:rgba(229,57,53,.40)!important}
 </style>
 <style id="aerix-site-settings-css">.page-view.site-section-hidden{display:none!important}body.site-maintenance-active{overflow:hidden!important}body.site-maintenance-active>*:not(#site-maintenance-overlay){display:none!important}#site-maintenance-overlay{animation:none!important;transition:none!important}#site-maintenance-overlay-message{animation:none!important;opacity:1!important;transform:none!important}</style>
 
@@ -4231,20 +4230,20 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
             <div class="hidden md:flex space-x-0.5 text-xs font-medium text-gray-400 uppercase tracking-widest items-center relative bg-[#0c0c0c]/80 p-1 rounded-full border border-white/10 overflow-hidden shadow-inner shrink-0" id="nav-container">
                 <div id="nav-pill" class="absolute h-8 rounded-full bg-aerix-purple/20 transition-all duration-300 ease-out z-0 pointer-events-none backdrop-blur-md border border-aerix-purple/60 shadow-[0_0_25px_rgba(139,92,246,0.7)]"></div>
                 <button id="nav-home" onclick="navigate('home')" class="nav-btn hover:text-white active" data-i18n="nav_home">Accueil</button>
-                <button id="nav-histoire" onclick="navigate('histoire')" class="nav-btn hover:text-white" data-i18n="nav_histoire">Histoire</button>
-                <button id="nav-effectifs" onclick="navigate('effectifs')" class="nav-btn hover:text-white" data-i18n="nav_effectifs">Effectifs</button>
-                <button id="nav-palmares" onclick="navigate('palmares')" class="nav-btn hover:text-white" data-i18n="nav_palmares">Palmarès</button>
-                <button id="nav-competition" onclick="navigate('competition')" class="nav-btn hover:text-white" data-i18n="nav_competition">Compétition</button>
-                <button id="nav-tournoi" onclick="navigate('tournoi')" class="nav-btn hover:text-white">Tournoi</button>
-                <button id="nav-performance" onclick="navigate('performance')" class="nav-btn hover:text-white" data-i18n="nav_performance">Performance</button>
-                <button id="nav-partenaires" onclick="navigate('partenaires')" class="nav-btn hover:text-white" data-i18n="nav_partenaires">Partenaires</button>
-                <button id="nav-boutique" onclick="navigate('boutique')" class="nav-btn hover:text-white" data-i18n="nav_boutique">Boutique</button>
-                <button id="nav-coaching" onclick="openCoachingModal()" class="nav-btn hover:text-white" data-i18n="nav_coaching">Coaching</button>
+                <button id="nav-histoire" data-site-nav-label="histoire" onclick="navigate('histoire')" class="nav-btn hover:text-white" data-i18n="nav_histoire">Histoire</button>
+                <button id="nav-effectifs" data-site-nav-label="effectifs" onclick="navigate('effectifs')" class="nav-btn hover:text-white" data-i18n="nav_effectifs">Effectifs</button>
+                <button id="nav-palmares" data-site-nav-label="palmares" onclick="navigate('palmares')" class="nav-btn hover:text-white" data-i18n="nav_palmares">Palmarès</button>
+                <button id="nav-competition" data-site-nav-label="competition" onclick="navigate('competition')" class="nav-btn hover:text-white" data-i18n="nav_competition">Compétition</button>
+                <button id="nav-tournoi" data-site-nav-label="tournoi" onclick="navigate('tournoi')" class="nav-btn hover:text-white">Tournoi</button>
+                <button id="nav-performance" data-site-nav-label="performance" onclick="navigate('performance')" class="nav-btn hover:text-white" data-i18n="nav_performance">Performance</button>
+                <button id="nav-partenaires" data-site-nav-label="partenaires" onclick="navigate('partenaires')" class="nav-btn hover:text-white" data-i18n="nav_partenaires">Partenaires</button>
+                <button id="nav-boutique" data-site-nav-label="boutique" onclick="navigate('boutique')" class="nav-btn hover:text-white" data-i18n="nav_boutique">Boutique</button>
+                <button id="nav-coaching" data-site-nav-label="coaching" onclick="openCoachingModal()" class="nav-btn hover:text-white" data-i18n="nav_coaching">Coaching</button>
                 <button id="nav-more" type="button" onclick="toggleMoreMenu(event)" class="nav-btn hover:text-white flex items-center gap-1" aria-haspopup="true" aria-expanded="false"><span>Plus</span><span class="text-[10px]">▾</span></button>
             </div>
             <div id="nav-more-menu" class="hidden absolute left-1/2 -translate-x-1/2 top-[calc(100%+10px)] w-64 glass-panel-no-hover rounded-2xl p-2 border border-white/10 shadow-2xl z-[70]">
-                <button onclick="navigate('annonces'); closeMoreMenu();" class="w-full text-left px-4 py-3 rounded-xl text-sm font-bold text-gray-300 hover:text-white hover:bg-white/10 transition" data-i18n="nav_annonces">Annonces</button>
-                <button onclick="navigate('media'); closeMoreMenu();" class="w-full text-left px-4 py-3 rounded-xl text-sm font-bold text-gray-300 hover:text-white hover:bg-white/10 transition" data-i18n="nav_media">Média</button>
+                <button onclick="navigate('annonces'); closeMoreMenu();" class="w-full text-left px-4 py-3 rounded-xl text-sm font-bold text-gray-300 hover:text-white hover:bg-white/10 transition" data-i18n="nav_annonces" data-page-id="annonces" data-site-nav-label="annonces">Annonces</button>
+                <button onclick="navigate('media'); closeMoreMenu();" class="w-full text-left px-4 py-3 rounded-xl text-sm font-bold text-gray-300 hover:text-white hover:bg-white/10 transition" data-i18n="nav_media" data-page-id="media" data-site-nav-label="media">Média</button>
                 <button onclick="openRecruitmentModal(); closeMoreMenu();" class="w-full text-left px-4 py-3 rounded-xl text-sm font-bold text-gray-300 hover:text-white hover:bg-white/10 transition" data-i18n="nav_recruit">Rejoindre</button>
             </div>
 
@@ -4287,18 +4286,18 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
         <!-- Menu Déroulant Mobile -->
         <div id="mobile-menu" class="hidden md:hidden bg-[#080808]/98 backdrop-blur-2xl border-b border-white/10 px-6 py-6 flex flex-col gap-3 shadow-2xl">
             <button onclick="navigate('home'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-white bg-white/5 border border-white/5" data-i18n="nav_home">Accueil</button>
-            <button onclick="navigate('histoire'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_histoire">Histoire</button>
-            <button onclick="navigate('effectifs'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_effectifs">Effectifs</button>
-            <button onclick="navigate('palmares'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_palmares">Palmarès</button>
-            <button onclick="navigate('competition'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_competition">Compétition</button>
-            <button onclick="navigate('tournoi'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition">Tournoi</button>
-            <button onclick="navigate('performance'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_performance">Performance</button>
-            <button onclick="navigate('partenaires'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_partenaires">Partenaires</button>
-            <button onclick="navigate('boutique'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_boutique">Boutique</button>
-            <button onclick="openCoachingModal(); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_coaching">Coaching</button>
+            <button onclick="navigate('histoire'); closeMobileMenu();" data-site-nav-label="histoire" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_histoire">Histoire</button>
+            <button onclick="navigate('effectifs'); closeMobileMenu();" data-site-nav-label="effectifs" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_effectifs">Effectifs</button>
+            <button onclick="navigate('palmares'); closeMobileMenu();" data-site-nav-label="palmares" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_palmares">Palmarès</button>
+            <button onclick="navigate('competition'); closeMobileMenu();" data-site-nav-label="competition" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_competition">Compétition</button>
+            <button onclick="navigate('tournoi'); closeMobileMenu();" data-site-nav-label="tournoi" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition">Tournoi</button>
+            <button onclick="navigate('performance'); closeMobileMenu();" data-site-nav-label="performance" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_performance">Performance</button>
+            <button onclick="navigate('partenaires'); closeMobileMenu();" data-site-nav-label="partenaires" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_partenaires">Partenaires</button>
+            <button onclick="navigate('boutique'); closeMobileMenu();" data-site-nav-label="boutique" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_boutique">Boutique</button>
+            <button onclick="openCoachingModal(); closeMobileMenu();" data-site-nav-label="coaching" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_coaching">Coaching</button>
             <div class="border-t border-white/10 pt-3 mt-1 text-[10px] uppercase tracking-widest text-gray-500 font-bold">Plus</div>
-            <button onclick="navigate('annonces'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_annonces">Annonces</button>
-            <button onclick="navigate('media'); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_media">Média</button>
+            <button onclick="navigate('annonces'); closeMobileMenu();" data-page-id="annonces" data-site-nav-label="annonces" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_annonces">Annonces</button>
+            <button onclick="navigate('media'); closeMobileMenu();" data-page-id="media" data-site-nav-label="media" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_media">Média</button>
             <button onclick="openRecruitmentModal(); closeMobileMenu();" class="text-left py-3 px-4 rounded-xl text-sm font-bold text-gray-300 hover:text-white bg-white/5 border border-white/5 transition" data-i18n="nav_recruit">Rejoindre AERIX</button>
             <div id="mobile-account-area"></div>
             <div class="relative">
@@ -4440,6 +4439,7 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
                 </div>
             </div>
             <div id="palmares-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+            <div id="achievements-stats" class="hidden grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8"></div>
             <div id="achievements-container" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </main>
 
@@ -4461,6 +4461,10 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
                     <div id="competition-results" class="space-y-4"></div>
                 </section>
             </div>
+            <section class="glass-panel p-7 rounded-3xl mt-8">
+                <div class="flex items-center justify-between gap-4 mb-6"><div><div class="text-xs font-bold text-aerix-purple uppercase tracking-widest">Archives</div><h4 class="text-2xl font-black text-white mt-1">Historique des événements</h4><p class="text-xs text-gray-500 mt-1">Les événements passés restent consultables tant qu'ils ne sont pas supprimés de l'administration.</p></div><span id="competition-archive-count" class="text-xs text-gray-500"></span></div>
+                <div id="competition-archive" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+            </section>
         </main>
 
         <!-- PAGE TOURNOI -->
@@ -5063,6 +5067,11 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
                     </div>
                     <button type="button" onclick="saveSiteSettings()" class="px-5 py-3 rounded-xl bg-aerix-purple text-white text-sm font-black hover:opacity-90">Enregistrer la visibilité</button>
                 </section>
+                <section class="glass-panel rounded-2xl p-5 md:p-7 space-y-4">
+                    <div><h4 class="text-lg font-black text-white">Renommer les onglets</h4><p class="text-sm text-gray-400 mt-1">Personnalise les libellés visibles dans la navigation. Cette fonction est réservée au Owner.</p></div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"><label class="text-xs text-gray-400">Histoire<input data-site-nav-input="histoire" maxlength="32" class="mt-1 w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm"></label><label class="text-xs text-gray-400">Effectifs<input data-site-nav-input="effectifs" maxlength="32" class="mt-1 w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm"></label><label class="text-xs text-gray-400">Palmarès<input data-site-nav-input="palmares" maxlength="32" class="mt-1 w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm"></label><label class="text-xs text-gray-400">Compétition<input data-site-nav-input="competition" maxlength="32" class="mt-1 w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm"></label><label class="text-xs text-gray-400">Tournoi<input data-site-nav-input="tournoi" maxlength="32" class="mt-1 w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm"></label><label class="text-xs text-gray-400">Performance<input data-site-nav-input="performance" maxlength="32" class="mt-1 w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm"></label><label class="text-xs text-gray-400">Partenaires<input data-site-nav-input="partenaires" maxlength="32" class="mt-1 w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm"></label><label class="text-xs text-gray-400">Boutique<input data-site-nav-input="boutique" maxlength="32" class="mt-1 w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm"></label><label class="text-xs text-gray-400">Annonces<input data-site-nav-input="annonces" maxlength="32" class="mt-1 w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm"></label><label class="text-xs text-gray-400">Média<input data-site-nav-input="media" maxlength="32" class="mt-1 w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm"></label><label class="text-xs text-gray-400">Coaching<input data-site-nav-input="coaching" maxlength="32" class="mt-1 w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm"></label></div>
+                    <button type="button" onclick="saveSiteSettings()" class="px-5 py-3 rounded-xl bg-aerix-purple text-white text-sm font-black hover:opacity-90">Enregistrer les noms des onglets</button>
+                </section>
                 <section class="glass-panel rounded-2xl p-5 md:p-7 space-y-4 border border-red-500/20">
                     <div><h4 class="text-lg font-black text-white">Mode maintenance</h4><p class="text-sm text-gray-400 mt-1">Le public verra une page de maintenance. Les administrateurs autorisés conserveront l’accès au site.</p></div>
                     <label class="flex items-center gap-3 rounded-xl border border-red-500/20 bg-red-500/5 p-4"><input id="site-maintenance-enabled" type="checkbox" class="accent-red-500 w-5 h-5"><span class="text-sm font-bold text-white">Activer le mode maintenance</span></label>
@@ -5085,7 +5094,7 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
             <div id="admin-tab-contact" class="admin-tab hidden space-y-6">
                 <div>
                     <h4 class="text-lg font-bold text-white mb-2" data-i18n="contact_admin_title">Demandes de contact</h4>
-                    <p class="text-xs text-gray-500 mb-5" data-i18n="contact_admin_desc">Consulte et gère les tickets envoyés par les utilisateurs.</p>
+                    <p class="text-xs text-gray-500 mb-2" data-i18n="contact_admin_desc">Consulte et gère les tickets envoyés par les utilisateurs.</p><p id="admin-contact-sync-status" class="text-xs text-gray-500 mb-5">Chargement des demandes…</p>
                     <div id="admin-list-contact" class="space-y-4"></div>
                 </div>
             </div>
@@ -5117,7 +5126,7 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
             <div id="admin-tab-avis" class="admin-tab hidden space-y-6">
                 <div>
                     <h4 class="text-lg font-bold text-white mb-2" data-i18n="review_admin_title">Avis publiés</h4>
-                    <p class="text-xs text-gray-500 mb-5" data-i18n="review_admin_desc">Tous les avis laissés par les membres. Supprime les avis abusifs ou hors sujet.</p>
+                    <p class="text-xs text-gray-500 mb-2" data-i18n="review_admin_desc">Tous les avis laissés par les membres. Supprime les avis abusifs ou hors sujet.</p><p id="admin-review-sync-status" class="text-xs text-gray-500 mb-5">Chargement des avis…</p>
                     <div id="admin-list-avis" class="space-y-4"></div>
                 </div>
             </div>
@@ -5786,6 +5795,8 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
         let globalAccounts = [];
         let globalContactRequests = [];
         let globalReviews = [];
+        let reviewSyncError = null;
+        let contactSyncError = null;
         let globalGallery = [];
         let userTickets = [];
         let globalCoachAvailability = {}; // { 'YYYY-MM-DD': true }
@@ -6230,6 +6241,7 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
                 history.pushState({ page: currentPage, lang }, "", aerixRoute(lang, currentPage));
                 currentLang = lang;
                 applyLanguageContent(lang);
+                if (typeof applySiteSettings === 'function') applySiteSettings();
                 updateDocumentSEO(lang, currentPage);
 
                 // 3) Contenus dynamiques.
@@ -6288,7 +6300,8 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
         }
 
         // RÉGLAGES GLOBAUX DU SITE (Firestore: siteConfig/public)
-        const DEFAULT_SITE_SETTINGS = { hiddenSections: [], maintenance: false, maintenanceMessage: 'Le site AERIX est temporairement en maintenance. Nous revenons bientôt.' };
+        const DEFAULT_SITE_NAV_LABELS = { fr:{histoire:'Histoire',effectifs:'Effectifs',palmares:'Palmarès',competition:'Compétition',tournoi:'Tournoi',performance:'Performance',partenaires:'Partenaires',boutique:'Boutique',annonces:'Annonces',media:'Média',coaching:'Coaching'}, en:{histoire:'About',effectifs:'Teams',palmares:'Achievements',competition:'Competitions',tournoi:'Tournaments',performance:'Performance',partenaires:'Partners',boutique:'Shop',annonces:'News',media:'Media',coaching:'Coaching'} };
+        const DEFAULT_SITE_SETTINGS = { hiddenSections: [], navLabels:{}, maintenance: false, maintenanceMessage: 'Le site AERIX est temporairement en maintenance. Nous revenons bientôt.' };
         let currentSiteSettings = { ...DEFAULT_SITE_SETTINGS };
         const SITE_SECTION_IDS = ['histoire','effectifs','palmares','competition','tournoi','performance','partenaires','boutique','annonces','media','coaching'];
         function applySiteSettings() {
@@ -6296,6 +6309,9 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
             SITE_SECTION_IDS.forEach(id => {
                 const nav = document.getElementById('nav-' + id);
                 const page = document.getElementById('page-' + id);
+                const defaults = DEFAULT_SITE_NAV_LABELS[currentLang] || DEFAULT_SITE_NAV_LABELS.fr;
+                const label = String(currentSiteSettings.navLabels?.[id] || '').trim() || defaults[id];
+                document.querySelectorAll(`[data-site-nav-label="${id}"]`).forEach(el => { el.textContent = label; });
                 if (nav) nav.classList.toggle('hidden', hidden.has(id));
                 if (page) page.classList.toggle('site-section-hidden', hidden.has(id));
                 document.querySelectorAll(`[onclick*="navigate('${id}')"]`).forEach(el => el.classList.toggle('hidden', hidden.has(id)));
@@ -6319,6 +6335,10 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
             if (document.getElementById('site-maintenance-enabled')) document.getElementById('site-maintenance-enabled').checked = !!currentSiteSettings.maintenance;
             if (document.getElementById('site-maintenance-message')) document.getElementById('site-maintenance-message').value = currentSiteSettings.maintenanceMessage || DEFAULT_SITE_SETTINGS.maintenanceMessage;
             document.querySelectorAll('[data-site-section]').forEach(input => { input.checked = hidden.has(input.dataset.siteSection); });
+            document.querySelectorAll('[data-site-nav-input]').forEach(input => {
+                const defaults = DEFAULT_SITE_NAV_LABELS[currentLang] || DEFAULT_SITE_NAV_LABELS.fr;
+                input.value = currentSiteSettings.navLabels?.[input.dataset.siteNavInput] || defaults[input.dataset.siteNavInput] || '';
+            });
             const activePage = document.querySelector('.page-view.active');
             if (activePage && activePage.classList.contains('site-section-hidden')) {
                 const home = document.getElementById('page-home');
@@ -6333,9 +6353,14 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
             const hiddenSections = [...document.querySelectorAll('[data-site-section]:checked')].map(input => input.dataset.siteSection);
             const maintenance = !!document.getElementById('site-maintenance-enabled')?.checked;
             const maintenanceMessage = (document.getElementById('site-maintenance-message')?.value || '').trim() || DEFAULT_SITE_SETTINGS.maintenanceMessage;
+            const navLabels = {};
+            document.querySelectorAll('[data-site-nav-input]').forEach(input => {
+                const key = input.dataset.siteNavInput, value = input.value.trim().slice(0,32);
+                if (key && value) navLabels[key] = value;
+            });
             try {
-                await db.collection('siteConfig').doc('public').set({ hiddenSections, maintenance, maintenanceMessage, updatedAt: firebase.firestore.FieldValue.serverTimestamp(), updatedBy: currentUser.uid }, { merge: true });
-                currentSiteSettings = { hiddenSections, maintenance, maintenanceMessage };
+                await db.collection('siteConfig').doc('public').set({ hiddenSections, navLabels, maintenance, maintenanceMessage, updatedAt: firebase.firestore.FieldValue.serverTimestamp(), updatedBy: currentUser.uid }, { merge: true });
+                currentSiteSettings = { ...currentSiteSettings, hiddenSections, navLabels, maintenance, maintenanceMessage };
                 try { localStorage.setItem('aerixSiteSettingsCache', JSON.stringify(currentSiteSettings)); } catch(e) {}
                 applySiteSettings();
                 showToast('Réglages du site enregistrés.', 'success');
@@ -6666,26 +6691,19 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
                 scheduleRender(renderEffectifs);
                 scheduleAdminRender();
             }, (e) => { console.warn('playerCards indisponibles (vérifier les règles Firestore)', e); globalPlayerCards = []; scheduleRender(renderEffectifs); scheduleAdminRender(); });
-            db.collection("palmares").onSnapshot((snapshot) => { globalPalmares = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); savePublicCollectionCache("palmares", globalPalmares); scheduleRender(renderPalmares); renderCompetitionPage(); renderPerformancePage(); scheduleAdminRender(); }, (e) => console.error('palmares', e));
+            db.collection("palmares").onSnapshot((snapshot) => { globalPalmares = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); savePublicCollectionCache("palmares", globalPalmares); scheduleRender(renderPalmares); scheduleRender(renderAchievements); renderCompetitionPage(); renderPerformancePage(); scheduleAdminRender(); }, (e) => console.error('palmares', e));
             db.collection("achievements").onSnapshot((snapshot) => { globalAchievements = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); savePublicCollectionCache("achievements", globalAchievements); scheduleRender(renderAchievements); scheduleAdminRender(); }, () => { globalAchievements = []; scheduleRender(renderAchievements); scheduleAdminRender(); });
             db.collection("annonces").onSnapshot((snapshot) => { globalAnnonces = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); globalAnnonces = sortByDateDesc(globalAnnonces); savePublicCollectionCache("annonces", globalAnnonces); scheduleRender(renderAnnonces); renderMediaPage(); scheduleAdminRender(); }, error => { globalAnnonces = []; db.collection("annonces").get().then(s => { globalAnnonces = s.docs.map(doc => ({ id: doc.id, ...doc.data() })); globalAnnonces = sortByDateDesc(globalAnnonces); savePublicCollectionCache("annonces", globalAnnonces); scheduleRender(renderAnnonces); scheduleAdminRender(); }).catch(e => console.error('annonces fallback', e)); });
             db.collection("partners").onSnapshot((snapshot) => { globalPartners = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); savePublicCollectionCache("partners", globalPartners); scheduleRender(renderPartners); scheduleRender(renderPartnersMarquee); scheduleAdminRender(); }, (e) => console.error('partners', e));
             db.collection("accounts").onSnapshot((snapshot) => { globalAccounts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); scheduleAdminRender(); }, () => { globalAccounts = []; scheduleAdminRender(); });
-            db.collection("contactRequests").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
-                globalContactRequests = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                scheduleAdminRender();
-                if (currentUser) { userTickets = globalContactRequests.filter(t => t.uid === currentUser.uid); if (!document.getElementById('tickets-modal').classList.contains('hidden')) renderUserTickets(); updateTicketsBadge(); }
-            }, () => { globalContactRequests = []; scheduleAdminRender(); updateTicketsBadge(); });
+            db.collection("contactRequests").orderBy("createdAt","desc").onSnapshot(snapshot=>{contactSyncError=null;globalContactRequests=snapshot.docs.map(doc=>({id:doc.id,...doc.data()}));scheduleAdminRender();if(currentUser){userTickets=globalContactRequests.filter(t=>t.uid===currentUser.uid);if(!document.getElementById('tickets-modal').classList.contains('hidden'))renderUserTickets();updateTicketsBadge();}},error=>{contactSyncError=error;console.error('contactRequests',error);globalContactRequests=[];scheduleAdminRender();updateTicketsBadge();});
             db.collection("coachAvailability").onSnapshot((snapshot) => {
                 globalCoachAvailability = {};
                 snapshot.docs.forEach(doc => { if (doc.data().open) globalCoachAvailability[doc.id] = true; });
                 if (document.getElementById('coaching-modal') && !document.getElementById('coaching-modal').classList.contains('hidden')) renderCoachingCalendar();
                 if (document.getElementById('admin-tab-coaching') && !document.getElementById('admin-tab-coaching').classList.contains('hidden')) renderAdminCoachingCalendar();
             }, () => { globalCoachAvailability = {}; });
-            db.collection("reviews").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
-                globalReviews = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                scheduleAdminRender();
-            }, () => { globalReviews = []; scheduleAdminRender(); });
+            db.collection("reviews").orderBy("createdAt","desc").onSnapshot(snapshot=>{reviewSyncError=null;globalReviews=snapshot.docs.map(doc=>({id:doc.id,...doc.data()}));scheduleAdminRender();},error=>{reviewSyncError=error;console.error('reviews',error);globalReviews=[];scheduleAdminRender();});
             db.collection("gallery").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
                 globalGallery = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 savePublicCollectionCache("gallery", globalGallery);
@@ -7212,9 +7230,11 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
             document.querySelectorAll('#palmares-view-toggle .filter-btn').forEach(btn => btn.classList.toggle('active', btn.getAttribute('data-view') === palmaresView));
             const resultsContainer = document.getElementById('palmares-container');
             const achievementsContainer = document.getElementById('achievements-container');
+            const achievementsStats = document.getElementById('achievements-stats');
             const filters = document.getElementById('filters-palmares');
             if (resultsContainer) resultsContainer.classList.toggle('hidden', palmaresView !== 'resultats');
             if (achievementsContainer) achievementsContainer.classList.toggle('hidden', palmaresView !== 'palmares');
+            if (achievementsStats) achievementsStats.classList.toggle('hidden', palmaresView !== 'palmares');
             if (filters) filters.classList.toggle('hidden', palmaresView !== 'resultats');
             if (palmaresView === 'resultats') renderPalmares();
             else renderAchievements();
@@ -7223,6 +7243,14 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
         function renderAchievements() {
             const container = document.getElementById('achievements-container');
             if (!container) return;
+            const stats = document.getElementById('achievements-stats');
+            const results = Array.isArray(globalPalmares) ? globalPalmares : [];
+            const details = p => [p.position,p.result,p.title,p.description,p.split,p.category].filter(Boolean).join(' ').toLowerCase();
+            const position = p => { const raw=String(p.position||p.result||'').trim().toLowerCase(); const m=raw.match(/^p?\s*(\d+)/)||raw.match(/(\d+)\s*(?:er|e|ème|eme)/); return m?Number(m[1]):null; };
+            const top5=results.filter(p=>{const n=position(p);return (n!==null&&n<=5)||/top\s*5|top\s*cinq/.test(details(p));}).length;
+            const podiums=results.filter(p=>{const n=position(p);return (n!==null&&n<=3)||/podium|top\s*3/.test(details(p));}).length;
+            const poles=results.filter(p=>/pole\s*position/.test(details(p))).length;
+            if(stats)stats.innerHTML=[[results.length,'Résultats enregistrés','🏁'],[top5,'Top 5','🏆'],[podiums,'Podiums','🥇'],[poles,'Pole positions','⚡']].map(([v,l,i])=>`<div class="glass-panel p-5 rounded-2xl text-center border border-white/10"><div class="text-xl mb-2">${i}</div><div class="text-3xl font-black text-white tabular-nums">${v}</div><div class="text-[10px] text-gray-500 uppercase tracking-widest mt-2">${l}</div></div>`).join('');
             const items = [...(globalAchievements || [])].sort((a,b) => {
                 const ao = Number(a.order ?? 999999), bo = Number(b.order ?? 999999);
                 if (ao !== bo) return ao - bo;
@@ -8725,22 +8753,17 @@ function checkAdminSessionTimeout() {
             }
             if (partnersAdminEl) partnersAdminEl.innerHTML = globalPartners.map(p => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center gap-3"><div class="min-w-0"><div class="text-white font-bold text-sm flex items-center gap-2">${escapeHtml(p.name || 'Partenaire')} ${p.featured ? '<span class="text-[9px] uppercase tracking-widest text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 px-2 py-0.5 rounded-full">Mis en avant</span>' : ''}</div><div class="text-xs text-gray-500 mt-1">${escapeHtml(p.category || 'Partenaire')}</div></div><div class="flex gap-2 shrink-0"><button onclick="startEditPartner('${p.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('partners', '${p.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
             document.getElementById('admin-list-annonces').innerHTML = sortByDateDesc(globalAnnonces).map(a => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm truncate max-w-[200px]">${a.title}</div><div class="text-xs text-gray-500">${a.date}</div></div><div class="flex gap-2"><button onclick="startEditAnnouncement('${a.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('annonces', '${a.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
-            const contactEl = document.getElementById('admin-list-contact');
-            if (contactEl) {
-                const contactOnly = globalContactRequests.filter(t => t.type !== 'coaching');
-                contactEl.innerHTML = contactOnly.length ? contactOnly.map(t => renderAdminTicketCard(t)).join('') : `<p class="text-gray-500 text-sm italic">${currentLang==='en'?'No contact requests.':'Aucun ticket.'}</p>`;
-            }
-            const coachingEl = document.getElementById('admin-list-coaching');
-            if (coachingEl) {
-                const coachingOnly = globalContactRequests.filter(t => t.type === 'coaching');
-                coachingEl.innerHTML = coachingOnly.length ? coachingOnly.map(t => renderAdminTicketCard(t)).join('') : `<p class="text-gray-500 text-sm italic">${currentLang==='en'?'No coaching requests.':'Aucune demande de coaching.'}</p>`;
-            }
+            const contactEl=document.getElementById('admin-list-contact'),contactStatus=document.getElementById('admin-contact-sync-status');
+            const contactOnly=(globalContactRequests||[]).filter(t=>t.type!=='coaching'),coachingOnly=(globalContactRequests||[]).filter(t=>t.type==='coaching');
+            if(contactStatus)contactStatus.textContent=contactSyncError?`Erreur Firestore (${contactSyncError.code||'inconnue'}) : vérifie les règles de lecture de contactRequests.`:`${contactOnly.length} demande(s) de contact · ${coachingOnly.length} demande(s) de coaching reçue(s).`;
+            if(contactEl)contactEl.innerHTML=contactSyncError?`<p class="text-red-300 text-sm">Impossible de lire contactRequests. Vérifie les règles Firestore et la console du navigateur.</p>`:contactOnly.length?contactOnly.map(t=>renderAdminTicketCard(t)).join(''):`<p class="text-gray-500 text-sm italic">${currentLang==='en'?'No contact requests.':'Aucun ticket.'}</p>`;
+            const coachingEl=document.getElementById('admin-list-coaching');
+            if(coachingEl)coachingEl.innerHTML=contactSyncError?`<p class="text-red-300 text-sm">Impossible de lire les demandes de coaching : accès Firestore à vérifier.</p>`:coachingOnly.length?coachingOnly.map(t=>renderAdminTicketCard(t)).join(''):`<p class="text-gray-500 text-sm italic">${currentLang==='en'?'No coaching requests.':'Aucune demande de coaching.'}</p>`;
             scrollTicketThreadsToBottom(contactEl);
             scrollTicketThreadsToBottom(coachingEl);
-            const avisEl = document.getElementById('admin-list-avis');
-            if (avisEl) {
-                avisEl.innerHTML = globalReviews.length ? globalReviews.map(r => renderAdminReviewCard(r)).join('') : `<p class="text-gray-500 text-sm italic">${currentLang==='en'?'No reviews yet.':'Aucun avis pour le moment.'}</p>`;
-            }
+            const avisEl=document.getElementById('admin-list-avis'),reviewStatus=document.getElementById('admin-review-sync-status');
+            if(reviewStatus)reviewStatus.textContent=reviewSyncError?`Erreur Firestore (${reviewSyncError.code||'inconnue'}) : vérifie les règles de lecture de reviews.`:`${(globalReviews||[]).length} avis reçu(s) dans Firestore.`;
+            if(avisEl)avisEl.innerHTML=reviewSyncError?`<p class="text-red-300 text-sm">Impossible de lire reviews. Vérifie les règles Firestore et la console du navigateur.</p>`:globalReviews.length?globalReviews.map(r=>renderAdminReviewCard(r)).join(''):`<p class="text-gray-500 text-sm italic">${currentLang==='en'?'No reviews yet.':'Aucun avis pour le moment.'}</p>`;
             const galleryEl = document.getElementById('admin-list-gallery');
             if (galleryEl) {
                 galleryEl.innerHTML = globalGallery.length ? globalGallery.map(g => `<div class="relative group rounded-xl overflow-hidden aspect-square border border-white/10"><img loading="lazy" decoding="async" src="${g.image}" loading="lazy" decoding="async" class="w-full h-full object-cover" alt="Image AERIX"><button onclick="deleteItem('gallery', '${g.id}')" class="absolute top-1.5 right-1.5 bg-red-500 text-white text-[10px] w-6 h-6 rounded-full font-bold opacity-0 group-hover:opacity-100 transition">✕</button></div>`).join('') : `<p class="text-gray-500 text-sm italic col-span-full">Aucune photo dans la galerie.</p>`;
@@ -9463,11 +9486,11 @@ function checkAdminSessionTimeout() {
         function refreshNavPill() { const active=document.querySelector('#nav-container .nav-btn.active'); if(!active) return; requestAnimationFrame(()=>requestAnimationFrame(()=>updateNavPill(active))); }
 
         function renderNavbar() {
-            const activePage = document.querySelector('.page-view.active');
-            const activeId = activePage ? activePage.id.replace('page-', '') : 'home';
-            document.querySelectorAll('#nav-container .nav-btn').forEach(btn => btn.classList.toggle('active', btn.id === 'nav-' + activeId));
-            updateNavPill(document.getElementById('nav-' + activeId));
-            if (!['home','histoire','effectifs','palmares','competition','performance','partenaires','boutique','coaching'].includes(activeId)) { document.getElementById('nav-more')?.classList.add('active'); }
+            const activePage=document.querySelector('.page-view.active'),activeId=activePage?activePage.id.replace('page-',''):'home',moreActive=['annonces','media'].includes(activeId);
+            document.querySelectorAll('#nav-container .nav-btn').forEach(btn=>btn.classList.toggle('active',btn.id==='nav-'+activeId||(btn.id==='nav-more'&&moreActive)));
+            document.querySelectorAll('#nav-more-menu button[data-page-id],#mobile-menu button[data-page-id]').forEach(btn=>{const yes=btn.dataset.pageId===activeId;btn.classList.toggle('is-current',yes);btn.setAttribute('aria-current',yes?'page':'false');});
+            const more=document.getElementById('nav-more');if(more)more.classList.toggle('active',moreActive);
+            updateNavPill(document.getElementById(moreActive?'nav-more':'nav-'+activeId));
         }
 
         function positionMoreMenu() {
@@ -9509,20 +9532,22 @@ function checkAdminSessionTimeout() {
         });
 
         function renderCompetitionPage() {
-            const up = document.getElementById('competition-upcoming');
-            const res = document.getElementById('competition-results');
-            if (!up || !res) return;
-            const now = Date.now();
-            const upcoming = [...(globalEvents || [])].sort((a,b) => parseAERIXDate(a.datetime || a.date || '') - parseAERIXDate(b.datetime || b.date || '')).filter(e => {
-                const d = parseAERIXDate(e.datetime || e.date || ''); return !Number.isNaN(d) && d >= now;
-            }).slice(0,6);
-            up.innerHTML = upcoming.length ? upcoming.map(e => {
-                const dateText = e.date ? e.date.split('-').reverse().join('/') : 'Date non renseignée';
-                return `<button type="button" onclick="openEventArticle('${e.id}')" class="glass-panel p-0 rounded-2xl border border-white/10 overflow-hidden text-left w-full group hover:border-aerix-purple/50 transition duration-300">${e.image ? `<div class="w-full aspect-video bg-black overflow-hidden"><img loading="lazy" decoding="async" src="${escapeHtml(e.image)}" class="w-full h-full object-cover group-hover:scale-[1.025] transition duration-500" alt="" loading="lazy"></div>` : ''}<div class="p-5"><div class="flex items-start justify-between gap-3"><div class="min-w-0"><div class="flex flex-wrap items-center gap-2"><span class="text-xs text-aerix-purple font-bold uppercase">${escapeHtml(e.game || e.type || 'Événement')}</span>${e.type ? `<span class="text-[10px] text-gray-500 uppercase tracking-widest">${escapeHtml(e.type)}</span>` : ''}</div><div class="text-white font-bold text-lg mt-2">${escapeHtml(e.title || 'Événement')}</div><div class="text-xs text-gray-500 mt-2">📅 ${escapeHtml(dateText)}${e.time ? ' · ' + escapeHtml(e.time) : ''}</div></div>${e.opponent ? `<span class="text-xs text-gray-400 text-right shrink-0">${escapeHtml(e.opponent)}</span>` : ''}</div>${e.competition ? `<div class="text-xs text-gray-500 mt-3">${escapeHtml(e.competition)}</div>` : ''}<div class="text-xs text-aerix-purple font-bold mt-4">Voir les détails →</div></div></button>`;
-            }).join('') : `<p class="text-gray-500 text-sm italic">Aucun événement à venir.</p>`;
-            const results = sortByDateDesc([...(globalPalmares || [])]).slice(0,6);
-            res.innerHTML = results.length ? results.map(p => `<div class="glass-panel p-4 rounded-2xl border border-white/10 flex items-center justify-between gap-4"><div><div class="text-white font-bold">${escapeHtml(p.title || 'Résultat')}</div><div class="text-xs text-gray-500 mt-1">${escapeHtml(p.game || 'Général')} ${p.date ? '· '+escapeHtml(p.date) : ''}</div></div><span class="text-xs font-bold text-aerix-purple">${escapeHtml(p.result || p.position || '')}</span></div>`).join('') : `<p class="text-gray-500 text-sm italic">Aucun résultat enregistré.</p>`;
+            const up=document.getElementById('competition-upcoming'),res=document.getElementById('competition-results'),archive=document.getElementById('competition-archive');
+            if(!up||!res)return;
+            const now=Date.now(),dated=[...(globalEvents||[])].map(e=>({...e,_ts:parseAERIXDate(e.datetime||e.date||'')})).filter(e=>!Number.isNaN(e._ts));
+            const upcoming=dated.filter(e=>e._ts>=now).sort((a,b)=>a._ts-b._ts).slice(0,6),past=dated.filter(e=>e._ts<now).sort((a,b)=>b._ts-a._ts);
+            up.innerHTML=upcoming.length?upcoming.map(e=>{const d=e.date?e.date.split('-').reverse().join('/'):'Date non renseignée';return `<button type="button" onclick="openEventArticle('${String(e.id||'').replace(/'/g,"\\'")}')" class="glass-panel p-0 rounded-2xl border border-white/10 overflow-hidden text-left w-full group hover:border-aerix-purple/50 transition duration-300">${e.image?`<div class="w-full aspect-video bg-black overflow-hidden"><img loading="lazy" decoding="async" src="${escapeHtml(e.image)}" class="w-full h-full object-cover group-hover:scale-[1.025] transition duration-500" alt=""></div>`:''}<div class="p-5"><div class="flex items-start justify-between gap-3"><div class="min-w-0"><div class="flex flex-wrap items-center gap-2"><span class="text-xs text-aerix-purple font-bold uppercase">${escapeHtml(e.game||e.type||'Événement')}</span>${e.type?`<span class="text-[10px] text-gray-500 uppercase tracking-widest">${escapeHtml(e.type)}</span>`:''}</div><div class="text-white font-bold text-lg mt-2">${escapeHtml(e.title||'Événement')}</div><div class="text-xs text-gray-500 mt-2">📅 ${escapeHtml(d)}${e.time?' · '+escapeHtml(e.time):''}</div></div>${e.opponent?`<span class="text-xs text-gray-400 text-right shrink-0">${escapeHtml(e.opponent)}</span>`:''}</div>${e.competition?`<div class="text-xs text-gray-500 mt-3">${escapeHtml(e.competition)}</div>`:''}<div class="text-xs text-aerix-purple font-bold mt-4">Voir les détails →</div></div></button>`;}).join(''):`<p class="text-gray-500 text-sm italic">Aucun événement à venir.</p>`;
+            const results=sortByDateDesc([...(globalPalmares||[])]).slice(0,6);
+            res.innerHTML=results.length?results.map(p=>`<button type="button" onclick="openCompetitionResult('${String(p.id||'').replace(/'/g,"\\'")}')" class="glass-panel p-4 rounded-2xl border border-white/10 flex items-center justify-between gap-4 text-left w-full hover:border-aerix-purple/40 transition"><span class="min-w-0"><span class="block text-white font-bold">${escapeHtml(p.title||'Résultat')}</span><span class="block text-xs text-gray-500 mt-1">${escapeHtml(p.game||'Général')} ${p.date?'· '+escapeHtml(p.date):''}</span></span><span class="text-xs font-bold text-aerix-purple shrink-0">${escapeHtml(p.result||p.position||'')} ↗</span></button>`).join(''):`<p class="text-gray-500 text-sm italic">Aucun résultat enregistré.</p>`;
+            if(archive){const count=document.getElementById('competition-archive-count');if(count)count.textContent=`${past.length} événement${past.length>1?'s':''}`;archive.innerHTML=past.length?past.map(e=>{const d=e.date?e.date.split('-').reverse().join('/') : new Date(e._ts).toLocaleDateString(currentLang==='en'?'en-GB':'fr-FR');return `<button type="button" onclick="openEventArticle('${String(e.id||'').replace(/'/g,"\\'")}')" class="rounded-2xl border border-white/10 bg-white/[.03] p-4 text-left hover:border-aerix-purple/45 transition"><span class="flex items-center justify-between gap-3"><span class="text-white font-bold text-sm">${escapeHtml(e.title||'Événement')}</span><span class="text-[10px] text-gray-500 shrink-0">${escapeHtml(d)}</span></span><span class="block text-xs text-gray-500 mt-2">${escapeHtml([e.game||'AERIX',e.type,e.competition].filter(Boolean).join(' · '))}</span><span class="block text-xs text-aerix-purple font-bold mt-3">Consulter l’événement →</span></button>`;}).join(''):`<p class="text-gray-500 text-sm italic">Aucun événement passé archivé.</p>`;}
         }
+        function openCompetitionResult(id){
+            const p=(globalPalmares||[]).find(x=>String(x.id)===String(id));if(!p)return;
+            const eventId=p.eventId||p.event_id||p.linkedEventId||p.linked_event_id;
+            const event=eventId?(globalEvents||[]).find(e=>String(e.id)===String(eventId)):(globalEvents||[]).find(e=>String(e.title||'').trim().toLowerCase()===String(p.title||'').trim().toLowerCase());
+            if(event)openEventArticle(event.id);else openPalmaresArticle(p.id);
+        }
+
 
         function openEventArticle(id) {
             const item = (globalEvents || []).find(e => e.id === id);
@@ -9626,10 +9651,7 @@ function checkAdminSessionTimeout() {
             void targetPage.offsetWidth;
             targetPage.classList.add('animate-tab-change');
 
-            document.querySelectorAll('#nav-container .nav-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.id === 'nav-' + pageId);
-            });
-            updateNavPill(document.getElementById('nav-' + pageId));
+            renderNavbar();
             refreshNavPill();
 
             document.querySelectorAll('.animate-fade-up').forEach(el => {
