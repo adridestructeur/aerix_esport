@@ -5159,7 +5159,7 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
             <div id="admin-tab-effectifs" class="admin-tab hidden space-y-8">
                 <div class="glass-panel p-5 rounded-2xl border border-white/5">
                     <h4 class="text-lg font-bold text-white mb-2">Fiches joueurs automatiques</h4>
-                    <p class="text-xs text-gray-400 mb-4">Créées par le bot lorsqu’une candidature Rocket League, iRacing, LMU ou RBR est acceptée. Elles restent séparées des rosters pour éviter d’affecter un joueur à la mauvaise division.</p>
+                    <p class="text-xs text-gray-400 mb-4">Créées automatiquement à l’acceptation d’une candidature. Sélectionne le roster correspondant pour publier le joueur directement dans son équipe. Une même fiche ne peut pas être ajoutée deux fois au même roster.</p>
                     <div id="admin-list-player-cards" class="grid grid-cols-1 gap-3"></div>
                 </div>
                 <div class="grid grid-cols-1 gap-4" id="admin-list-effectifs"></div>
@@ -7071,21 +7071,8 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
             });
 
             container.innerHTML = filtered.length ? __html : '<p class="text-gray-500 text-sm italic text-center">Aucun effectif pour cette catégorie.</p>';
-            // Fiches créées automatiquement par le bot à l'acceptation. Elles restent
-            // indépendantes des rosters/divisions gérés manuellement dans l'administration.
-            const acceptedCards = (globalPlayerCards || []).filter(p => p.game === selectedFilter);
-            if (acceptedCards.length) {
-                const autoCardsHTML = acceptedCards.map(p => {
-                    const playerKey = registerPlayerForModal({ ...p, game: p.game, division: p.division || p.game });
-                    return `<div class="glass-panel effectif-player-card rounded-3xl cursor-pointer group transition-all duration-500" onclick="openPlayerModalByKey('${playerKey}')">
-                        <div class="member-card-media"><img loading="lazy" decoding="async" src="${escapeHtml(p.avatar || defaultAvatar)}" alt="${escapeHtml(p.pseudo || p.name || 'AERIX Member')}" class="object-top-custom"></div>
-                        <div class="member-card-top"><span class="member-role-badge"><span class="member-role-dot"></span>◈ ${escapeHtml(getMemberRoleLabel(p.role || 'Player'))}</span></div>
-                        <div class="member-card-content"><div class="member-card-game">${escapeHtml(p.game || 'AERIX')}</div><div class="member-card-pseudo">${escapeHtml(p.pseudo || p.name || 'AERIX')}</div><div class="member-card-name">${escapeHtml(p.name || '')}</div>
-                        <div class="member-card-meta"><span>${escapeHtml(p.country || '')}</span>${p.age ? `<span class="member-card-separator"></span><span>${escapeHtml(p.age)} ${currentLang==='en'?'y.o.':'ans'}</span>` : ''}</div>
-                        ${p.tracker ? `<a href="${escapeHtml(p.tracker)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" class="inline-flex mt-3 text-xs text-aerix-purple hover:text-white">${currentLang==='en'?'View player tracker':'Voir le tracker joueur'} ↗</a>` : ''}</div></div>`;
-                }).join('');
-                container.insertAdjacentHTML('beforeend', `<div class="reveal mb-12"><div class="mb-8 border-b border-white/10 pb-4"><h4 class="text-3xl font-black text-white">${currentLang==='en'?'New AERIX members':'Nouveaux membres AERIX'}</h4><p class="text-gray-400 text-sm mt-2">${currentLang==='en'?'Profiles published automatically after application acceptance.':'Fiches publiées automatiquement après acceptation de la candidature.'}</p></div><div class="roster-track">${autoCardsHTML}</div></div>`);
-            }
+            // Les fiches automatiques ne sont publiées dans les équipes qu'après
+            // affectation explicite à un roster depuis la console d'administration.
             setTimeout(revealActiveElements, 20);
         }
 
@@ -8751,7 +8738,44 @@ function checkAdminSessionTimeout() {
             const sortedAdminEffectifs = [...globalEffectifs].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
             document.getElementById('admin-list-effectifs').innerHTML = sortedAdminEffectifs.map((r, idx) => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center effectif-row" draggable="true" data-id="${r.id}" ondragstart="dragEffectifStart(event)" ondragend="dragEffectifEnd(event)" ondragover="dragEffectifOver(event)" ondrop="dropEffectif(event)"><div class="flex items-center gap-2"><div class="effectif-drag-handle cursor-grab active:cursor-grabbing text-gray-500 hover:text-white transition px-1" title="Glisser pour réordonner"><svg width="10" height="16" viewBox="0 0 10 16" fill="currentColor"><circle cx="2" cy="2" r="1.5"/><circle cx="8" cy="2" r="1.5"/><circle cx="2" cy="8" r="1.5"/><circle cx="8" cy="8" r="1.5"/><circle cx="2" cy="14" r="1.5"/><circle cx="8" cy="14" r="1.5"/></svg></div><div class="flex flex-col gap-1"><button onclick="moveEffectif('${r.id}', -1)" ${idx === 0 ? 'disabled' : ''} class="w-6 h-6 flex items-center justify-center rounded-md bg-white/10 hover:bg-aerix-purple text-white text-xs transition disabled:opacity-20 disabled:cursor-not-allowed" title="Monter">▲</button><button onclick="moveEffectif('${r.id}', 1)" ${idx === sortedAdminEffectifs.length - 1 ? 'disabled' : ''} class="w-6 h-6 flex items-center justify-center rounded-md bg-white/10 hover:bg-aerix-purple text-white text-xs transition disabled:opacity-20 disabled:cursor-not-allowed" title="Descendre">▼</button></div><div><div class="text-white font-bold text-sm flex items-center gap-2">${r.name} <span class="bg-white/10 text-[9px] px-2 py-0.5 rounded-full">${r.players?.length||0} j.</span></div><div class="text-xs text-gray-500">${r.game || 'Général'}</div></div></div><div class="flex gap-2"><button onclick="startEditEffectif('${r.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('effectifs', '${r.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
             const autoCardsAdmin = document.getElementById('admin-list-player-cards');
-            if (autoCardsAdmin) autoCardsAdmin.innerHTML = (globalPlayerCards || []).length ? globalPlayerCards.map(p => `<div class="glass-panel p-4 rounded-xl flex items-center justify-between gap-3"><div class="flex items-center gap-3 min-w-0"><img src="${escapeHtml(p.avatar || defaultAvatar)}" class="w-12 h-12 rounded-xl object-cover" alt=""><div class="min-w-0"><div class="text-white font-bold text-sm truncate">${escapeHtml(p.pseudo || p.name || p.discordName || 'Joueur')}</div><div class="text-xs text-gray-500">${escapeHtml(p.game || 'Jeu inconnu')} · Discord ${escapeHtml(p.discordId || p.id)}</div><div class="text-xs text-aerix-purple mt-1">${currentLang==='en'?'Auto-created on application acceptance':'Créée automatiquement à l’acceptation'}</div></div></div><button onclick="deleteItem('playerCards', '${p.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-2 rounded-lg transition">${currentLang==='en'?'Remove card':'Supprimer la fiche'}</button></div>`).join('') : `<p class="text-gray-500 text-sm italic">${currentLang==='en'?'No automatically created player cards.':'Aucune fiche joueur créée automatiquement.'}</p>`;
+            if (autoCardsAdmin) {
+                autoCardsAdmin.innerHTML = (globalPlayerCards || []).length ? globalPlayerCards.map(p => {
+                    const playerId = String(p.id || p.discordId || '');
+                    const encodedPlayerId = encodeURIComponent(playerId);
+                    const compatibleRosters = sortedAdminEffectifs.filter(r =>
+                        !r.game || r.game === 'Tous' || r.game === p.game
+                    );
+                    const alreadyIn = sortedAdminEffectifs.filter(r =>
+                        (r.players || []).some(member =>
+                            String(member.discordId || member.id || '') === playerId
+                        )
+                    );
+                    const rosterOptions = compatibleRosters.map(r =>
+                        `<option value="${escapeHtml(r.id)}">${escapeHtml(r.name)} · ${escapeHtml(r.game || 'Tous')}</option>`
+                    ).join('');
+                    const assignedLabel = alreadyIn.length
+                        ? `<div class="text-xs text-emerald-400 mt-1">${currentLang === 'en' ? 'Already assigned to:' : 'Déjà affecté à :'} ${alreadyIn.map(r => escapeHtml(r.name)).join(', ')}</div>`
+                        : `<div class="text-xs text-amber-400 mt-1">${currentLang === 'en' ? 'Not assigned to a roster' : 'Pas encore affecté à un roster'}</div>`;
+                    return `<div class="glass-panel p-4 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-3">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <img src="${escapeHtml(p.avatar || defaultAvatar)}" class="w-12 h-12 rounded-xl object-cover shrink-0" alt="">
+                            <div class="min-w-0">
+                                <div class="text-white font-bold text-sm truncate">${escapeHtml(p.pseudo || p.name || p.discordName || 'Joueur')}</div>
+                                <div class="text-xs text-gray-500">${escapeHtml(p.game || 'Jeu inconnu')} · Discord ${escapeHtml(p.discordId || p.id)}</div>
+                                ${assignedLabel}
+                            </div>
+                        </div>
+                        <div class="flex flex-col sm:flex-row gap-2 shrink-0">
+                            <select id="player-roster-${encodedPlayerId}" class="min-w-0 sm:min-w-[210px] bg-black/50 border border-white/10 rounded-lg px-3 py-2 text-white text-xs outline-none focus:border-aerix-purple">
+                                <option value="">${currentLang === 'en' ? 'Choose a roster…' : 'Choisir un roster…'}</option>
+                                ${rosterOptions}
+                            </select>
+                            <button type="button" onclick="assignPlayerCardToRoster('${encodedPlayerId}')" ${compatibleRosters.length ? '' : 'disabled'} class="text-white text-xs bg-aerix-purple hover:bg-purple-500 disabled:opacity-40 disabled:cursor-not-allowed px-3 py-2 rounded-lg transition">${currentLang === 'en' ? 'Assign' : 'Affecter'}</button>
+                            <button type="button" onclick="deleteItem('playerCards', decodeURIComponent('${encodedPlayerId}'))" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-2 rounded-lg transition">${currentLang === 'en' ? 'Remove card' : 'Supprimer la fiche'}</button>
+                        </div>
+                    </div>`;
+                }).join('') : `<p class="text-gray-500 text-sm italic">${currentLang === 'en' ? 'No automatically created player cards.' : 'Aucune fiche joueur créée automatiquement.'}</p>`;
+            }
             document.getElementById('admin-list-palmares').innerHTML = sortByDateDesc(globalPalmares).map(p => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm truncate max-w-[150px]">${p.title}</div><div class="text-xs text-gray-500">${p.game || 'Général'}</div></div><div class="flex gap-2"><button onclick="startEditPalmares('${p.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('palmares', '${p.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
             const eventsEl = document.getElementById('admin-list-evenements');
             if (eventsEl) {
@@ -8894,6 +8918,70 @@ function checkAdminSessionTimeout() {
             } catch(e) {
                 console.error('saveShopItem', e);
                 showToast(e?.code === 'invalid-argument' ? 'Image(s) trop volumineuse(s) pour Firestore.' : 'Erreur de sauvegarde', 'error');
+            }
+        }
+
+        // Affecte une fiche automatique à un roster sans créer de doublon.
+        async function assignPlayerCardToRoster(encodedPlayerId) {
+            const playerId = decodeURIComponent(String(encodedPlayerId || ''));
+            const select = document.getElementById(`player-roster-${encodeURIComponent(playerId)}`);
+            const rosterId = select?.value;
+            if (!playerId || !rosterId) {
+                return showToast(currentLang === 'en' ? 'Choose a roster first.' : 'Sélectionne d’abord un roster.', 'error');
+            }
+
+            const card = (globalPlayerCards || []).find(p => String(p.id || p.discordId || '') === playerId);
+            const roster = (globalEffectifs || []).find(r => String(r.id) === String(rosterId));
+            if (!card || !roster) {
+                return showToast(currentLang === 'en' ? 'Player card or roster not found.' : 'Fiche joueur ou roster introuvable.', 'error');
+            }
+            if (roster.game && roster.game !== 'Tous' && roster.game !== card.game) {
+                return showToast(currentLang === 'en' ? 'This player belongs to another game.' : 'Ce joueur appartient à un autre jeu.', 'error');
+            }
+
+            try {
+                const rosterRef = db.collection('effectifs').doc(rosterId);
+                const rosterSnap = await rosterRef.get();
+                if (!rosterSnap.exists) {
+                    return showToast(currentLang === 'en' ? 'Roster no longer exists.' : 'Ce roster n’existe plus.', 'error');
+                }
+
+                const latestRoster = rosterSnap.data() || {};
+                const players = Array.isArray(latestRoster.players) ? [...latestRoster.players] : [];
+                const alreadyAdded = players.some(member =>
+                    String(member.discordId || member.id || '') === playerId
+                );
+                if (alreadyAdded) {
+                    return showToast(currentLang === 'en' ? 'This player is already in this roster.' : 'Ce joueur est déjà dans ce roster.', 'error');
+                }
+
+                const rosterPlayer = {
+                    id: playerId,
+                    discordId: playerId,
+                    discordName: String(card.discordName || ''),
+                    pseudo: String(card.pseudo || card.name || card.discordName || 'Joueur'),
+                    name: String(card.name || card.pseudo || ''),
+                    avatar: String(card.avatar || ''),
+                    game: String(card.game || latestRoster.game || 'Tous'),
+                    division: String(latestRoster.name || card.division || card.game || ''),
+                    role: card.role || 'Player',
+                    age: String(card.age || ''),
+                    country: String(card.country || ''),
+                    tracker: String(card.tracker || ''),
+                    steam: String(card.steam || ''),
+                    category: String(card.category || ''),
+                    experience: String(card.experience || ''),
+                    availability: String(card.availability || ''),
+                    ambitions: String(card.ambitions || '')
+                };
+
+                players.push(rosterPlayer);
+                await rosterRef.update({ players });
+                showToast(currentLang === 'en' ? `${rosterPlayer.pseudo} added to ${latestRoster.name || 'roster'}.` : `${rosterPlayer.pseudo} ajouté à ${latestRoster.name || 'ce roster'}.`);
+                if (select) select.value = '';
+            } catch (error) {
+                console.error('assignPlayerCardToRoster:', error);
+                showToast(currentLang === 'en' ? 'Could not assign this player. Check Firestore permissions.' : 'Impossible d’affecter ce joueur. Vérifie les règles Firestore.', 'error');
             }
         }
 
