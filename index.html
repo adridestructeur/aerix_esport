@@ -5157,12 +5157,16 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
 
             <!-- TAB: EFFECTIFS -->
             <div id="admin-tab-effectifs" class="admin-tab hidden space-y-8">
-                <div class="glass-panel p-5 rounded-2xl border border-white/5">
-                    <h4 class="text-lg font-bold text-white mb-2">Fiches joueurs automatiques</h4>
-                    <p class="text-xs text-gray-400 mb-4">Créées automatiquement à l’acceptation d’une candidature. Sélectionne le roster correspondant pour publier le joueur directement dans son équipe. Une même fiche ne peut pas être ajoutée deux fois au même roster.</p>
-                    <div id="admin-list-player-cards" class="grid grid-cols-1 gap-3"></div>
-                </div>
                 <div class="grid grid-cols-1 gap-4" id="admin-list-effectifs"></div>
+                <div class="glass-panel p-5 rounded-2xl border border-white/5">
+                    <h4 class="text-lg font-bold text-white mb-2">Transfert rapide d’un joueur</h4>
+                    <p class="text-xs text-gray-400 mb-3">Sélectionne le joueur, puis son nouveau roster, et valide. Son ancienne affectation sera retirée automatiquement.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-[1fr_1fr_auto] gap-2">
+                        <select id="quick-transfer-player" class="bg-black/50 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"><option value="">Choisir un joueur…</option></select>
+                        <select id="quick-transfer-roster" class="bg-black/50 border border-white/10 rounded-lg px-3 py-2 text-white text-sm"><option value="">Choisir le nouveau roster…</option></select>
+                        <button type="button" onclick="quickTransferPlayer()" class="bg-aerix-purple text-white rounded-lg px-4 py-2 text-sm font-bold">Transférer</button>
+                    </div>
+                </div>
                 <div class="glass-panel glass-panel-form p-6 rounded-2xl border border-white/5">
                     <h4 id="effectif-form-title" class="text-lg font-bold text-white mb-6 border-b border-white/10 pb-2">Créer un Roster</h4>
                     <input type="hidden" id="edit-effectif-id" value="">
@@ -8737,53 +8741,6 @@ function checkAdminSessionTimeout() {
             document.getElementById('admin-list-boutique').innerHTML = globalShop.map(item => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm">${escapeHtml(item.name)}</div><div class="text-xs text-gray-500">${item.available === false ? 'Indisponible' : 'Disponible'}</div></div><div class="flex gap-2"><button onclick="startEditShop('${item.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('shop', '${item.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
             const sortedAdminEffectifs = [...globalEffectifs].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
             document.getElementById('admin-list-effectifs').innerHTML = sortedAdminEffectifs.map((r, idx) => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center effectif-row" draggable="true" data-id="${r.id}" ondragstart="dragEffectifStart(event)" ondragend="dragEffectifEnd(event)" ondragover="dragEffectifOver(event)" ondrop="dropEffectif(event)"><div class="flex items-center gap-2"><div class="effectif-drag-handle cursor-grab active:cursor-grabbing text-gray-500 hover:text-white transition px-1" title="Glisser pour réordonner"><svg width="10" height="16" viewBox="0 0 10 16" fill="currentColor"><circle cx="2" cy="2" r="1.5"/><circle cx="8" cy="2" r="1.5"/><circle cx="2" cy="8" r="1.5"/><circle cx="8" cy="8" r="1.5"/><circle cx="2" cy="14" r="1.5"/><circle cx="8" cy="14" r="1.5"/></svg></div><div class="flex flex-col gap-1"><button onclick="moveEffectif('${r.id}', -1)" ${idx === 0 ? 'disabled' : ''} class="w-6 h-6 flex items-center justify-center rounded-md bg-white/10 hover:bg-aerix-purple text-white text-xs transition disabled:opacity-20 disabled:cursor-not-allowed" title="Monter">▲</button><button onclick="moveEffectif('${r.id}', 1)" ${idx === sortedAdminEffectifs.length - 1 ? 'disabled' : ''} class="w-6 h-6 flex items-center justify-center rounded-md bg-white/10 hover:bg-aerix-purple text-white text-xs transition disabled:opacity-20 disabled:cursor-not-allowed" title="Descendre">▼</button></div><div><div class="text-white font-bold text-sm flex items-center gap-2">${r.name} <span class="bg-white/10 text-[9px] px-2 py-0.5 rounded-full">${r.players?.length||0} j.</span></div><div class="text-xs text-gray-500">${r.game || 'Général'}</div></div></div><div class="flex gap-2"><button onclick="startEditEffectif('${r.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('effectifs', '${r.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
-            const autoCardsAdmin = document.getElementById('admin-list-player-cards');
-            if (autoCardsAdmin) {
-                const assignedPlayerIds = new Set((globalEffectifs || []).flatMap(r =>
-                    (Array.isArray(r.players) ? r.players : []).map(member =>
-                        String(member.discordId || member.id || '')
-                    )
-                ));
-                const unassignedPlayerCards = (globalPlayerCards || []).filter(p =>
-                    !assignedPlayerIds.has(String(p.id || p.discordId || ''))
-                );
-                autoCardsAdmin.innerHTML = unassignedPlayerCards.length ? unassignedPlayerCards.map(p => {
-                    const playerId = String(p.id || p.discordId || '');
-                    const encodedPlayerId = encodeURIComponent(playerId);
-                    const compatibleRosters = sortedAdminEffectifs.filter(r =>
-                        !r.game || r.game === 'Tous' || r.game === p.game
-                    );
-                    const alreadyIn = sortedAdminEffectifs.filter(r =>
-                        (r.players || []).some(member =>
-                            String(member.discordId || member.id || '') === playerId
-                        )
-                    );
-                    const rosterOptions = compatibleRosters.map(r =>
-                        `<option value="${escapeHtml(r.id)}">${escapeHtml(r.name)} · ${escapeHtml(r.game || 'Tous')}</option>`
-                    ).join('');
-                    const assignedLabel = alreadyIn.length
-                        ? `<div class="text-xs text-emerald-400 mt-1">${currentLang === 'en' ? 'Already assigned to:' : 'Déjà affecté à :'} ${alreadyIn.map(r => escapeHtml(r.name)).join(', ')}</div>`
-                        : `<div class="text-xs text-amber-400 mt-1">${currentLang === 'en' ? 'Not assigned to a roster' : 'Pas encore affecté à un roster'}</div>`;
-                    return `<div class="glass-panel p-4 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-3">
-                        <div class="flex items-center gap-3 min-w-0">
-                            <img src="${escapeHtml(p.avatar || defaultAvatar)}" class="w-12 h-12 rounded-xl object-cover shrink-0" alt="">
-                            <div class="min-w-0">
-                                <div class="text-white font-bold text-sm truncate">${escapeHtml(p.pseudo || p.name || p.discordName || 'Joueur')}</div>
-                                <div class="text-xs text-gray-500">${escapeHtml(p.game || 'Jeu inconnu')} · Discord ${escapeHtml(p.discordId || p.id)}</div>
-                                ${assignedLabel}
-                            </div>
-                        </div>
-                        <div class="flex flex-col sm:flex-row gap-2 shrink-0">
-                            <select id="player-roster-${encodedPlayerId}" class="min-w-0 sm:min-w-[210px] bg-black/50 border border-white/10 rounded-lg px-3 py-2 text-white text-xs outline-none focus:border-aerix-purple">
-                                <option value="">${currentLang === 'en' ? 'Choose a roster…' : 'Choisir un roster…'}</option>
-                                ${rosterOptions}
-                            </select>
-                            <button type="button" onclick="assignPlayerCardToRoster('${encodedPlayerId}')" ${compatibleRosters.length ? '' : 'disabled'} class="text-white text-xs bg-aerix-purple hover:bg-purple-500 disabled:opacity-40 disabled:cursor-not-allowed px-3 py-2 rounded-lg transition">${currentLang === 'en' ? 'Assign' : 'Affecter'}</button>
-                            <button type="button" onclick="deleteItem('playerCards', decodeURIComponent('${encodedPlayerId}'))" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-2 rounded-lg transition">${currentLang === 'en' ? 'Remove card' : 'Supprimer la fiche'}</button>
-                        </div>
-                    </div>`;
-                }).join('') : `<p class="text-gray-500 text-sm italic">${currentLang === 'en' ? 'No automatically created player cards.' : 'Aucune fiche joueur créée automatiquement.'}</p>`;
-            }
             document.getElementById('admin-list-palmares').innerHTML = sortByDateDesc(globalPalmares).map(p => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm truncate max-w-[150px]">${p.title}</div><div class="text-xs text-gray-500">${p.game || 'Général'}</div></div><div class="flex gap-2"><button onclick="startEditPalmares('${p.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('palmares', '${p.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
             const eventsEl = document.getElementById('admin-list-evenements');
             if (eventsEl) {
@@ -8826,6 +8783,19 @@ function checkAdminSessionTimeout() {
             if (galleryMediaEl) {
                 galleryMediaEl.innerHTML = globalGallery.length ? globalGallery.map(g => `<div class="relative group rounded-2xl overflow-hidden aspect-square border border-white/10 bg-black/40 cursor-pointer" onclick="openImageViewer('${escapeHtml(g.image)}', '${escapeHtml(g.caption || '')}')"><img loading="lazy" decoding="async" src="${escapeHtml(g.image)}" loading="lazy" decoding="async" class="w-full h-full object-cover transition duration-500 group-hover:scale-105" alt="${escapeHtml(g.caption || 'Image AERIX')}"><button type="button" onclick="event.stopPropagation(); deleteItem('gallery', '${g.id}')" class="absolute top-2 right-2 bg-red-500/90 text-white text-[10px] w-7 h-7 rounded-full font-bold opacity-0 group-hover:opacity-100 transition">✕</button></div>`).join('') : `<p class="text-gray-500 text-sm italic col-span-full">Aucune photo dans la galerie.</p>`;
             }
+            // Menus de transfert rapide (joueur -> roster cible).
+            const playerSelect = document.getElementById('quick-transfer-player');
+            const rosterSelect = document.getElementById('quick-transfer-roster');
+            if (playerSelect && rosterSelect) {
+                const players = [];
+                (globalEffectifs || []).forEach(roster => (roster.players || []).forEach(player => {
+                    const id = String(player.discordId || player.id || '');
+                    if (id && !players.some(p => p.id === id)) players.push({ id, pseudo: player.pseudo || player.name || id });
+                }));
+                playerSelect.innerHTML = '<option value="">Choisir un joueur…</option>' + players.map(p => `<option value="${escapeHtml(p.id)}">${escapeHtml(p.pseudo)}</option>`).join('');
+                rosterSelect.innerHTML = '<option value="">Choisir le nouveau roster…</option>' + (globalEffectifs || []).map(r => `<option value="${escapeHtml(r.id)}">${escapeHtml(r.name)} · ${escapeHtml(r.game || 'Tous')}</option>`).join('');
+            }
+
         }
         // Carte d'avis affichée dans l'onglet admin "Avis" : note en étoiles, auteur,
         // commentaire, et bouton de suppression pour modérer les avis abusifs/hors sujet.
@@ -8994,6 +8964,41 @@ function checkAdminSessionTimeout() {
         }
 
         // --- EDITION EFFECTIFS ---
+
+        async function quickTransferPlayer() {
+            const playerId = document.getElementById('quick-transfer-player')?.value;
+            const targetId = document.getElementById('quick-transfer-roster')?.value;
+            if (!playerId || !targetId) return showToast('Choisis un joueur et un roster cible.', 'error');
+            const target = globalEffectifs.find(r => r.id === targetId);
+            if (!target) return showToast('Roster cible introuvable.', 'error');
+            try {
+                const refs = globalEffectifs.filter(r => (r.players || []).some(p => String(p.discordId || p.id || '') === playerId));
+                let moved = null;
+                for (const roster of refs) {
+                    const snap = await db.collection('effectifs').doc(roster.id).get();
+                    const data = snap.data() || {};
+                    const players = [...(data.players || [])];
+                    const index = players.findIndex(p => String(p.discordId || p.id || '') === playerId);
+                    if (index >= 0) {
+                        moved = { ...players[index], game: target.game || 'Tous', division: target.name || '' };
+                        if (roster.id !== targetId) players.splice(index, 1);
+                        else moved = players[index];
+                        await db.collection('effectifs').doc(roster.id).update({ players });
+                    }
+                }
+                const targetSnap = await db.collection('effectifs').doc(targetId).get();
+                const targetPlayers = [...((targetSnap.data() || {}).players || [])];
+                if (!targetPlayers.some(p => String(p.discordId || p.id || '') === playerId) && moved) targetPlayers.push(moved);
+                await db.collection('effectifs').doc(targetId).update({ players: targetPlayers });
+                showToast('Joueur transféré.', 'success');
+                document.getElementById('quick-transfer-player').value = '';
+                document.getElementById('quick-transfer-roster').value = '';
+            } catch (error) {
+                console.error('quickTransferPlayer:', error);
+                showToast('Échec du transfert. Vérifie les règles Firestore.', 'error');
+            }
+        }
+
         function startEditEffectif(id) {
             const item = globalEffectifs.find(e => e.id === id); if(!item) return;
             document.getElementById('edit-effectif-id').value = item.id;
