@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" data-aerix-version="14">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -822,6 +822,8 @@ body.theme-light {
     
     /* SYSTÈME D'ÉTOILES — AVIS */
     .review-star { background: transparent; border: none; cursor: pointer; font-size: 2.4rem; line-height: 1; color: rgba(255,255,255,0.15); padding: 0; transition: color 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), text-shadow 0.25s ease; transform: scale(1); touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+    /* V14 — étoiles non sélectionnées nettement visibles ; animations conservées. */
+    #review-stars .review-star:not(.filled) { color: rgba(255,255,255,.78); opacity: 1; }
     .review-star:hover { transform: scale(1.2); }
     .review-star.filled { color: #8B5CF6; text-shadow: 0 0 14px rgba(139,92,246,.7); }
     .review-star.pop { animation: reviewStarPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); }
@@ -4568,13 +4570,21 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
             <div class="mb-14 text-center animate-fade-up">
                 <h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2" data-i18n="roster_subtitle">Divisions</h2>
                 <h3 class="text-4xl font-black text-white mb-8 inline-block" data-i18n="roster_title">Nos équipes</h3>
-                <div class="flex flex-wrap justify-center gap-3" id="filters-effectifs">
+                <div class="flex flex-col items-center gap-4">
+                    <div class="flex flex-wrap justify-center gap-3" id="filters-effectifs">
                     <button onclick="setFilter('effectifs', 'Staff')" data-filter="Staff" class="filter-btn active">Staff</button>
                     <button onclick="setFilter('effectifs', 'Rocket League')" data-filter="Rocket League" class="filter-btn">Rocket League</button>
                     <button onclick="setFilter('effectifs', 'Le Mans Ultimate')" data-filter="Le Mans Ultimate" class="filter-btn">Le Mans Ultimate</button>
                     <button onclick="setFilter('effectifs', 'RBR')" data-filter="RBR" class="filter-btn">RBR</button>
                     <button onclick="setFilter('effectifs', 'iRacing')" data-filter="iRacing" class="filter-btn">iRacing</button>
-                    <button onclick="setFilter('effectifs', 'F1 Ultimate')" data-filter="F1 Ultimate" class="filter-btn">F1 Ultimate</button>
+                    </div>
+                    <label class="flex items-center gap-3 text-xs text-gray-400">
+                        <span class="uppercase tracking-widest font-bold">Trier par</span>
+                        <select id="effectifs-sort" onchange="renderEffectifs()" class="bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-white text-xs outline-none focus:border-aerix-purple">
+                            <option value="name">Nom (A → Z)</option>
+                            <option value="arrival">Date d'arrivée (anciens → récents)</option>
+                        </select>
+                    </label>
                 </div>
             </div>
             <div id="effectifs-container" class="space-y-16"></div>
@@ -5008,7 +5018,6 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
                         <select id="coaching-game" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
                             <option value="Le Mans Ultimate">Le Mans Ultimate</option>
                             <option value="iRacing">iRacing</option>
-                            <option value="F1 Ultimate">F1 Ultimate</option>
                         </select>
                         <select id="coaching-level" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
                             <option value="Débutant" data-i18n="coaching_level_beginner">Débutant</option>
@@ -7158,7 +7167,6 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
             if (/\b(le mans ultimate|lmu|lemans ultimate)\b/.test(raw)) return 'le mans ultimate';
             if (/\b(iracing|i racing|i-racing)\b/.test(raw)) return 'iracing';
             if (/\b(rbr|richard burns rally)\b/.test(raw)) return 'rbr';
-            if (/\b(f1 ultimate|f1)\b/.test(raw)) return 'f1 ultimate';
             return raw;
         }
         function aerixGetCardGame(card) {
@@ -7168,14 +7176,14 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
             const candidates = [card.game, card.simulator, card.gameName, card.game_name, card.sim, card.platformGame];
             for (const value of candidates) {
                 const game = aerixNormalizeGame(value);
-                if (['rocket league','le mans ultimate','rbr','iracing','f1 ultimate'].includes(game)) return game;
+                if (['rocket league','le mans ultimate','rbr','iracing'].includes(game)) return game;
             }
             // Compatibilité avec les anciennes fiches où le jeu était enregistré
             // dans category/division/team, uniquement si la valeur correspond
             // exactement à l'un des jeux reconnus après normalisation.
             for (const value of [card.category, card.division, card.team]) {
                 const game = aerixNormalizeGame(value);
-                if (['rocket league','le mans ultimate','rbr','iracing','f1 ultimate'].includes(game)) return game;
+                if (['rocket league','le mans ultimate','rbr','iracing'].includes(game)) return game;
             }
             return '';
         }
@@ -7300,6 +7308,36 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
             }
         }
 
+        function getPlayerArrivalTimestamp(player) {
+            if (!player || typeof player !== 'object') return 0;
+            const candidates = [
+                player.arrivalDate, player.arrival_date, player.dateArrivee,
+                player.date_arrivee, player.joinedAt, player.joined_at,
+                player.joinDate, player.join_date, player.memberSince,
+                player.member_since, player.createdAt, player.created_at
+            ];
+            for (const value of candidates) {
+                const timestamp = parseAERIXDate(value);
+                if (timestamp) return timestamp;
+            }
+            return 0;
+        }
+        function sortEffectifPlayers(players) {
+            const mode = document.getElementById('effectifs-sort')?.value || 'name';
+            return [...(players || [])].sort((a, b) => {
+                if (mode === 'arrival') {
+                    const dateA = getPlayerArrivalTimestamp(a);
+                    const dateB = getPlayerArrivalTimestamp(b);
+                    if (dateA && dateB && dateA !== dateB) return dateA - dateB;
+                    if (dateA && !dateB) return -1;
+                    if (!dateA && dateB) return 1;
+                }
+                return String(a.pseudo || a.name || '').localeCompare(
+                    String(b.pseudo || b.name || ''), 'fr', { sensitivity: 'base' }
+                );
+            });
+        }
+
         function renderEffectifs() {
             for (const key of Object.keys(aerixPlayerRegistry)) delete aerixPlayerRegistry[key];
             aerixPlayerRegistrySeq = 0;
@@ -7335,7 +7373,8 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
                     });
                 });
 
-                const playersHTML = staffMembers.length ? staffMembers.map(p => {
+                const sortedStaffMembers = sortEffectifPlayers(staffMembers);
+                const playersHTML = sortedStaffMembers.length ? sortedStaffMembers.map(p => {
                     const playerKey = registerPlayerForModal(p);
                     const roleLabel = getMemberRoleLabel(p.role);
                     const roleIcon = getMemberRoleIcon(p.role);
@@ -7389,7 +7428,7 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
 
             filtered.forEach((r, index) => {
                 let playersHTML = '';
-                const rosterPlayers = (r.players || []).filter(p => getMemberRoleKey(p.role) === 'player' && !aerixMatchesIdentitySet(p, staffIdentityKeys)).sort((a,b) => String(a.pseudo || a.name || '').localeCompare(String(b.pseudo || b.name || ''), 'fr', {sensitivity:'base'}));
+                const rosterPlayers = sortEffectifPlayers((r.players || []).filter(p => getMemberRoleKey(p.role) === 'player' && !aerixMatchesIdentitySet(p, staffIdentityKeys)));
                 if (rosterPlayers.length > 0) {
                     playersHTML = rosterPlayers.map(p => {
                         const playerKey = registerPlayerForModal({...p, game: r.game, division: p.division || r.game});
@@ -11117,3 +11156,25 @@ document.addEventListener('DOMContentLoaded',applyTheme);
     </div>
 </body>
 </html>
+
+<style id="aerix-v14-review-visibility">
+#review-stars .review-star:focus-visible { outline: 2px solid currentColor; outline-offset: 5px; border-radius: 4px; }
+.theme-light #review-stars .review-star:not(.filled) { color: rgba(17,24,39,.48) !important; }
+</style>
+
+
+<style id="aerix-v14-light-review-cta">
+/* Restaure le bouton blanc « Laisser un avis » en thème clair ; le thème sombre garde son rendu discret. */
+body.theme-light #page-home .aerix-home-hero button[data-i18n="nav_review"] {
+    background:#fff !important;
+    color:#0a0a0a !important;
+    border:1px solid rgba(17,24,39,.18) !important;
+    box-shadow:0 8px 24px rgba(17,24,39,.07) !important;
+}
+body.theme-light #page-home .aerix-home-hero button[data-i18n="nav_review"]:hover {
+    background:#f4f4f5 !important;
+    color:#09090b !important;
+    border-color:rgba(17,24,39,.28) !important;
+    transform:translateY(-2px) !important;
+}
+</style>
