@@ -5350,6 +5350,14 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
                         <button type="button" onclick="quickTransferPlayer()" class="bg-aerix-purple text-white rounded-lg px-4 py-2 text-sm font-bold">Transférer</button>
                     </div>
                 </div>
+                <div id="bulk-nationality-panel" class="glass-panel p-5 rounded-2xl border border-white/5 mb-6">
+                    <h4 class="text-sm font-bold text-white mb-1">Nationalité — appliquer à tous les joueurs</h4>
+                    <p class="text-xs text-gray-400 mb-3">Seuls les membres ayant le rôle Joueur sont modifiés (champ « country » uniquement). Staff, ordre et autres données restent inchangés.</p>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <select id="bulk-nationality" class="bg-black/50 border border-white/10 rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-aerix-purple cursor-pointer sm:w-64"><option value="🇫🇷">🇫🇷 France</option><option value="🇨🇭">🇨🇭 Suisse</option><option value="🇧🇪">🇧🇪 Belgique</option><option value="🇨🇦">🇨🇦 Canada</option><option value="🇬🇧">🇬🇧 Royaume-Uni</option><option value="🇩🇪">🇩🇪 Allemagne</option><option value="🇪🇸">🇪🇸 Espagne</option><option value="🇮🇹">🇮🇹 Italie</option><option value="🇵🇹">🇵🇹 Portugal</option><option value="🇳🇱">🇳🇱 Pays-Bas</option><option value="🇱🇺">🇱🇺 Luxembourg</option><option value="🇦🇹">🇦🇹 Autriche</option><option value="🇵🇱">🇵🇱 Pologne</option><option value="🇸🇪">🇸🇪 Suède</option><option value="🇳🇴">🇳🇴 Norvège</option><option value="🇩🇰">🇩🇰 Danemark</option><option value="🇫🇮">🇫🇮 Finlande</option><option value="🇺🇸">🇺🇸 États-Unis</option><option value="🇧🇷">🇧🇷 Brésil</option><option value="🇦🇷">🇦🇷 Argentine</option><option value="🇯🇵">🇯🇵 Japon</option><option value="🇰🇷">🇰🇷 Corée du Sud</option><option value="🇲🇦">🇲🇦 Maroc</option><option value="🇩🇿">🇩🇿 Algérie</option><option value="🇹🇳">🇹🇳 Tunisie</option><option value="🇸🇳">🇸🇳 Sénégal</option><option value="🇨🇮">🇨🇮 Côte d'Ivoire</option><option value="🇨🇲">🇨🇲 Cameroun</option><option value="🇪🇺">🇪🇺 Europe</option><option value="🌍">🌍 Autre</option></select>
+                        <button id="bulk-nationality-btn" type="button" onclick="applyNationalityToAllPlayers()" class="bg-aerix-purple text-white rounded-lg px-4 py-2 text-sm font-bold">Appliquer à tous</button>
+                    </div>
+                </div>
                 <div class="glass-panel glass-panel-form p-6 rounded-2xl border border-white/5">
                     <h4 id="effectif-form-title" class="text-lg font-bold text-white mb-6 border-b border-white/10 pb-2">Créer un Roster</h4>
                     <input type="hidden" id="edit-effectif-id" value="">
@@ -5395,12 +5403,43 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
                                         <option value="🇨🇭">🇨🇭 Suisse</option>
                                         <option value="🇧🇪">🇧🇪 Belgique</option>
                                         <option value="🇨🇦">🇨🇦 Canada</option>
+                                        <option value="🇬🇧">🇬🇧 Royaume-Uni</option>
+                                        <option value="🇩🇪">🇩🇪 Allemagne</option>
+                                        <option value="🇪🇸">🇪🇸 Espagne</option>
+                                        <option value="🇮🇹">🇮🇹 Italie</option>
+                                        <option value="🇵🇹">🇵🇹 Portugal</option>
+                                        <option value="🇳🇱">🇳🇱 Pays-Bas</option>
+                                        <option value="🇱🇺">🇱🇺 Luxembourg</option>
+                                        <option value="🇦🇹">🇦🇹 Autriche</option>
+                                        <option value="🇵🇱">🇵🇱 Pologne</option>
+                                        <option value="🇸🇪">🇸🇪 Suède</option>
+                                        <option value="🇳🇴">🇳🇴 Norvège</option>
+                                        <option value="🇩🇰">🇩🇰 Danemark</option>
+                                        <option value="🇫🇮">🇫🇮 Finlande</option>
+                                        <option value="🇺🇸">🇺🇸 États-Unis</option>
+                                        <option value="🇧🇷">🇧🇷 Brésil</option>
+                                        <option value="🇦🇷">🇦🇷 Argentine</option>
+                                        <option value="🇯🇵">🇯🇵 Japon</option>
+                                        <option value="🇰🇷">🇰🇷 Corée du Sud</option>
                                         <option value="🇲🇦">🇲🇦 Maroc</option>
                                         <option value="🇩🇿">🇩🇿 Algérie</option>
+                                        <option value="🇹🇳">🇹🇳 Tunisie</option>
+                                        <option value="🇸🇳">🇸🇳 Sénégal</option>
+                                        <option value="🇨🇮">🇨🇮 Côte d'Ivoire</option>
+                                        <option value="🇨🇲">🇨🇲 Cameroun</option>
                                         <option value="🇪🇺">🇪🇺 Europe</option>
                                         <option value="🌍">🌍 Autre</option>
                                     </select>
                                     <input type="number" id="temp-player-number" placeholder="Numéro (ex: 7)" class="bg-black/50 border border-white/10 rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-aerix-purple">
+                                    <div class="col-span-2 mt-1">
+                                        <div class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Photo de profil automatique (facultatif)</div>
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                            <input type="text" inputmode="numeric" autocomplete="off" id="temp-player-discordid" placeholder="Identifiant Discord (17-20 chiffres)" class="bg-black/50 border border-white/10 rounded-lg px-3 py-2 text-white text-xs outline-none focus:border-aerix-purple">
+                                            <input type="url" id="temp-player-avatarurl" placeholder="URL d'avatar externe — https://..." class="bg-black/50 border border-white/10 rounded-lg px-3 py-2 text-white text-xs outline-none focus:border-aerix-purple">
+                                        </div>
+                                        <label class="flex items-center gap-2 mt-2 text-[11px] text-gray-400 cursor-pointer select-none"><input type="checkbox" id="temp-player-prefer-manual" class="accent-purple-500"> Garder en priorité la photo importée manuellement</label>
+                                        <p class="text-[10px] text-gray-500 mt-1">Ordre : avatar Discord synchronisé → URL externe → photo importée → avatar AERIX. La photo importée n'est jamais supprimée.</p>
+                                    </div>
                                     <div class="col-span-2 mt-1">
                                         <div class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Réseaux sociaux (liens complets)</div>
                                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -6895,6 +6934,13 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
             db.collection("events").onSnapshot((snapshot) => { globalEvents = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); savePublicCollectionCache("events", globalEvents); renderUpcomingEvents(); renderCompetitionPage(); renderPerformancePage(); }, () => { globalEvents = []; renderUpcomingEvents(); renderCompetitionPage(); renderPerformancePage(); });
             db.collection("shop").onSnapshot((snapshot) => { globalShop = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); savePublicCollectionCache("shop", globalShop); scheduleRender(renderShop); scheduleAdminRender(); }, (e) => console.error('shop', e));
             db.collection("effectifs").onSnapshot((snapshot) => { globalEffectifs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); savePublicCollectionCache("effectifs", globalEffectifs); scheduleRender(renderEffectifs); renderPerformancePage(); scheduleAdminRender(); }, (e) => console.error('effectifs', e));
+            db.collection("discordAvatars").onSnapshot((snapshot) => {
+                const map = Object.create(null);
+                snapshot.docs.forEach(doc => { const u = (doc.data() || {}).avatarUrl; if (typeof u === 'string' && u) map[doc.id] = u; });
+                globalDiscordAvatars = map;
+                scheduleRender(renderEffectifs);
+                scheduleAdminRender();
+            }, (e) => console.warn('discordAvatars indisponible (règles Firestore à publier)', e));
             db.collection("playerCards").onSnapshot((snapshot) => {
                 globalPlayerCards = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })).filter(p => p.published !== false && p.status === 'accepted');
                 scheduleRender(renderEffectifs);
@@ -7115,6 +7161,40 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
                 ['discord', p.discord, `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.5 5.1A16.4 16.4 0 0 0 15.7 4l-.5 1a14.8 14.8 0 0 0-6.4 0l-.5-1a16.4 16.4 0 0 0-3.8 1.1C2.1 8.3 1.4 11.4 1.7 14.5a16.6 16.6 0 0 0 4.6 2.3l1.1-1.5c-.6-.2-1.2-.5-1.7-.8l.4-.3a11.8 11.8 0 0 0 11.8 0l.4.3c-.5.3-1.1.6-1.7.8l1.1 1.5a16.6 16.6 0 0 0 4.6-2.3c.4-3.6-.6-6.6-2.8-9.4ZM8.7 13.1c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2Zm6.6 0c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2Z"/></svg>`]
             ];
             return socials.filter(([,url]) => url && safeUrl(url)).map(([key,url,icon]) => `<a href="${escapeHtml(safeUrl(url))}" target="_blank" rel="noopener noreferrer" aria-label="${key}" title="${key}" onclick="event.stopPropagation()" class="player-social-link" data-social="${key}">${icon}</a>`).join('');
+        }
+
+        // ── Avatars des membres ────────────────────────────────────────────
+        // Ordre : avatar Discord synchronisé (collection discordAvatars, écrite par le bot)
+        //         → URL externe → photo importée manuellement → avatar par défaut AERIX.
+        // Option « preferManualAvatar » : la photo importée passe en premier.
+        // Aucune de ces sources n'est supprimée ou écrasée : seule l'affichage change.
+        let globalDiscordAvatars = Object.create(null);
+        const AERIX_DISCORD_ID_RE = /^\d{17,20}$/;
+        function aerixValidImageSrc(v) {
+            const x = String(v || '').trim();
+            return /^https:\/\//i.test(x) || /^data:image\//i.test(x) ? x : '';
+        }
+        function aerixAvatarCandidates(p) {
+            p = p || {};
+            const did = String(p.discordId || p.discord_id || '').trim();
+            const discord = AERIX_DISCORD_ID_RE.test(did) ? aerixValidImageSrc(globalDiscordAvatars[did]) : '';
+            const external = aerixValidImageSrc(p.externalAvatarUrl);
+            const manual = aerixValidImageSrc(p.avatar);
+            const list = p.preferManualAvatar === true ? [manual, discord, external] : [discord, external, manual];
+            const out = [];
+            list.forEach(u => { if (u && !out.includes(u)) out.push(u); });
+            out.push(defaultAvatar);
+            return out;
+        }
+        function aerixAvatarSrc(p) { return aerixAvatarCandidates(p)[0]; }
+        // Image indisponible → source suivante (la dernière est l'avatar par défaut, sans boucle).
+        function aerixAvatarError(img, playerKey) {
+            const p = aerixPlayerRegistry[playerKey];
+            const list = aerixAvatarCandidates(p);
+            const next = (parseInt(img.dataset.fbi || '0', 10) || 0) + 1;
+            if (next >= list.length) { img.onerror = null; return; }
+            img.dataset.fbi = String(next);
+            img.src = list[next];
         }
 
         // Registre temporaire : les cartes ne transportent qu'une clé courte dans leur onclick.
@@ -7382,7 +7462,7 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
                     return `
                         <div class="glass-panel effectif-player-card rounded-3xl cursor-pointer group transition-all duration-500" onclick="openPlayerModalByKey('${playerKey}')">
                             <div class="member-card-media">
-                                <img loading="lazy" decoding="async" src="${escapeHtml(p.avatar || defaultAvatar)}" alt="${escapeHtml(p.pseudo || p.name || 'AERIX Member')}" class="object-top-custom">
+                                <img loading="lazy" decoding="async" src="${escapeHtml(aerixAvatarSrc(p))}" onerror="aerixAvatarError(this,'${playerKey}')" alt="${escapeHtml(p.pseudo || p.name || 'AERIX Member')}" class="object-top-custom">
                             </div>
                             <div class="member-card-top">
                                 <span class="member-role-badge"><span class="member-role-dot"></span>${escapeHtml(roleIcon)} ${escapeHtml(roleLabel)}</span>
@@ -7438,7 +7518,7 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
                         return `
                         <div class="glass-panel effectif-player-card rounded-3xl cursor-pointer group transition-all duration-500" onclick="openPlayerModalByKey('${playerKey}')">
                             <div class="member-card-media">
-                                <img loading="lazy" decoding="async" src="${escapeHtml(p.avatar || defaultAvatar)}" alt="${escapeHtml(p.pseudo || p.name || 'AERIX Member')}" class="object-top-custom">
+                                <img loading="lazy" decoding="async" src="${escapeHtml(aerixAvatarSrc(p))}" onerror="aerixAvatarError(this,'${playerKey}')" alt="${escapeHtml(p.pseudo || p.name || 'AERIX Member')}" class="object-top-custom">
                             </div>
                             <div class="member-card-top">
                                 <span class="member-role-badge"><span class="member-role-dot"></span>${escapeHtml(roleIcon)} ${escapeHtml(roleLabel)}</span>
@@ -7493,7 +7573,7 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
             const roleLabel = getMemberRoleLabel(p.role);
             const roleIcon = getMemberRoleIcon(p.role);
             const roleHTML = `<span class="member-profile-role-dot"></span><span>${escapeHtml(roleIcon)} ${escapeHtml(roleLabel)}</span>`;
-            document.getElementById('pm-img').src = p.avatar || defaultAvatar;
+            { const __pmImg = document.getElementById('pm-img'); const __pmList = aerixAvatarCandidates(p); let __pmI = 0; __pmImg.onerror = () => { __pmI++; if (__pmI < __pmList.length) __pmImg.src = __pmList[__pmI]; else __pmImg.onerror = null; }; __pmImg.src = __pmList[0]; }
             document.getElementById('pm-flag').innerHTML = countryHTML(p.country, 22);
             document.getElementById('pm-number').innerText = p.number ? `#${p.number}` : '';
             document.getElementById('pm-pseudo').innerText = p.pseudo || p.name || 'AERIX';
@@ -8178,8 +8258,13 @@ function checkAdminSessionTimeout() {
 
         // Windows n'affiche pas les emojis-drapeaux (🇫🇷 devient « FR »).
         // On convertit donc l'emoji stocké en vraie image (FlagCDN) ; les données Firestore ne changent pas.
+        const AERIX_COUNTRY_NAME_TO_ISO = { 'france':'fr','suisse':'ch','switzerland':'ch','belgique':'be','belgium':'be','canada':'ca','royaume-uni':'gb','united kingdom':'gb','uk':'gb','allemagne':'de','germany':'de','espagne':'es','spain':'es','italie':'it','italy':'it','portugal':'pt','pays-bas':'nl','netherlands':'nl','luxembourg':'lu','autriche':'at','austria':'at','pologne':'pl','poland':'pl','suède':'se','suede':'se','sweden':'se','norvège':'no','norvege':'no','norway':'no','danemark':'dk','denmark':'dk','finlande':'fi','finland':'fi','états-unis':'us','etats-unis':'us','usa':'us','brésil':'br','bresil':'br','brazil':'br','argentine':'ar','japon':'jp','japan':'jp','corée du sud':'kr','coree du sud':'kr','south korea':'kr','maroc':'ma','morocco':'ma','algérie':'dz','algerie':'dz','tunisie':'tn','sénégal':'sn','senegal':'sn',"côte d'ivoire":'ci',"cote d'ivoire":'ci','cameroun':'cm','cameroon':'cm','europe':'eu','irlande':'ie','ireland':'ie' };
         function countryHTML(country, h = 14) {
-            const cps = [...String(country || '')];
+            let cps = [...String(country || '')];
+            const __iso = AERIX_COUNTRY_NAME_TO_ISO[String(country || '').trim().toLowerCase().replace(/’/g, "'")];
+            if (__iso && !(cps[0] && cps[0].codePointAt(0) >= 0x1F1E6 && cps[0].codePointAt(0) <= 0x1F1FF)) {
+                cps = [...__iso.toUpperCase()].map(c => String.fromCodePoint(0x1F1E6 + c.charCodeAt(0) - 65));
+            }
             const isRI = c => c && c.codePointAt(0) >= 0x1F1E6 && c.codePointAt(0) <= 0x1F1FF;
             if (isRI(cps[0]) && isRI(cps[1])) {
                 const code = cps.slice(0, 2).map(c => String.fromCharCode(c.codePointAt(0) - 0x1F1E6 + 97)).join('');
@@ -9406,6 +9491,48 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
             }
         }
 
+        // Applique une nationalité (champ « country » uniquement) aux membres au rôle Joueur.
+        // Lecture fraîche de chaque roster dans une transaction, puis map() sur le tableau
+        // existant : ordre, propriétés et staff sont strictement conservés.
+        async function applyNationalityToAllPlayers() {
+            if (!hasAdminAccess()) return showToast('Accès refusé.', 'error');
+            const select = document.getElementById('bulk-nationality');
+            const btn = document.getElementById('bulk-nationality-btn');
+            const value = select?.value;
+            if (!value) return showToast('Choisis une nationalité.', 'error');
+            const label = select.options[select.selectedIndex].text;
+            if (!confirm(`Appliquer « ${label} » à TOUS les joueurs ?\n\nSeul le champ nationalité des membres ayant le rôle Joueur sera modifié. Le staff, l'ordre et les autres données restent inchangés.`)) return;
+            if (btn) btn.disabled = true;
+            try {
+                const staffKeys = aerixStaffIdentitySet();
+                let rostersTouched = 0, playersTouched = 0;
+                for (const roster of (globalEffectifs || [])) {
+                    const ref = db.collection('effectifs').doc(roster.id);
+                    await db.runTransaction(async tx => {
+                        const snap = await tx.get(ref);
+                        if (!snap.exists) return;
+                        const players = snap.data().players;
+                        if (!Array.isArray(players)) return;
+                        let changed = 0;
+                        const next = players.map(p => {
+                            if (!p || typeof p !== 'object') return p;
+                            if (getMemberRoleKey(p.role) !== 'player' || aerixMatchesIdentitySet(p, staffKeys)) return p;
+                            if (p.country === value) return p;
+                            changed++;
+                            return { ...p, country: value };
+                        });
+                        if (changed) { tx.update(ref, { players: next }); rostersTouched++; playersTouched += changed; }
+                    });
+                }
+                showToast(`Nationalité appliquée : ${playersTouched} joueur(s) dans ${rostersTouched} roster(s).`, 'success');
+            } catch (error) {
+                console.error('applyNationalityToAllPlayers:', error);
+                showToast("Échec de l'opération. Aucune donnée partielle n'est corrompue : relance après vérification des permissions.", 'error');
+            } finally {
+                if (btn) btn.disabled = false;
+            }
+        }
+
         function startEditEffectif(id) {
             const item = globalEffectifs.find(e => e.id === id); if(!item) return;
             document.getElementById('edit-effectif-id').value = item.id;
@@ -10460,7 +10587,13 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
             const tiktok = document.getElementById('temp-player-tiktok')?.value.trim() || '';
             const discord = document.getElementById('temp-player-discord')?.value.trim() || '';
             if(!pseudo && !name) return showToast("Pseudo ou Nom requis.", "error"); 
-            const playerData = { pseudo, name, age, country, number, role, instagram, x, twitch, youtube, tiktok, discord, avatar: tempPlayerAvatar || (editingPlayerIndex !== null ? tempPlayers[editingPlayerIndex].avatar : defaultAvatar) };
+            const discordIdRaw = (document.getElementById('temp-player-discordid')?.value || '').trim();
+            const externalAvatarUrl = (document.getElementById('temp-player-avatarurl')?.value || '').trim();
+            const preferManualAvatar = !!document.getElementById('temp-player-prefer-manual')?.checked;
+            if (discordIdRaw && !AERIX_DISCORD_ID_RE.test(discordIdRaw)) return showToast(currentLang==='en'?'Invalid Discord ID (17 to 20 digits).':"Identifiant Discord invalide (17 à 20 chiffres).", "error");
+            if (externalAvatarUrl && !/^https:\/\/\S+$/i.test(externalAvatarUrl)) return showToast(currentLang==='en'?'External avatar URL must start with https://':"L'URL d'avatar externe doit commencer par https://", "error");
+            const __previous = editingPlayerIndex !== null ? (tempPlayers[editingPlayerIndex] || {}) : {};
+            const playerData = { ...__previous, pseudo, name, age, country, number, role, instagram, x, twitch, youtube, tiktok, discord, externalAvatarUrl, preferManualAvatar, ...(discordIdRaw ? { discordId: discordIdRaw } : {}), avatar: tempPlayerAvatar || (editingPlayerIndex !== null ? tempPlayers[editingPlayerIndex].avatar : defaultAvatar) };
 
             if (editingPlayerIndex !== null) {
                 tempPlayers[editingPlayerIndex] = playerData;
@@ -10473,7 +10606,7 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
         }
         function resetTempPlayerForm() {
             editingPlayerIndex = null;
-            document.getElementById('temp-player-pseudo').value = ''; document.getElementById('temp-player-role').value = 'Player'; document.getElementById('temp-player-name').value = ''; document.getElementById('temp-player-age').value = ''; document.getElementById('temp-player-country').value = '🇫🇷'; document.getElementById('temp-player-number').value = ''; ['instagram','x','twitch','youtube','tiktok','discord'].forEach(k => { const el=document.getElementById('temp-player-'+k); if(el) el.value=''; });
+            document.getElementById('temp-player-pseudo').value = ''; document.getElementById('temp-player-role').value = 'Player'; document.getElementById('temp-player-name').value = ''; document.getElementById('temp-player-age').value = ''; document.getElementById('temp-player-country').value = '🇫🇷'; document.getElementById('temp-player-number').value = ''; { const a=document.getElementById('temp-player-discordid'); if(a) a.value=''; const b=document.getElementById('temp-player-avatarurl'); if(b) b.value=''; const c=document.getElementById('temp-player-prefer-manual'); if(c) c.checked=false; } ['instagram','x','twitch','youtube','tiktok','discord'].forEach(k => { const el=document.getElementById('temp-player-'+k); if(el) el.value=''; });
             document.getElementById('player-avatar-preview').src = defaultAvatar; tempPlayerAvatar = null;
             const btn = document.getElementById('temp-player-submit-btn');
             if (btn) btn.innerText = currentLang==='en'?'Add this player to the roster':'Ajouter ce joueur au roster';
@@ -10490,8 +10623,9 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
             document.getElementById('temp-player-age').value = p.age || '';
             document.getElementById('temp-player-country').value = p.country || '🇫🇷';
             document.getElementById('temp-player-number').value = p.number || '';
+            { const a=document.getElementById('temp-player-discordid'); if(a) a.value = p.discordId || ''; const b=document.getElementById('temp-player-avatarurl'); if(b) b.value = p.externalAvatarUrl || ''; const c=document.getElementById('temp-player-prefer-manual'); if(c) c.checked = p.preferManualAvatar === true; }
             ['instagram','x','twitch','youtube','tiktok','discord'].forEach(k => { const el=document.getElementById('temp-player-'+k); if(el) el.value = p[k] || ''; });
-            document.getElementById('player-avatar-preview').src = p.avatar || defaultAvatar;
+            document.getElementById('player-avatar-preview').src = aerixAvatarSrc(p);
             tempPlayerAvatar = null;
             const btn = document.getElementById('temp-player-submit-btn');
             if (btn) btn.innerText = currentLang==='en'?'Save changes':'Enregistrer les modifications';
@@ -11154,6 +11288,49 @@ document.addEventListener('DOMContentLoaded',applyTheme);
             <p id="site-maintenance-overlay-message" class="text-lg md:text-2xl font-semibold text-white leading-relaxed">Le site AERIX est temporairement en maintenance. Nous revenons bientôt.</p>
         </div>
     </div>
+<style id="aerix-pc-fluid-2026">
+/* AERIX — optimisation PC (additif : aucune règle existante n'est supprimée).
+   Les pages étaient figées à 1280 px : on élargit progressivement le contenu
+   et les grilles selon la largeur disponible, sans toucher au design. */
+@media (min-width:1536px) {
+  .page-view.max-w-7xl { max-width:1440px; }
+  .page-view.max-w-5xl { max-width:1100px; }
+  #page-effectifs .roster-track { grid-template-columns:repeat(5,minmax(0,1fr)) !important; gap:18px !important; }
+}
+@media (min-width:1920px) {
+  .page-view.max-w-7xl { max-width:1680px; }
+  .page-view.max-w-5xl { max-width:1200px; }
+  .page-view.max-w-4xl { max-width:960px; }
+  #page-effectifs .roster-track { gap:20px !important; }
+  #page-effectifs .effectif-player-card { height:clamp(330px,17vw,400px) !important; }
+}
+@media (min-width:2400px) {
+  .page-view.max-w-7xl { max-width:1960px; }
+  .page-view.max-w-5xl { max-width:1320px; }
+  .page-view.max-w-4xl { max-width:1040px; }
+  #page-effectifs .roster-track { grid-template-columns:repeat(6,minmax(0,1fr)) !important; }
+}
+/* Écrans ultrawide 21:9 : le contenu reste centré, lisible, sans étirement excessif. */
+@media (min-aspect-ratio:21/10) and (min-width:1900px) {
+  .page-view.max-w-7xl { max-width:min(1960px,76vw); }
+}
+/* Fenêtres peu hautes (1280×720, 1366×768) : modales toujours entièrement accessibles. */
+@media (min-width:768px) and (max-height:800px) {
+  [class*="max-h-["][class*="vh]"] { max-height:calc(100dvh - 24px) !important; }
+}
+/* Tableaux : jamais plus larges que leur conteneur sur PC (le défilement reste interne). */
+@media (min-width:768px) {
+  main.page-view table { display:block; max-width:100%; overflow-x:auto; }
+}
+/* Images de membres : jamais déformées (cartes, profils, admin). */
+#page-effectifs .member-card-media img,
+#pm-img,
+#player-avatar-preview,
+#temp-players-list img { object-fit:cover; }
+/* Formulaire membre : champs Discord/avatar alignés et sans débordement. */
+#temp-player-discordid, #temp-player-avatarurl { min-width:0; width:100%; }
+#bulk-nationality-panel select { min-width:0; }
+</style>
 </body>
 </html>
 
