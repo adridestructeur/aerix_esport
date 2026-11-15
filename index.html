@@ -4291,6 +4291,62 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
 @media(max-width:640px){.aerix-home-slogan{font-size:clamp(2.25rem,11vw,4rem)}.aerix-home-slogan-line{line-height:1.13}}
 </style>
 
+
+<style id="aerix-v12-requested-visual-fixes">
+/* Les cartes partenaires classiques gardent l’animation ; le partenaire mis en avant reste statique. */
+#page-partenaires .partner-featured,
+#page-partenaires .partner-featured:hover {
+  transform:none !important;
+  transition:none !important;
+}
+#page-partenaires .partner-featured img,
+#page-partenaires .partner-featured:hover img {
+  transform:none !important;
+  transition:none !important;
+  filter:none !important;
+}
+/* Les titres de navigation retrouvent leur animation de survol douce. */
+.nav-btn {
+  transform:translateY(0);
+  transition:color .42s cubic-bezier(.16,1,.3,1),transform .58s cubic-bezier(.16,1,.3,1),text-shadow .58s ease;
+  will-change:transform;
+}
+.nav-btn:hover {
+  transform:translateY(-2px);
+  text-shadow:0 0 16px rgba(255,255,255,.22);
+}
+/* Les règles du hero ne doivent plus écraser le bouton blanc et son halo. */
+#page-home .aerix-home-hero button.aerix-discover-button {
+  background:#fff !important;
+  color:#080808 !important;
+  border:1px solid rgba(255,255,255,.98) !important;
+  box-shadow:0 0 0 1px rgba(255,255,255,.7),0 0 18px rgba(255,255,255,.34),0 0 42px rgba(255,255,255,.18) !important;
+}
+#page-home .aerix-home-hero button.aerix-discover-button:hover {
+  background:#fff !important;
+  color:#080808 !important;
+  transform:translateY(-2px) !important;
+  box-shadow:0 0 0 1px #fff,0 0 24px rgba(255,255,255,.72),0 0 58px rgba(255,255,255,.30) !important;
+}
+/* Le bouton Avis reste blanc avec un néon blanc, y compris sur l'accueil. */
+#page-home .aerix-home-hero button.btn-review-neon {
+  background:#fff !important;
+  color:#080808 !important;
+  border:1px solid #fff !important;
+  box-shadow:0 0 7px rgba(255,255,255,.95),0 0 20px rgba(255,255,255,.65),0 0 42px rgba(255,255,255,.34) !important;
+}
+#page-home .aerix-home-hero button.btn-review-neon:hover {
+  background:#f5f5f5 !important;
+  color:#080808 !important;
+  border-color:#fff !important;
+  transform:translateY(-2px) !important;
+  box-shadow:0 0 9px #fff,0 0 25px rgba(255,255,255,.82),0 0 52px rgba(255,255,255,.48) !important;
+}
+@media(prefers-reduced-motion:reduce){
+  .nav-btn{transition:none!important;transform:none!important}
+}
+</style>
+
 </head>
 <body class="antialiased selection:bg-purple-500 selection:text-white min-h-screen flex flex-col relative">
 <script id="aerix-early-theme-init">
@@ -7072,15 +7128,17 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
         function aerixPersonIdentityKeys(person) {
             if (!person || typeof person !== 'object') return [];
             const keys = [];
+            // Les identifiants Discord sont prioritaires ; pseudo et nom sont
+            // comparés séparément pour détecter une même personne même si un
+            // formulaire a enregistré un nom légèrement différent.
             ['discordId','discord_id','userId','uid','id'].forEach(k => {
                 const value = aerixNormalizeIdentity(person[k]);
                 if (value) keys.push('id:' + value);
             });
-            const pseudo = aerixNormalizeIdentity(person.pseudo || person.username || '');
+            const pseudo = aerixNormalizeIdentity(person.pseudo || person.username || person.discordName || '');
             const name = aerixNormalizeIdentity(person.name || '');
-            if (pseudo && name) keys.push('person:' + [pseudo, name].sort().join('|'));
-            else if (pseudo) keys.push('pseudo:' + pseudo);
-            else if (name) keys.push('name:' + name);
+            if (pseudo) keys.push('pseudo:' + pseudo);
+            if (name) keys.push('name:' + name);
             return [...new Set(keys)];
         }
         function aerixStaffIdentitySet() {
@@ -7094,39 +7152,66 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
             return aerixPersonIdentityKeys(person).some(k => keys.has(k));
         }
         function aerixNormalizeGame(value) {
-            const raw = aerixNormalizeIdentity(value).replace(/[_-]+/g, ' ');
+            const raw = aerixNormalizeIdentity(value).replace(/[_-]+/g, ' ').replace(/[()]/g, ' ').replace(/\s+/g, ' ').trim();
             if (!raw) return '';
-            if (raw.includes('rocket')) return 'rocket league';
-            if (raw.includes('mans ultimate') || raw === 'lmu') return 'le mans ultimate';
-            if (raw.includes('iracing') || raw === 'i racing') return 'iracing';
-            if (raw.includes('rbr') || raw.includes('richard burns')) return 'rbr';
-            if (raw.includes('f1 ultimate') || raw === 'f1') return 'f1 ultimate';
+            if (/\b(rocket league|rocketleague|rl)\b/.test(raw) || raw === 'rocket') return 'rocket league';
+            if (/\b(le mans ultimate|lmu|lemans ultimate)\b/.test(raw)) return 'le mans ultimate';
+            if (/\b(iracing|i racing|i-racing)\b/.test(raw)) return 'iracing';
+            if (/\b(rbr|richard burns rally)\b/.test(raw)) return 'rbr';
+            if (/\b(f1 ultimate|f1)\b/.test(raw)) return 'f1 ultimate';
             return raw;
+        }
+        function aerixGetCardGame(card) {
+            if (!card || typeof card !== 'object') return '';
+            // Ne jamais déduire le jeu depuis une étiquette libre (ex. catégorie
+            // de candidature). On n'accepte que les champs dédiés au jeu/simulateur.
+            const candidates = [card.game, card.simulator, card.gameName, card.game_name, card.sim, card.platformGame];
+            for (const value of candidates) {
+                const game = aerixNormalizeGame(value);
+                if (['rocket league','le mans ultimate','rbr','iracing','f1 ultimate'].includes(game)) return game;
+            }
+            // Compatibilité avec les anciennes fiches où le jeu était enregistré
+            // dans category/division/team, uniquement si la valeur correspond
+            // exactement à l'un des jeux reconnus après normalisation.
+            for (const value of [card.category, card.division, card.team]) {
+                const game = aerixNormalizeGame(value);
+                if (['rocket league','le mans ultimate','rbr','iracing','f1 ultimate'].includes(game)) return game;
+            }
+            return '';
         }
         function getPendingPlayerCardSyncs() {
             const rosters = Array.isArray(globalEffectifs) ? globalEffectifs : [];
             const cards = Array.isArray(globalPlayerCards) ? globalPlayerCards : [];
             const staffKeys = aerixStaffIdentitySet();
-            const existingKeys = new Set();
-            rosters.forEach(roster => (roster.players || []).forEach(person => {
-                if (getMemberRoleKey(person.role) === 'player') aerixPersonIdentityKeys(person).forEach(k => existingKeys.add(k));
-            }));
             const pending = [];
+            const seen = new Set();
             cards.forEach(card => {
                 const role = getMemberRoleKey(card.role || card.memberRole || card.member_role || 'player');
                 if (role !== 'player') return;
                 const cardWithId = { ...card, discordId: card.discordId || card.discord_id || card.userId || card.uid || card.id };
-                if (aerixMatchesIdentitySet(cardWithId, staffKeys)) return;
-                if (aerixMatchesIdentitySet(cardWithId, existingKeys)) return;
-                const game = aerixNormalizeGame(card.game || card.simulator || card.category || card.division || card.team || card.gameName);
+                const keys = aerixPersonIdentityKeys(cardWithId);
+                if (!keys.length || aerixMatchesIdentitySet(cardWithId, staffKeys)) return;
+                const signature = keys.slice().sort().join('||');
+                if (seen.has(signature)) return;
+                seen.add(signature);
+                const game = aerixGetCardGame(card);
                 if (!game) return;
-                const target = rosters.find(r => aerixNormalizeGame(r.game || r.name) === game);
+                const target = rosters.find(r => aerixNormalizeGame(r.game) === game);
                 if (!target) return;
-                pending.push({ card: cardWithId, targetId: target.id, game: target.game || card.game || game });
-                aerixPersonIdentityKeys(cardWithId).forEach(k => existingKeys.add(k));
+                const keySet = new Set(keys);
+                const matches = [];
+                rosters.forEach(roster => (roster.players || []).forEach(person => {
+                    if (getMemberRoleKey(person.role) === 'player' && aerixMatchesIdentitySet(person, keySet)) matches.push(roster.id);
+                }));
+                // Une fiche est en attente si elle est absente, rangée dans une
+                // mauvaise discipline ou présente en double dans plusieurs rosters.
+                if (matches.length !== 1 || matches[0] !== target.id) {
+                    pending.push({ card: cardWithId, targetId: target.id, game });
+                }
             });
             return pending;
         }
+
         function updateEffectifSyncControl() {
             const panel = document.getElementById('effectif-sync-panel');
             const button = document.getElementById('effectif-sync-button');
@@ -7150,30 +7235,49 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
                 const byRoster = new Map();
                 rosters.forEach(roster => {
                     const cleaned = (roster.players || []).filter(person => {
-                        const role = getMemberRoleKey(person.role);
-                        // Les fiches staff restent dans les données staff, jamais dans une division joueur.
+                        const role = getMemberRoleKey(person.role || person.memberRole || person.member_role);
+                        // Un membre staff ne peut jamais rester dans une liste de pilotes,
+                        // même si une ancienne fiche le qualifie par erreur de Player.
                         return role !== 'player' || !aerixMatchesIdentitySet(person, staffKeys);
                     });
                     byRoster.set(roster.id, cleaned);
                 });
+
                 let routedCards = 0;
+                let skippedWithoutGame = 0;
+                const processed = new Set();
                 cards.forEach(card => {
-                    if (getMemberRoleKey(card.role || card.memberRole || card.member_role || 'player') !== 'player') return;
+                    const role = getMemberRoleKey(card.role || card.memberRole || card.member_role || 'player');
+                    if (role !== 'player') return;
                     const normalized = { ...card, discordId: card.discordId || card.discord_id || card.userId || card.uid || card.id };
                     if (aerixMatchesIdentitySet(normalized, staffKeys)) return;
-                    const game = aerixNormalizeGame(card.game || card.simulator || card.category || card.division || card.team || card.gameName);
-                    const target = rosters.find(r => aerixNormalizeGame(r.game || r.name) === game);
-                    if (!target) return;
-                    const identity = new Set(aerixPersonIdentityKeys(normalized));
-                    // Retire la fiche des mauvaises divisions avant de l'affecter à sa division réelle.
+                    const identityKeys = aerixPersonIdentityKeys(normalized);
+                    const identity = identityKeys.join('||');
+                    if (!identity || processed.has(identity)) return;
+                    processed.add(identity);
+                    const game = aerixGetCardGame(card);
+                    if (!game) { skippedWithoutGame++; return; }
+                    const target = rosters.find(r => aerixNormalizeGame(r.game) === game);
+                    if (!target) { skippedWithoutGame++; return; }
+
+                    // Retire toute ancienne affectation avant de réinsérer la fiche
+                    // dans l'unique roster correspondant à son jeu déclaré.
                     byRoster.forEach((list, rosterId) => {
-                        byRoster.set(rosterId, list.filter(person => !aerixMatchesIdentitySet(person, identity)));
+                        byRoster.set(rosterId, list.filter(person => !aerixMatchesIdentitySet(person, new Set(identityKeys))));
                     });
                     const targetList = byRoster.get(target.id) || [];
-                    targetList.push({ ...normalized, id: normalized.discordId || normalized.id, discordId: normalized.discordId || normalized.id, game: target.game || game, division: normalized.division || target.game || game, role: 'Player' });
+                    targetList.push({
+                        ...normalized,
+                        id: normalized.discordId || normalized.id,
+                        discordId: normalized.discordId || normalized.id,
+                        game: target.game,
+                        division: target.name || target.game,
+                        role: 'Player'
+                    });
                     byRoster.set(target.id, targetList);
                     routedCards++;
                 });
+
                 const batch = db.batch();
                 let writes = 0;
                 byRoster.forEach((players, rosterId) => {
@@ -7185,7 +7289,8 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
                     }
                 });
                 if (writes) await batch.commit();
-                showToast(`Mise à jour forcée terminée : ${writes} division(s) corrigée(s), ${routedCards} fiche(s) joueur(s) réaffectée(s).`, 'success');
+                const extra = skippedWithoutGame ? ` ${skippedWithoutGame} fiche(s) ignorée(s) : jeu non reconnu ou roster absent.` : '';
+                showToast(`Mise à jour forcée terminée : ${writes} division(s) corrigée(s), ${routedCards} fiche(s) joueur(s) réaffectée(s).${extra}`, 'success');
             } catch (error) {
                 console.error('syncPlayerCardsToEffectifs:', error);
                 showToast('Échec de la mise à jour. Vérifie les permissions Firestore et les données des effectifs.', 'error');
@@ -9176,7 +9281,7 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
             if (!card || !roster) {
                 return showToast(currentLang === 'en' ? 'Player card or roster not found.' : 'Fiche joueur ou roster introuvable.', 'error');
             }
-            if (roster.game && roster.game !== 'Tous' && roster.game !== card.game) {
+            if (roster.game && roster.game !== 'Tous' && aerixNormalizeGame(roster.game) !== aerixGetCardGame(card)) {
                 return showToast(currentLang === 'en' ? 'This player belongs to another game.' : 'Ce joueur appartient à un autre jeu.', 'error');
             }
 
@@ -9289,7 +9394,7 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
             for (const player of tempPlayers) {
                 if (getMemberRoleKey(player.role) === 'player' && aerixMatchesIdentitySet(player, staffKeys)) continue;
                 const avatar = player?.avatar ? (await optimizeImageListForFirestore([player.avatar], 180000))[0] : player.avatar;
-                players.push({ ...player, avatar });
+                players.push({ ...player, avatar, game, division: name });
             }
             const data = { name, game, desc, players };
             const rosterBudget = ensureFirestoreImageBudget(players.map(p => p.avatar).filter(Boolean), 700000);
