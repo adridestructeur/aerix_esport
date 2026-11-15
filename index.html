@@ -4274,6 +4274,21 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
 .shop-empty-state h4{font-size:20px;font-weight:900;color:#fff}.shop-empty-state p{font-size:13px;color:#9ca3af;margin-top:7px}
 #effectif-sync-button:disabled{opacity:.65;cursor:wait;transform:none}
 @media(prefers-reduced-motion:reduce){.aerix-title-hover,#page-partenaires .partner-card-tile,#page-partenaires .partner-card-tile img,.shop-product-card,.shop-product-image,.shop-product-open{transition:none!important}}
+
+/* Home slogan only: keep the tab-heading hover behavior untouched and prevent clipping. */
+.aerix-home-slogan{width:100%;max-width:100%;overflow:visible;isolation:isolate;padding:.08em .12em .18em}
+.aerix-home-slogan-line{display:block;max-width:100%;white-space:normal;overflow:visible;transition:transform .72s cubic-bezier(.16,1,.3,1),filter .72s cubic-bezier(.16,1,.3,1),letter-spacing .72s cubic-bezier(.16,1,.3,1);transform-origin:center}
+.aerix-home-slogan:hover .aerix-home-slogan-line{transform:translateY(-2px) scale(1.025);filter:drop-shadow(0 8px 22px rgba(255,255,255,.16));letter-spacing:-.025em}
+.aerix-discover-button{box-shadow:0 0 0 1px rgba(255,255,255,.8),0 0 18px rgba(255,255,255,.24),0 0 42px rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.92)}
+.aerix-discover-button:hover{transform:translateY(-2px);box-shadow:0 0 0 1px #fff,0 0 24px rgba(255,255,255,.52),0 0 58px rgba(255,255,255,.2);background:#fff}
+#product-image-lightbox{position:fixed;inset:0;z-index:300;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(0,0,0,.97);backdrop-filter:blur(18px);cursor:zoom-out}
+#product-image-lightbox.open{display:flex}
+#product-image-lightbox img{max-width:96vw;max-height:92vh;object-fit:contain;box-shadow:0 20px 90px rgba(0,0,0,.65)}
+#product-image-lightbox button{position:absolute;top:22px;right:24px;width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(20,20,20,.8);color:#fff;font-size:24px}
+#modal-product-img{cursor:zoom-in!important;pointer-events:auto!important;object-fit:contain!important;padding:18px!important}
+#modal-product-sizes{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+#modal-product-sizes .size-chip{padding:8px 13px;border:1px solid rgba(255,255,255,.16);border-radius:10px;background:rgba(255,255,255,.045);font-size:12px;font-weight:800;color:#e5e7eb}
+@media(max-width:640px){.aerix-home-slogan{font-size:clamp(2.25rem,11vw,4rem)}.aerix-home-slogan-line{line-height:1.13}}
 </style>
 
 </head>
@@ -4429,16 +4444,16 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
         <main id="page-home" class="page-view active px-6 max-w-7xl mx-auto mt-12">
             <div class="aerix-home-hero text-center min-h-[50vh] flex flex-col justify-center mb-20">
                 <div class="aerix-hero-eyebrow animate-fade-up" data-i18n="hero_eyebrow">STRUCTURE ESPORT FRANÇAISE · ROCKET LEAGUE &amp; SIM RACING</div>
-                <h1 class="aerix-hero-title text-4xl sm:text-5xl md:text-7xl font-black text-white tracking-tighter mb-4 leading-tight animate-fade-up flex flex-wrap justify-center items-center gap-x-[0.25em]">
-                    <span class="aerix-title-hover inline-block" data-i18n="hero_title_1">Une nouvelle</span>
-                    <span class="aerix-title-hover aerix-title-accent inline-block" data-i18n="hero_title_4">ère approche</span>
+                <h1 class="aerix-hero-title aerix-home-slogan text-4xl sm:text-5xl md:text-7xl font-black text-white tracking-tighter mb-4 leading-[1.12] animate-fade-up flex flex-col justify-center items-center gap-y-1">
+                    <span class="aerix-home-slogan-line" data-i18n="hero_title_1">Une nouvelle</span>
+                    <span class="aerix-home-slogan-line aerix-title-accent" data-i18n="hero_title_4">ère approche</span>
                 </h1>
                 <div class="text-lg sm:text-xl md:text-2xl font-semibold text-gray-300 mb-6 animate-fade-up delay-75" data-i18n="hero_tagline">L'avenir de la Compétition.</div>
                 <p class="mt-2 text-base sm:text-lg text-gray-400 max-w-2xl mx-auto font-light leading-relaxed mb-12 animate-fade-up delay-100" data-i18n="hero_desc">
                     Découvrez AERIX Esport, une structure française compétitive sur Rocket League et sim racing : équipes, résultats, tournois, endurance, iRacing et Le Mans Ultimate.
                 </p>
                 <div class="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6 animate-fade-up delay-200">
-                    <button onclick="navigate('effectifs')" class="px-8 py-3.5 bg-white text-black text-sm font-bold rounded-full hover:bg-gray-200 transition shadow-[0_0_20px_rgba(255,255,255,0.2)]" data-i18n="hero_btn_1">Découvrir les équipes</button>
+                    <button onclick="navigate('effectifs')" class="aerix-discover-button px-8 py-3.5 bg-white text-black text-sm font-bold rounded-full transition" data-i18n="hero_btn_1">Découvrir les équipes</button>
                     <button onclick="navigate('palmares')" class="px-8 py-3.5 glass-panel text-white text-sm font-bold rounded-full hover:border-aerix-purple transition" data-i18n="hero_btn_2">Notre Palmarès</button>
                     <button onclick="openReviewModal()" class="btn-review-neon px-8 py-3.5 rounded-full text-sm font-bold transition" data-i18n="nav_review">Laisser un avis</button>
                 </div>
@@ -4496,7 +4511,7 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
         <main id="page-effectifs" class="page-view px-6 max-w-7xl mx-auto">
             <div class="mb-14 text-center animate-fade-up">
                 <h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2" data-i18n="roster_subtitle">Divisions</h2>
-                <h3 class="text-4xl font-black text-white mb-8 inline-block aerix-title-hover" data-i18n="roster_title">Nos équipes</h3>
+                <h3 class="text-4xl font-black text-white mb-8 inline-block" data-i18n="roster_title">Nos équipes</h3>
                 <div class="flex flex-wrap justify-center gap-3" id="filters-effectifs">
                     <button onclick="setFilter('effectifs', 'Staff')" data-filter="Staff" class="filter-btn active">Staff</button>
                     <button onclick="setFilter('effectifs', 'Rocket League')" data-filter="Rocket League" class="filter-btn">Rocket League</button>
@@ -4513,7 +4528,7 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
         <main id="page-palmares" class="page-view px-6 max-w-7xl mx-auto">
             <div class="mb-14 text-center animate-fade-up">
                 <h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2" data-i18n="results_subtitle">Compétitions</h2>
-                <h3 class="text-4xl font-black text-white mb-8 inline-block aerix-title-hover" data-i18n="results_title">Nos résultats</h3>
+                <h3 class="text-4xl font-black text-white mb-8 inline-block" data-i18n="results_title">Nos résultats</h3>
                 <div class="flex flex-wrap justify-center gap-3 mb-4" id="palmares-view-toggle">
                     <button onclick="setPalmaresView('resultats')" data-view="resultats" class="filter-btn active" data-i18n="results_tab_results">Résultats</button>
                     <button onclick="setPalmaresView('palmares')" data-view="palmares" class="filter-btn" data-i18n="results_tab_achievements">Palmarès</button>
@@ -4536,7 +4551,7 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
 
             <div class="mb-14 text-center animate-fade-up">
                 <h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2">AERIX COMPETITION</h2>
-                <h3 class="text-4xl font-black text-white mb-4 inline-block aerix-title-hover">Compétition</h3>
+                <h3 class="text-4xl font-black text-white mb-4 inline-block">Compétition</h3>
                 <p class="text-gray-400 max-w-2xl mx-auto">Retrouve les prochains matchs et courses ainsi que les dernières performances enregistrées par AERIX.</p>
             </div>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -4580,7 +4595,7 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
         <main id="page-performance" class="page-view px-6 max-w-7xl mx-auto">
             <div class="mb-14 text-center animate-fade-up">
                 <h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2">AERIX PERFORMANCE</h2>
-                <h3 class="text-4xl font-black text-white mb-4 inline-block aerix-title-hover">Performance</h3>
+                <h3 class="text-4xl font-black text-white mb-4 inline-block">Performance</h3>
                 <p class="text-gray-400 max-w-2xl mx-auto">Une vue synthétique des effectifs, compétitions et résultats actuellement enregistrés.</p>
             </div>
             <div id="performance-stats" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10"></div>
@@ -4592,7 +4607,7 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
 
         <!-- 6. MÉDIA -->
         <main id="page-media" class="page-view px-6 max-w-7xl mx-auto">
-            <div class="mb-14 text-center animate-fade-up"><h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2">AERIX MEDIA</h2><h3 class="text-4xl font-black text-white mb-4 inline-block aerix-title-hover">Média</h3><p class="text-gray-400 max-w-2xl mx-auto">Photos et contenus visuels publiés depuis les annonces et la galerie AERIX.</p></div>
+            <div class="mb-14 text-center animate-fade-up"><h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2">AERIX MEDIA</h2><h3 class="text-4xl font-black text-white mb-4 inline-block">Média</h3><p class="text-gray-400 max-w-2xl mx-auto">Photos et contenus visuels publiés depuis les annonces et la galerie AERIX.</p></div>
             <div id="media-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5"></div>
         </main>
 
@@ -4600,7 +4615,7 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
         <main id="page-histoire" class="page-view px-6 max-w-5xl mx-auto">
             <div class="text-center mb-20 animate-fade-up">
                 <h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2" data-i18n="history_subtitle">L'Héritage</h2>
-                <h3 class="text-4xl font-black text-white mb-6 inline-block aerix-title-hover" data-i18n="history_title">L'Histoire d'AERIX</h3>
+                <h3 class="text-4xl font-black text-white mb-6 inline-block" data-i18n="history_title">L'Histoire d'AERIX</h3>
                 <p class="text-gray-400 text-lg max-w-2xl mx-auto font-light" data-i18n="history_desc">Née d'une passion commune pour le sport automobile virtuel et l'esport, AERIX n'a cessé d'évoluer.</p>
             </div>
             <div class="relative border-l border-white/10 ml-4 md:ml-1/2 space-y-24 py-10">
@@ -4641,7 +4656,7 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
         <main id="page-boutique" class="page-view px-6 max-w-7xl mx-auto">
             <div class="mb-14 text-center animate-fade-up">
                 <h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2" data-i18n="shop_subtitle">Shop</h2>
-                <h3 class="text-4xl font-black text-white inline-block aerix-title-hover" data-i18n="shop_title">Équipement Officiel</h3>
+                <h3 class="text-4xl font-black text-white inline-block" data-i18n="shop_title">Équipement Officiel</h3>
             </div>
             <div id="shop-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"></div>
         </main>
@@ -4651,7 +4666,7 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
             <div class="partners-hero glass-panel rounded-[2rem] p-7 md:p-10 mb-14 animate-fade-up">
                 <div class="relative z-10">
                     <div class="text-xs font-black text-aerix-purple uppercase tracking-[.22em] mb-3" data-i18n="partners_subtitle">Sponsors & Affiliés</div>
-                    <h3 class="text-4xl md:text-5xl font-black text-white tracking-tight inline-block aerix-title-hover" data-i18n="partners_title">Partenaires Techniques</h3>
+                    <h3 class="text-4xl md:text-5xl font-black text-white tracking-tight inline-block" data-i18n="partners_title">Partenaires Techniques</h3>
                     <p class="text-sm md:text-base text-gray-400 max-w-2xl mx-auto mt-5 leading-relaxed" data-i18n="partners_desc">Des collaborations qui accompagnent AERIX dans son développement compétitif, son équipement et sa communauté.</p>
                     <div id="partners-stats" class="flex flex-wrap justify-center gap-3 md:gap-4 mt-8"></div>
                 </div>
@@ -4670,7 +4685,7 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
         <main id="page-annonces" class="page-view px-6 max-w-4xl mx-auto">
             <div class="mb-14 text-center animate-fade-up">
                 <h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2" data-i18n="news_subtitle">Actualités</h2>
-                <h3 class="text-4xl font-black text-white mb-8 inline-block aerix-title-hover" data-i18n="news_title">Annonces & Mises à jour</h3>
+                <h3 class="text-4xl font-black text-white mb-8 inline-block" data-i18n="news_title">Annonces & Mises à jour</h3>
                 <div class="flex flex-wrap justify-center gap-3 mb-4" id="annonces-view-toggle">
                     <button onclick="setAnnoncesView('liste')" data-view="liste" class="filter-btn active">Actualités</button>
                     <button onclick="setAnnoncesView('galerie')" data-view="galerie" class="filter-btn" data-i18n="filter_gallery">Galerie</button>
@@ -4751,7 +4766,7 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
             <button onclick="closeProductModal()" aria-label="Fermer" class="absolute top-6 right-6 text-white hover:text-aerix-purple z-50 bg-black/50 w-10 h-10 rounded-full flex items-center justify-center border border-white/20 backdrop-blur-md transition">✕</button>
             <div class="w-full md:w-1/2 h-[62%] md:h-full bg-[#050505] flex items-center justify-center relative border-b md:border-b-0 md:border-r border-white/10">
                 <div class="absolute inset-0 bg-gradient-to-tr from-purple-900/10 to-transparent"></div>
-                <img loading="lazy" decoding="async" id="modal-product-img" src="" class="w-full h-full object-cover object-center p-0 relative z-10" alt="Image du produit AERIX">
+                <img loading="lazy" decoding="async" id="modal-product-img" onclick="event.stopPropagation();openProductImageLightbox()" src="" class="w-full h-full object-contain object-center p-0 relative z-10" alt="Image du produit AERIX">
                 <button type="button" id="slider-prev" onclick="event.stopPropagation(); prevProductImg()" aria-label="Image précédente" class="product-slider-btn absolute left-4 top-1/2 -translate-y-1/2 z-[40] bg-black/65 backdrop-blur-md border border-white/20 text-white w-12 h-12 rounded-full hover:bg-aerix-purple hover:border-aerix-purple transition hidden flex items-center justify-center text-2xl leading-none cursor-pointer select-none">‹</button>
                 <button type="button" id="slider-next" onclick="event.stopPropagation(); nextProductImg()" aria-label="Image suivante" class="product-slider-btn absolute right-4 top-1/2 -translate-y-1/2 z-[40] bg-black/65 backdrop-blur-md border border-white/20 text-white w-12 h-12 rounded-full hover:bg-aerix-purple hover:border-aerix-purple transition hidden flex items-center justify-center text-2xl leading-none cursor-pointer select-none">›</button>
                 <div id="slider-dots" class="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-20 flex gap-2"></div>
@@ -4759,10 +4774,12 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
             <div class="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center overflow-y-auto bg-black/40">
                 <div class="text-xs font-bold text-aerix-purple uppercase tracking-widest mb-3">Boutique AERIX</div>
                 <h3 id="modal-product-title" class="text-3xl md:text-5xl font-black text-white mb-6 leading-tight tracking-tight">Nom</h3>
-                <div id="modal-product-state" class="flex"></div>
+                <div id="modal-product-state" class="flex"></div><div id="modal-product-sizes"></div>
             </div>
         </div>
     </div>
+
+    <div id="product-image-lightbox" onclick="closeProductImageLightbox()" aria-label="Image du produit en plein écran"><button type="button" onclick="event.stopPropagation();closeProductImageLightbox()" aria-label="Fermer">×</button><img id="product-image-lightbox-img" src="" alt="Image du produit en plein écran"></div>
 
     <!-- MODAL : ARTICLE ÉVÉNEMENT / COMPÉTITION -->
     <div id="event-article-modal" class="fixed inset-0 z-[120] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl" role="dialog" aria-modal="true" aria-label="Détail de l'événement">
@@ -4863,7 +4880,7 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
                 <button onclick="openContactForm()" class="glass-panel p-6 rounded-2xl text-left hover:border-aerix-purple/60 transition group">
                     <div class="w-12 h-12 rounded-2xl bg-aerix-purple/15 border border-aerix-purple/30 flex items-center justify-center text-aerix-purple mb-4 text-xl">✉</div>
                     <div class="text-white font-bold mb-1" data-i18n="contact_form">Formulaire de contact</div>
-                    <div class="text-xs text-gray-500">Partenariat · Question · Autre demande</div>
+                    <div class="text-xs text-gray-500">Candidature pour rejoindre l’équipe.</div>
                 </button>
                 <a href="mailto:contact.aerixesport@gmail.com" class="glass-panel p-6 rounded-2xl text-left hover:border-aerix-purple/60 transition group md:col-span-2">
                     <div class="w-12 h-12 rounded-2xl bg-aerix-purple/15 border border-aerix-purple/30 flex items-center justify-center text-aerix-purple mb-4 text-xl">@</div>
@@ -5246,15 +5263,15 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
 
             <!-- TAB: EFFECTIFS -->
             <div id="admin-tab-effectifs" class="admin-tab hidden space-y-8">
-                <div id="effectif-sync-panel" class="hidden rounded-2xl border border-aerix-purple/30 bg-gradient-to-r from-aerix-purple/15 via-white/[0.03] to-transparent p-5 md:p-6">
+                <div id="effectif-sync-panel" class="rounded-2xl border border-aerix-purple/30 bg-gradient-to-r from-aerix-purple/15 via-white/[0.03] to-transparent p-5 md:p-6">
                     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div class="min-w-0">
                             <div class="text-[10px] font-black uppercase tracking-[.2em] text-aerix-purple mb-2">Synchronisation des effectifs</div>
-                            <h4 class="text-lg md:text-xl font-black text-white">De nouvelles fiches pilotes sont disponibles</h4>
-                            <p id="effectif-sync-description" class="text-xs text-gray-400 mt-1">Des candidatures acceptées peuvent être ajoutées aux divisions correspondantes.</p>
+                            <h4 class="text-lg md:text-xl font-black text-white">Nettoyage et synchronisation des effectifs</h4>
+                            <p id="effectif-sync-description" class="text-xs text-gray-400 mt-1">Nettoie les rôles staff, trie les joueurs et réapplique les fiches acceptées aux bonnes divisions.</p>
                         </div>
                         <button id="effectif-sync-button" type="button" onclick="syncPlayerCardsToEffectifs()" class="shrink-0 inline-flex items-center justify-center gap-2 rounded-xl bg-aerix-purple hover:bg-purple-500 px-5 py-3 text-white text-sm font-black transition-all duration-300 shadow-[0_8px_28px_rgba(139,92,246,.25)] hover:-translate-y-0.5">
-                            <span aria-hidden="true">↻</span> Mettre à jour les données <span id="effectif-sync-count" class="rounded-full bg-black/25 px-2 py-0.5 text-[10px]">0</span>
+                            <span aria-hidden="true">↻</span> Forcer la mise à jour des effectifs <span id="effectif-sync-count" class="rounded-full bg-black/25 px-2 py-0.5 text-[10px]">0</span>
                         </button>
                     </div>
                 </div>
@@ -5692,7 +5709,7 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
     <div id="recruitment-modal" class="fixed inset-0 z-[210] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl">
         <div class="glass-panel w-full max-w-2xl max-h-[92vh] overflow-y-auto rounded-[2rem] p-7 md:p-9 shadow-2xl">
             <div class="flex items-center justify-between mb-7">
-                <div><div class="text-xs font-bold text-aerix-purple uppercase tracking-widest">AERIX Esport</div><h3 class="text-3xl font-black text-white mt-1">Rejoindre AERIX</h3></div>
+                <div><div class="text-xs font-bold text-aerix-purple uppercase tracking-widest">AERIX Esport</div><h3 class="text-3xl font-black text-white mt-1">Rejoindre AERIX</h3><p class="text-xs text-gray-400 mt-2">Candidature pour rejoindre l’équipe AERIX.</p></div>
                 <button type="button" onclick="closeRecruitmentModal()" class="w-10 h-10 rounded-full bg-white/5 border border-white/10 text-white">✕</button>
             </div>
             <form id="recruitment-form" onsubmit="submitRecruitment(event)" class="space-y-4">
@@ -7096,13 +7113,14 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
             }));
             const pending = [];
             cards.forEach(card => {
-                if (getMemberRoleKey(card.role) !== 'player') return;
+                const role = getMemberRoleKey(card.role || card.memberRole || card.member_role || 'player');
+                if (role !== 'player') return;
                 const cardWithId = { ...card, discordId: card.discordId || card.discord_id || card.userId || card.uid || card.id };
                 if (aerixMatchesIdentitySet(cardWithId, staffKeys)) return;
                 if (aerixMatchesIdentitySet(cardWithId, existingKeys)) return;
-                const game = aerixNormalizeGame(card.game || card.simulator || card.category || card.division);
+                const game = aerixNormalizeGame(card.game || card.simulator || card.category || card.division || card.team || card.gameName);
                 if (!game) return;
-                const target = rosters.find(r => aerixNormalizeGame(r.game) === game);
+                const target = rosters.find(r => aerixNormalizeGame(r.game || r.name) === game);
                 if (!target) return;
                 pending.push({ card: cardWithId, targetId: target.id, game: target.game || card.game || game });
                 aerixPersonIdentityKeys(cardWithId).forEach(k => existingKeys.add(k));
@@ -7115,52 +7133,64 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
             const count = document.getElementById('effectif-sync-count');
             const description = document.getElementById('effectif-sync-description');
             if (!panel || !button) return;
+            panel.classList.remove('hidden');
             const pending = getPendingPlayerCardSyncs();
-            panel.classList.toggle('hidden', pending.length === 0);
             if (count) count.textContent = String(pending.length);
-            if (description) description.textContent = `${pending.length} nouvelle${pending.length > 1 ? 's' : ''} fiche${pending.length > 1 ? 's' : ''} acceptée${pending.length > 1 ? 's' : ''} prête${pending.length > 1 ? 's' : ''} à être ajoutée${pending.length > 1 ? 's' : ''} à la bonne division.`;
+            if (description) description.textContent = `${pending.length} fiche${pending.length > 1 ? 's' : ''} acceptée${pending.length > 1 ? 's' : ''} à intégrer · nettoyage staff et tri automatique inclus.`;
+            button.disabled = false;
         }
         async function syncPlayerCardsToEffectifs() {
             if (!hasAdminAccess()) return showToast('Accès refusé.', 'error');
             const button = document.getElementById('effectif-sync-button');
-            const pending = getPendingPlayerCardSyncs();
-            if (!pending.length) { updateEffectifSyncControl(); return; }
-            if (button) { button.disabled = true; button.dataset.originalText = button.innerHTML; button.innerHTML = 'Synchronisation…'; }
+            if (button) { button.disabled = true; button.dataset.originalText = button.innerHTML; button.innerHTML = 'Mise à jour forcée…'; }
             try {
-                const additionsByRoster = new Map();
-                pending.forEach(({card, targetId, game}) => {
-                    if (!additionsByRoster.has(targetId)) additionsByRoster.set(targetId, []);
-                    additionsByRoster.get(targetId).push({
-                        ...card,
-                        id: card.discordId || card.id,
-                        discordId: card.discordId || card.id,
-                        game,
-                        division: card.division || game,
-                        role: 'Player'
+                const staffKeys = aerixStaffIdentitySet();
+                const cards = Array.isArray(globalPlayerCards) ? globalPlayerCards : [];
+                const rosters = Array.isArray(globalEffectifs) ? globalEffectifs : [];
+                const byRoster = new Map();
+                rosters.forEach(roster => {
+                    const cleaned = (roster.players || []).filter(person => {
+                        const role = getMemberRoleKey(person.role);
+                        // Les fiches staff restent dans les données staff, jamais dans une division joueur.
+                        return role !== 'player' || !aerixMatchesIdentitySet(person, staffKeys);
                     });
+                    byRoster.set(roster.id, cleaned);
+                });
+                let routedCards = 0;
+                cards.forEach(card => {
+                    if (getMemberRoleKey(card.role || card.memberRole || card.member_role || 'player') !== 'player') return;
+                    const normalized = { ...card, discordId: card.discordId || card.discord_id || card.userId || card.uid || card.id };
+                    if (aerixMatchesIdentitySet(normalized, staffKeys)) return;
+                    const game = aerixNormalizeGame(card.game || card.simulator || card.category || card.division || card.team || card.gameName);
+                    const target = rosters.find(r => aerixNormalizeGame(r.game || r.name) === game);
+                    if (!target) return;
+                    const identity = new Set(aerixPersonIdentityKeys(normalized));
+                    // Retire la fiche des mauvaises divisions avant de l'affecter à sa division réelle.
+                    byRoster.forEach((list, rosterId) => {
+                        byRoster.set(rosterId, list.filter(person => !aerixMatchesIdentitySet(person, identity)));
+                    });
+                    const targetList = byRoster.get(target.id) || [];
+                    targetList.push({ ...normalized, id: normalized.discordId || normalized.id, discordId: normalized.discordId || normalized.id, game: target.game || game, division: normalized.division || target.game || game, role: 'Player' });
+                    byRoster.set(target.id, targetList);
+                    routedCards++;
                 });
                 const batch = db.batch();
-                additionsByRoster.forEach((additions, rosterId) => {
-                    const roster = globalEffectifs.find(r => r.id === rosterId);
-                    if (!roster) return;
-                    const current = Array.isArray(roster.players) ? [...roster.players] : [];
-                    const seen = new Set();
-                    current.forEach(p => aerixPersonIdentityKeys(p).forEach(k => seen.add(k)));
-                    additions.forEach(p => {
-                        if (!aerixMatchesIdentitySet(p, seen)) {
-                            current.push(p);
-                            aerixPersonIdentityKeys(p).forEach(k => seen.add(k));
-                        }
-                    });
-                    batch.update(db.collection('effectifs').doc(rosterId), { players: current });
+                let writes = 0;
+                byRoster.forEach((players, rosterId) => {
+                    players.sort((a,b) => String(a.pseudo || a.name || '').localeCompare(String(b.pseudo || b.name || ''), 'fr', {sensitivity:'base'}));
+                    const original = (globalEffectifs.find(r => r.id === rosterId)?.players || []);
+                    if (JSON.stringify(players) !== JSON.stringify(original)) {
+                        batch.update(db.collection('effectifs').doc(rosterId), { players });
+                        writes++;
+                    }
                 });
-                await batch.commit();
-                showToast(`${pending.length} fiche${pending.length > 1 ? 's' : ''} pilote synchronisée${pending.length > 1 ? 's' : ''}.`, 'success');
+                if (writes) await batch.commit();
+                showToast(`Mise à jour forcée terminée : ${writes} division(s) corrigée(s), ${routedCards} fiche(s) joueur(s) réaffectée(s).`, 'success');
             } catch (error) {
                 console.error('syncPlayerCardsToEffectifs:', error);
-                showToast('Échec de la synchronisation. Vérifie les règles Firestore.', 'error');
+                showToast('Échec de la mise à jour. Vérifie les permissions Firestore et les données des effectifs.', 'error');
             } finally {
-                if (button) { button.disabled = false; button.innerHTML = button.dataset.originalText || '↻ Mettre à jour les données'; }
+                if (button) { button.disabled = false; button.innerHTML = button.dataset.originalText || '↻ Forcer la mise à jour des effectifs'; }
                 updateEffectifSyncControl();
             }
         }
@@ -7168,7 +7198,7 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
         function renderEffectifs() {
             for (const key of Object.keys(aerixPlayerRegistry)) delete aerixPlayerRegistry[key];
             aerixPlayerRegistrySeq = 0;
-            const sortedEffectifs = [...globalEffectifs].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+            const sortedEffectifs = [...globalEffectifs].sort((a, b) => String(a.game || a.name || '').localeCompare(String(b.game || b.name || ''), 'fr', {sensitivity:'base'}));
             const selectedFilter = currentFilters.effectifs;
             const container = document.getElementById('effectifs-container');
             const staffIdentityKeys = aerixStaffIdentitySet();
@@ -7254,7 +7284,7 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
 
             filtered.forEach((r, index) => {
                 let playersHTML = '';
-                const rosterPlayers = (r.players || []).filter(p => getMemberRoleKey(p.role) === 'player' && !aerixMatchesIdentitySet(p, staffIdentityKeys));
+                const rosterPlayers = (r.players || []).filter(p => getMemberRoleKey(p.role) === 'player' && !aerixMatchesIdentitySet(p, staffIdentityKeys)).sort((a,b) => String(a.pseudo || a.name || '').localeCompare(String(b.pseudo || b.name || ''), 'fr', {sensitivity:'base'}));
                 if (rosterPlayers.length > 0) {
                     playersHTML = rosterPlayers.map(p => {
                         const playerKey = registerPlayerForModal({...p, game: r.game, division: p.division || r.game});
@@ -8343,8 +8373,11 @@ function checkAdminSessionTimeout() {
             try {
                 await db.collection('contactRequests').add({
                     uid: currentUser.uid, username: currentAccount.username || '', email: currentUser.email || currentAccount.email || '',
-                    category: 'Recrutement', subject: `Candidature ${division} — ${pseudo}`,
-                    message: `Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\n\n${message}`,
+                    category: 'Recrutement', subject: `Candidature pour rejoindre l’équipe — ${division} — ${pseudo}`,
+                    message: `Candidature concernant l’équipe ${division}.
+Objectif : rejoindre l’équipe AERIX.
+
+Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\n\n${message}`,
                     status:'new', adminReply:'', messages:[], unreadByUser:false, unreadByAdmin:true,
                     createdAt:firebase.firestore.FieldValue.serverTimestamp(), updatedAt:firebase.firestore.FieldValue.serverTimestamp()
                 });
@@ -10698,6 +10731,10 @@ function checkAdminSessionTimeout() {
             const item = globalShop[index]; if(!item) return;
             document.getElementById('modal-product-title').innerText = item.name;
             document.getElementById('modal-product-state').innerHTML = shopStateBadge(item);
+            const sizesEl = document.getElementById('modal-product-sizes');
+            const rawSizes = item.sizes || item.availableSizes || item.sizeOptions || item.variants || [];
+            const sizes = Array.isArray(rawSizes) ? rawSizes.map(v => typeof v === 'string' ? v : (v.label || v.size || v.name || '')).filter(Boolean) : (typeof rawSizes === 'string' ? rawSizes.split(/[,;|]/).map(v=>v.trim()).filter(Boolean) : []);
+            sizesEl.innerHTML = sizes.length ? `<div class="w-full"><div class="text-[10px] uppercase tracking-widest text-gray-500 font-black mb-2">Tailles disponibles</div><div class="flex flex-wrap gap-2">${sizes.map(size=>`<span class="size-chip">${escapeHtml(size)}</span>`).join('')}</div></div>` : ''; 
             currentModalImages = Array.isArray(item.images) && item.images.length > 0 ? item.images : (item.image ? [item.image] : []);
             const btnPrev = document.getElementById('slider-prev'), btnNext = document.getElementById('slider-next');
             if(currentModalImages.length > 0) {
@@ -10713,7 +10750,9 @@ function checkAdminSessionTimeout() {
         function updateSliderView() { document.getElementById('modal-product-img').src = currentModalImages[currentModalImgIndex]; const dotsContainer = document.getElementById('slider-dots'); dotsContainer.innerHTML = currentModalImages.length > 1 ? currentModalImages.map((_, i) => `<div class="h-2 rounded-full transition-all duration-300 ${i === currentModalImgIndex ? 'bg-aerix-purple w-8 shadow-[0_0_10px_#8B5CF6]' : 'bg-white/30 w-2'}"></div>`).join('') : ''; }
         function nextProductImg() { if(!currentModalImages.length) return; currentModalImgIndex = (currentModalImgIndex + 1) % currentModalImages.length; updateSliderView(); }
         function prevProductImg() { if(!currentModalImages.length) return; currentModalImgIndex = (currentModalImgIndex - 1 + currentModalImages.length) % currentModalImages.length; updateSliderView(); }
-        function closeProductModal() { document.getElementById('product-modal').classList.add('hidden'); }
+        function closeProductModal() { document.getElementById('product-modal').classList.add('hidden'); closeProductImageLightbox(); }
+        function openProductImageLightbox() { const src = document.getElementById('modal-product-img')?.src; if(!src) return; document.getElementById('product-image-lightbox-img').src = src; document.getElementById('product-image-lightbox').classList.add('open'); }
+        function closeProductImageLightbox() { document.getElementById('product-image-lightbox')?.classList.remove('open'); }
 
         // MODAL LEGAL & COOKIES
         const legalTexts = {
@@ -10933,21 +10972,7 @@ function checkAdminSessionTimeout() {
         setPalmaresView('resultats');
         initImageDropZones();
 
-// Bloquer le clic droit (menu contextuel)
-document.addEventListener('contextmenu', function(e) {
-    e.preventDefault();
-});
-
-// Bloquer les raccourcis clavier d'inspection (F12, Ctrl+Shift+I, Ctrl+U...)
-document.addEventListener('keydown', function(e) {
-    if (
-        e.key === 'F12' || 
-        (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'C' || e.key === 'J' || e.key === 'i' || e.key === 'c' || e.key === 'j')) || 
-        (e.ctrlKey && (e.key === 'U' || e.key === 'u'))
-    ) {
-        e.preventDefault();
-    }
-});
+// Menu contextuel et raccourcis navigateur réactivés.
 
 // --- THÈME UNIQUE : SOMBRE ---
 let currentTheme = 'dark';
