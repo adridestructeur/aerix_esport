@@ -6867,8 +6867,8 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
                 applySiteSettings();
                 showToast('Réglages du site enregistrés.', 'success');
             } catch (error) {
-                console.error('saveSiteSettings', error);
-                showToast('Échec de l’enregistrement. Vérifie les règles Firestore.', 'error');
+                console.error('saveSiteSettings', error.code, error.message);
+                showToast(error.code === 'permission-denied' ? 'Refusé par Firestore (permission-denied) : règles non publiées ou compte non vérifié comme Owner.' : 'Échec de l’enregistrement (' + (error.code || 'erreur') + ').', 'error');
             }
         }
 
