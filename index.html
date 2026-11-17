@@ -6860,7 +6860,7 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
             let heroImage = siteHeroImageDraft === null ? (currentSiteSettings.heroImage || '') : siteHeroImageDraft;
             if (heroImage && heroImage.length > 450000) return showToast('Image trop volumineuse après compression. Choisis une image plus légère.', 'error');
             try {
-                await db.collection('siteConfig').doc('public').set({ hiddenSections, navLabels, maintenance, maintenanceMessage, heroImage, heroSize, updatedAt: firebase.firestore.FieldValue.serverTimestamp(), updatedBy: currentUser.uid }, { merge: true });
+                await db.collection('siteConfig').doc('public').set({ hiddenSections, navLabels, maintenance, maintenanceMessage, heroImage, heroSize, updatedAt: firebase.firestore.FieldValue.serverTimestamp(), updatedBy: currentUser.uid });
                 currentSiteSettings = { ...currentSiteSettings, hiddenSections, navLabels, maintenance, maintenanceMessage, heroImage, heroSize };
                 siteHeroImageDraft = null;
                 try { localStorage.setItem('aerixSiteSettingsCache', JSON.stringify(currentSiteSettings)); } catch(e) {}
