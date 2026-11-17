@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" data-aerix-version="14">
+<html lang="fr" data-aerix-version="16">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -4349,6 +4349,151 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
 }
 </style>
 
+
+<style id="aerix-v16-visual-performance">
+/* Titres : soulignement lumineux discret, sans animation agressive. */
+.page-view.active h3,
+.page-view.active h4 {
+    text-wrap: balance;
+}
+.page-view.active > .mb-14 h3,
+#page-histoire > div:first-child h3,
+#page-partenaires .partners-hero h3 {
+    position: relative;
+    text-shadow: 0 0 24px rgba(139,92,246,.10);
+}
+.page-view.active > .mb-14 h3::after,
+#page-histoire > div:first-child h3::after,
+#page-partenaires .partners-hero h3::after {
+    content: "";
+    display: block;
+    width: clamp(42px, 12%, 82px);
+    height: 2px;
+    margin: 12px auto 0;
+    border-radius: 999px;
+    background: linear-gradient(90deg, transparent, #8b5cf6, #c4b5fd, transparent);
+    transform-origin: center;
+    animation: aerixTitleLine 4.5s ease-in-out infinite;
+}
+@keyframes aerixTitleLine {
+    0%,100% { opacity:.58; transform:scaleX(.78); }
+    50% { opacity:1; transform:scaleX(1.12); }
+}
+/* Onglets et filtres : retour des transitions et du relief violet. */
+#nav-container .nav-btn,
+#nav-more-menu button,
+#mobile-menu button[data-page-id],
+.filter-btn {
+    transition: color .22s ease, background .22s ease, border-color .22s ease,
+                box-shadow .25s ease, transform .25s ease;
+}
+#nav-container .nav-btn { position:relative; }
+#nav-container .nav-btn::after {
+    content:""; position:absolute; left:22%; right:22%; bottom:5px; height:2px;
+    border-radius:999px; background:#a78bfa; opacity:0; transform:scaleX(.35);
+    transition:transform .24s ease, opacity .24s ease;
+}
+#nav-container .nav-btn:hover::after,
+#nav-container .nav-btn.active::after { opacity:1; transform:scaleX(1); }
+#nav-container .nav-btn:hover,
+#nav-more-menu button:hover,
+#mobile-menu button[data-page-id]:hover { transform:translateY(-1px); }
+.filter-btn:hover {
+    transform:translateY(-2px);
+    border-color:rgba(167,139,250,.55) !important;
+    box-shadow:0 7px 22px rgba(139,92,246,.13);
+}
+.filter-btn.active {
+    box-shadow:0 0 0 1px rgba(167,139,250,.12), 0 6px 20px rgba(139,92,246,.16);
+}
+/* Visuel remplaçant le slogan de l'accueil. */
+.aerix-hero-custom-image {
+    display:block; width:auto; max-width:min(100%, 680px); max-height:190px;
+    margin:0 auto; object-fit:contain; border-radius:16px;
+    filter:drop-shadow(0 10px 28px rgba(0,0,0,.25));
+}
+/* Historique : frise mieux hiérarchisée, cartes plus vivantes. */
+#page-histoire .relative.border-l {
+    border-image:linear-gradient(to bottom, rgba(139,92,246,.75), rgba(255,255,255,.10), rgba(139,92,246,.45)) 1;
+}
+#page-histoire .reveal > div.glass-panel {
+    position:relative; overflow:hidden;
+    border-left:2px solid rgba(139,92,246,.48) !important;
+    transition:transform .28s ease, border-color .28s ease, box-shadow .28s ease;
+}
+#page-histoire .reveal > div.glass-panel::before {
+    content:""; position:absolute; inset:0 auto 0 0; width:34%;
+    background:linear-gradient(90deg,rgba(139,92,246,.045),transparent); pointer-events:none;
+}
+#page-histoire .reveal > div.glass-panel:hover {
+    transform:translateY(-3px); border-color:rgba(167,139,250,.55) !important;
+    box-shadow:0 18px 38px rgba(0,0,0,.24),0 0 24px rgba(139,92,246,.09);
+}
+#page-histoire .reveal > div.absolute.rounded-full {
+    background:#c4b5fd !important; box-shadow:0 0 0 5px rgba(139,92,246,.13),0 0 20px rgba(139,92,246,.55) !important;
+}
+/* Partenaires : zoom fluide et halo violet au survol des logos. */
+#partners-container .partner-card-tile {
+    position:relative; overflow:hidden;
+    transition:transform .32s cubic-bezier(.2,.75,.25,1), border-color .32s ease, box-shadow .32s ease !important;
+}
+#partners-container .partner-card-tile img {
+    transform:scale(1);
+    transform-origin:center;
+    transition:transform .42s cubic-bezier(.2,.75,.25,1), filter .35s ease !important;
+    will-change:transform;
+}
+#partners-container .partner-card-tile:hover {
+    transform:translateY(-4px);
+    border-color:rgba(167,139,250,.72) !important;
+    box-shadow:0 12px 32px rgba(0,0,0,.24),0 0 24px rgba(139,92,246,.25),inset 0 0 18px rgba(139,92,246,.07) !important;
+}
+#partners-container .partner-card-tile:hover img {
+    transform:scale(1.09) !important;
+    filter:drop-shadow(0 0 10px rgba(167,139,250,.55)) drop-shadow(0 0 22px rgba(139,92,246,.35));
+}
+/* Boutique : l'image ne doit plus apparaître brutalement au survol. */
+.shop-product-card { overflow:hidden; }
+.shop-product-image {
+    transform:scale(1);
+    transition:transform .48s cubic-bezier(.2,.75,.25,1), filter .35s ease !important;
+    will-change:transform;
+}
+.shop-product-card:hover .shop-product-image {
+    transform:scale(1.055) !important;
+    filter:drop-shadow(0 0 18px rgba(139,92,246,.24));
+}
+.shop-product-visual-overlay,
+.shop-product-arrow { transition:opacity .28s ease, transform .32s ease, background .28s ease; }
+.shop-product-card:hover .shop-product-arrow { transform:translate(3px,-3px); }
+/* Les sections de compétition vides ne réservent plus un grand panneau. */
+#competition-empty-overview { margin-top:0; }
+#competition-archive-section { min-width:0; }
+#competition-main-grid > section { min-width:0; }
+#competition-main-grid > section.hidden,
+#competition-archive-section.hidden { display:none !important; }
+.pilot-card-photo-placeholder {
+    display:flex; align-items:center; justify-content:center; min-height:180px;
+    background:radial-gradient(circle at 50% 35%,rgba(139,92,246,.18),rgba(8,8,12,.98) 68%);
+    color:rgba(196,181,253,.8); font-weight:900; letter-spacing:.28em;
+}
+@media (max-width:767px) {
+    #page-histoire .relative.border-l { margin-left:8px; }
+    #page-histoire .reveal > div.glass-panel { padding:1.15rem !important; }
+    .aerix-hero-custom-image { max-height:130px; }
+    #competition-main-grid > section { padding:1.15rem !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .page-view.active > .mb-14 h3::after,
+    #page-histoire > div:first-child h3::after,
+    #page-partenaires .partners-hero h3::after { animation:none; }
+    #nav-container .nav-btn, #nav-more-menu button, #mobile-menu button[data-page-id],
+    .filter-btn, #page-histoire .reveal > div.glass-panel,
+    #partners-container .partner-card-tile, #partners-container .partner-card-tile img,
+    .shop-product-image { transition:none !important; }
+}
+</style>
+
 </head>
 <body class="antialiased selection:bg-purple-500 selection:text-white min-h-screen flex flex-col relative">
 <script id="aerix-early-theme-init">
@@ -4506,7 +4651,10 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
                     <span class="aerix-home-slogan-line" data-i18n="hero_title_1">Une nouvelle</span>
                     <span class="aerix-home-slogan-line aerix-title-accent" data-i18n="hero_title_4">ère approche</span>
                 </h1>
-                <div class="text-lg sm:text-xl md:text-2xl font-semibold text-gray-300 mb-6 animate-fade-up delay-75" data-i18n="hero_tagline">L'avenir de la Compétition.</div>
+                <div id="aerix-hero-tagline" class="text-lg sm:text-xl md:text-2xl font-semibold text-gray-300 mb-6 animate-fade-up delay-75" data-i18n="hero_tagline">L'avenir de la Compétition.</div>
+                <div id="aerix-hero-image-wrap" class="hidden w-full max-w-2xl mx-auto mb-7 animate-fade-up delay-75">
+                    <img id="aerix-hero-image" src="" alt="AERIX Esport" class="aerix-hero-custom-image">
+                </div>
                 <p class="mt-2 text-base sm:text-lg text-gray-400 max-w-2xl mx-auto font-light leading-relaxed mb-12 animate-fade-up delay-100" data-i18n="hero_desc">
                     Découvrez AERIX Esport, une structure française compétitive sur Rocket League et sim racing : équipes, résultats, tournois, endurance, iRacing et Le Mans Ultimate.
                 </p>
@@ -4578,13 +4726,6 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
                     <button onclick="setFilter('effectifs', 'RBR')" data-filter="RBR" class="filter-btn">RBR</button>
                     <button onclick="setFilter('effectifs', 'iRacing')" data-filter="iRacing" class="filter-btn">iRacing</button>
                     </div>
-                    <label class="flex items-center gap-3 text-xs text-gray-400">
-                        <span class="uppercase tracking-widest font-bold">Trier par</span>
-                        <select id="effectifs-sort" onchange="renderEffectifs()" class="bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-white text-xs outline-none focus:border-aerix-purple">
-                            <option value="name">Nom (A → Z)</option>
-                            <option value="arrival">Date d'arrivée (anciens → récents)</option>
-                        </select>
-                    </label>
                 </div>
             </div>
             <div id="effectifs-container" class="space-y-16"></div>
@@ -4617,21 +4758,25 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
 
             <div class="mb-14 text-center animate-fade-up">
                 <h2 class="text-sm font-bold text-aerix-purple uppercase tracking-widest mb-2">AERIX COMPETITION</h2>
-                <h3 class="text-4xl font-black text-white mb-4 inline-block">Compétition</h3>
-                <p class="text-gray-400 max-w-2xl mx-auto">Retrouve les prochains matchs et courses ainsi que les dernières performances enregistrées par AERIX.</p>
+                <h3 id="competition-page-title" class="text-4xl font-black text-white mb-4 inline-block">Compétition</h3>
+                <p id="competition-page-description" class="text-gray-400 max-w-2xl mx-auto">Retrouve les prochains matchs et courses ainsi que les dernières performances enregistrées par AERIX.</p>
             </div>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <section class="glass-panel p-7 rounded-3xl">
-                    <div class="flex items-center justify-between mb-6"><div><div class="text-xs font-bold text-aerix-purple uppercase tracking-widest">À venir</div><h4 class="text-2xl font-black text-white mt-1">Prochains événements</h4></div><span class="text-xs text-gray-500">Live Firebase</span></div>
+            <div id="competition-empty-overview" class="hidden glass-panel rounded-2xl border border-white/10 px-6 py-7 text-center">
+                <div class="text-xs font-black uppercase tracking-[.2em] text-aerix-purple mb-2" id="competition-empty-kicker">AERIX COMPETITION</div>
+                <p class="text-sm text-gray-400" id="competition-empty-text">Aucun événement ou résultat n'est actuellement publié.</p>
+            </div>
+            <div id="competition-main-grid" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <section id="competition-upcoming-section" class="glass-panel p-7 rounded-3xl">
+                    <div class="flex items-center justify-between mb-6"><div><div id="competition-upcoming-kicker" class="text-xs font-bold text-aerix-purple uppercase tracking-widest">À venir</div><h4 id="competition-upcoming-title" class="text-2xl font-black text-white mt-1">Prochains événements</h4></div><span class="text-xs text-gray-500">Live Firebase</span></div>
                     <div id="competition-upcoming" class="space-y-4"></div>
                 </section>
-                <section class="glass-panel p-7 rounded-3xl">
-                    <div class="flex items-center justify-between mb-6"><div><div class="text-xs font-bold text-aerix-purple uppercase tracking-widest">Historique</div><h4 class="text-2xl font-black text-white mt-1">Derniers résultats</h4></div></div>
+                <section id="competition-results-section" class="glass-panel p-7 rounded-3xl">
+                    <div class="flex items-center justify-between mb-6"><div><div id="competition-results-kicker" class="text-xs font-bold text-aerix-purple uppercase tracking-widest">Historique</div><h4 id="competition-results-title" class="text-2xl font-black text-white mt-1">Derniers résultats</h4></div></div>
                     <div id="competition-results" class="space-y-4"></div>
                 </section>
             </div>
-            <section class="glass-panel p-7 rounded-3xl mt-8">
-                <div class="flex items-center justify-between gap-4 mb-6"><div><div class="text-xs font-bold text-aerix-purple uppercase tracking-widest">Archives</div><h4 class="text-2xl font-black text-white mt-1">Historique des événements</h4><p class="text-xs text-gray-500 mt-1">Les événements passés restent consultables tant qu'ils ne sont pas supprimés de l'administration.</p></div><span id="competition-archive-count" class="text-xs text-gray-500"></span></div>
+            <section id="competition-archive-section" class="glass-panel p-7 rounded-3xl mt-8">
+                <div class="flex items-center justify-between gap-4 mb-6"><div><div id="competition-archive-kicker" class="text-xs font-bold text-aerix-purple uppercase tracking-widest">Archives</div><h4 id="competition-archive-title" class="text-2xl font-black text-white mt-1">Historique des événements</h4><p id="competition-archive-desc" class="text-xs text-gray-500 mt-1">Les événements passés restent consultables tant qu'ils ne sont pas supprimés de l'administration.</p></div><span id="competition-archive-count" class="text-xs text-gray-500"></span></div>
                 <div id="competition-archive" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
             </section>
         </main>
@@ -5243,6 +5388,19 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"><label class="text-xs text-gray-400">Histoire<input data-site-nav-input="histoire" maxlength="32" class="mt-1 w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm"></label><label class="text-xs text-gray-400">Effectifs<input data-site-nav-input="effectifs" maxlength="32" class="mt-1 w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm"></label><label class="text-xs text-gray-400">Palmarès<input data-site-nav-input="palmares" maxlength="32" class="mt-1 w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm"></label><label class="text-xs text-gray-400">Compétition<input data-site-nav-input="competition" maxlength="32" class="mt-1 w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm"></label><label class="text-xs text-gray-400">Tournoi<input data-site-nav-input="tournoi" maxlength="32" class="mt-1 w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm"></label><label class="text-xs text-gray-400">Performance<input data-site-nav-input="performance" maxlength="32" class="mt-1 w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm"></label><label class="text-xs text-gray-400">Partenaires<input data-site-nav-input="partenaires" maxlength="32" class="mt-1 w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm"></label><label class="text-xs text-gray-400">Boutique<input data-site-nav-input="boutique" maxlength="32" class="mt-1 w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm"></label><label class="text-xs text-gray-400">Annonces<input data-site-nav-input="annonces" maxlength="32" class="mt-1 w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm"></label><label class="text-xs text-gray-400">Média<input data-site-nav-input="media" maxlength="32" class="mt-1 w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm"></label><label class="text-xs text-gray-400">Coaching<input data-site-nav-input="coaching" maxlength="32" class="mt-1 w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm"></label></div>
                     <button type="button" onclick="saveSiteSettings()" class="px-5 py-3 rounded-xl bg-aerix-purple text-white text-sm font-black hover:opacity-90">Enregistrer les noms des onglets</button>
                 </section>
+                <section class="glass-panel rounded-2xl p-5 md:p-7 space-y-4 border border-aerix-purple/25">
+                    <div><h4 class="text-lg font-black text-white">Visuel principal de l'accueil</h4><p class="text-sm text-gray-400 mt-1">Remplace la phrase « L'avenir de la Compétition » par une image personnalisée. L'image est compressée avant son enregistrement.</p></div>
+                    <label for="site-hero-image-file" class="block text-xs font-bold uppercase tracking-widest text-gray-400">Importer une image</label>
+                    <input id="site-hero-image-file" type="file" accept="image/png,image/jpeg,image/webp" class="block w-full text-sm text-gray-300 file:mr-4 file:rounded-xl file:border-0 file:bg-aerix-purple file:px-4 file:py-2.5 file:font-bold file:text-white">
+                    <div id="site-hero-image-preview-wrap" class="hidden rounded-2xl border border-white/10 bg-black/30 p-3">
+                        <img id="site-hero-image-preview" alt="Aperçu du visuel d'accueil" class="max-h-40 w-full object-contain">
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <button type="button" onclick="clearSiteHeroImage()" class="px-4 py-2.5 rounded-xl border border-white/10 bg-white/5 text-white text-xs font-bold hover:bg-white/10">Retirer l'image et rétablir le texte</button>
+                        <button type="button" onclick="saveSiteSettings()" class="px-5 py-2.5 rounded-xl bg-aerix-purple text-white text-xs font-black hover:opacity-90">Enregistrer le visuel</button>
+                    </div>
+                    <p class="text-[11px] text-gray-500">Formats acceptés : PNG, JPG et WebP. Le fichier est redimensionné et compressé pour limiter le temps de chargement.</p>
+                </section>
                 <section class="glass-panel rounded-2xl p-5 md:p-7 space-y-4 border border-red-500/20">
                     <div><h4 class="text-lg font-black text-white">Mode maintenance</h4><p class="text-sm text-gray-400 mt-1">Le public verra une page de maintenance. Les administrateurs autorisés conserveront l’accès au site.</p></div>
                     <label class="flex items-center gap-3 rounded-xl border border-red-500/20 bg-red-500/5 p-4"><input id="site-maintenance-enabled" type="checkbox" class="accent-red-500 w-5 h-5"><span class="text-sm font-bold text-white">Activer le mode maintenance</span></label>
@@ -5328,7 +5486,7 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
 
             <!-- TAB: EFFECTIFS -->
             <div id="admin-tab-effectifs" class="admin-tab hidden space-y-8">
-                <div id="effectif-sync-panel" class="rounded-2xl border border-aerix-purple/30 bg-gradient-to-r from-aerix-purple/15 via-white/[0.03] to-transparent p-5 md:p-6">
+                <div id="effectif-sync-panel" class="hidden">
                     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div class="min-w-0">
                             <div class="text-[10px] font-black uppercase tracking-[.2em] text-aerix-purple mb-2">Synchronisation des effectifs</div>
@@ -6073,13 +6231,14 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
             achievements: readPublicCollectionCache('achievements'),
             annonces: readPublicCollectionCache('annonces'),
             partners: readPublicCollectionCache('partners'),
-            gallery: readPublicCollectionCache('gallery')
+            gallery: readPublicCollectionCache('gallery'),
+            playerCards: readPublicCollectionCache('playerCards')
         };
         const hasCachedPublicContent = Object.values(aerixCachedPublic).some(rows => rows.length > 0);
 
         // VARIABLES GLOBALES : amorçage depuis le cache local, actualisé ensuite par Firestore.
         let globalShop = aerixCachedPublic.shop, globalEffectifs = aerixCachedPublic.effectifs,
-            globalPlayerCards = [], globalPalmares = aerixCachedPublic.palmares, globalAchievements = aerixCachedPublic.achievements,
+            globalPlayerCards = (aerixCachedPublic.playerCards || []).filter(p => p.published !== false && (p.status === 'accepted' || p.status === 'published')), globalPalmares = aerixCachedPublic.palmares, globalAchievements = aerixCachedPublic.achievements,
             globalAnnonces = aerixCachedPublic.annonces, globalPartners = aerixCachedPublic.partners,
             globalEvents = aerixCachedPublic.events;
         let currentFilters = { effectifs: 'Staff', annonces: 'Tous', palmares: 'Tous' };
@@ -6476,9 +6635,8 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
             clearTimeout(languageTransitionTimer);
             clearTimeout(languageTransitionCloseTimer);
 
-            // On laisse volontairement l'écran de langue visible ~1 seconde avant
-            // d'appliquer les traductions, puis encore ~0,7 s pour que le changement
-            // soit lisible avant la disparition de l'overlay.
+            // Appliquer la langue rapidement ; l'overlay reste brièvement visible
+            // pour signaler le changement sans retarder l'apparition du contenu.
             languageTransitionTimer = setTimeout(() => {
                 const currentPage = aerixRouteFromPath().pageId;
                 history.pushState({ page: currentPage, lang }, "", aerixRoute(lang, currentPage));
@@ -6499,11 +6657,11 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
                     requestAnimationFrame(() => {
                         languageTransitionCloseTimer = setTimeout(() => {
                             if (overlay) overlay.classList.remove('is-active');
-                            setTimeout(() => document.body.classList.remove('language-changing'), 560);
-                        }, 700);
+                            setTimeout(() => document.body.classList.remove('language-changing'), 260);
+                        }, 220);
                     });
                 });
-            }, 950);
+            }, 120);
         }
 
         // TOAST NOTIFICATIONS
@@ -6544,8 +6702,14 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
 
         // RÉGLAGES GLOBAUX DU SITE (Firestore: siteConfig/public)
         const DEFAULT_SITE_NAV_LABELS = { fr:{histoire:'Histoire',effectifs:'Effectifs',palmares:'Palmarès',competition:'Compétition',tournoi:'Tournoi',performance:'Performance',partenaires:'Partenaires',boutique:'Boutique',annonces:'Annonces',media:'Média',coaching:'Coaching'}, en:{histoire:'About',effectifs:'Teams',palmares:'Achievements',competition:'Competitions',tournoi:'Tournaments',performance:'Performance',partenaires:'Partners',boutique:'Shop',annonces:'News',media:'Media',coaching:'Coaching'} };
-        const DEFAULT_SITE_SETTINGS = { hiddenSections: [], navLabels:{}, maintenance: false, maintenanceMessage: 'Le site AERIX est temporairement en maintenance. Nous revenons bientôt.' };
-        let currentSiteSettings = { ...DEFAULT_SITE_SETTINGS };
+        const DEFAULT_SITE_SETTINGS = { hiddenSections: [], navLabels:{}, maintenance: false, maintenanceMessage: 'Le site AERIX est temporairement en maintenance. Nous revenons bientôt.', heroImage: '' };
+        let currentSiteSettings = (() => {
+            try {
+                const cached = JSON.parse(localStorage.getItem('aerixSiteSettingsCache') || 'null');
+                return cached && typeof cached === 'object' ? { ...DEFAULT_SITE_SETTINGS, ...cached } : { ...DEFAULT_SITE_SETTINGS };
+            } catch (_) { return { ...DEFAULT_SITE_SETTINGS }; }
+        })();
+        let siteHeroImageDraft = null;
         const SITE_SECTION_IDS = ['histoire','effectifs','palmares','competition','tournoi','performance','partenaires','boutique','annonces','media','coaching'];
         function applySiteSettings() {
             const hidden = new Set(Array.isArray(currentSiteSettings.hiddenSections) ? currentSiteSettings.hiddenSections : []);
@@ -6563,6 +6727,27 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
                 document.querySelectorAll(`[onclick*="navigate('${id}')"]`).forEach(el => el.classList.toggle('hidden', hidden.has(id)));
                 if (id === 'coaching') document.querySelectorAll(`[onclick*="openCoachingModal()"]`).forEach(el => el.classList.toggle('hidden', hidden.has(id)));
             });
+            const heroImage = typeof currentSiteSettings.heroImage === 'string' ? currentSiteSettings.heroImage : '';
+            const heroWrap = document.getElementById('aerix-hero-image-wrap');
+            const heroImg = document.getElementById('aerix-hero-image');
+            const heroTagline = document.getElementById('aerix-hero-tagline');
+            if (heroWrap && heroImg && heroTagline) {
+                if (heroImage) {
+                    if (heroImg.getAttribute('src') !== heroImage) heroImg.src = heroImage;
+                    heroWrap.classList.remove('hidden');
+                    heroTagline.classList.add('hidden');
+                } else {
+                    heroImg.removeAttribute('src');
+                    heroWrap.classList.add('hidden');
+                    heroTagline.classList.remove('hidden');
+                }
+            }
+            const heroPreviewWrap = document.getElementById('site-hero-image-preview-wrap');
+            const heroPreview = document.getElementById('site-hero-image-preview');
+            if (heroPreviewWrap && heroPreview && siteHeroImageDraft === null) {
+                if (heroImage) { heroPreview.src = heroImage; heroPreviewWrap.classList.remove('hidden'); }
+                else { heroPreview.removeAttribute('src'); heroPreviewWrap.classList.add('hidden'); }
+            }
             const overlay = document.getElementById('site-maintenance-overlay');
             const message = document.getElementById('site-maintenance-overlay-message');
             const maintenancePreview = new URLSearchParams(window.location.search).get('maintenancePreview') === '1' && hasAdminAccess();
@@ -6596,6 +6781,46 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
                 if (typeof refreshNavPill === 'function') refreshNavPill();
             }
         }
+        function setSiteHeroImagePreview(value) {
+            const wrap = document.getElementById('site-hero-image-preview-wrap');
+            const img = document.getElementById('site-hero-image-preview');
+            if (!wrap || !img) return;
+            if (value) { img.src = value; wrap.classList.remove('hidden'); }
+            else { img.removeAttribute('src'); wrap.classList.add('hidden'); }
+        }
+        async function handleSiteHeroImageUpload(event) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+            if (!/^image\/(png|jpeg|webp)$/i.test(file.type)) {
+                event.target.value = '';
+                return showToast('Format non accepté. Utilise PNG, JPG ou WebP.', 'error');
+            }
+            try {
+                const raw = await new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(String(reader.result || ''));
+                    reader.onerror = reject;
+                    reader.readAsDataURL(file);
+                });
+                const optimized = (await optimizeImageListForFirestore([raw], 400000))[0] || '';
+                if (!optimized || optimized.length > 450000) return showToast('Impossible de compresser cette image suffisamment. Essaie une image plus légère.', 'error');
+                siteHeroImageDraft = optimized;
+                setSiteHeroImagePreview(optimized);
+                showToast('Aperçu prêt. Enregistre les réglages pour publier le visuel.', 'success');
+            } catch (error) {
+                console.error('handleSiteHeroImageUpload', error);
+                showToast('Impossible de traiter cette image.', 'error');
+            }
+        }
+        function clearSiteHeroImage() {
+            siteHeroImageDraft = '';
+            setSiteHeroImagePreview('');
+            showToast('Le texte d’accueil sera rétabli après enregistrement.');
+        }
+        document.addEventListener('change', event => {
+            if (event.target && event.target.id === 'site-hero-image-file') handleSiteHeroImageUpload(event);
+        });
+
         async function saveSiteSettings() {
             if (!isOwner()) { showToast('Seul le Owner peut modifier les réglages du site.', 'error'); return; }
             const hiddenSections = [...document.querySelectorAll('[data-site-section]:checked')].map(input => input.dataset.siteSection);
@@ -6606,9 +6831,12 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
                 const key = input.dataset.siteNavInput, value = input.value.trim().slice(0,32);
                 if (key && value) navLabels[key] = value;
             });
+            let heroImage = siteHeroImageDraft === null ? (currentSiteSettings.heroImage || '') : siteHeroImageDraft;
+            if (heroImage && heroImage.length > 450000) return showToast('Image trop volumineuse après compression. Choisis une image plus légère.', 'error');
             try {
-                await db.collection('siteConfig').doc('public').set({ hiddenSections, navLabels, maintenance, maintenanceMessage, updatedAt: firebase.firestore.FieldValue.serverTimestamp(), updatedBy: currentUser.uid }, { merge: true });
-                currentSiteSettings = { ...currentSiteSettings, hiddenSections, navLabels, maintenance, maintenanceMessage };
+                await db.collection('siteConfig').doc('public').set({ hiddenSections, navLabels, maintenance, maintenanceMessage, heroImage, updatedAt: firebase.firestore.FieldValue.serverTimestamp(), updatedBy: currentUser.uid }, { merge: true });
+                currentSiteSettings = { ...currentSiteSettings, hiddenSections, navLabels, maintenance, maintenanceMessage, heroImage };
+                siteHeroImageDraft = null;
                 try { localStorage.setItem('aerixSiteSettingsCache', JSON.stringify(currentSiteSettings)); } catch(e) {}
                 applySiteSettings();
                 showToast('Réglages du site enregistrés.', 'success');
@@ -6942,7 +7170,8 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
                 scheduleAdminRender();
             }, (e) => console.warn('discordAvatars indisponible (règles Firestore à publier)', e));
             db.collection("playerCards").onSnapshot((snapshot) => {
-                globalPlayerCards = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })).filter(p => p.published !== false && p.status === 'accepted');
+                globalPlayerCards = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })).filter(p => p.published !== false && (p.status === 'accepted' || p.status === 'published'));
+                savePublicCollectionCache("playerCards", globalPlayerCards);
                 scheduleRender(renderEffectifs);
                 scheduleAdminRender();
             }, (e) => { console.warn('playerCards indisponibles (vérifier les règles Firestore)', e); globalPlayerCards = []; scheduleRender(renderEffectifs); scheduleAdminRender(); });
@@ -7003,7 +7232,6 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
                             ${imgTag}
                             <div class="shop-product-topline"><span class="shop-product-brand">AERIX / OFFICIAL</span><span class="shop-product-status ${available ? 'is-available' : 'is-unavailable'}">${available ? 'Disponible' : 'Indisponible'}</span></div>
                             <div class="shop-product-visual-overlay"></div>
-                            <div class="shop-product-open">Découvrir le produit <span aria-hidden="true">↗</span></div>
                         </div>
                         <div class="shop-product-info">
                             <div class="min-w-0"><div class="shop-product-kicker">COLLECTION AERIX</div><h4>${escapeHtml(item.name || 'Équipement AERIX')}</h4></div>
@@ -7306,7 +7534,8 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
             const count = document.getElementById('effectif-sync-count');
             const description = document.getElementById('effectif-sync-description');
             if (!panel || !button) return;
-            panel.classList.remove('hidden');
+            panel.classList.add('hidden');
+            return;
             const pending = getPendingPlayerCardSyncs();
             if (count) count.textContent = String(pending.length);
             if (description) description.textContent = `${pending.length} fiche${pending.length > 1 ? 's' : ''} acceptée${pending.length > 1 ? 's' : ''} à intégrer · nettoyage staff et tri automatique inclus.`;
@@ -7388,40 +7617,24 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
             }
         }
 
-        function getPlayerArrivalTimestamp(player) {
-            if (!player || typeof player !== 'object') return 0;
-            const candidates = [
-                player.arrivalDate, player.arrival_date, player.dateArrivee,
-                player.date_arrivee, player.joinedAt, player.joined_at,
-                player.joinDate, player.join_date, player.memberSince,
-                player.member_since, player.createdAt, player.created_at
-            ];
-            for (const value of candidates) {
-                const timestamp = parseAERIXDate(value);
-                if (timestamp) return timestamp;
-            }
-            return 0;
-        }
+        // L'ordre des pilotes est manuel : ne jamais le recalculer par nom ou date.
         function sortEffectifPlayers(players) {
-            const mode = document.getElementById('effectifs-sort')?.value || 'name';
-            return [...(players || [])].sort((a, b) => {
-                if (mode === 'arrival') {
-                    const dateA = getPlayerArrivalTimestamp(a);
-                    const dateB = getPlayerArrivalTimestamp(b);
-                    if (dateA && dateB && dateA !== dateB) return dateA - dateB;
-                    if (dateA && !dateB) return -1;
-                    if (!dateA && dateB) return 1;
-                }
-                return String(a.pseudo || a.name || '').localeCompare(
-                    String(b.pseudo || b.name || ''), 'fr', { sensitivity: 'base' }
-                );
-            });
+            return Array.isArray(players) ? [...players] : [];
         }
 
         function renderEffectifs() {
             for (const key of Object.keys(aerixPlayerRegistry)) delete aerixPlayerRegistry[key];
             aerixPlayerRegistrySeq = 0;
-            const sortedEffectifs = [...globalEffectifs].sort((a, b) => String(a.game || a.name || '').localeCompare(String(b.game || b.name || ''), 'fr', {sensitivity:'base'}));
+            const sortedEffectifs = [...globalEffectifs]
+                .map((roster, index) => ({ ...roster, __sourceIndex: index }))
+                .sort((a, b) => {
+                    const aHasOrder = Number.isFinite(Number(a.order));
+                    const bHasOrder = Number.isFinite(Number(b.order));
+                    if (aHasOrder && bHasOrder && Number(a.order) !== Number(b.order)) return Number(a.order) - Number(b.order);
+                    if (aHasOrder !== bHasOrder) return aHasOrder ? -1 : 1;
+                    return a.__sourceIndex - b.__sourceIndex;
+                })
+                .map(({ __sourceIndex, ...roster }) => roster);
             const selectedFilter = currentFilters.effectifs;
             const container = document.getElementById('effectifs-container');
             const staffIdentityKeys = aerixStaffIdentitySet();
@@ -9225,7 +9438,7 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
                 usersEl.innerHTML = globalAccounts.length ? globalAccounts.map(u => {
                     const role = u.role || 'user';
                     const isSelfOwner = (u.email || '').toLowerCase() === OWNER_EMAIL.toLowerCase();
-                    const menu = isOwner() && !isSelfOwner ? `<div class="relative"><button onclick="toggleRoleMenu('${u.id}', event)" class="w-9 h-9 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-aerix-purple/20 hover:border-aerix-purple/40 transition text-lg" aria-label="Options">⋯</button><div id="role-menu-${u.id}" class="role-menu hidden absolute right-0 top-11 z-[500] w-44 glass-panel-no-hover rounded-xl p-1.5 border border-white/10 shadow-2xl pointer-events-auto"><button type="button" onclick="event.stopPropagation(); setAccountRole('${u.id}','user')" class="w-full text-left px-3 py-2 text-xs text-white hover:bg-white/10 rounded-lg pointer-events-auto">${currentLang==='en'?'User':'Utilisateur'}</button><button type="button" onclick="event.stopPropagation(); setAccountRole('${u.id}','admin')" class="w-full text-left px-3 py-2 text-xs text-white hover:bg-white/10 rounded-lg pointer-events-auto">Admin</button></div></div>` : '';
+                    const menu = isOwner() && !isSelfOwner ? `<div class="relative"><button onclick="toggleRoleMenu('${u.id}', event)" class="w-9 h-9 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-aerix-purple/20 hover:border-aerix-purple/40 transition text-lg" aria-label="Options">⋯</button><div id="role-menu-${u.id}" class="role-menu hidden absolute right-0 top-11 z-[500] w-44 glass-panel-no-hover rounded-xl p-1.5 border border-white/10 shadow-2xl pointer-events-auto"><button type="button" onclick="event.stopPropagation(); setAccountRole('${u.id}','user')" class="w-full text-left px-3 py-2 text-xs text-white hover:bg-white/10 rounded-lg pointer-events-auto">${currentLang==='en'?'User':'Utilisateur'}</button><button type="button" onclick="event.stopPropagation(); setAccountRole('${u.id}','admin')" class="w-full text-left px-3 py-2 text-xs text-white hover:bg-white/10 rounded-lg pointer-events-auto">Admin</button><button type="button" onclick="event.stopPropagation(); setAccountRole('${u.id}','pilot')" class="w-full text-left px-3 py-2 text-xs text-white hover:bg-white/10 rounded-lg pointer-events-auto">PILOTE</button><button type="button" onclick="event.stopPropagation(); setAccountRole('${u.id}','staff')" class="w-full text-left px-3 py-2 text-xs text-white hover:bg-white/10 rounded-lg pointer-events-auto">STAFF</button></div></div>` : '';
                     return `<div class="glass-panel glass-panel-form p-4 rounded-xl flex items-center justify-between gap-3"><div class="min-w-0"><div class="text-white font-bold text-sm truncate">${escapeHtml(u.username || '—')}</div><div class="text-xs text-gray-500 mt-1 truncate">${escapeHtml(u.email || '—')}</div><div class="text-xs text-aerix-purple mt-2 uppercase tracking-widest">${escapeHtml(role)}</div></div>${menu}</div>`;
                 }).join('') : `<p class="text-gray-500 text-sm italic">${currentLang==='en'?'No registered accounts.':'Aucun compte enregistré.'}</p>`;
             }
@@ -9332,7 +9545,7 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
         }
         async function setAccountRole(uid, role) {
             if (!isOwner()) return;
-            if (!['user', 'admin'].includes(role)) return;
+            if (!['user', 'admin', 'pilot', 'staff'].includes(role)) return;
             try {
                 await db.collection('accounts').doc(uid).update({ role });
                 const menuEl = document.getElementById(`role-menu-${uid}`);
@@ -10194,14 +10407,77 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
         });
 
         function renderCompetitionPage() {
-            const up=document.getElementById('competition-upcoming'),res=document.getElementById('competition-results'),archive=document.getElementById('competition-archive');
-            if(!up||!res)return;
-            const now=Date.now(),dated=[...(globalEvents||[])].map(e=>({...e,_ts:parseAERIXDate(e.datetime||e.date||'')})).filter(e=>!Number.isNaN(e._ts));
-            const upcoming=dated.filter(e=>e._ts>=now).sort((a,b)=>a._ts-b._ts).slice(0,6),past=dated.filter(e=>e._ts<now).sort((a,b)=>b._ts-a._ts);
-            up.innerHTML=upcoming.length?upcoming.map(e=>{const d=e.date?e.date.split('-').reverse().join('/'):'Date non renseignée';return `<button type="button" onclick="openEventArticle('${String(e.id||'').replace(/'/g,"\\'")}')" class="glass-panel p-0 rounded-2xl border border-white/10 overflow-hidden text-left w-full group hover:border-aerix-purple/50 transition duration-300">${e.image?`<div class="w-full aspect-video bg-black overflow-hidden"><img loading="lazy" decoding="async" src="${escapeHtml(e.image)}" class="w-full h-full object-cover group-hover:scale-[1.025] transition duration-500" alt=""></div>`:''}<div class="p-5"><div class="flex items-start justify-between gap-3"><div class="min-w-0"><div class="flex flex-wrap items-center gap-2"><span class="text-xs text-aerix-purple font-bold uppercase">${escapeHtml(e.game||e.type||'Événement')}</span>${e.type?`<span class="text-[10px] text-gray-500 uppercase tracking-widest">${escapeHtml(e.type)}</span>`:''}</div><div class="text-white font-bold text-lg mt-2">${escapeHtml(e.title||'Événement')}</div><div class="text-xs text-gray-500 mt-2">📅 ${escapeHtml(d)}${e.time?' · '+escapeHtml(e.time):''}</div></div>${e.opponent?`<span class="text-xs text-gray-400 text-right shrink-0">${escapeHtml(e.opponent)}</span>`:''}</div>${e.competition?`<div class="text-xs text-gray-500 mt-3">${escapeHtml(e.competition)}</div>`:''}<div class="text-xs text-aerix-purple font-bold mt-4">Voir les détails →</div></div></button>`;}).join(''):`<p class="text-gray-500 text-sm italic">Aucun événement à venir.</p>`;
-            const results=sortByDateDesc([...(globalPalmares||[])]).slice(0,6);
-            res.innerHTML=results.length?results.map(p=>`<button type="button" onclick="openCompetitionResult('${String(p.id||'').replace(/'/g,"\\'")}')" class="glass-panel p-4 rounded-2xl border border-white/10 flex items-center justify-between gap-4 text-left w-full hover:border-aerix-purple/40 transition"><span class="min-w-0"><span class="block text-white font-bold">${escapeHtml(p.title||'Résultat')}</span><span class="block text-xs text-gray-500 mt-1">${escapeHtml(p.game||'Général')} ${p.date?'· '+escapeHtml(p.date):''}</span></span><span class="text-xs font-bold text-aerix-purple shrink-0">${escapeHtml(p.result||p.position||'')} ↗</span></button>`).join(''):`<p class="text-gray-500 text-sm italic">Aucun résultat enregistré.</p>`;
-            if(archive){const count=document.getElementById('competition-archive-count');if(count)count.textContent=`${past.length} événement${past.length>1?'s':''}`;archive.innerHTML=past.length?past.map(e=>{const d=e.date?e.date.split('-').reverse().join('/') : new Date(e._ts).toLocaleDateString(currentLang==='en'?'en-GB':'fr-FR');return `<button type="button" onclick="openEventArticle('${String(e.id||'').replace(/'/g,"\\'")}')" class="rounded-2xl border border-white/10 bg-white/[.03] p-4 text-left hover:border-aerix-purple/45 transition"><span class="flex items-center justify-between gap-3"><span class="text-white font-bold text-sm">${escapeHtml(e.title||'Événement')}</span><span class="text-[10px] text-gray-500 shrink-0">${escapeHtml(d)}</span></span><span class="block text-xs text-gray-500 mt-2">${escapeHtml([e.game||'AERIX',e.type,e.competition].filter(Boolean).join(' · '))}</span><span class="block text-xs text-aerix-purple font-bold mt-3">Consulter l’événement →</span></button>`;}).join(''):`<p class="text-gray-500 text-sm italic">Aucun événement passé archivé.</p>`;}
+            const up = document.getElementById('competition-upcoming');
+            const res = document.getElementById('competition-results');
+            const archive = document.getElementById('competition-archive');
+            if (!up || !res) return;
+
+            const en = currentLang === 'en';
+            const setText = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value; };
+            setText('competition-page-kicker', 'AERIX COMPETITION');
+            setText('competition-page-title', en ? 'Competition' : 'Compétition');
+            setText('competition-page-description', en
+                ? 'Follow AERIX upcoming matches and races, as well as the latest recorded results.'
+                : 'Retrouve les prochains matchs et courses ainsi que les dernières performances enregistrées par AERIX.');
+            setText('competition-upcoming-kicker', en ? 'Upcoming' : 'À venir');
+            setText('competition-upcoming-title', en ? 'Upcoming events' : 'Prochains événements');
+            setText('competition-results-kicker', en ? 'History' : 'Historique');
+            setText('competition-results-title', en ? 'Latest results' : 'Derniers résultats');
+            setText('competition-archive-kicker', en ? 'Archive' : 'Archives');
+            setText('competition-archive-title', en ? 'Event history' : 'Historique des événements');
+            setText('competition-archive-desc', en ? 'Past events remain available until removed from administration.' : "Les événements passés restent consultables tant qu'ils ne sont pas supprimés de l'administration.");
+            setText('competition-empty-kicker', 'AERIX COMPETITION');
+
+            const now = Date.now();
+            const dated = [...(globalEvents || [])]
+                .map(e => ({ ...e, _ts: parseAERIXDate(e.datetime || e.date || '') }))
+                .filter(e => !Number.isNaN(e._ts));
+            const upcoming = dated.filter(e => e._ts >= now).sort((a,b) => a._ts - b._ts).slice(0,6);
+            const past = dated.filter(e => e._ts < now).sort((a,b) => b._ts - a._ts);
+            const results = sortByDateDesc([...(globalPalmares || [])]).slice(0,6);
+
+            const upSection = document.getElementById('competition-upcoming-section');
+            const resultsSection = document.getElementById('competition-results-section');
+            const archiveSection = document.getElementById('competition-archive-section');
+            const mainGrid = document.getElementById('competition-main-grid');
+            const emptyOverview = document.getElementById('competition-empty-overview');
+            const hasMainContent = upcoming.length > 0 || results.length > 0;
+            const hasAnyContent = hasMainContent || past.length > 0;
+
+            if (upSection) upSection.classList.toggle('hidden', !upcoming.length);
+            if (resultsSection) resultsSection.classList.toggle('hidden', !results.length);
+            if (mainGrid) {
+                mainGrid.classList.toggle('hidden', !hasMainContent);
+                const onePanelOnly = (upcoming.length > 0) !== (results.length > 0);
+                mainGrid.classList.toggle('lg:grid-cols-1', onePanelOnly);
+                mainGrid.classList.toggle('lg:grid-cols-2', !onePanelOnly);
+            }
+            if (archiveSection) archiveSection.classList.toggle('hidden', !past.length);
+            if (emptyOverview) emptyOverview.classList.toggle('hidden', hasAnyContent);
+            setText('competition-empty-text', en
+                ? 'No events or results have been published yet.'
+                : "Aucun événement ou résultat n'est actuellement publié.");
+
+            up.innerHTML = upcoming.length ? upcoming.map(e => {
+                const d = e.date ? e.date.split('-').reverse().join('/') : (en ? 'Date not specified' : 'Date non renseignée');
+                const id = String(e.id || '').replace(/'/g, "\\'");
+                return `<button type="button" onclick="openEventArticle('${id}')" class="glass-panel p-0 rounded-2xl border border-white/10 overflow-hidden text-left w-full group hover:border-aerix-purple/50 transition duration-300">${e.image ? `<div class="w-full aspect-video bg-black overflow-hidden"><img loading="lazy" decoding="async" src="${escapeHtml(e.image)}" class="w-full h-full object-cover group-hover:scale-[1.025] transition duration-500" alt=""></div>` : ''}<div class="p-5"><div class="flex items-start justify-between gap-3"><div class="min-w-0"><div class="flex flex-wrap items-center gap-2"><span class="text-xs text-aerix-purple font-bold uppercase">${escapeHtml(e.game || e.type || (en ? 'Event' : 'Événement'))}</span>${e.type ? `<span class="text-[10px] text-gray-500 uppercase tracking-widest">${escapeHtml(e.type)}</span>` : ''}</div><div class="text-white font-bold text-lg mt-2">${escapeHtml(e.title || (en ? 'Event' : 'Événement'))}</div><div class="text-xs text-gray-500 mt-2">📅 ${escapeHtml(d)}${e.time ? ' · ' + escapeHtml(e.time) : ''}</div></div>${e.opponent ? `<span class="text-xs text-gray-400 text-right shrink-0">${escapeHtml(e.opponent)}</span>` : ''}</div>${e.competition ? `<div class="text-xs text-gray-500 mt-3">${escapeHtml(e.competition)}</div>` : ''}<div class="text-xs text-aerix-purple font-bold mt-4">${en ? 'View details →' : 'Voir les détails →'}</div></div></button>`;
+            }).join('') : '';
+
+            res.innerHTML = results.length ? results.map(p => {
+                const id = String(p.id || '').replace(/'/g, "\\'");
+                return `<button type="button" onclick="openCompetitionResult('${id}')" class="glass-panel p-4 rounded-2xl border border-white/10 flex items-center justify-between gap-4 text-left w-full hover:border-aerix-purple/40 transition"><span class="min-w-0"><span class="block text-white font-bold">${escapeHtml(p.title || (en ? 'Result' : 'Résultat'))}</span><span class="block text-xs text-gray-500 mt-1">${escapeHtml(p.game || (en ? 'General' : 'Général'))} ${p.date ? '· ' + escapeHtml(p.date) : ''}</span></span><span class="text-xs font-bold text-aerix-purple shrink-0">${escapeHtml(p.result || p.position || '')} ↗</span></button>`;
+            }).join('') : '';
+
+            if (archive) {
+                const count = document.getElementById('competition-archive-count');
+                if (count) count.textContent = `${past.length} ${en ? (past.length > 1 ? 'events' : 'event') : (past.length > 1 ? 'événements' : 'événement')}`;
+                archive.innerHTML = past.length ? past.map(e => {
+                    const d = e.date ? e.date.split('-').reverse().join('/') : new Date(e._ts).toLocaleDateString(en ? 'en-GB' : 'fr-FR');
+                    const id = String(e.id || '').replace(/'/g, "\\'");
+                    return `<button type="button" onclick="openEventArticle('${id}')" class="rounded-2xl border border-white/10 bg-white/[.03] p-4 text-left hover:border-aerix-purple/45 transition"><span class="flex items-center justify-between gap-3"><span class="text-white font-bold text-sm">${escapeHtml(e.title || (en ? 'Event' : 'Événement'))}</span><span class="text-[10px] text-gray-500 shrink-0">${escapeHtml(d)}</span></span><span class="block text-xs text-gray-500 mt-2">${escapeHtml([e.game || 'AERIX', e.type, e.competition].filter(Boolean).join(' · '))}</span><span class="block text-xs text-aerix-purple font-bold mt-3">${en ? 'View event →' : 'Consulter l’événement →'}</span></button>`;
+                }).join('') : '';
+            }
         }
         function openCompetitionResult(id){
             const p=(globalPalmares||[]).find(x=>String(x.id)===String(id));if(!p)return;
@@ -11228,6 +11504,7 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
         applyLanguageContent(currentLang);
         updateLanguageMenuUI(currentLang);
         renderAccountArea();
+        applySiteSettings();
         // Premier rendu depuis le cache local : les contenus publics sont visibles immédiatement.
         // Les snapshots Firestore ci-dessous remplacent ces données dès qu'ils arrivent.
         if (hasCachedPublicContent) {
@@ -11331,6 +11608,69 @@ document.addEventListener('DOMContentLoaded',applyTheme);
 #temp-player-discordid, #temp-player-avatarurl { min-width:0; width:100%; }
 #bulk-nationality-panel select { min-width:0; }
 </style>
+
+<style id="aerix-pilot-cards-v1">
+#aerix-pilot-modal{z-index:100000}#aerix-pilot-modal .pilot-field{width:100%;background:#09090b;border:1px solid rgba(255,255,255,.12);border-radius:11px;padding:11px 13px;color:#fff;font-size:13px;outline:none}#aerix-pilot-modal .pilot-field:focus{border-color:#9b6cff}#aerix-pilot-modal label{display:block;color:#aaa;font-size:11px;font-weight:700;margin:0 0 6px}#aerix-pilot-modal .pilot-section{border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.025);border-radius:15px;padding:15px}#aerix-pilot-public{margin-top:42px}#aerix-pilot-public .pilot-public-card{background:linear-gradient(145deg,#15131b,#070708);border:1px solid rgba(155,108,255,.25);border-radius:18px;overflow:hidden}#aerix-pilot-public .pilot-public-card img{width:100%;height:220px;object-fit:cover;object-position:top}#aerix-pilot-public .pilot-public-card .pilot-card-body{padding:14px}#aerix-pilot-public .pilot-card-name{font-weight:900;color:#fff;font-size:18px}#aerix-pilot-public .pilot-card-meta{font-size:11px;color:#aaa;margin-top:5px}#aerix-pilot-admin{margin-top:20px}
+</style>
+<div id="aerix-pilot-modal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-xl flex items-center justify-center p-3 md:p-6">
+ <div class="w-full max-w-6xl max-h-[94vh] overflow-y-auto rounded-3xl border border-white/10 bg-[#09090c] shadow-2xl">
+  <div class="sticky top-0 z-10 flex items-center justify-between gap-3 p-5 border-b border-white/10 bg-[#09090c]/95"><div><div class="text-[10px] tracking-[.22em] font-black text-purple-400 uppercase">AERIX Esport</div><h2 id="aerix-pilot-title" class="text-xl md:text-2xl font-black text-white">Ma carte pilote</h2></div><button onclick="closeAerixPilotEditor()" class="w-9 h-9 rounded-full bg-white/10 text-white">✕</button></div>
+  <div class="grid grid-cols-1 lg:grid-cols-[1.15fr_.85fr] gap-5 p-5">
+   <div class="space-y-4">
+    <div class="pilot-section"><h3 class="text-white font-bold mb-4">Informations du pilote</h3><div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+     <div><label for="ap-pseudo">Pseudo / nom de pilote *</label><input id="ap-pseudo" class="pilot-field" maxlength="40" required></div>
+     <div><label for="ap-realname">Nom et prénom *</label><input id="ap-realname" class="pilot-field" maxlength="70" required></div>
+     <div><label for="ap-age">Âge *</label><input id="ap-age" class="pilot-field" type="number" min="13" max="99" required></div>
+     <div><label for="ap-number">Numéro de course *</label><input id="ap-number" class="pilot-field" maxlength="8" required></div>
+     <div class="sm:col-span-2"><label for="ap-country">Pays / nationalité *</label><input id="ap-country" class="pilot-field" list="ap-country-list" placeholder="Rechercher un pays en français ou en anglais" autocomplete="off" required><datalist id="ap-country-list"></datalist><p class="text-[10px] text-gray-500 mt-1">Choisis un pays dans les suggestions pour enregistrer son drapeau.</p></div>
+     <div class="sm:col-span-2"><label for="ap-photo">Photo de profil *</label><input id="ap-photo" type="file" accept="image/*" class="pilot-field"><p class="text-[10px] text-gray-500 mt-1">Image automatiquement redimensionnée pour limiter son poids.</p></div>
+    </div></div>
+    <div class="pilot-section"><h3 class="text-white font-bold mb-4">Discipline</h3><div class="grid grid-cols-1 sm:grid-cols-2 gap-3"><div><label for="ap-game">Jeu *</label><select id="ap-game" class="pilot-field" onchange="updateAerixPilotCategories()"><option value="Le Mans Ultimate">Le Mans Ultimate</option><option value="RBR">Richard Burns Rally</option><option value="iRacing">iRacing</option></select></div><div><label for="ap-category">Catégorie *</label><select id="ap-category" class="pilot-field"></select></div></div></div>
+    <div class="pilot-section"><h3 class="text-white font-bold mb-4">Réseaux sociaux (facultatif)</h3><div class="grid grid-cols-1 sm:grid-cols-2 gap-3"><div><label for="ap-discord">Discord</label><input id="ap-discord" class="pilot-field" placeholder="https://discord.com/users/…"></div><div><label for="ap-tiktok">TikTok</label><input id="ap-tiktok" class="pilot-field" placeholder="https://tiktok.com/@…"></div><div><label for="ap-instagram">Instagram</label><input id="ap-instagram" class="pilot-field" placeholder="https://instagram.com/…"></div><div><label for="ap-youtube">YouTube</label><input id="ap-youtube" class="pilot-field" placeholder="https://youtube.com/@…"></div><div><label for="ap-twitch">Twitch</label><input id="ap-twitch" class="pilot-field" placeholder="https://twitch.tv/…"></div><div><label for="ap-x">X</label><input id="ap-x" class="pilot-field" placeholder="https://x.com/…"></div></div></div>
+    <div class="flex flex-wrap gap-2"><button id="ap-save" onclick="saveAerixPilotCard()" class="flex-1 min-w-[180px] rounded-xl bg-purple-600 hover:bg-purple-500 px-5 py-3 text-white font-black text-sm">Enregistrer ma carte</button><button onclick="closeAerixPilotEditor()" class="rounded-xl bg-white/10 px-5 py-3 text-white text-sm">Annuler</button></div>
+    <p class="text-[10px] text-gray-500">Les informations enregistrées peuvent être affichées publiquement sur le site AERIX.</p>
+   </div>
+   <div class="pilot-section h-fit lg:sticky lg:top-24"><div class="text-[10px] tracking-widest text-purple-400 font-black mb-3">APERÇU EN DIRECT</div><div class="rounded-2xl overflow-hidden border border-white/10 bg-black"><img id="ap-preview-photo" src="" alt="Aperçu de la photo" class="w-full h-64 object-cover object-top bg-[#111]"><div class="p-4"><div id="ap-preview-game" class="text-[10px] uppercase tracking-widest text-purple-300">LE MANS ULTIMATE · HYPERCAR</div><div class="flex items-center gap-2 mt-2"><h3 id="ap-preview-pseudo" class="text-2xl font-black text-white">PSEUDO</h3><span id="ap-preview-flag" class="text-xl"></span><span id="ap-preview-number" class="ml-auto text-sm text-gray-400"></span></div><div id="ap-preview-name" class="text-sm text-gray-400 mt-1">Nom Prénom</div><div id="ap-preview-age" class="text-xs text-gray-500 mt-2">Âge</div><div id="ap-preview-socials" class="text-[10px] text-purple-300 mt-3"></div></div></div></div>
+  </div>
+ </div>
+</div>
+<script>
+(function(){
+ const $=id=>document.getElementById(id); const countryRows=[
+ ['AF','Afghanistan','Afghanistan'],['ZA','Afrique du Sud','South Africa'],['AL','Albanie','Albania'],['DZ','Algérie','Algeria'],['DE','Allemagne','Germany'],['AD','Andorre','Andorra'],['AO','Angola','Angola'],['AG','Antigua-et-Barbuda','Antigua and Barbuda'],['SA','Arabie saoudite','Saudi Arabia'],['AR','Argentine','Argentina'],['AM','Arménie','Armenia'],['AU','Australie','Australia'],['AT','Autriche','Austria'],['AZ','Azerbaïdjan','Azerbaijan'],['BS','Bahamas','Bahamas'],['BH','Bahreïn','Bahrain'],['BD','Bangladesh','Bangladesh'],['BB','Barbade','Barbados'],['BE','Belgique','Belgium'],['BZ','Belize','Belize'],['BJ','Bénin','Benin'],['BT','Bhoutan','Bhutan'],['BY','Biélorussie','Belarus'],['BO','Bolivie','Bolivia'],['BA','Bosnie-Herzégovine','Bosnia and Herzegovina'],['BW','Botswana','Botswana'],['BR','Brésil','Brazil'],['BN','Brunei','Brunei'],['BG','Bulgarie','Bulgaria'],['BF','Burkina Faso','Burkina Faso'],['BI','Burundi','Burundi'],['KH','Cambodge','Cambodia'],['CM','Cameroun','Cameroon'],['CA','Canada','Canada'],['CV','Cap-Vert','Cape Verde'],['CL','Chili','Chile'],['CN','Chine','China'],['CY','Chypre','Cyprus'],['CO','Colombie','Colombia'],['KM','Comores','Comoros'],['CG','Congo','Congo'],['CD','RD Congo','DR Congo'],['KP','Corée du Nord','North Korea'],['KR','Corée du Sud','South Korea'],['CR','Costa Rica','Costa Rica'],['CI',"Côte d’Ivoire",'Ivory Coast'],['HR','Croatie','Croatia'],['CU','Cuba','Cuba'],['DK','Danemark','Denmark'],['DJ','Djibouti','Djibouti'],['DM','Dominique','Dominica'],['EG','Égypte','Egypt'],['AE','Émirats arabes unis','United Arab Emirates'],['EC','Équateur','Ecuador'],['ER','Érythrée','Eritrea'],['ES','Espagne','Spain'],['EE','Estonie','Estonia'],['SZ','Eswatini','Eswatini'],['US','États-Unis','United States'],['ET','Éthiopie','Ethiopia'],['FJ','Fidji','Fiji'],['FI','Finlande','Finland'],['FR','France','France'],['GA','Gabon','Gabon'],['GM','Gambie','Gambia'],['GE','Géorgie','Georgia'],['GH','Ghana','Ghana'],['GR','Grèce','Greece'],['GD','Grenade','Grenada'],['GT','Guatemala','Guatemala'],['GN','Guinée','Guinea'],['GQ','Guinée équatoriale','Equatorial Guinea'],['GW','Guinée-Bissau','Guinea-Bissau'],['GY','Guyana','Guyana'],['HT','Haïti','Haiti'],['HN','Honduras','Honduras'],['HU','Hongrie','Hungary'],['IN','Inde','India'],['ID','Indonésie','Indonesia'],['IQ','Irak','Iraq'],['IR','Iran','Iran'],['IE','Irlande','Ireland'],['IS','Islande','Iceland'],['IL','Israël','Israel'],['IT','Italie','Italy'],['JM','Jamaïque','Jamaica'],['JP','Japon','Japan'],['JO','Jordanie','Jordan'],['KZ','Kazakhstan','Kazakhstan'],['KE','Kenya','Kenya'],['KG','Kirghizistan','Kyrgyzstan'],['KI','Kiribati','Kiribati'],['KW','Koweït','Kuwait'],['LA','Laos','Laos'],['LS','Lesotho','Lesotho'],['LV','Lettonie','Latvia'],['LB','Liban','Lebanon'],['LR','Liberia','Liberia'],['LY','Libye','Libya'],['LI','Liechtenstein','Liechtenstein'],['LT','Lituanie','Lithuania'],['LU','Luxembourg','Luxembourg'],['MK','Macédoine du Nord','North Macedonia'],['MG','Madagascar','Madagascar'],['MY','Malaisie','Malaysia'],['MW','Malawi','Malawi'],['MV','Maldives','Maldives'],['ML','Mali','Mali'],['MT','Malte','Malta'],['MA','Maroc','Morocco'],['MH','Îles Marshall','Marshall Islands'],['MU','Maurice','Mauritius'],['MR','Mauritanie','Mauritania'],['MX','Mexique','Mexico'],['FM','Micronésie','Micronesia'],['MD','Moldavie','Moldova'],['MC','Monaco','Monaco'],['MN','Mongolie','Mongolia'],['ME','Monténégro','Montenegro'],['MZ','Mozambique','Mozambique'],['MM','Myanmar','Myanmar'],['NA','Namibie','Namibia'],['NR','Nauru','Nauru'],['NP','Népal','Nepal'],['NI','Nicaragua','Nicaragua'],['NE','Niger','Niger'],['NG','Nigeria','Nigeria'],['NO','Norvège','Norway'],['NZ','Nouvelle-Zélande','New Zealand'],['OM','Oman','Oman'],['UG','Ouganda','Uganda'],['UZ','Ouzbékistan','Uzbekistan'],['PK','Pakistan','Pakistan'],['PW','Palaos','Palau'],['PS','Palestine','Palestine'],['PA','Panama','Panama'],['PG','Papouasie-Nouvelle-Guinée','Papua New Guinea'],['PY','Paraguay','Paraguay'],['NL','Pays-Bas','Netherlands'],['PE','Pérou','Peru'],['PH','Philippines','Philippines'],['PL','Pologne','Poland'],['PT','Portugal','Portugal'],['QA','Qatar','Qatar'],['CF','République centrafricaine','Central African Republic'],['DO','République dominicaine','Dominican Republic'],['CZ','République tchèque','Czechia'],['RO','Roumanie','Romania'],['GB','Royaume-Uni','United Kingdom'],['RU','Russie','Russia'],['RW','Rwanda','Rwanda'],['KN','Saint-Christophe-et-Niévès','Saint Kitts and Nevis'],['SM','Saint-Marin','San Marino'],['VC','Saint-Vincent-et-les-Grenadines','Saint Vincent and the Grenadines'],['LC','Sainte-Lucie','Saint Lucia'],['SV','Salvador','El Salvador'],['WS','Samoa','Samoa'],['ST','Sao Tomé-et-Principe','Sao Tome and Principe'],['SN','Sénégal','Senegal'],['RS','Serbie','Serbia'],['SC','Seychelles','Seychelles'],['SL','Sierra Leone','Sierra Leone'],['SG','Singapour','Singapore'],['SK','Slovaquie','Slovakia'],['SI','Slovénie','Slovenia'],['SO','Somalie','Somalia'],['SD','Soudan','Sudan'],['SS','Soudan du Sud','South Sudan'],['LK','Sri Lanka','Sri Lanka'],['SE','Suède','Sweden'],['CH','Suisse','Switzerland'],['SR','Suriname','Suriname'],['SY','Syrie','Syria'],['TJ','Tadjikistan','Tajikistan'],['TZ','Tanzanie','Tanzania'],['TD','Tchad','Chad'],['TH','Thaïlande','Thailand'],['TL','Timor oriental','Timor-Leste'],['TG','Togo','Togo'],['TO','Tonga','Tonga'],['TT','Trinité-et-Tobago','Trinidad and Tobago'],['TN','Tunisie','Tunisia'],['TM','Turkménistan','Turkmenistan'],['TR','Turquie','Turkey'],['TV','Tuvalu','Tuvalu'],['UA','Ukraine','Ukraine'],['UY','Uruguay','Uruguay'],['VU','Vanuatu','Vanuatu'],['VA','Vatican','Vatican City'],['VE','Venezuela','Venezuela'],['VN','Viêt Nam','Vietnam'],['YE','Yémen','Yemen'],['ZM','Zambie','Zambia'],['ZW','Zimbabwe','Zimbabwe']
+ ];
+ const flag=code=>String.fromCodePoint(...code.toUpperCase().split('').map(c=>c.charCodeAt(0)+127397));
+ const gameCategories={'Le Mans Ultimate':['Hypercar','GT3','LMP2'],'RBR':['Rallye'],'iRacing':['GT3','GT4','Hypercar','LMP2','NASCAR','Formule','Autres']};
+ let editingUid=null,photoData='',editingByStaff=false;
+ const isPilotStaff=()=>typeof isOwner==='function'&&isOwner()||!!(typeof currentAccount!=='undefined'&&['admin','staff','owner'].includes(String(currentAccount.role||'').toLowerCase()));
+ const accountRole=()=>String(typeof currentAccount!=='undefined'?currentAccount?.role||'':'').toLowerCase();
+ const myCard=()=>Array.isArray(globalPlayerCards)?globalPlayerCards.find(c=>c.id===currentUser?.uid):null;
+ function initCountries(){const dl=$('ap-country-list');if(!dl)return;dl.innerHTML=countryRows.map(([c,fr,en])=>`<option value="${flag(c)} ${fr}" label="${en}"></option>`).join('');}
+ window.updateAerixPilotCategories=function(selected){const game=$('ap-game')?.value||'Le Mans Ultimate';$('ap-category').innerHTML=(gameCategories[game]||[]).map(c=>`<option ${c===selected?'selected':''}>${c}</option>`).join('');preview();};
+ function resolveCountry(value){const v=String(value||'').trim().toLowerCase();return countryRows.find(([c,fr,en])=>v===`${flag(c)} ${fr}`.toLowerCase()||v===fr.toLowerCase()||v===en.toLowerCase()||v===c.toLowerCase());}
+ function preview(){const val=id=>$(id)?.value||'';const country=resolveCountry(val('ap-country'));$('ap-preview-pseudo').textContent=val('ap-pseudo')||'PSEUDO';$('ap-preview-name').textContent=val('ap-realname')||'Nom Prénom';$('ap-preview-age').textContent=val('ap-age')?`${val('ap-age')} ans`: 'Âge';$('ap-preview-number').textContent=val('ap-number')?`#${val('ap-number')}`:'';$('ap-preview-flag').textContent=country?flag(country[0]):'';$('ap-preview-game').textContent=`${val('ap-game')} · ${val('ap-category')}`;$('ap-preview-socials').textContent=['Discord','TikTok','Instagram','YouTube','Twitch','X'].filter(k=>val('ap-'+k.toLowerCase())).join(' · ');if(photoData)$('ap-preview-photo').src=photoData;}
+ ['ap-pseudo','ap-realname','ap-age','ap-number','ap-country','ap-game','ap-category','ap-discord','ap-tiktok','ap-instagram','ap-youtube','ap-twitch','ap-x'].forEach(id=>document.addEventListener('input',e=>{if(e.target?.id===id)preview();}));
+ window.openAerixPilotEditor=async function(uid=null){if(typeof currentUser==='undefined'||!currentUser||typeof currentAccount==='undefined'||!currentAccount)return showToast('Connecte-toi pour gérer ta carte.','error');const own=!uid||uid===currentUser.uid;if(!own&&!isPilotStaff())return showToast('Accès refusé.','error');if(own&&!['pilot','owner','admin','staff'].includes(accountRole())&&!isOwner())return showToast('Le rôle PILOTE est nécessaire pour créer une carte.','error');editingUid=own?currentUser.uid:uid;editingByStaff=!own;const existing=(globalPlayerCards||[]).find(c=>c.id===editingUid);if(own&&existing&&existing.id!==currentUser.uid)return;photoData=existing?.photo||existing?.avatar||'';['pseudo','realname','age','number','country','discord','tiktok','instagram','youtube','twitch','x'].forEach(k=>{const el=$('ap-'+k);if(el)el.value=existing?.[k==='realname'?'name':k]||'';});$('ap-game').value=existing?.game||'Le Mans Ultimate';updateAerixPilotCategories(existing?.category||existing?.division||'');if(existing?.photo||existing?.avatar)$('ap-preview-photo').src=photoData;else $('ap-preview-photo').removeAttribute('src');$('ap-photo').value='';$('aerix-pilot-title').textContent=existing?(own?'Modifier ma carte pilote':'Modifier la carte pilote'):'Créer ma carte pilote';$('ap-save').textContent=existing?'Enregistrer les modifications':'Créer ma carte pilote';$('aerix-pilot-modal').classList.remove('hidden');preview();};
+ window.closeAerixPilotEditor=function(){$('aerix-pilot-modal')?.classList.add('hidden');};
+ $('ap-photo')?.addEventListener('change',async e=>{const file=e.target.files?.[0];if(!file)return;if(!file.type.startsWith('image/'))return showToast('Sélectionne une image.','error');try{const img=new Image(),url=URL.createObjectURL(file);img.onload=()=>{const canvas=document.createElement('canvas'),scale=Math.min(1,900/Math.max(img.width,img.height));canvas.width=Math.round(img.width*scale);canvas.height=Math.round(img.height*scale);canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);photoData=canvas.toDataURL('image/webp',.68);$('ap-preview-photo').src=photoData;URL.revokeObjectURL(url);};img.onerror=()=>{URL.revokeObjectURL(url);showToast('Image impossible à lire.','error');};img.src=url;}catch(err){showToast('Impossible de traiter cette image.','error');}});
+ window.saveAerixPilotCard=async function(){if(!editingUid||typeof currentUser==='undefined'||!currentUser)return;const own=editingUid===currentUser.uid;if(!own&&!isPilotStaff())return showToast('Accès refusé.','error');const pseudo=$('ap-pseudo').value.trim(),name=$('ap-realname').value.trim(),age=Number($('ap-age').value),number=$('ap-number').value.trim(),country=resolveCountry($('ap-country').value);if(!pseudo||!name||!Number.isInteger(age)||age<13||age>99||!number||!country||!photoData)return showToast('Complète tous les champs obligatoires et ajoute une photo.','error');if(photoData.length>850000)return showToast('La photo reste trop volumineuse. Choisis une image plus légère.','error');const game=$('ap-game').value,category=$('ap-category').value;if(!(gameCategories[game]||[]).includes(category))return showToast('Catégorie invalide.','error');const data={uid:editingUid,pseudo,name,age,number,country:`${flag(country[0])} ${country[1]}`,countryCode:country[0],photo:photoData,game,category,discord:$('ap-discord').value.trim(),tiktok:$('ap-tiktok').value.trim(),instagram:$('ap-instagram').value.trim(),youtube:$('ap-youtube').value.trim(),twitch:$('ap-twitch').value.trim(),x:$('ap-x').value.trim(),status:'accepted',published:true,updatedAt:firebase.firestore.FieldValue.serverTimestamp()};try{const ref=db.collection('playerCards').doc(editingUid);const old=await ref.get();if(!old.exists)data.createdAt=firebase.firestore.FieldValue.serverTimestamp();if(!old.exists)data.effectifActive=true;await ref.set(data,{merge:true});showToast('Carte pilote enregistrée.','success');closeAerixPilotEditor();if(typeof renderAccountArea==='function')renderAccountArea();}catch(err){console.error('saveAerixPilotCard',err);showToast(err.code==='permission-denied'?'Accès Firestore refusé : les règles playerCards doivent autoriser cette opération.':'Échec de l’enregistrement de la carte.','error');}};
+   function cardMarkup(c){const flagHtml=c.countryCode?`<img src="https://flagcdn.com/w40/${String(c.countryCode).toLowerCase()}.png" alt="${escapeHtml(c.country||'')}" class="inline-block h-4 w-auto rounded-sm">`:escapeHtml(c.country||'');const socials=playerSocialsHTML(c);const photo=c.photo||c.avatar||'';const photoHtml=photo?`<img loading="lazy" decoding="async" src="${escapeHtml(photo)}" alt="${escapeHtml(c.pseudo||'Pilote AERIX')}">`:`<div class="pilot-card-photo-placeholder" aria-hidden="true">AERIX</div>`;return `<article class="pilot-public-card">${photoHtml}<div class="pilot-card-body"><div class="text-[10px] uppercase tracking-widest text-purple-300">${escapeHtml(c.game||'')} · ${escapeHtml(c.category||'')}</div><div class="flex items-center gap-2 mt-2"><h4 class="pilot-card-name">${escapeHtml(c.pseudo||'Pilote')}</h4>${flagHtml}<span class="ml-auto text-xs text-gray-400">#${escapeHtml(c.number||'')}</span></div><div class="pilot-card-meta">${escapeHtml(c.name||'')} · ${escapeHtml(c.age||'')} ans</div>${socials?`<div class="player-socials mt-3">${socials}</div>`:''}</div></article>`;}
+ function renderPublicCards(){const container=$('effectifs-container');if(!container)return;let section=$('aerix-pilot-public');if(!section){section=document.createElement('section');section.id='aerix-pilot-public';container.appendChild(section);}const selected=typeof currentFilters!=='undefined'?currentFilters.effectifs:'Tous';const active=(globalPlayerCards||[]).filter(c=>c.effectifActive!==false&&c.published!==false&&c.status==='accepted'&&selected!=='Staff'&&(selected==='Tous'||!selected||String(c.game||'')===String(selected)));if(!active.length){section.innerHTML='';return;}const groups={};active.forEach(c=>{const key=`${c.game||'Autre'}|||${c.category||'Autres'}`;(groups[key]??=[]).push(c);});section.innerHTML=`<div class="border-t border-white/10 pt-8"><div class="mb-6"><div class="text-[10px] uppercase tracking-[.2em] text-purple-400 font-black">Cartes pilotes</div><h3 class="text-2xl font-black text-white mt-1">Nos pilotes par discipline</h3></div>${Object.entries(groups).map(([key,cards])=>{const [game,category]=key.split('|||');return `<div class="mb-8"><h4 class="text-lg font-black text-white mb-3">${escapeHtml(game)} <span class="text-purple-300">/ ${escapeHtml(category)}</span></h4><div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">${cards.map(cardMarkup).join('')}</div></div>`;}).join('')}</div>`;}
+ const oldRender=window.renderEffectifs;window.renderEffectifs=function(){if(typeof oldRender==='function')oldRender();renderPublicCards();};
+ const oldAccount=window.renderAccountArea;window.renderAccountArea=function(){if(typeof oldAccount==='function')oldAccount();document.querySelectorAll('.account-menu').forEach(menu=>{const existing=myCard();const allowed=['pilot','owner','admin','staff'].includes(accountRole())||typeof isOwner==='function'&&isOwner();if(allowed&&!menu.querySelector('.aerix-pilot-menu-btn')){const b=document.createElement('button');b.className='aerix-pilot-menu-btn account-menu-item w-full text-left px-3 py-2.5 text-xs font-bold text-white rounded-xl';b.textContent=existing?'🏁 Modifier ma carte pilote':'🏁 Créer ma carte de pilote';b.onclick=()=>openAerixPilotEditor();const logout=menu.querySelector('button[onclick="logoutAccount()"]');menu.insertBefore(b,logout||null);}if(isPilotStaff()&&!menu.querySelector('.aerix-pilot-manager-btn')){const m=document.createElement('button');m.className='aerix-pilot-manager-btn account-menu-item w-full text-left px-3 py-2.5 text-xs font-bold text-white rounded-xl';m.textContent='🛠 Gestion des cartes pilotes';m.onclick=()=>openAerixPilotManager();const logout=menu.querySelector('button[onclick="logoutAccount()"]');menu.insertBefore(m,logout||null);}});};
+ function renderAdminPilotTools(){if(!isPilotStaff())return;const tab=$('admin-tab-effectifs');if(!tab)return;let box=$('aerix-pilot-admin');if(!box){box=document.createElement('div');box.id='aerix-pilot-admin';box.className='glass-panel p-5 rounded-2xl border border-purple-400/20';const first=tab.firstElementChild;tab.insertBefore(box,first?.nextSibling||null);}const cards=globalPlayerCards||[];const games=['Le Mans Ultimate','RBR','iRacing'];const categories=[...new Set(Object.values(gameCategories).flat())];box.innerHTML=`<h3 class="text-lg font-black text-white">Gestion des cartes pilotes</h3><p class="text-xs text-gray-400 mt-1 mb-4">Retirer un pilote le masque des effectifs sans supprimer sa carte ni ses données. Il pourra être réintégré ensuite.</p><div class="flex flex-wrap gap-2 mb-4">${games.map(g=>`<button onclick="bulkAerixPilotStatus('game','${g}',false)" class="rounded-lg bg-red-500/10 text-red-300 px-3 py-2 text-xs font-bold">Retirer tous · ${g}</button>`).join('')}${categories.map(c=>`<button onclick="bulkAerixPilotStatus('category','${c}',false)" class="rounded-lg bg-white/5 text-gray-200 px-3 py-2 text-xs">Retirer · ${c}</button>`).join('')}</div><div class="space-y-2">${cards.map(c=>`<div class="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-black/30 p-3"><div class="text-sm text-white"><b>${escapeHtml(c.pseudo||c.name||c.id)}</b> <span class="text-gray-500">${escapeHtml(c.game||'')} · ${escapeHtml(c.category||'')}</span><span class="ml-2 text-xs ${c.effectifActive===false?'text-red-300':'text-green-300'}">${c.effectifActive===false?'Hors effectifs':'Actif'}</span></div><div class="flex gap-2"><button onclick="openAerixPilotEditor('${c.id}')" class="rounded-lg bg-white/10 px-3 py-1.5 text-xs text-white">Modifier</button><button onclick="setAerixPilotActive('${c.id}',${c.effectifActive===false?'true':'false'})" class="rounded-lg ${c.effectifActive===false?'bg-green-600':'bg-red-500/15 text-red-300'} px-3 py-1.5 text-xs">${c.effectifActive===false?'Réintégrer':'Retirer'}</button></div></div>`).join('')||'<p class="text-xs text-gray-500">Aucune carte pilote.</p>'}</div>`;}
+ window.setAerixPilotActive=async function(uid,active){if(!isPilotStaff())return;try{await db.collection('playerCards').doc(uid).update({effectifActive:!!active,updatedAt:firebase.firestore.FieldValue.serverTimestamp()});showToast(active?'Pilote réintégré aux effectifs.':'Pilote retiré des effectifs.','success');renderAerixPilotManager();}catch(e){console.error(e);showToast('Modification refusée par Firestore.','error');}};
+ window.bulkAerixPilotStatus=async function(type,value,active){if(!isPilotStaff())return;const matches=(globalPlayerCards||[]).filter(c=>(type==='game'?c.game===value:c.category===value)&&c.effectifActive!==active);const n=matches.length;if(!n)return showToast('Aucun pilote concerné.');if(!confirm(`${n} pilote(s) seront ${active?'réintégrés':'retirés'} des effectifs ${type==='game'?'du jeu':'de la catégorie'} ${value}. Les cartes et les données seront conservées. Continuer ?`))return;try{const chunks=[];for(let i=0;i<matches.length;i+=450)chunks.push(matches.slice(i,i+450));for(const chunk of chunks){const batch=db.batch();chunk.forEach(c=>batch.update(db.collection('playerCards').doc(c.id),{effectifActive:!!active,updatedAt:firebase.firestore.FieldValue.serverTimestamp()}));await batch.commit();}showToast(`${n} pilote(s) ${active?'réintégré(s)':'retiré(s)'}.`,'success');renderAerixPilotManager();}catch(e){console.error(e);showToast('Échec : vérifie les règles Firestore.','error');}};
+ const oldAdmin=window.renderAdminLists;window.renderAdminLists=function(){if(typeof oldAdmin==='function')oldAdmin();renderAdminPilotTools();};
+ window.openAerixPilotManager=function(){if(!isPilotStaff())return showToast('Accès réservé au staff.','error');let modal=$('aerix-pilot-manager-modal');if(!modal){modal=document.createElement('div');modal.id='aerix-pilot-manager-modal';modal.className='fixed inset-0 z-[100001] bg-black/90 backdrop-blur-xl p-3 md:p-6 flex items-center justify-center';modal.innerHTML=`<div class="w-full max-w-4xl max-h-[92vh] overflow-y-auto rounded-3xl border border-white/10 bg-[#09090c] p-5"><div class="flex items-center justify-between mb-4"><div><div class="text-[10px] uppercase tracking-widest text-purple-300">AERIX Esport</div><h2 class="text-xl font-black text-white">Gestion des cartes pilotes</h2></div><button onclick="document.getElementById('aerix-pilot-manager-modal').remove()" class="w-9 h-9 rounded-full bg-white/10 text-white">✕</button></div><div id="aerix-pilot-manager-content"></div></div>`;document.body.appendChild(modal);}renderAerixPilotManager();};
+ function renderAerixPilotManager(){const target=$('aerix-pilot-manager-content');if(!target)return;const cards=globalPlayerCards||[];const games=['Le Mans Ultimate','RBR','iRacing'];const categories=[...new Set(Object.values(gameCategories).flat())];target.innerHTML=`<p class="text-xs text-gray-400 mb-4">Retirer un pilote le masque des effectifs sans supprimer sa carte ni ses données. Il peut être réintégré à tout moment.</p><div class="flex flex-wrap gap-2 mb-4">${games.map(g=>`<button onclick="bulkAerixPilotStatus('game','${g}',false)" class="rounded-lg bg-red-500/10 text-red-300 px-3 py-2 text-xs font-bold">Retirer tous · ${g}</button>`).join('')}${categories.map(c=>`<button onclick="bulkAerixPilotStatus('category','${c}',false)" class="rounded-lg bg-white/5 text-gray-200 px-3 py-2 text-xs">Retirer · ${c}</button>`).join('')}</div><div class="space-y-2">${cards.map(c=>`<div class="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-black/30 p-3"><div class="text-sm text-white"><b>${escapeHtml(c.pseudo||c.name||c.id)}</b> <span class="text-gray-500">${escapeHtml(c.game||'')} · ${escapeHtml(c.category||'')}</span><span class="ml-2 text-xs ${c.effectifActive===false?'text-red-300':'text-green-300'}">${c.effectifActive===false?'Hors effectifs':'Actif'}</span></div><div class="flex gap-2"><button onclick="openAerixPilotEditor('${c.id}')" class="rounded-lg bg-white/10 px-3 py-1.5 text-xs text-white">Modifier</button><button onclick="setAerixPilotActive('${c.id}',${c.effectifActive===false?'true':'false'})" class="rounded-lg bg-white/10 px-3 py-1.5 text-xs text-white">${c.effectifActive===false?'Réintégrer':'Retirer'}</button></div></div>`).join('')||'<p class="text-xs text-gray-500">Aucune carte pilote.</p>'}</div>`;}
+ // Désactive les anciens mécanismes de synchronisation automatique/destructrice.
+ window.syncPlayerCardsToEffectifs=async function(){showToast('La synchronisation automatique est désactivée. Les cartes et les effectifs sont désormais gérés séparément.');};
+ function hideLegacyCardBuilder(){const zone=$('player-drop-zone');if(zone){const panel=zone.closest('.bg-black\\/40')||zone.parentElement; if(panel)panel.classList.add('hidden');}const list=$('temp-players-list');if(list)list.classList.add('hidden');}
+ function boot(){initCountries();hideLegacyCardBuilder();if(typeof window.renderAccountArea==='function')window.renderAccountArea();if(typeof window.renderEffectifs==='function')window.renderEffectifs();if(typeof window.renderAdminLists==='function'&&$('admin-modal')&&!$('admin-modal').classList.contains('hidden'))window.renderAdminLists();}
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+})();
+</script>
 </body>
 </html>
 
