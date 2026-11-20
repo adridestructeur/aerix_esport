@@ -5850,11 +5850,9 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
                         <p class="text-[11px] text-gray-500 mt-2 leading-relaxed">Syntaxe Markdown : <code># titre</code> · <code>**gras**</code> · <code>*italique*</code> · <code>__souligné__</code> · <code>~~barré~~</code> · <code>- liste</code> · <code>1. liste</code> · <code>&gt; citation</code> · <code>---</code> séparateur · <code>[texte](https://…)</code></p>
                     </div>
 
-                    <div id="palm-img-preview" class="w-full h-40 bg-white/5 rounded-xl mb-4 hidden bg-cover bg-center border border-white/10 relative">
-                        <button type="button" onclick="tempPalmImage=null; this.parentElement.classList.add('hidden')" class="absolute top-2 right-2 bg-red-500 text-white text-[10px] w-6 h-6 rounded-full font-bold">✕</button>
-                    </div>
-                    <button type="button" id="palm-drop-zone" onclick="document.getElementById('palm-img-input').click()" class="bg-white/5 border border-dashed border-white/20 text-gray-400 hover:text-white hover:border-white/40 text-xs font-bold px-4 py-4 rounded-xl w-full mb-6 transition">+ Uploader Image du Match (16:9) — ou glisser-déposer ici</button>
-                    <input type="file" id="palm-img-input" accept="image/*" class="hidden">
+                    <div id="palm-img-previews" class="flex gap-3 flex-wrap mb-4"></div>
+                    <button type="button" id="palm-drop-zone" onclick="document.getElementById('palm-img-input').click()" class="bg-white/5 border border-dashed border-white/20 text-gray-400 hover:text-white hover:border-white/40 text-xs font-bold px-4 py-4 rounded-xl w-full mb-6 transition">+ Ajouter des images du match (16:9) — ou glisser-déposer plusieurs images ici</button>
+                    <input type="file" id="palm-img-input" accept="image/*" multiple class="hidden">
 
                     <div class="flex gap-3">
                         <button id="palmares-cancel-btn" onclick="resetPalmaresForm()" class="hidden px-6 py-3.5 bg-white/5 border border-white/10 hover:bg-white/10 text-white rounded-xl text-sm font-bold transition">Annuler</button>
@@ -5905,11 +5903,9 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
                         <input type="url" id="add-event-link" placeholder="Lien (optionnel)" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple transition">
                     </div>
                     <textarea id="add-event-description" placeholder="Description / informations complémentaires (optionnel)" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm h-24 mb-4 outline-none focus:border-aerix-purple transition resize-y"></textarea>
-                    <div id="event-img-preview" class="w-full h-44 bg-white/5 rounded-xl mb-4 hidden bg-cover bg-center border border-white/10 relative overflow-hidden">
-                        <button type="button" onclick="tempEventImage=null; this.parentElement.style.backgroundImage=''; this.parentElement.classList.add('hidden')" class="absolute top-2 right-2 bg-red-500 text-white text-[10px] w-7 h-7 rounded-full font-bold z-10">✕</button>
-                    </div>
-                    <button type="button" id="event-drop-zone" onclick="document.getElementById('event-img-input').click()" class="bg-white/5 border border-dashed border-white/20 text-gray-400 hover:text-white hover:border-white/40 text-xs font-bold px-4 py-4 rounded-xl w-full mb-6 transition">+ Ajouter une image de l'événement (16:9) — ou glisser-déposer ici</button>
-                    <input type="file" id="event-img-input" accept="image/*" class="hidden">
+                    <div id="event-img-previews" class="flex gap-3 flex-wrap mb-4"></div>
+                    <button type="button" id="event-drop-zone" onclick="document.getElementById('event-img-input').click()" class="bg-white/5 border border-dashed border-white/20 text-gray-400 hover:text-white hover:border-white/40 text-xs font-bold px-4 py-4 rounded-xl w-full mb-6 transition">+ Ajouter des images de l'événement (16:9) — ou glisser-déposer plusieurs images ici</button>
+                    <input type="file" id="event-img-input" accept="image/*" multiple class="hidden">
                     <div class="flex gap-3"><button id="event-cancel-btn" type="button" onclick="resetEventForm()" class="hidden px-6 py-3.5 bg-white/5 border border-white/10 hover:bg-white/10 text-white rounded-xl text-sm font-bold transition">Annuler</button><button type="button" onclick="saveEvent()" class="flex-1 bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition shadow-[0_0_15px_rgba(139,92,246,0.3)]">Enregistrer l'événement</button></div>
                 </div>
             </div>
@@ -6036,11 +6032,9 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
                         <p class="text-[11px] text-gray-500 mt-2 leading-relaxed">Syntaxe Markdown : <code># titre</code> · <code>**gras**</code> · <code>*italique*</code> · <code>__souligné__</code> · <code>~~barré~~</code> · <code>- liste</code> · <code>1. liste</code> · <code>&gt; citation</code> · <code>---</code> séparateur · <code>[texte](https://…)</code></p>
                     </div>
 
-                    <div id="announcement-img-preview" class="w-full h-40 bg-white/5 rounded-xl mb-4 hidden bg-cover bg-center border border-white/10 relative">
-                        <button type="button" onclick="tempAnnouncementImage=null; this.parentElement.classList.add('hidden')" class="absolute top-2 right-2 bg-red-500 text-white text-[10px] w-6 h-6 rounded-full font-bold">✕</button>
-                    </div>
-                    <button type="button" id="announcement-drop-zone" onclick="document.getElementById('announcement-img-input').click()" class="bg-white/5 border border-dashed border-white/20 text-gray-400 hover:text-white hover:border-white/40 text-xs font-bold px-4 py-4 rounded-xl w-full mb-6 transition">+ Miniature (16:9) — ou glisser-déposer ici</button>
-                    <input type="file" id="announcement-img-input" accept="image/*" class="hidden">
+                    <div id="announcement-img-previews" class="flex gap-3 flex-wrap mb-4"></div>
+                    <button type="button" id="announcement-drop-zone" onclick="document.getElementById('announcement-img-input').click()" class="bg-white/5 border border-dashed border-white/20 text-gray-400 hover:text-white hover:border-white/40 text-xs font-bold px-4 py-4 rounded-xl w-full mb-6 transition">+ Ajouter des images (16:9, la première sert de miniature) — ou glisser-déposer plusieurs images ici</button>
+                    <input type="file" id="announcement-img-input" accept="image/*" multiple class="hidden">
                     
                     <div class="flex gap-3">
                         <button id="announcement-cancel-btn" onclick="resetAnnouncementForm()" class="hidden px-6 py-3.5 bg-white/5 border border-white/10 hover:bg-white/10 text-white rounded-xl text-sm font-bold transition">Annuler</button>
@@ -8358,8 +8352,7 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
             const item = globalPalmares.find(p => p.id === id); if(!item) return;
 
             const imgWrap = document.getElementById('palmares-article-img-wrap');
-            if (item.image) { document.getElementById('palmares-article-img').src = item.image; imgWrap.classList.remove('hidden'); }
-            else { imgWrap.classList.add('hidden'); }
+            aerixModalGallery('palmares-article-img-wrap', 'palmares-article-img', aerixItemImages(item));
 
             document.getElementById('palmares-article-title').textContent = item.title || '';
 
@@ -8411,7 +8404,7 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
             filtered = sortByDateDesc(filtered);
 
             if (annoncesView === 'galerie') {
-                const galleryFromAnnonces = filtered.filter(a => a.image).map(a => ({ image: a.image, game: a.game, caption: a.title }));
+                const galleryFromAnnonces = filtered.flatMap(a => aerixItemImages(a).map(img => ({ image: img, game: a.game, caption: a.title })));
                 const galleryFromCollection = currentFilters.annonces === 'Tous' ? globalGallery : globalGallery.filter(g => (g.game || 'Tous') === currentFilters.annonces);
                 const galleryPhotos = [...galleryFromCollection.map(g => ({ image: g.image, game: g.game, caption: g.caption })), ...galleryFromAnnonces];
                 renderAnnoncesGallery(galleryPhotos);
@@ -8423,7 +8416,7 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
             
             filtered.forEach((a, index) => {
                 const descHtml = aerixRichHtml(a.desc, a.descFormat);
-                const imgHTML = a.image ? `<button type="button" class="announcement-image-button w-full md:w-1/3 shrink-0 h-48 md:h-auto border-r border-white/5 overflow-hidden cursor-zoom-in group/image" onclick="event.stopPropagation(); openImageViewer(decodeURIComponent('${encodeURIComponent(a.image)}'), decodeURIComponent('${encodeURIComponent(a.title || '')}'))" aria-label="Ouvrir l'image de l'annonce"><img loading="lazy" decoding="async" src="${escapeHtml(a.image)}" loading="lazy" alt="${escapeHtml(a.title || 'Image AERIX')}" class="news-img w-full h-full object-cover transition duration-500 group-hover/image:scale-105"></button>` : '';
+                const imgHTML = a.image ? `<button type="button" class="announcement-image-button relative w-full md:w-1/3 shrink-0 h-48 md:h-auto border-r border-white/5 overflow-hidden cursor-zoom-in group/image" onclick="event.stopPropagation(); openAnnonceImages(decodeURIComponent('${encodeURIComponent(a.id || '')}'))" aria-label="Ouvrir l'image de l'annonce"><img loading="lazy" decoding="async" src="${escapeHtml(a.image)}" loading="lazy" alt="${escapeHtml(a.title || 'Image AERIX')}" class="news-img w-full h-full object-cover transition duration-500 group-hover/image:scale-105">${aerixItemImages(a).length > 1 ? `<span style="position:absolute;right:10px;bottom:10px;padding:.25rem .7rem;border-radius:999px;font-size:.7rem;font-weight:800;color:#fff;background:rgba(0,0,0,.65);backdrop-filter:blur(6px)">${aerixItemImages(a).length} photos</span>` : ''}</button>` : '';
                 __html += `
                     <div id="annonce-${escapeHtml(a.id || '')}" class="news-card-animated group cursor-pointer glass-panel rounded-3xl overflow-hidden reveal delay-${(index%3)*100} flex flex-col md:flex-row border-l-2 border-l-aerix-purple/50 hover:border-l-aerix-purple transition-colors">
                         ${imgHTML}
@@ -10294,8 +10287,7 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
             document.getElementById('add-palm-split').value = item.split || '';
             document.getElementById('add-palm-car').value = item.car || '';
             
-            tempPalmImage = item.image || null;
-            if(tempPalmImage) { document.getElementById('palm-img-preview').style.backgroundImage = `url(${tempPalmImage})`; document.getElementById('palm-img-preview').classList.remove('hidden'); }
+            aerixImgSetLoad('palm', item);
             document.getElementById('palmares-form-title').innerText = "Modifier le Résultat"; document.getElementById('palmares-cancel-btn').classList.remove('hidden');
         }
         
@@ -10307,7 +10299,7 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
             
             togglePalmaresFields();
 
-            tempPalmImage = null; document.getElementById('palm-img-preview').classList.add('hidden');
+            aerixImgSetClear('palm');
             document.getElementById('palmares-form-title').innerText = "Déclarer un Résultat"; document.getElementById('palmares-cancel-btn').classList.add('hidden');
         }
         
@@ -10317,8 +10309,8 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
             if(!title) return showToast("Titre/Compétition obligatoire.", "error");
 
             const desc = document.getElementById('add-palm-desc').value.trim();
-            const optimizedPalmImage = tempPalmImage ? (await optimizeImageListForFirestore([tempPalmImage], 500000))[0] : "";
-            let data = { title, date, game, image: optimizedPalmImage || "", desc, descFormat: 'md' };
+            const __pimgs = await aerixImgSetOptimized('palm'); if (!__pimgs) return;
+            let data = { title, date, game, image: __pimgs.image, images: __pimgs.images, desc, descFormat: 'md' };
 
             if(game === 'Rocket League') {
                 data.opponent = document.getElementById('add-palm-opponent').value;
@@ -10464,9 +10456,7 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
             document.getElementById('add-event-time').value = item.time || '';
             document.getElementById('add-event-link').value = item.link || '';
             document.getElementById('add-event-description').value = item.description || '';
-            tempEventImage = item.image || null;
-            const eventPreview = document.getElementById('event-img-preview');
-            if (eventPreview) { eventPreview.style.backgroundImage = tempEventImage ? `url(${tempEventImage})` : ''; eventPreview.classList.toggle('hidden', !tempEventImage); }
+            aerixImgSetLoad('event', item);
             document.getElementById('event-form-title').innerText = 'Modifier l’événement';
             document.getElementById('event-cancel-btn').classList.remove('hidden');
             switchAdminTab('evenements');
@@ -10482,9 +10472,7 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
             document.getElementById('add-event-time').value = '';
             document.getElementById('add-event-link').value = '';
             document.getElementById('add-event-description').value = '';
-            tempEventImage = null;
-            const eventPreview = document.getElementById('event-img-preview');
-            if (eventPreview) { eventPreview.style.backgroundImage = ''; eventPreview.classList.add('hidden'); }
+            aerixImgSetClear('event');
             document.getElementById('event-form-title').innerText = 'Ajouter un événement';
             document.getElementById('event-cancel-btn').classList.add('hidden');
         }
@@ -10502,7 +10490,8 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
             const description = document.getElementById('add-event-description').value.trim();
             if (!title || !date) return showToast('Nom et date obligatoires.', 'error');
             if (link && !safeUrl(link)) return showToast('Le lien fourni n’est pas valide.', 'error');
-            const data = { title, type, game, competition, opponent, date, time, link, description, image: tempEventImage || '', datetime: `${date}${time ? 'T' + time : 'T23:59'}`, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
+            const __eimgs = await aerixImgSetOptimized('event'); if (!__eimgs) return;
+            const data = { title, type, game, competition, opponent, date, time, link, description, image: __eimgs.image, images: __eimgs.images, datetime: `${date}${time ? 'T' + time : 'T23:59'}`, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
             try {
                 if (id) { await db.collection('events').doc(id).update(data); showToast('Événement mis à jour.'); }
                 else { data.createdAt = firebase.firestore.FieldValue.serverTimestamp(); await db.collection('events').add(data); showToast('Événement ajouté.'); }
@@ -10638,14 +10627,13 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
             document.getElementById('add-announcement-game').value = item.game || 'Tous';
             setMdEditorValue('add-announcement-desc', aerixDescToMarkdown(item.desc, item.descFormat)); 
             
-            tempAnnouncementImage = item.image || null;
-            if(tempAnnouncementImage) { document.getElementById('announcement-img-preview').style.backgroundImage = `url(${tempAnnouncementImage})`; document.getElementById('announcement-img-preview').classList.remove('hidden'); }
+            aerixImgSetLoad('announcement', item);
             document.getElementById('announcement-form-title').innerText = "Modifier l'article"; document.getElementById('announcement-cancel-btn').classList.remove('hidden');
         }
         function resetAnnouncementForm() {
             document.getElementById('edit-announcement-id').value = ''; document.getElementById('add-announcement-title').value = ''; document.getElementById('add-announcement-date').value = ''; document.getElementById('add-announcement-game').value = 'Tous';
             setMdEditorValue('add-announcement-desc', ''); 
-            tempAnnouncementImage = null; document.getElementById('announcement-img-preview').classList.add('hidden');
+            aerixImgSetClear('announcement');
             document.getElementById('announcement-form-title').innerText = "Rédiger un Article"; document.getElementById('announcement-cancel-btn').classList.add('hidden');
         }
         async function saveAnnouncement() {
@@ -10654,8 +10642,8 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
             if(!title || !desc) return showToast("Titre et contenu obligatoires.", "error");
 
             try {
-                const image = tempAnnouncementImage ? (await optimizeImageListForFirestore([tempAnnouncementImage], 500000))[0] : "";
-                const data = { title, date: date || new Date().toLocaleDateString('fr-FR'), game, desc, descFormat: 'md', image };
+                const __aimgs = await aerixImgSetOptimized('announcement'); if (!__aimgs) return; const image = __aimgs.image;
+                const data = { title, date: date || new Date().toLocaleDateString('fr-FR'), game, desc, descFormat: 'md', image, images: __aimgs.images };
                 if(id) await db.collection("annonces").doc(id).update(data); else await db.collection("annonces").add(data);
                 showToast("Annonce publiée !"); resetAnnouncementForm();
             } catch(e) { showToast("Erreur", "error"); }
@@ -10890,13 +10878,7 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
             const linkWrap = document.getElementById('event-article-link-wrap');
             const dateText = item.date ? item.date.split('-').reverse().join('/') : 'Date non renseignée';
             const type = item.type || 'Événement';
-            if (item.image) {
-                img.src = item.image;
-                imgWrap.classList.remove('hidden');
-            } else {
-                img.src = '';
-                imgWrap.classList.add('hidden');
-            }
+            aerixModalGallery('event-article-img-wrap', 'event-article-img', aerixItemImages(item));
             badges.innerHTML = `<span class="text-xs font-bold px-3 py-1.5 rounded-full bg-aerix-purple/15 text-aerix-purple border border-aerix-purple/30">${escapeHtml(item.game || 'AERIX')}</span><span class="text-xs font-bold px-3 py-1.5 rounded-full bg-white/5 text-gray-300 border border-white/10">${escapeHtml(type)}</span>`;
             document.getElementById('event-article-title').textContent = item.title || 'Événement AERIX';
             const metaItems = [
@@ -10938,27 +10920,126 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
             rl.innerHTML = rosterHTML(rlR, 'Aucun roster Rocket League enregistré.');
             sim.innerHTML = rosterHTML(simR, 'Aucun roster simracing enregistré.');
         }
-        function openImageViewer(url, caption = '') {
+        // ---- Plusieurs images par élément (résultats, annonces, événements) ----
+        // `image` reste la couverture (compatibilité) ; `images` contient toutes les photos.
+        function aerixItemImages(item) {
+            if (!item) return [];
+            const list = Array.isArray(item.images) ? item.images.filter(Boolean) : [];
+            if (list.length) return list;
+            return item.image ? [item.image] : [];
+        }
+        const AERIX_MAX_IMAGES = 6;
+        const aerixImgSets = { palm: [], announcement: [], event: [] };
+        function aerixRenderImgSet(key) {
+            const el = document.getElementById(key + '-img-previews');
+            if (!el) return;
+            el.innerHTML = aerixImgSets[key].map((src, i) => `<div class="relative w-32 aspect-video rounded-lg overflow-hidden border ${i === 0 ? 'border-aerix-purple' : 'border-white/20'}"><img decoding="async" src="${src}" alt="" title="Cliquer pour définir comme couverture" onclick="aerixImgSetCover('${key}', ${i})" class="w-full h-full object-cover cursor-pointer">${i === 0 ? '<span class="absolute bottom-0 left-0 right-0 text-center text-[9px] font-black bg-aerix-purple/90 text-white py-0.5 tracking-widest">COUVERTURE</span>' : ''}<button type="button" onclick="aerixImgSetRemove('${key}', ${i})" class="absolute top-0 right-0 bg-red-500 text-white text-[10px] w-5 h-5 rounded-bl-lg font-bold">✕</button></div>`).join('');
+        }
+        function aerixImgSetAdd(key, src) {
+            if (aerixImgSets[key].length >= AERIX_MAX_IMAGES) { showToast(`Maximum ${AERIX_MAX_IMAGES} images.`, 'error'); return; }
+            aerixImgSets[key].push(src);
+            aerixRenderImgSet(key);
+        }
+        function aerixImgSetCover(key, i) { if (i <= 0) return; const a = aerixImgSets[key]; a.unshift(a.splice(i, 1)[0]); aerixRenderImgSet(key); }
+        function aerixImgSetRemove(key, i) { aerixImgSets[key].splice(i, 1); aerixRenderImgSet(key); }
+        function aerixImgSetLoad(key, item) { aerixImgSets[key] = [...aerixItemImages(item)]; aerixRenderImgSet(key); }
+        function aerixImgSetClear(key) { aerixImgSets[key] = []; aerixRenderImgSet(key); }
+        async function aerixImgSetOptimized(key) {
+            const arr = aerixImgSets[key].filter(Boolean);
+            if (!arr.length) return { image: '', images: [] };
+            const opt = await optimizeImageListForFirestore(arr, arr.length === 1 ? 500000 : 700000);
+            if (!ensureFirestoreImageBudget(opt, FIRESTORE_DOC_SAFE_CHARS).ok) {
+                showToast('Trop d’images pour un seul élément : retires-en quelques-unes.', 'error');
+                return null;
+            }
+            return { image: opt[0], images: opt };
+        }
+        // Galerie dans les fenêtres article (flèches + compteur) quand il y a plusieurs images.
+        function aerixModalGallery(wrapId, imgId, images) {
+            const wrap = document.getElementById(wrapId), img = document.getElementById(imgId);
+            if (!wrap || !img) return;
+            wrap.querySelectorAll('.aerix-gal-ui').forEach(n => n.remove());
+            const list = (images || []).filter(Boolean);
+            if (!list.length) { img.src = ''; wrap.classList.add('hidden'); return; }
+            wrap.classList.remove('hidden');
+            wrap.style.position = 'relative';
+            let i = 0;
+            img.src = list[0];
+            if (list.length < 2) return;
+            const ui = document.createElement('div');
+            ui.className = 'aerix-gal-ui';
+            ui.style.cssText = 'position:absolute;inset:0;pointer-events:none';
+            const btn = d => `<button type="button" data-d="${d}" aria-label="${d < 0 ? 'Image précédente' : 'Image suivante'}" style="pointer-events:auto;position:absolute;top:50%;${d < 0 ? 'left' : 'right'}:12px;transform:translateY(-50%);width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(0,0,0,.55);color:#fff;font-size:22px;line-height:1;backdrop-filter:blur(6px)">${d < 0 ? '‹' : '›'}</button>`;
+            ui.innerHTML = btn(-1) + btn(1) + '<div class="aerix-gal-count" style="position:absolute;bottom:12px;left:50%;transform:translateX(-50%);padding:.25rem .8rem;border-radius:999px;font-size:.72rem;font-weight:800;color:#fff;background:rgba(0,0,0,.65)"></div>';
+            const count = ui.querySelector('.aerix-gal-count');
+            const render = () => { img.src = list[i]; count.textContent = `${i + 1} / ${list.length}`; };
+            ui.querySelectorAll('button').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); i = (i + Number(b.dataset.d) + list.length) % list.length; render(); }));
+            wrap.appendChild(ui);
+            render();
+        }
+        function openAnnonceImages(id) {
+            const a = (globalAnnonces || []).find(x => x.id === id);
+            const list = aerixItemImages(a);
+            if (list.length) openImageViewer(list[0], a.title || '', list);
+        }
+        let aerixLightboxList = [], aerixLightboxIdx = 0;
+        function aerixLightboxRefresh() {
+            const modal = document.getElementById('media-lightbox');
+            const img = document.getElementById('media-lightbox-img');
+            if (!modal || !img) return;
+            let ui = modal.querySelector('.aerix-lb-ui');
+            const multi = aerixLightboxList.length > 1;
+            if (multi && !ui) {
+                ui = document.createElement('div');
+                ui.className = 'aerix-lb-ui';
+                ui.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:3';
+                const b = d => `<button type="button" data-d="${d}" aria-label="${d < 0 ? 'Image précédente' : 'Image suivante'}" style="pointer-events:auto;position:absolute;top:50%;${d < 0 ? 'left' : 'right'}:18px;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(0,0,0,.6);color:#fff;font-size:26px;line-height:1">${d < 0 ? '‹' : '›'}</button>`;
+                ui.innerHTML = b(-1) + b(1) + '<div class="aerix-lb-count" style="position:absolute;top:18px;left:50%;transform:translateX(-50%);padding:.3rem .9rem;border-radius:999px;font-size:.75rem;font-weight:800;color:#fff;background:rgba(0,0,0,.65)"></div>';
+                ui.querySelectorAll('button').forEach(btn => btn.addEventListener('click', e => { e.stopPropagation(); aerixLightboxStep(Number(btn.dataset.d)); }));
+                modal.appendChild(ui);
+            }
+            if (ui) {
+                ui.style.display = multi ? 'block' : 'none';
+                const c = ui.querySelector('.aerix-lb-count');
+                if (c) c.textContent = `${aerixLightboxIdx + 1} / ${aerixLightboxList.length}`;
+            }
+        }
+        function aerixLightboxStep(d) {
+            if (aerixLightboxList.length < 2) return;
+            aerixLightboxIdx = (aerixLightboxIdx + d + aerixLightboxList.length) % aerixLightboxList.length;
+            const img = document.getElementById('media-lightbox-img');
+            if (img) img.src = aerixLightboxList[aerixLightboxIdx];
+            aerixLightboxRefresh();
+        }
+        function openImageViewer(url, caption = '', list = null) {
             if (!url) return;
             const modal = document.getElementById('media-lightbox');
             const img = document.getElementById('media-lightbox-img');
             const cap = document.getElementById('media-lightbox-caption');
             if (!modal || !img) return;
+            aerixLightboxList = Array.isArray(list) && list.length > 1 ? list.filter(Boolean) : [];
+            aerixLightboxIdx = Math.max(0, aerixLightboxList.indexOf(url));
             img.src = url;
             img.alt = caption || 'AERIX Media';
             if (cap) cap.textContent = caption || '';
             modal.classList.remove('hidden');
             modal.classList.add('flex');
             document.body.classList.add('overflow-hidden');
+            aerixLightboxRefresh();
         }
         function closeImageViewer() {
             const modal = document.getElementById('media-lightbox');
             const img = document.getElementById('media-lightbox-img');
             if (modal) { modal.classList.add('hidden'); modal.classList.remove('flex'); }
             if (img) img.src = '';
+            aerixLightboxList = [];
             document.body.classList.remove('overflow-hidden');
         }
-        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeImageViewer(); });
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') closeImageViewer();
+            else if (e.key === 'ArrowLeft') aerixLightboxStep(-1);
+            else if (e.key === 'ArrowRight') aerixLightboxStep(1);
+        });
         function renderMediaPage() {
             const c = document.getElementById('media-container'); if (!c) return;
             const items = [];
@@ -11337,16 +11418,16 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
         }
         function renderTempPlayersAdmin() { document.getElementById('temp-players-list').innerHTML = tempPlayers.map((p, i) => `<div class="flex items-center justify-between glass-panel p-3 rounded-xl border border-white/10 ${editingPlayerIndex === i ? 'border-aerix-purple/60' : ''}"><div class="flex items-center gap-3 cursor-pointer" onclick="startEditTempPlayer(${i})"><img loading="lazy" decoding="async" src="${escapeHtml(p.avatar)}" alt="" class="w-10 h-12 rounded bg-black object-cover object-top-custom border border-white/10"><div><div class="text-white font-bold text-sm uppercase">${p.pseudo||p.name}</div><div class="text-gray-400 text-xs">${countryHTML(p.country, 12)} | #${p.number||'-'}</div></div></div><div class="flex gap-2"><button type="button" onclick="startEditTempPlayer(${i})" class="text-white bg-white/10 px-2 py-1 rounded text-xs hover:bg-aerix-purple transition">${currentLang==='en'?'Edit':'Éditer'}</button><button type="button" onclick="if(editingPlayerIndex===${i}) resetTempPlayerForm(); tempPlayers.splice(${i}, 1); renderTempPlayersAdmin()" class="text-red-400 bg-red-500/10 px-2 py-1 rounded text-xs hover:bg-red-500/20 transition">Retirer</button></div></div>`).join(''); }
         
-        document.getElementById('palm-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 16/9, b => { tempPalmImage = b; document.getElementById('palm-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('palm-img-preview').classList.remove('hidden'); }); e.target.value=''; });
+        document.getElementById('palm-img-input').addEventListener('change', e => { const files = Array.from(e.target.files || []); e.target.value=''; if(files.length) queueCropFiles(files, 16/9, b => aerixImgSetAdd('palm', b), 1400, 0.8); });
         document.getElementById('partner-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], NaN, b => { tempPartnerImage = b; document.getElementById('partner-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('partner-img-preview').classList.remove('hidden'); }); e.target.value=''; });
-        document.getElementById('announcement-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 16/9, b => { tempAnnouncementImage = b; document.getElementById('announcement-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('announcement-img-preview').classList.remove('hidden'); }); e.target.value=''; });
+        document.getElementById('announcement-img-input').addEventListener('change', e => { const files = Array.from(e.target.files || []); e.target.value=''; if(files.length) queueCropFiles(files, 16/9, b => aerixImgSetAdd('announcement', b), 1400, 0.8); });
         document.getElementById('gallery-img-input').addEventListener('change', e => { const files = Array.from(e.target.files || []); e.target.value=''; if(files.length) queueCropFiles(files, 1/1, b => { tempGalleryImages.push(b); renderGalleryPreviews(); }); });
         function renderGalleryPreviews() {
             const el = document.getElementById('gallery-img-previews');
             if (!el) return;
             el.innerHTML = tempGalleryImages.map((src, i) => `<div class="relative w-20 h-20 rounded-lg overflow-hidden border border-white/20"><img decoding="async" src="${src}" alt="" class="w-full h-full object-cover"><button type="button" onclick="tempGalleryImages.splice(${i}, 1); renderGalleryPreviews()" class="absolute top-0 right-0 bg-red-500 text-white text-[10px] w-5 h-5 rounded-bl-lg font-bold">✕</button></div>`).join('');
         }
-        document.getElementById('event-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 16/9, b => { tempEventImage = b; document.getElementById('event-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('event-img-preview').classList.remove('hidden'); }, 1200, 0.78); e.target.value=''; });
+        document.getElementById('event-img-input').addEventListener('change', e => { const files = Array.from(e.target.files || []); e.target.value=''; if(files.length) queueCropFiles(files, 16/9, b => aerixImgSetAdd('event', b), 1200, 0.78); });
 
         // Affiche/masque le widget assistant IA en fonction de l'état de la console
         // d'administration. Centralisé ici car la modale admin peut être ouverte/fermée
