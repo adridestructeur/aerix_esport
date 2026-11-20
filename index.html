@@ -5616,7 +5616,7 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
                     
                     <div id="shop-img-previews" class="flex gap-3 flex-wrap mb-4"></div>
                     <button type="button" id="shop-drop-zone" onclick="document.getElementById('shop-img-input').click()" class="bg-white/5 border border-dashed border-white/20 text-gray-400 hover:text-white hover:border-white/40 text-xs font-bold px-4 py-4 rounded-xl w-full mb-6 transition">+ Uploader des images (4:5) — ou glisser-déposer ici</button>
-                    <input type="file" id="shop-img-input" accept="image/*" class="hidden">
+                    <input type="file" id="shop-img-input" accept="image/*" multiple class="hidden">
                     <div class="flex gap-3">
                         <button id="shop-cancel-btn" onclick="resetShopForm()" class="hidden px-6 py-3.5 bg-white/5 border border-white/10 hover:bg-white/10 text-white rounded-xl text-sm font-bold transition">Annuler</button>
                         <button onclick="saveShopItem()" class="flex-1 bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition shadow-[0_0_15px_rgba(139,92,246,0.3)]">Publier le produit</button>
@@ -6065,8 +6065,9 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
                     <div id="gallery-img-preview" class="w-full h-40 bg-white/5 rounded-xl mb-4 hidden bg-cover bg-center border border-white/10 relative">
                         <button type="button" onclick="tempGalleryImage=null; this.parentElement.classList.add('hidden')" class="absolute top-2 right-2 bg-red-500 text-white text-[10px] w-6 h-6 rounded-full font-bold">✕</button>
                     </div>
-                    <button type="button" id="gallery-drop-zone" onclick="document.getElementById('gallery-img-input').click()" class="bg-white/5 border border-dashed border-white/20 text-gray-400 hover:text-white hover:border-white/40 text-xs font-bold px-4 py-4 rounded-xl w-full mb-6 transition">+ Ajouter une photo — ou glisser-déposer ici</button>
-                    <input type="file" id="gallery-img-input" accept="image/*" class="hidden">
+                    <div id="gallery-img-previews" class="flex gap-3 flex-wrap mb-4"></div>
+                    <button type="button" id="gallery-drop-zone" onclick="document.getElementById('gallery-img-input').click()" class="bg-white/5 border border-dashed border-white/20 text-gray-400 hover:text-white hover:border-white/40 text-xs font-bold px-4 py-4 rounded-xl w-full mb-6 transition">+ Ajouter des photos — ou glisser-déposer plusieurs images ici</button>
+                    <input type="file" id="gallery-img-input" accept="image/*" multiple class="hidden">
                     <button onclick="saveGalleryPhoto()" class="w-full bg-aerix-purple text-white font-bold py-3.5 rounded-xl hover:bg-purple-500 transition shadow-[0_0_15px_rgba(139,92,246,0.3)]">Ajouter à la galerie</button>
                     <div id="admin-list-gallery" class="grid grid-cols-3 md:grid-cols-4 gap-3 mt-6"></div>
                 </div>
@@ -10663,18 +10664,27 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
         // GALERIE (AJOUT RAPIDE DE PHOTOS, SANS ARTICLE)
         function resetGalleryForm() {
             document.getElementById('add-gallery-caption').value = ''; document.getElementById('add-gallery-game').value = 'Tous';
-            tempGalleryImage = null; document.getElementById('gallery-img-preview').classList.add('hidden');
+            tempGalleryImage = null; tempGalleryImages = []; renderGalleryPreviews(); document.getElementById('gallery-img-preview').classList.add('hidden');
         }
         async function saveGalleryPhoto() {
-            if (!tempGalleryImage) return showToast("Ajoute une photo.", "error");
+            if (!tempGalleryImages.length) return showToast("Ajoute au moins une photo.", "error");
             const caption = document.getElementById('add-gallery-caption').value;
             const game = document.getElementById('add-gallery-game').value;
+            const total = tempGalleryImages.length;
+            let done = 0;
             try {
-                const image = (await optimizeImageListForFirestore([tempGalleryImage], 500000))[0];
-                if (!image) return showToast("Image invalide.", "error");
-                await db.collection("gallery").add({ caption, game, image, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
-                showToast("Photo ajoutée à la galerie !"); resetGalleryForm();
-            } catch(e) { console.error(e); showToast("Erreur", "error"); }
+                for (const raw of [...tempGalleryImages]) {
+                    const image = (await optimizeImageListForFirestore([raw], 500000))[0];
+                    if (!image) continue;
+                    await db.collection("gallery").add({ caption, game, image, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                    done++;
+                }
+                showToast(done > 1 ? `${done} photos ajoutées à la galerie !` : "Photo ajoutée à la galerie !");
+                resetGalleryForm();
+            } catch(e) {
+                console.error(e);
+                showToast(done ? `${done}/${total} photos ajoutées, puis erreur.` : "Erreur", "error");
+            }
         }
 
         // NAVIGATION & FILTRES
@@ -11064,6 +11074,36 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
             return fallback.toDataURL('image/webp', 0.35);
         }
 
+        // Envoi de plusieurs images : chaque fichier passe tour à tour dans le recadrage.
+        // « Annuler » interrompt le reste de la file.
+        let aerixCropQueue = null;
+        function aerixCropBadge(text) {
+            const modal = document.getElementById('crop-modal');
+            if (!modal) return;
+            let b = document.getElementById('crop-queue-badge');
+            if (!b) {
+                b = document.createElement('div');
+                b.id = 'crop-queue-badge';
+                b.style.cssText = 'position:absolute;top:18px;left:50%;transform:translateX(-50%);padding:.4rem 1rem;border-radius:999px;font-size:.75rem;font-weight:800;letter-spacing:.12em;color:#fff;background:rgba(139,92,246,.85);z-index:5;pointer-events:none';
+                modal.appendChild(b);
+            }
+            b.textContent = text;
+            b.style.display = text ? 'block' : 'none';
+        }
+        function aerixCropQueueStep() {
+            const q = aerixCropQueue;
+            if (!q) return;
+            if (q.i >= q.list.length) { aerixCropQueue = null; aerixCropBadge(''); return; }
+            aerixCropBadge(q.list.length > 1 ? `Image ${q.i + 1} / ${q.list.length}` : '');
+            openCropper(q.list[q.i], q.ratio, b => q.onEach(b), q.maxDim, q.quality);
+        }
+        function queueCropFiles(files, ratio, onEach, maxDim, quality) {
+            const list = Array.from(files || []).filter(f => f && f.type && f.type.startsWith('image/'));
+            if (!list.length) { showToast(currentLang==='en' ? 'Please select an image file.' : 'Sélectionne un fichier image.', 'error'); return; }
+            aerixCropQueue = { list, i: 0, ratio, onEach, maxDim, quality };
+            aerixCropQueueStep();
+        }
+
         function openCropper(file, ratio, callback, maxDim, quality) {
             if (!file || !file.type || !file.type.startsWith('image/')) {
                 showToast(currentLang==='en' ? 'Please select an image file.' : 'Sélectionne un fichier image.', 'error');
@@ -11117,6 +11157,7 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
 
             if (callback && optimized) callback(optimized);
             cropQuality = 0.82;
+            if (aerixCropQueue) { aerixCropQueue.i++; setTimeout(aerixCropQueueStep, 80); }
         }
 
         function ensureFirestoreImageBudget(images, maxTotalChars = FIRESTORE_DOC_SAFE_CHARS) {
@@ -11163,7 +11204,7 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
             }
             return optimized;
         }
-        function cancelCrop() { document.getElementById('crop-modal').classList.add('hidden'); if (cropper) cropper.destroy(); cropper = null; cropCallback = null; const img = document.getElementById('crop-image'); if (img) img.src = ''; }
+        function cancelCrop() { aerixCropQueue = null; aerixCropBadge(''); document.getElementById('crop-modal').classList.add('hidden'); if (cropper) cropper.destroy(); cropper = null; cropCallback = null; const img = document.getElementById('crop-image'); if (img) img.src = ''; }
 
         // DRAG & DROP GÉNÉRIQUE POUR LES ZONES D'UPLOAD ADMIN (boutique, effectifs, palmarès,
         // annonces, galerie, partenaires) : permet de glisser-déposer une image directement sur
@@ -11186,16 +11227,21 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
             zoneEl.addEventListener('drop', e => {
                 e.preventDefault(); e.stopPropagation();
                 zoneEl.classList.remove('drop-zone-active');
-                const file = e.dataTransfer?.files?.[0];
-                if (!file || !file.type.startsWith('image/')) return;
+                const dropped = Array.from(e.dataTransfer?.files || []).filter(f => f.type && f.type.startsWith('image/'));
+                if (!dropped.length) return;
+                const accepted = input.multiple ? dropped : dropped.slice(0, 1);
+                if (!input.multiple && dropped.length > 1) showToast(currentLang==='en' ? 'Only one image is accepted here — the first one was used.' : 'Une seule image est acceptée ici : la première a été utilisée.');
                 // Réutilise le même DataTransfer que l'input pour déclencher son event 'change'
                 // existant (et donc le même pipeline de recadrage / compression déjà en place).
                 const dt = new DataTransfer();
-                dt.items.add(file);
+                accepted.forEach(f => dt.items.add(f));
                 input.files = dt.files;
                 input.dispatchEvent(new Event('change', { bubbles: true }));
             });
         }
+        ['dragover', 'drop'].forEach(evt => window.addEventListener(evt, e => {
+            if (e.dataTransfer && Array.from(e.dataTransfer.types || []).includes('Files') && !e.target.closest?.('[data-drop-enabled]')) e.preventDefault();
+        }));
         function initImageDropZones() {
             [
                 ['shop-drop-zone', 'shop-img-input'],
@@ -11208,10 +11254,10 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
             ].forEach(([zoneId, inputId]) => enableImageDropZone(document.getElementById(zoneId), inputId));
         }
 
-        let tempShopImages = [], tempPlayerAvatar = null, tempPlayers = [], tempPartnerImage = null, tempAnnouncementImage = null, tempPalmImage = null, tempGalleryImage = null, tempEventImage = null;
+        let tempShopImages = [], tempPlayerAvatar = null, tempPlayers = [], tempPartnerImage = null, tempAnnouncementImage = null, tempPalmImage = null, tempGalleryImage = null, tempGalleryImages = [], tempEventImage = null;
         const defaultAvatar = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E";
         
-        document.getElementById('shop-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 4/5, b => { tempShopImages.push(b); renderShopPreviews(); }); e.target.value=''; });
+        document.getElementById('shop-img-input').addEventListener('change', e => { const files = Array.from(e.target.files || []); e.target.value=''; if(files.length) queueCropFiles(files, 4/5, b => { tempShopImages.push(b); renderShopPreviews(); }); });
         function renderShopPreviews() { document.getElementById('shop-img-previews').innerHTML = tempShopImages.map((src, i) => `<div class="relative w-16 h-20 rounded-lg overflow-hidden border border-white/20"><img loading="lazy" decoding="async" src="${src}" alt="" class="w-full h-full object-cover"><button type="button" onclick="tempShopImages.splice(${i}, 1); renderShopPreviews()" class="absolute top-0 right-0 bg-red-500/90 text-white text-[10px] w-5 h-5">✕</button></div>`).join(''); }
         
         document.getElementById('player-avatar-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 3/4, b => { tempPlayerAvatar = b; document.getElementById('player-avatar-preview').src = b; }, 1200, 0.9); e.target.value=''; });
@@ -11294,7 +11340,12 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
         document.getElementById('palm-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 16/9, b => { tempPalmImage = b; document.getElementById('palm-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('palm-img-preview').classList.remove('hidden'); }); e.target.value=''; });
         document.getElementById('partner-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], NaN, b => { tempPartnerImage = b; document.getElementById('partner-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('partner-img-preview').classList.remove('hidden'); }); e.target.value=''; });
         document.getElementById('announcement-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 16/9, b => { tempAnnouncementImage = b; document.getElementById('announcement-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('announcement-img-preview').classList.remove('hidden'); }); e.target.value=''; });
-        document.getElementById('gallery-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 1/1, b => { tempGalleryImage = b; document.getElementById('gallery-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('gallery-img-preview').classList.remove('hidden'); }); e.target.value=''; });
+        document.getElementById('gallery-img-input').addEventListener('change', e => { const files = Array.from(e.target.files || []); e.target.value=''; if(files.length) queueCropFiles(files, 1/1, b => { tempGalleryImages.push(b); renderGalleryPreviews(); }); });
+        function renderGalleryPreviews() {
+            const el = document.getElementById('gallery-img-previews');
+            if (!el) return;
+            el.innerHTML = tempGalleryImages.map((src, i) => `<div class="relative w-20 h-20 rounded-lg overflow-hidden border border-white/20"><img decoding="async" src="${src}" alt="" class="w-full h-full object-cover"><button type="button" onclick="tempGalleryImages.splice(${i}, 1); renderGalleryPreviews()" class="absolute top-0 right-0 bg-red-500 text-white text-[10px] w-5 h-5 rounded-bl-lg font-bold">✕</button></div>`).join('');
+        }
         document.getElementById('event-img-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 16/9, b => { tempEventImage = b; document.getElementById('event-img-preview').style.backgroundImage = `url(${b})`; document.getElementById('event-img-preview').classList.remove('hidden'); }, 1200, 0.78); e.target.value=''; });
 
         // Affiche/masque le widget assistant IA en fonction de l'état de la console
