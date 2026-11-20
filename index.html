@@ -5783,29 +5783,22 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <input type="text" id="add-palm-title" placeholder="Compétition (ex: RLCS Qualifiers)" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple transition font-bold">
                         <select id="add-palm-game" onchange="togglePalmaresFields()" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple transition">
-                            <option value="Rocket League">Rocket League</option>
                             <option value="Le Mans Ultimate">Le Mans Ultimate (Simracing)</option>
                             <option value="RBR">RBR (Richard Burns Rally)</option>
                             <option value="iRacing">iRacing</option>
                         </select>
                     </div>
 
-                    <!-- Champs spécifiques ROCKET LEAGUE -->
-                    <div id="palm-fields-rl" class="grid grid-cols-3 gap-4 mb-4">
-                        <input type="text" id="add-palm-opponent" placeholder="Adversaire (ex: Karmine Corp)" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple transition">
-                        <input type="text" id="add-palm-score" placeholder="Score (ex: 4 - 2)" class="text-center font-black bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-lg outline-none focus:border-aerix-purple transition">
-                        <select id="add-palm-result" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white font-bold text-sm outline-none focus:border-aerix-purple transition">
-                            <option value="Victoire" class="text-aerix-win">🏆 Victoire</option>
-                            <option value="Défaite" class="text-aerix-loss">❌ Défaite</option>
-                        </select>
-                    </div>
-
-                    <!-- Champs spécifiques SIMRACING (Cachés par défaut) -->
-                    <div id="palm-fields-sim" class="grid grid-cols-3 gap-4 mb-4 hidden">
+                    <!-- Champs de résultats simracing -->
+                    <div id="palm-fields-sim" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                         <input type="text" id="add-palm-position" placeholder="Position (ex: P1, Top 10)" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm font-bold outline-none focus:border-aerix-lmu transition">
                         <input type="text" id="add-palm-split" placeholder="Catégorie / Split (ex: GTE, Split 2)" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-lmu transition">
                         <input type="text" id="add-palm-car" placeholder="Voiture (ex: Porsche 911 RSR)" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-lmu transition">
                     </div>
+                    <label class="flex items-center gap-3 rounded-xl border border-amber-400/20 bg-amber-400/5 p-4 mb-4 cursor-pointer">
+                        <input type="checkbox" id="add-palm-pole-position" class="w-5 h-5 accent-amber-400">
+                        <span class="text-sm font-bold text-white">Pole position obtenue ?</span>
+                    </label>
 
                     <div class="grid grid-cols-1 gap-4 mb-4">
                         <input type="text" id="add-palm-date" placeholder="Date (ex: 12 Mars 2026)" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple transition">
@@ -8232,7 +8225,7 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
             const position = p => { const raw=String(p.position||p.result||'').trim().toLowerCase(); const m=raw.match(/^p?\s*(\d+)/)||raw.match(/(\d+)\s*(?:er|e|ème|eme)/); return m?Number(m[1]):null; };
             const top5=results.filter(p=>{const n=position(p);return (n!==null&&n<=5)||/top\s*5|top\s*cinq/.test(details(p));}).length;
             const podiums=results.filter(p=>{const n=position(p);return (n!==null&&n<=3)||/podium|top\s*3/.test(details(p));}).length;
-            const poles=results.filter(p=>/pole\s*position/.test(details(p))).length;
+            const poles=results.filter(p=>p.polePosition === true || /pole\s*position/.test(details(p))).length;
             const EN = currentLang==='en';
             const ICO = {
                 flag:'<path d="M5 21V4"/><path d="M5 4h13l-2.5 4 2.5 4H5"/>',
@@ -10258,14 +10251,8 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
 
         // --- EDITION PALMARÈS (DYNAMIQUE RL / SIMRACING) ---
         function togglePalmaresFields() {
-            const game = document.getElementById('add-palm-game').value;
-            if (game === 'Rocket League') {
-                document.getElementById('palm-fields-rl').classList.remove('hidden');
-                document.getElementById('palm-fields-sim').classList.add('hidden');
-            } else {
-                document.getElementById('palm-fields-rl').classList.add('hidden');
-                document.getElementById('palm-fields-sim').classList.remove('hidden');
-            }
+            // Le formulaire de création est désormais dédié au simracing.
+            document.getElementById('palm-fields-sim')?.classList.remove('hidden');
         }
 
         function startEditPalmares(id) {
@@ -10273,27 +10260,29 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
             document.getElementById('edit-palmares-id').value = item.id;
             document.getElementById('add-palm-title').value = item.title;
             document.getElementById('add-palm-date').value = item.date || '';
-            document.getElementById('add-palm-game').value = item.game || 'Rocket League';
+            document.getElementById('add-palm-game').value = item.game || 'Le Mans Ultimate';
+            // Compatibilité : les anciens résultats Rocket League restent éditables sans réafficher leurs champs spécifiques.
+            if (item.game === 'Rocket League' && ![...document.getElementById('add-palm-game').options].some(o => o.value === 'Rocket League')) {
+                const legacyOption = document.createElement('option'); legacyOption.value = 'Rocket League'; legacyOption.textContent = 'Rocket League (ancien résultat)'; legacyOption.hidden = true;
+                document.getElementById('add-palm-game').appendChild(legacyOption);
+            }
             setMdEditorValue('add-palm-desc', aerixDescToMarkdown(item.desc, item.descFormat));
             
             togglePalmaresFields(); // Met à jour l'affichage selon le jeu choisi
             
-            // RL Fields
-            document.getElementById('add-palm-opponent').value = item.opponent || '';
-            document.getElementById('add-palm-score').value = item.score || '';
-            document.getElementById('add-palm-result').value = item.result || 'Victoire';
             // Simracing Fields
             document.getElementById('add-palm-position').value = normalizeSimracingPosition(item.position);
             document.getElementById('add-palm-split').value = item.split || '';
             document.getElementById('add-palm-car').value = item.car || '';
+            document.getElementById('add-palm-pole-position').checked = item.polePosition === true;
             
             aerixImgSetLoad('palm', item);
             document.getElementById('palmares-form-title').innerText = "Modifier le Résultat"; document.getElementById('palmares-cancel-btn').classList.remove('hidden');
         }
         
         function resetPalmaresForm() {
-            document.getElementById('edit-palmares-id').value = ''; document.getElementById('add-palm-title').value = ''; document.getElementById('add-palm-date').value = ''; document.getElementById('add-palm-game').value = 'Rocket League';
-            document.getElementById('add-palm-opponent').value = ''; document.getElementById('add-palm-score').value = ''; document.getElementById('add-palm-result').value = 'Victoire';
+            document.getElementById('edit-palmares-id').value = ''; document.getElementById('add-palm-title').value = ''; document.getElementById('add-palm-date').value = ''; document.getElementById('add-palm-game').value = 'Le Mans Ultimate';
+            const legacyOption = [...document.getElementById('add-palm-game').options].find(o => o.value === 'Rocket League'); if (legacyOption) legacyOption.remove();
             document.getElementById('add-palm-position').value = ''; document.getElementById('add-palm-split').value = ''; document.getElementById('add-palm-car').value = '';
             setMdEditorValue('add-palm-desc', '');
             
@@ -10312,14 +10301,11 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
             const __pimgs = await aerixImgSetOptimized('palm'); if (!__pimgs) return;
             let data = { title, date, game, image: __pimgs.image, images: __pimgs.images, desc, descFormat: 'md' };
 
-            if(game === 'Rocket League') {
-                data.opponent = document.getElementById('add-palm-opponent').value;
-                data.score = document.getElementById('add-palm-score').value;
-                data.result = document.getElementById('add-palm-result').value;
-            } else {
+            if (game !== 'Rocket League') {
                 data.position = normalizeSimracingPosition(document.getElementById('add-palm-position').value);
                 data.split = document.getElementById('add-palm-split').value;
                 data.car = document.getElementById('add-palm-car').value;
+                data.polePosition = document.getElementById('add-palm-pole-position').checked;
             }
 
             try {
