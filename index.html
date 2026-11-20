@@ -4612,6 +4612,13 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
 }
 @media (prefers-reduced-motion:reduce){#page-palmares .pal-stat-bar i{animation:none}}
 </style>
+<style id="aerix-v19b-palmares-header">
+#page-palmares > .mb-14{display:flex;flex-direction:column;align-items:center}
+#page-palmares > .mb-14 > h2{display:flex;justify-content:center;width:100%;margin-bottom:.9rem}
+#page-palmares > .mb-14 > h3{display:block;margin-bottom:2.75rem}
+#page-palmares #palmares-view-toggle{display:flex;width:fit-content;margin:0 auto 1.75rem}
+#page-palmares #filters-palmares{margin-top:.25rem}
+</style>
 </head>
 <body class="antialiased selection:bg-purple-500 selection:text-white min-h-screen flex flex-col relative">
 <div id="aerix-staff-preview-banner" role="status" aria-live="polite">
@@ -5619,6 +5626,10 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
 
             <!-- TAB: EFFECTIFS -->
             <div id="admin-tab-effectifs" class="admin-tab hidden space-y-8">
+                <label class="flex items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/5 p-4 cursor-pointer">
+                    <span class="min-w-0"><span class="block text-sm font-bold text-white">Masquer la pastille « Rocket League »</span><span class="block text-xs text-gray-400 mt-1">Retire uniquement le bouton de filtre « Rocket League » sur la page Effectifs. Les données ne sont pas supprimées.</span></span>
+                    <input type="checkbox" data-hide-rl-filter="effectifs" onchange="saveHiddenFilter('effectifs', this.checked)" class="accent-purple-500 w-5 h-5 shrink-0">
+                </label>
                 <div id="effectif-sync-panel" class="hidden">
                     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div class="min-w-0">
@@ -5759,6 +5770,10 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
 
             <!-- TAB: PALMARÈS -->
             <div id="admin-tab-palmares" class="admin-tab hidden space-y-8">
+                <label class="flex items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/5 p-4 cursor-pointer">
+                    <span class="min-w-0"><span class="block text-sm font-bold text-white">Masquer la pastille « Rocket League »</span><span class="block text-xs text-gray-400 mt-1">Retire uniquement le bouton de filtre « Rocket League » sur la page Résultats. Les données ne sont pas supprimées.</span></span>
+                    <input type="checkbox" data-hide-rl-filter="palmares" onchange="saveHiddenFilter('palmares', this.checked)" class="accent-purple-500 w-5 h-5 shrink-0">
+                </label>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="admin-list-palmares"></div>
                 <div><h4 class="text-sm font-bold text-gray-300 uppercase tracking-widest mb-3">Palmarès globaux</h4><div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="admin-list-achievements"></div></div>
                 <div class="glass-panel glass-panel-form p-6 rounded-2xl border border-white/5">
@@ -6835,7 +6850,7 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
 
         // RÉGLAGES GLOBAUX DU SITE (Firestore: siteConfig/public)
         const DEFAULT_SITE_NAV_LABELS = { fr:{histoire:'Histoire',effectifs:'Effectifs',palmares:'Palmarès',competition:'Compétition',tournoi:'Tournoi',performance:'Performance',partenaires:'Partenaires',boutique:'Boutique',annonces:'Annonces',media:'Média',coaching:'Coaching'}, en:{histoire:'About',effectifs:'Teams',palmares:'Achievements',competition:'Competitions',tournoi:'Tournaments',performance:'Performance',partenaires:'Partners',boutique:'Shop',annonces:'News',media:'Media',coaching:'Coaching'} };
-        const DEFAULT_SITE_SETTINGS = { hiddenSections: [], navLabels:{}, maintenance: false, maintenanceMessage: 'Le site AERIX est temporairement en maintenance. Nous revenons bientôt.', heroImage: '', heroSize: 190 };
+        const DEFAULT_SITE_SETTINGS = { hiddenSections: [], navLabels:{}, maintenance: false, maintenanceMessage: 'Le site AERIX est temporairement en maintenance. Nous revenons bientôt.', heroImage: '', heroSize: 190, hiddenFilters: {} };
         let currentSiteSettings = (() => {
             try {
                 const cached = JSON.parse(localStorage.getItem('aerixSiteSettingsCache') || 'null');
@@ -6854,8 +6869,50 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
             document.documentElement.style.setProperty('--aerix-hero-h', size + 'px');
             ['site-hero-size-range','site-hero-size-number'].forEach(id => { const el = document.getElementById(id); if (el && document.activeElement !== el) el.value = size; });
         }
+        const HIDEABLE_FILTER_SECTIONS = { effectifs: 'Staff', palmares: 'Tous' };
+        function applyHiddenFilters() {
+            const hf = (currentSiteSettings.hiddenFilters && typeof currentSiteSettings.hiddenFilters === 'object') ? currentSiteSettings.hiddenFilters : {};
+            Object.keys(HIDEABLE_FILTER_SECTIONS).forEach(section => {
+                const hideRL = Array.isArray(hf[section]) && hf[section].includes('Rocket League');
+                document.querySelectorAll(`#filters-${section} [data-filter="Rocket League"]`).forEach(btn => { btn.style.display = hideRL ? 'none' : ''; });
+                document.querySelectorAll(`[data-hide-rl-filter="${section}"]`).forEach(input => { input.checked = hideRL; });
+                if (typeof currentFilters !== 'undefined' && hideRL) {
+                  if (section === 'palmares' && typeof renderPalmares === 'function' && document.getElementById('palmares-container')) renderPalmares();
+                }
+                if (hideRL && typeof currentFilters !== 'undefined' && currentFilters[section] === 'Rocket League') {
+                    currentFilters[section] = HIDEABLE_FILTER_SECTIONS[section];
+                    updateFilterUI(section);
+                    if (section === 'effectifs' && typeof renderEffectifs === 'function') renderEffectifs();
+                    if (section === 'palmares' && typeof renderPalmares === 'function') renderPalmares();
+                }
+            });
+        }
+        function isRLHidden(section) {
+            const hf = currentSiteSettings && currentSiteSettings.hiddenFilters;
+            return !!(hf && Array.isArray(hf[section]) && hf[section].includes('Rocket League'));
+        }
+        async function saveHiddenFilter(section, hide) {
+            if (!isOwner()) { showToast('Seul le Owner peut modifier ce réglage.', 'error'); applyHiddenFilters(); return; }
+            const hiddenFilters = { ...(currentSiteSettings.hiddenFilters || {}) };
+            hiddenFilters[section] = hide ? ['Rocket League'] : [];
+            try {
+                await db.collection('siteConfig').doc('public').set({ hiddenFilters, updatedAt: firebase.firestore.FieldValue.serverTimestamp(), updatedBy: currentUser.uid }, { merge: true });
+                currentSiteSettings = { ...currentSiteSettings, hiddenFilters };
+                try { localStorage.setItem('aerixSiteSettingsCache', JSON.stringify(currentSiteSettings)); } catch(e) {}
+                applyHiddenFilters();
+                if (typeof renderPalmares === 'function' && palmaresView === 'resultats') renderPalmares();
+                if (typeof renderAchievements === 'function' && palmaresView === 'palmares') renderAchievements();
+                if (typeof renderEffectifs === 'function') renderEffectifs();
+                showToast(hide ? 'Pastille Rocket League masquée.' : 'Pastille Rocket League affichée.', 'success');
+            } catch (error) {
+                console.error('saveHiddenFilter', error.code, error.message);
+                showToast(error.code === 'permission-denied' ? 'Refusé par Firestore (permission-denied).' : 'Échec de l’enregistrement.', 'error');
+                applyHiddenFilters();
+            }
+        }
         function applySiteSettings() {
             applyHeroSize();
+            applyHiddenFilters();
             const hidden = new Set(Array.isArray(currentSiteSettings.hiddenSections) ? currentSiteSettings.hiddenSections : []);
             SITE_SECTION_IDS.forEach(id => {
                 const nav = document.getElementById('nav-' + id);
@@ -6982,8 +7039,9 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
             let heroImage = siteHeroImageDraft === null ? (currentSiteSettings.heroImage || '') : siteHeroImageDraft;
             if (heroImage && heroImage.length > 450000) return showToast('Image trop volumineuse après compression. Choisis une image plus légère.', 'error');
             try {
-                await db.collection('siteConfig').doc('public').set({ hiddenSections, navLabels, maintenance, maintenanceMessage, heroImage, heroSize, updatedAt: firebase.firestore.FieldValue.serverTimestamp(), updatedBy: currentUser.uid });
-                currentSiteSettings = { ...currentSiteSettings, hiddenSections, navLabels, maintenance, maintenanceMessage, heroImage, heroSize };
+                const hiddenFilters = (currentSiteSettings.hiddenFilters && typeof currentSiteSettings.hiddenFilters === 'object') ? currentSiteSettings.hiddenFilters : {};
+                await db.collection('siteConfig').doc('public').set({ hiddenSections, navLabels, maintenance, maintenanceMessage, heroImage, heroSize, hiddenFilters, updatedAt: firebase.firestore.FieldValue.serverTimestamp(), updatedBy: currentUser.uid });
+                currentSiteSettings = { ...currentSiteSettings, hiddenSections, navLabels, maintenance, maintenanceMessage, heroImage, heroSize, hiddenFilters };
                 siteHeroImageDraft = null;
                 try { localStorage.setItem('aerixSiteSettingsCache', JSON.stringify(currentSiteSettings)); } catch(e) {}
                 applySiteSettings();
@@ -7820,6 +7878,7 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
             for (const key of Object.keys(aerixPlayerRegistry)) delete aerixPlayerRegistry[key];
             aerixPlayerRegistrySeq = 0;
             const sortedEffectifs = [...globalEffectifs]
+                .filter(r => !(isRLHidden('effectifs') && r.game === 'Rocket League'))
                 .map((roster, index) => ({ ...roster, __sourceIndex: index }))
                 .sort((a, b) => {
                     const aHasOrder = Number.isFinite(Number(a.order));
@@ -8173,7 +8232,7 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
             const container = document.getElementById('achievements-container');
             if (!container) return;
             const stats = document.getElementById('achievements-stats');
-            const results = Array.isArray(globalPalmares) ? globalPalmares : [];
+            const results = (Array.isArray(globalPalmares) ? globalPalmares : []).filter(p => !(isRLHidden('palmares') && p.game === 'Rocket League'));
             const details = p => [p.position,p.result,p.title,p.description,p.split,p.category].filter(Boolean).join(' ').toLowerCase();
             const position = p => { const raw=String(p.position||p.result||'').trim().toLowerCase(); const m=raw.match(/^p?\s*(\d+)/)||raw.match(/(\d+)\s*(?:er|e|ème|eme)/); return m?Number(m[1]):null; };
             const top5=results.filter(p=>{const n=position(p);return (n!==null&&n<=5)||/top\s*5|top\s*cinq/.test(details(p));}).length;
@@ -8239,7 +8298,8 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
 
         // RÉSULTATS (PALMARÈS) FRONT-END
         function renderPalmares() {
-            let filtered = currentFilters.palmares === 'Tous' ? globalPalmares : globalPalmares.filter(p => (p.game || 'Tous') === currentFilters.palmares);
+            const __src = isRLHidden('palmares') ? globalPalmares.filter(p => p.game !== 'Rocket League') : globalPalmares;
+            let filtered = currentFilters.palmares === 'Tous' ? __src : __src.filter(p => (p.game || 'Tous') === currentFilters.palmares);
             filtered = sortByDateDesc(filtered);
             const container = document.getElementById('palmares-container');
             let __html = '';
