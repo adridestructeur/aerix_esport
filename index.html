@@ -7042,6 +7042,8 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
 
         // AERIX SERIES : Group Stage en double élimination (Day 1) puis playoffs (Day 2).
         const TOURNAMENT_DOC = 'aerix-series-1';
+        // À incrémenter quand les équipes / résultats par défaut changent : force la mise à jour du tableau public.
+        const TOURNAMENT_SEED_VERSION = 3;
         let tournamentData = null;
         const defaultTournament = () => {
           const teams = [
@@ -7051,7 +7053,7 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
             'Senka Esport', 'Team XR',
             'BLF Esport', 'AToM IDC',
             'TGOG', '200kMonLilypad',
-            'Yota Corp', 'Electium',
+            'Yøta Corp', 'Electium',
             'BYE', 'La 4Keus'
           ].map(name => ({ name, logo: '' }));
           // Chaque élément de games représente une manche gagnée par A ou B.
@@ -7062,6 +7064,7 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
           });
           return {
             schemaVersion: 2,
+            seedVersion: TOURNAMENT_SEED_VERSION,
             teams,
             scores: {
               // GROUP A — Upper Bracket
@@ -7108,7 +7111,7 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
               ubsf:[matchDef(`g${group}us1`,'UB Semifinal 1',{winner:`g${group}uq1`},{winner:`g${group}uq2`}),matchDef(`g${group}us2`,'UB Semifinal 2',{winner:`g${group}uq3`},{winner:`g${group}uq4`})],
               ubf:[matchDef(`g${group}uf`,'Upper Bracket Final',{winner:`g${group}us1`},{winner:`g${group}us2`})],
               lbqf:[matchDef(`g${group}lq1`,'LB Quarterfinal 1',{loser:`g${group}uq1`},{loser:`g${group}uq2`}),matchDef(`g${group}lq2`,'LB Quarterfinal 2',{loser:`g${group}uq3`},{loser:`g${group}uq4`})],
-              lbsf:[matchDef(`g${group}ls1`,'LB Semifinal 1',{winner:`g${group}lq1`},{loser:`g${group}us1`}),matchDef(`g${group}ls2`,'LB Semifinal 2',{winner:`g${group}lq2`},{loser:`g${group}us2`})],
+              lbsf:[matchDef(`g${group}ls1`,'LB Semifinal 1',{loser:`g${group}us2`},{winner:`g${group}lq1`}),matchDef(`g${group}ls2`,'LB Semifinal 2',{loser:`g${group}us1`},{winner:`g${group}lq2`})],
               lbf:[matchDef(`g${group}lf`,'Lower Bracket Final',{winner:`g${group}ls1`},{winner:`g${group}ls2`})]
             };
         }
@@ -7395,11 +7398,21 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
             const raw=snap.exists?snap.data():null;
             if (raw && raw.schemaVersion === 2) {
               const hasSavedScores = raw.scores && !Array.isArray(raw.scores) && Object.keys(raw.scores).length > 0;
-              const hasRealTeamNames = Array.isArray(raw.teams) && raw.teams.some(t => t && t.name && !/^Équipe\\s+\\d+$/i.test(String(t.name).trim()));
+              const hasRealTeamNames = Array.isArray(raw.teams) && raw.teams.some(t => t && t.name && !/^Équipe\s+\d+$/i.test(String(t.name).trim()));
               // Un document Firestore encore vierge (équipes génériques, aucun score)
               // reçoit le tableau prérempli. Un tournoi déjà commencé reste inchangé.
               const isBlankBracket = !hasSavedScores && !hasRealTeamNames;
-              tournamentData = isBlankBracket ? defaultTournament() : { ...defaultTournament(), ...raw };
+              if (isBlankBracket || raw.seedVersion !== TOURNAMENT_SEED_VERSION) {
+                // Nouvelle version du tableau : on repart des données par défaut en gardant les logos déjà importés (par nom d'équipe).
+                const base = defaultTournament();
+                const oldLogos = {};
+                (raw.teams || []).forEach(t => { if (t && t.name && t.logo) oldLogos[String(t.name).trim().toLowerCase()] = t.logo; });
+                base.teams = base.teams.map(t => ({ ...t, logo: oldLogos[t.name.toLowerCase()] || '' }));
+                if (raw.discordSync) base.discordSync = raw.discordSync;
+                tournamentData = base;
+              } else {
+                tournamentData = { ...defaultTournament(), ...raw };
+              }
             } else {
               tournamentData = defaultTournament();
             }
