@@ -1009,7 +1009,20 @@ body.theme-light {
     .delay-200 { transition-delay: 0.1s; }
     .delay-300 { transition-delay: 0.15s; }
     
-    #crop-image-container { max-height: 50vh; }
+    /* STUDIO DE RECADRAGE */
+    #crop-image-container { height: clamp(260px, 48vh, 560px); }
+    #crop-modal .cropper-container { max-width: 100%; }
+    .cs-toolbar { display:flex; flex-wrap:wrap; gap:10px 20px; align-items:center; margin-bottom:12px; }
+    .cs-group { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+    .cs-label { font-size:10px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:#8b8b96; margin-right:2px; }
+    .cs-chip { display:inline-flex; align-items:center; gap:6px; padding:.42rem .75rem; font-size:12px; font-weight:700; color:#d4d4d8; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1); border-radius:10px; cursor:pointer; transition:all .15s; line-height:1; }
+    .cs-chip:hover { background:rgba(255,255,255,.1); color:#fff; }
+    .cs-chip.active { background:rgba(139,92,246,.22); border-color:rgba(139,92,246,.85); color:#fff; box-shadow:0 0 12px rgba(139,92,246,.35); }
+    .cs-sw { width:12px; height:12px; border-radius:50%; border:1px solid rgba(255,255,255,.35); display:inline-block; }
+    .cs-sw-checker { background:repeating-conic-gradient(#777 0% 25%, #333 0% 50%) 50%/8px 8px; }
+    .cs-color { width:30px; height:30px; padding:0; border:1px solid rgba(255,255,255,.15); border-radius:10px; background:transparent; cursor:pointer; }
+    #cs-zoom { width:110px; accent-color:#8b5cf6; }
+    .cs-hidden { display:none !important; }
     .object-top-custom { object-position: 50% 15%; }
 
     /* PILL & LOGO GLOW */
@@ -5438,11 +5451,42 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
 
     <!-- CROP STUDIO -->
     <div id="crop-modal" style="z-index:100500" class="fixed inset-0 z-[300] hidden flex items-center justify-center bg-black/98 p-6 backdrop-blur-2xl" role="dialog" aria-modal="true" aria-label="Fenêtre de dialogue">
-        <div class="glass-panel w-full max-w-4xl rounded-[2rem] p-6 flex flex-col shadow-[0_0_50px_rgba(0,0,0,0.8)] border border-white/10">
+        <div class="glass-panel w-full max-w-4xl rounded-[2rem] p-6 flex flex-col shadow-[0_0_50px_rgba(0,0,0,0.8)] border border-white/10 max-h-[96vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-3">
                 <h3 class="text-xl font-bold text-white flex items-center gap-2"><svg class="w-5 h-5 text-aerix-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> Studio de recadrage</h3>
             </div>
-            <div class="w-full bg-[#030303] rounded-xl overflow-hidden relative border border-white/5 shadow-inner" id="crop-image-container" style="height: 60vh;">
+            <div class="cs-toolbar" id="crop-toolbar">
+                <div class="cs-group" id="cs-g-modes"><span class="cs-label">Mode</span>
+                    <button type="button" class="cs-chip" data-cs-mode="fit" onclick="csSetMode('fit')" title="Toute l'image reste visible, le fond complète le format">Ajuster (entier)</button>
+                    <button type="button" class="cs-chip" data-cs-mode="fill" onclick="csSetMode('fill')" title="L'image remplit tout le cadre">Remplir</button>
+                    <button type="button" class="cs-chip" data-cs-mode="free" onclick="csSetMode('free')" title="Cadre libre, sans format imposé">Libre</button>
+                </div>
+                <div class="cs-group" id="cs-g-ratios"><span class="cs-label">Format</span>
+                    <button type="button" class="cs-chip" data-cs-ratio="4:5" onclick="csSetRatio('4:5')">4:5</button>
+                    <button type="button" class="cs-chip" data-cs-ratio="1:1" onclick="csSetRatio('1:1')">1:1</button>
+                    <button type="button" class="cs-chip" data-cs-ratio="3:4" onclick="csSetRatio('3:4')">3:4</button>
+                    <button type="button" class="cs-chip" data-cs-ratio="4:3" onclick="csSetRatio('4:3')">4:3</button>
+                    <button type="button" class="cs-chip" data-cs-ratio="16:9" onclick="csSetRatio('16:9')">16:9</button>
+                    <button type="button" class="cs-chip" data-cs-ratio="orig" onclick="csSetRatio('orig')">Original</button>
+                </div>
+                <div class="cs-group" id="cs-g-bg"><span class="cs-label">Fond</span>
+                    <button type="button" class="cs-chip" data-cs-bg="auto" onclick="csSetBg('auto')"><span class="cs-sw" id="cs-sw-auto"></span>Auto</button>
+                    <button type="button" class="cs-chip" data-cs-bg="transparent" onclick="csSetBg('transparent')"><span class="cs-sw cs-sw-checker"></span>Transparent</button>
+                    <button type="button" class="cs-chip" data-cs-bg="black" onclick="csSetBg('black')"><span class="cs-sw" style="background:#000"></span>Noir</button>
+                    <button type="button" class="cs-chip" data-cs-bg="white" onclick="csSetBg('white')"><span class="cs-sw" style="background:#fff"></span>Blanc</button>
+                    <input type="color" id="cs-custom-bg" class="cs-color" value="#0b0b10" title="Couleur personnalisée" oninput="csSetBg('custom', this.value)">
+                </div>
+                <div class="cs-group" id="cs-g-tools"><span class="cs-label">Image</span>
+                    <button type="button" class="cs-chip" onclick="csZoomStep(-0.1)" title="Dézoomer">−</button>
+                    <input type="range" id="cs-zoom" min="0.2" max="4" step="0.01" value="1" oninput="csZoomInput(this.value)" aria-label="Zoom">
+                    <button type="button" class="cs-chip" onclick="csZoomStep(0.1)" title="Zoomer">+</button>
+                    <button type="button" class="cs-chip" onclick="csRotate(-90)" title="Pivoter à gauche">⟲</button>
+                    <button type="button" class="cs-chip" onclick="csRotate(90)" title="Pivoter à droite">⟳</button>
+                    <button type="button" class="cs-chip" onclick="csFlip()" title="Miroir">⇋</button>
+                    <button type="button" class="cs-chip" onclick="csReset()" title="Recentrer / réinitialiser">Réinit.</button>
+                </div>
+            </div>
+            <div class="w-full bg-[#030303] rounded-xl overflow-hidden relative border border-white/5 shadow-inner" id="crop-image-container">
                 <img id="crop-image" src="" class="block max-w-full" alt="Image AERIX">
             </div>
             <div class="flex justify-end gap-3 mt-6">
@@ -6524,7 +6568,7 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
                 'Mesure d’audience':'Analytics','Autorise les outils d’analyse d’audience lorsqu’ils sont activés par AERIX.':'Allows analytics tools when enabled by AERIX.',
                 'Votre choix est enregistré localement. Aucun outil d’analyse facultatif ne doit être chargé avant votre consentement.':'Your choice is stored locally. No optional analytics tool should load before your consent.',
                 'Enregistrer mes choix':'Save my choices','Accès Sécurisé':'Secure access',"Panel d'administration AERIX":'AERIX administration panel','Mot de passe...':'Password...','Annuler':'Cancel','Connexion':'Sign in',
-                'Studio de recadrage':'Crop studio',"Valider l'image":'Confirm image','Boutique AERIX':'AERIX Shop','Tailles Disponibles':'Available sizes','Nom Complet':'Full name','Âge':'Age','Nationalité':'Nationality',
+                'Studio de recadrage':'Crop studio','Ajuster (entier)':'Fit (whole image)','Remplir':'Fill','Format':'Ratio','Fond':'Background','Transparent':'Transparent','Blanc':'White','Réinit.':'Reset',"Valider l'image":'Confirm image','Boutique AERIX':'AERIX Shop','Tailles Disponibles':'Available sizes','Nom Complet':'Full name','Âge':'Age','Nationalité':'Nationality',
                 'Éditer':'Edit','Suppr':'Delete','Ajouter un produit':'Add a product','Nom du produit':'Product name','Prix (€)':'Price (€)','Description du produit...':'Product description...',
                 'Uploader des images (4:5)':'Upload images (4:5)','Publier le produit':'Publish product','Créer un Roster':'Create a roster','Nom du Roster (ex: GC2, Endurance...)':'Roster name (e.g. GC2, Endurance...)',
                 'Jeu / Catégorie Générale':'Game / General category','Description du roster...':'Roster description...','Création de Cartes Joueurs':'Player card creation','Photo':'Photo','Prénom Nom':'First name Last name',
@@ -11191,33 +11235,182 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
             if (!q) return;
             if (q.i >= q.list.length) { aerixCropQueue = null; aerixCropBadge(''); return; }
             aerixCropBadge(q.list.length > 1 ? `Image ${q.i + 1} / ${q.list.length}` : '');
-            openCropper(q.list[q.i], q.ratio, b => q.onEach(b), q.maxDim, q.quality);
+            openCropper(q.list[q.i], q.ratio, b => q.onEach(b), q.maxDim, q.quality, q.opts);
         }
-        function queueCropFiles(files, ratio, onEach, maxDim, quality) {
+        function queueCropFiles(files, ratio, onEach, maxDim, quality, opts) {
             const list = Array.from(files || []).filter(f => f && f.type && f.type.startsWith('image/'));
             if (!list.length) { showToast(currentLang==='en' ? 'Please select an image file.' : 'Sélectionne un fichier image.', 'error'); return; }
-            aerixCropQueue = { list, i: 0, ratio, onEach, maxDim, quality };
+            aerixCropQueue = { list, i: 0, ratio, onEach, maxDim, quality, opts };
             aerixCropQueueStep();
         }
 
-        function openCropper(file, ratio, callback, maxDim, quality) {
+        // ===== STUDIO DE RECADRAGE : modes Ajuster / Remplir / Libre, formats, fond =====
+        // - Ajuster (entier) : toute l'image reste visible (ex. maillot complet), le fond complète le format.
+        // - Remplir          : l'image remplit tout le cadre (recadrage classique).
+        // - Libre            : cadre sans format imposé.
+        const CS_RATIOS = { '4:5': 4/5, '1:1': 1, '3:4': 3/4, '4:3': 4/3, '16:9': 16/9 };
+        let cropState = { mode: 'fill', ratio: NaN, bg: 'auto', custom: '#0b0b10', flex: false, freeOnly: false, autoColor: 'transparent', base: 1, fx: 1, fy: 1 };
+        let csPersist = null;
+        let csZoomBound = false;
+
+        function csSampleBg(img) {
+            try {
+                const n = 24, c = document.createElement('canvas');
+                c.width = n; c.height = n;
+                const x = c.getContext('2d', { willReadFrequently: true });
+                x.drawImage(img, 0, 0, n, n);
+                const d = x.getImageData(0, 0, n, n).data;
+                let r = 0, g = 0, bl = 0, al = 0, k = 0;
+                for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
+                    if (i > 0 && i < n - 1 && j > 0 && j < n - 1) continue;
+                    const p = (i * n + j) * 4;
+                    r += d[p]; g += d[p + 1]; bl += d[p + 2]; al += d[p + 3]; k++;
+                }
+                if (al / k < 128) return 'transparent';
+                return `rgb(${Math.round(r / k)},${Math.round(g / k)},${Math.round(bl / k)})`;
+            } catch (err) { return 'transparent'; }
+        }
+
+        function csBgColor() {
+            switch (cropState.bg) {
+                case 'transparent': return 'transparent';
+                case 'black': return '#000000';
+                case 'white': return '#ffffff';
+                case 'custom': return cropState.custom || '#000000';
+                default: return cropState.autoColor || 'transparent';
+            }
+        }
+
+        function csPaintBg() {
+            const modal = document.getElementById('crop-modal');
+            const view = modal && modal.querySelector('.cropper-view-box');
+            const col = csBgColor();
+            if (view) view.style.background = col === 'transparent' ? 'repeating-conic-gradient(#2b2b30 0% 25%, #19191c 0% 50%) 50% / 16px 16px' : col;
+            const sw = document.getElementById('cs-sw-auto');
+            if (sw) sw.style.background = cropState.autoColor === 'transparent' ? 'repeating-conic-gradient(#777 0% 25%, #333 0% 50%) 50% / 8px 8px' : cropState.autoColor;
+        }
+
+        function csRefreshUI() {
+            const m = document.getElementById('crop-modal');
+            if (!m) return;
+            m.querySelectorAll('[data-cs-mode]').forEach(b => {
+                b.classList.toggle('active', b.dataset.csMode === cropState.mode);
+                if (b.dataset.csMode === 'free') b.classList.toggle('cs-hidden', !cropState.flex);
+            });
+            m.querySelectorAll('[data-cs-ratio]').forEach(b => {
+                const k = b.dataset.csRatio;
+                const on = cropState.mode !== 'free' && (k === 'orig' ? cropState.ratio === 'orig' : CS_RATIOS[k] === cropState.ratio);
+                b.classList.toggle('active', on);
+            });
+            m.querySelectorAll('[data-cs-bg]').forEach(b => b.classList.toggle('active', b.dataset.csBg === cropState.bg));
+            document.getElementById('cs-g-modes').classList.toggle('cs-hidden', cropState.freeOnly);
+            document.getElementById('cs-g-ratios').classList.toggle('cs-hidden', !cropState.flex || cropState.mode === 'free');
+            const ci = document.getElementById('cs-custom-bg');
+            if (ci) ci.value = /^#[0-9a-f]{6}$/i.test(cropState.custom) ? cropState.custom : '#0b0b10';
+            csPaintBg();
+        }
+
+        function csApply() {
+            if (!cropper) return;
+            const cd = cropper.getCanvasData();
+            const nw = cd.naturalWidth, nh = cd.naturalHeight;
+            if (!nw || !nh) return;
+            const cont = cropper.getContainerData();
+            const cw = cont.width, ch = cont.height, pad = 14;
+            const free = cropState.mode === 'free';
+            const r = free ? NaN : (cropState.ratio === 'orig' ? nw / nh : cropState.ratio);
+            cropper.setAspectRatio(r);
+            let bw, bh, s;
+            if (isNaN(r)) {
+                s = Math.min((cw - 2 * pad) / nw, (ch - 2 * pad) / nh);
+                bw = nw * s; bh = nh * s;
+            } else {
+                bw = Math.min(cw - 2 * pad, (ch - 2 * pad) * r);
+                bh = bw / r;
+                s = cropState.mode === 'fill' ? Math.max(bw / nw, bh / nh) : Math.min(bw / nw, bh / nh);
+            }
+            cropper.setCanvasData({ left: (cw - nw * s) / 2, top: (ch - nh * s) / 2, width: nw * s, height: nh * s });
+            cropper.setCropBoxData({ left: (cw - bw) / 2, top: (ch - bh) / 2, width: bw, height: bh });
+            cropState.base = s;
+            const z = document.getElementById('cs-zoom');
+            if (z) z.value = 1;
+            csPaintBg();
+        }
+
+        function csSetMode(m) {
+            cropState.mode = m;
+            if (m !== 'free' && (typeof cropState.ratio === 'number' && isNaN(cropState.ratio))) cropState.ratio = 'orig';
+            csRefreshUI(); csApply();
+        }
+        function csSetRatio(k) {
+            cropState.ratio = k === 'orig' ? 'orig' : CS_RATIOS[k];
+            if (cropState.mode === 'free') cropState.mode = 'fit';
+            csRefreshUI(); csApply();
+        }
+        function csSetBg(b, custom) {
+            cropState.bg = b;
+            if (b === 'custom' && custom) cropState.custom = custom;
+            csRefreshUI();
+        }
+        function csZoomInput(v) { if (cropper) cropper.zoomTo(cropState.base * parseFloat(v)); }
+        function csZoomStep(d) {
+            const z = document.getElementById('cs-zoom');
+            if (!z || !cropper) return;
+            z.value = Math.min(4, Math.max(0.2, parseFloat(z.value) + d));
+            csZoomInput(z.value);
+        }
+        function csRotate(deg) { if (!cropper) return; cropper.rotate(deg); csApply(); }
+        function csFlip() { if (!cropper) return; cropState.fx *= -1; cropper.scaleX(cropState.fx); }
+        function csReset() {
+            if (!cropper) return;
+            cropper.rotateTo(0); cropState.fx = 1; cropState.fy = 1; cropper.scale(1, 1);
+            csApply();
+        }
+        function csBindZoom(image) {
+            if (csZoomBound) return;
+            csZoomBound = true;
+            image.addEventListener('zoom', e => {
+                const z = document.getElementById('cs-zoom');
+                if (z && e.detail && cropState.base) z.value = Math.min(4, Math.max(0.2, e.detail.ratio / cropState.base));
+            });
+        }
+
+        function openCropper(file, ratio, callback, maxDim, quality, opts) {
             if (!file || !file.type || !file.type.startsWith('image/')) {
                 showToast(currentLang==='en' ? 'Please select an image file.' : 'Sélectionne un fichier image.', 'error');
                 return;
             }
+            opts = opts || {};
             const reader = new FileReader();
             reader.onerror = () => showToast(currentLang==='en' ? 'Unable to read the image.' : 'Impossible de lire l’image.', 'error');
             reader.onload = (e) => {
                 const image = document.getElementById('crop-image');
                 image.onload = () => {
+                    const flex = !!opts.flexRatios;
+                    const saved = flex ? csPersist : null;
+                    const hasRatio = typeof ratio === 'number' && !isNaN(ratio);
+                    cropState.flex = flex;
+                    cropState.freeOnly = !flex && !hasRatio;
+                    cropState.ratio = saved ? saved.ratio : (hasRatio ? ratio : NaN);
+                    cropState.mode = saved ? saved.mode : (opts.mode || (hasRatio ? 'fill' : 'free'));
+                    cropState.bg = saved ? saved.bg : (opts.bg || 'auto');
+                    cropState.custom = saved ? saved.custom : '#0b0b10';
+                    cropState.fx = 1; cropState.fy = 1;
+                    cropState.autoColor = csSampleBg(image);
                     document.getElementById('crop-modal').classList.remove('hidden');
                     if (cropper) cropper.destroy();
                     cropper = new Cropper(image, {
-                        aspectRatio: ratio,
-                        viewMode: 1,
+                        aspectRatio: NaN,
+                        viewMode: 0,
+                        dragMode: 'move',
                         background: false,
-                        autoCropArea: 1
+                        autoCropArea: 1,
+                        toggleDragModeOnDblclick: false,
+                        wheelZoomRatio: 0.08,
+                        ready: () => { csRefreshUI(); csApply(); }
                     });
+                    csBindZoom(image);
+                    csRefreshUI();
                 };
                 image.src = e.target.result;
                 cropCallback = callback;
@@ -11234,7 +11427,7 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
                 maxHeight: cropMaxDim,
                 imageSmoothingEnabled: true,
                 imageSmoothingQuality: 'high',
-                fillColor: 'transparent'
+                fillColor: csBgColor()
             });
             if (!canvas) {
                 showToast(currentLang==='en' ? 'Could not process the image.' : 'Impossible de traiter cette image.', 'error');
@@ -11242,6 +11435,7 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
             }
 
             const callback = cropCallback;
+            if (cropState.flex) csPersist = { mode: cropState.mode, ratio: cropState.ratio, bg: cropState.bg, custom: cropState.custom };
             const optimized = canvasToOptimizedWebP(canvas, FIRESTORE_SINGLE_IMAGE_CHARS, cropQuality);
 
             document.getElementById('crop-modal').classList.add('hidden');
@@ -11353,7 +11547,7 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
         let tempShopImages = [], tempPlayerAvatar = null, tempPlayers = [], tempPartnerImage = null, tempAnnouncementImage = null, tempPalmImage = null, tempGalleryImage = null, tempGalleryImages = [], tempEventImage = null;
         const defaultAvatar = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E";
         
-        document.getElementById('shop-img-input').addEventListener('change', e => { const files = Array.from(e.target.files || []); e.target.value=''; if(files.length) queueCropFiles(files, 4/5, b => { tempShopImages.push(b); renderShopPreviews(); }); });
+        document.getElementById('shop-img-input').addEventListener('change', e => { const files = Array.from(e.target.files || []); e.target.value=''; if(files.length) queueCropFiles(files, 4/5, b => { tempShopImages.push(b); renderShopPreviews(); }, undefined, undefined, { flexRatios: true, mode: 'fit' }); });
         function renderShopPreviews() { document.getElementById('shop-img-previews').innerHTML = tempShopImages.map((src, i) => `<div class="relative w-16 h-20 rounded-lg overflow-hidden border border-white/20"><img loading="lazy" decoding="async" src="${src}" alt="" class="w-full h-full object-cover"><button type="button" onclick="tempShopImages.splice(${i}, 1); renderShopPreviews()" class="absolute top-0 right-0 bg-red-500/90 text-white text-[10px] w-5 h-5">✕</button></div>`).join(''); }
         
         document.getElementById('player-avatar-input').addEventListener('change', e => { if(e.target.files.length) openCropper(e.target.files[0], 3/4, b => { tempPlayerAvatar = b; document.getElementById('player-avatar-preview').src = b; }, 1200, 0.9); e.target.value=''; });
