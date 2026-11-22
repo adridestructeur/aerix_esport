@@ -4306,7 +4306,12 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
 #modal-product-sizes .size-chip:hover{border-color:rgba(139,92,246,.7);background:rgba(139,92,246,.12)}
 #modal-product-sizes .size-chip.is-selected{background:#8b5cf6;border-color:#a78bfa;color:#fff;box-shadow:0 0 16px rgba(139,92,246,.45)}
 #modal-product-custom:empty,#modal-product-order:empty{display:none}
-#modal-product-custom,#modal-product-order{margin-top:22px}
+/* Centrage vertical sans couper le haut/bas quand le contenu dépasse (le panneau défile) */
+.product-info-col{justify-content:flex-start}
+.product-info-col>:first-child{margin-top:auto}
+.product-info-col>:last-child{margin-bottom:auto}
+.product-info-col{scrollbar-width:thin}
+#modal-product-custom,#modal-product-order{margin-top:18px}
 .shop-opt-label{font-size:10px;text-transform:uppercase;letter-spacing:.16em;color:#8b8b96;font-weight:900;margin-bottom:8px}
 .shop-opt-label span{text-transform:none;letter-spacing:0;font-weight:600;opacity:.7}
 .shop-custom-box{border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:14px 16px;background:rgba(255,255,255,.03)}
@@ -4323,7 +4328,7 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
 @font-face{font-family:'Falcon Sport Two';font-style:normal;font-weight:400;font-display:swap;src:local('Falcon Sport Two Regular'),local('Falcon Sport Two'),local('FalconSportTwo-Regular'),url('FalconSportTwo.woff2') format('woff2'),url('FalconSportTwo.woff') format('woff'),url('FalconSportTwo.ttf') format('truetype'),url('FalconSportTwo.otf') format('opentype')}
 .shop-back-name,.shop-back-num{font-family:'Falcon Sport Two','Impact','Arial Black',sans-serif;font-weight:400}
 .shop-back-name{font-size:clamp(20px,4.2vw,28px);letter-spacing:.06em;color:#fff;min-height:1.3em;line-height:1.3;white-space:nowrap;overflow:hidden}
-.shop-back-num{font-size:clamp(72px,14vw,104px);line-height:1;color:#fff;letter-spacing:.02em;text-shadow:0 0 28px rgba(139,92,246,.45)}
+.shop-back-num{font-size:clamp(60px,11vw,84px);line-height:1;color:#fff;letter-spacing:.02em;text-shadow:0 0 28px rgba(139,92,246,.45)}
 .shop-back-preview.is-empty .shop-back-name,.shop-back-preview.is-empty .shop-back-num{opacity:.28}
 .shop-order-btn{width:100%;background:#8b5cf6;color:#fff;font-weight:800;padding:.95rem 1rem;border-radius:14px;transition:all .15s;box-shadow:0 0 18px rgba(139,92,246,.35);font-size:14px}
 .shop-order-btn:hover:not(:disabled){background:#7c3aed}
@@ -5150,9 +5155,9 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
                 <button type="button" id="slider-next" onclick="event.stopPropagation(); nextProductImg()" aria-label="Image suivante" class="product-slider-btn absolute right-4 top-1/2 -translate-y-1/2 z-[40] bg-black/65 backdrop-blur-md border border-white/20 text-white w-12 h-12 rounded-full hover:bg-aerix-purple hover:border-aerix-purple transition hidden flex items-center justify-center text-2xl leading-none cursor-pointer select-none">›</button>
                 <div id="slider-dots" class="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-20 flex gap-2"></div>
             </div>
-            <div class="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center overflow-y-auto bg-black/40">
-                <div class="text-xs font-bold text-aerix-purple uppercase tracking-widest mb-3">Boutique AERIX</div>
-                <h3 id="modal-product-title" class="text-3xl md:text-5xl font-black text-white mb-6 leading-tight tracking-tight">Nom</h3>
+            <div class="product-info-col w-full md:w-1/2 p-6 md:p-9 flex flex-col overflow-y-auto bg-black/40">
+                <div class="text-xs font-bold text-aerix-purple uppercase tracking-widest mb-3 pr-12">Boutique AERIX</div>
+                <h3 id="modal-product-title" class="text-3xl md:text-4xl font-black text-white mb-5 leading-tight tracking-tight break-words pr-12">Nom</h3>
                 <div id="modal-product-state" class="flex"></div><div id="modal-product-sizes"></div><div id="modal-product-custom"></div><div id="modal-product-order"></div>
             </div>
         </div>
