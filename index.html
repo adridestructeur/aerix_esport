@@ -4302,7 +4302,33 @@ body.theme-light .tn,body.theme-white-red .tn{--tn-bg:#f6f6f8;--tn-box:#ffffff;-
 #product-image-lightbox button{position:absolute;top:22px;right:24px;width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(20,20,20,.8);color:#fff;font-size:24px}
 #modal-product-img{cursor:zoom-in!important;pointer-events:auto!important;object-fit:contain!important;padding:18px!important}
 #modal-product-sizes{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
-#modal-product-sizes .size-chip{padding:8px 13px;border:1px solid rgba(255,255,255,.16);border-radius:10px;background:rgba(255,255,255,.045);font-size:12px;font-weight:800;color:#e5e7eb}
+#modal-product-sizes .size-chip{padding:8px 13px;border:1px solid rgba(255,255,255,.16);border-radius:10px;background:rgba(255,255,255,.045);font-size:12px;font-weight:800;color:#e5e7eb;cursor:pointer;transition:all .15s;min-width:46px;text-align:center}
+#modal-product-sizes .size-chip:hover{border-color:rgba(139,92,246,.7);background:rgba(139,92,246,.12)}
+#modal-product-sizes .size-chip.is-selected{background:#8b5cf6;border-color:#a78bfa;color:#fff;box-shadow:0 0 16px rgba(139,92,246,.45)}
+#modal-product-custom:empty,#modal-product-order:empty{display:none}
+#modal-product-custom,#modal-product-order{margin-top:22px}
+.shop-opt-label{font-size:10px;text-transform:uppercase;letter-spacing:.16em;color:#8b8b96;font-weight:900;margin-bottom:8px}
+.shop-opt-label span{text-transform:none;letter-spacing:0;font-weight:600;opacity:.7}
+.shop-custom-box{border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:14px 16px;background:rgba(255,255,255,.03)}
+.shop-custom-toggle{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700;color:#fff;cursor:pointer}
+.shop-custom-toggle input{accent-color:#8b5cf6;width:16px;height:16px}
+.shop-input.is-falcon{font-family:'Falcon Sport Two','Impact','Arial Black',sans-serif;font-weight:400;letter-spacing:.06em}
+.shop-input{width:100%;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:.7rem .9rem;color:#fff;font-size:14px;font-weight:700;outline:none;transition:border-color .15s}
+.shop-input:focus{border-color:#8b5cf6}
+.shop-back-preview{margin-top:14px;border-radius:14px;padding:16px 10px 14px;text-align:center;background:radial-gradient(circle at 50% 0,rgba(139,92,246,.22),transparent 65%),linear-gradient(160deg,#14141a,#07070a);border:1px solid rgba(255,255,255,.08)}
+.shop-back-label{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#6b6b76;font-weight:800;margin-bottom:6px}
+/* Police officielle des maillots : Falcon Sport Two Regular (nom + numéro).
+   Dépose le fichier de la police à la racine du dépôt, à côté de index.html, sous l'un de ces noms :
+   FalconSportTwo.woff2 / FalconSportTwo.woff / FalconSportTwo.ttf / FalconSportTwo.otf */
+@font-face{font-family:'Falcon Sport Two';font-style:normal;font-weight:400;font-display:swap;src:local('Falcon Sport Two Regular'),local('Falcon Sport Two'),local('FalconSportTwo-Regular'),url('FalconSportTwo.woff2') format('woff2'),url('FalconSportTwo.woff') format('woff'),url('FalconSportTwo.ttf') format('truetype'),url('FalconSportTwo.otf') format('opentype')}
+.shop-back-name,.shop-back-num{font-family:'Falcon Sport Two','Impact','Arial Black',sans-serif;font-weight:400}
+.shop-back-name{font-size:clamp(20px,4.2vw,28px);letter-spacing:.06em;color:#fff;min-height:1.3em;line-height:1.3;white-space:nowrap;overflow:hidden}
+.shop-back-num{font-size:clamp(72px,14vw,104px);line-height:1;color:#fff;letter-spacing:.02em;text-shadow:0 0 28px rgba(139,92,246,.45)}
+.shop-back-preview.is-empty .shop-back-name,.shop-back-preview.is-empty .shop-back-num{opacity:.28}
+.shop-order-btn{width:100%;background:#8b5cf6;color:#fff;font-weight:800;padding:.95rem 1rem;border-radius:14px;transition:all .15s;box-shadow:0 0 18px rgba(139,92,246,.35);font-size:14px}
+.shop-order-btn:hover:not(:disabled){background:#7c3aed}
+.shop-order-btn:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
+.shop-order-note{font-size:11px;color:#8b8b96;margin-top:8px;text-align:center}
 @media(max-width:640px){.aerix-home-slogan{font-size:clamp(2.25rem,11vw,4rem)}.aerix-home-slogan-line{line-height:1.13}}
 </style>
 
@@ -5127,7 +5153,7 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
             <div class="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center overflow-y-auto bg-black/40">
                 <div class="text-xs font-bold text-aerix-purple uppercase tracking-widest mb-3">Boutique AERIX</div>
                 <h3 id="modal-product-title" class="text-3xl md:text-5xl font-black text-white mb-6 leading-tight tracking-tight">Nom</h3>
-                <div id="modal-product-state" class="flex"></div><div id="modal-product-sizes"></div>
+                <div id="modal-product-state" class="flex"></div><div id="modal-product-sizes"></div><div id="modal-product-custom"></div><div id="modal-product-order"></div>
             </div>
         </div>
     </div>
@@ -5247,6 +5273,7 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
                 <input id="contact-username" type="text" readonly class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-gray-400 text-sm outline-none" placeholder="Pseudo">
                 <input id="contact-email" type="email" readonly class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-gray-400 text-sm outline-none" placeholder="Adresse email">
                 <select id="contact-category" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple">
+                    <option value="Commande boutique">Commande boutique</option>
                     <option value="Partenariat" data-i18n="contact_category_partnership">Partenariat</option>
                     <option value="Question" data-i18n="contact_category_question">Question</option>
                     <option value="Autre demande" data-i18n="contact_category_other">Autre demande</option>
@@ -5658,6 +5685,18 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
                         </select>
                     </div>
                     
+                    <div class="mb-4">
+                        <div class="text-[10px] uppercase tracking-widest text-gray-500 font-black mb-2">Tailles disponibles</div>
+                        <div id="shop-size-chips" class="flex flex-wrap gap-2 mb-3"></div>
+                        <div class="flex gap-2">
+                            <input type="text" id="shop-size-custom" maxlength="20" placeholder="Autre taille (ex : 140, Enfant 12 ans)" onkeydown="if(event.key==='Enter'){event.preventDefault();shopAdminAddSize();}" class="flex-1 bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm outline-none focus:border-aerix-purple transition">
+                            <button type="button" onclick="shopAdminAddSize()" class="px-4 bg-white/5 border border-white/10 hover:bg-white/10 text-white rounded-xl text-xs font-bold transition">Ajouter</button>
+                        </div>
+                    </div>
+                    <label class="flex items-center gap-3 mb-4 bg-black/30 border border-white/10 rounded-xl px-4 py-3 cursor-pointer">
+                        <input type="checkbox" id="add-shop-customizable" class="w-4 h-4" style="accent-color:#8b5cf6">
+                        <span class="text-sm text-white font-bold">Personnalisation nom &amp; numéro <span class="text-gray-500 font-medium">— le client peut ajouter son nom (12 car. max) et son numéro (00–99)</span></span>
+                    </label>
                     <div id="shop-img-previews" class="flex gap-3 flex-wrap mb-4"></div>
                     <button type="button" id="shop-drop-zone" onclick="document.getElementById('shop-img-input').click()" class="bg-white/5 border border-dashed border-white/20 text-gray-400 hover:text-white hover:border-white/40 text-xs font-bold px-4 py-4 rounded-xl w-full mb-6 transition">+ Uploader des images (4:5) — ou glisser-déposer ici</button>
                     <input type="file" id="shop-img-input" accept="image/*" multiple class="hidden">
@@ -9880,7 +9919,7 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
                     return `<div class="glass-panel glass-panel-form p-4 rounded-xl flex items-center justify-between gap-3"><div class="min-w-0"><div class="text-white font-bold text-sm truncate">${escapeHtml(u.username || '—')}</div><div class="text-xs text-gray-500 mt-1 truncate">${escapeHtml(u.email || '—')}</div><div class="flex flex-wrap gap-1 mt-2">${roleLabels.map(label=>`<span class="text-[9px] text-aerix-purple bg-aerix-purple/10 border border-aerix-purple/20 px-2 py-1 rounded-full uppercase tracking-wider">${escapeHtml(label)}</span>`).join('')}</div></div>${menu}</div>`;
                 }).join('') : `<p class="text-gray-500 text-sm italic">${currentLang==='en'?'No registered accounts.':'Aucun compte enregistré.'}</p>`;
             }
-            document.getElementById('admin-list-boutique').innerHTML = globalShop.map(item => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm">${escapeHtml(item.name)}</div><div class="text-xs text-gray-500">${item.available === false ? 'Indisponible' : 'Disponible'}</div></div><div class="flex gap-2"><button onclick="startEditShop('${item.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('shop', '${item.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
+            document.getElementById('admin-list-boutique').innerHTML = globalShop.map(item => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm">${escapeHtml(item.name)}</div><div class="text-xs text-gray-500">${item.available === false ? 'Indisponible' : 'Disponible'}${shopItemSizes(item).length ? ' · ' + escapeHtml(shopItemSizes(item).join(' / ')) : ''}${item.customizable ? ' · Perso nom/numéro' : ''}</div></div><div class="flex gap-2"><button onclick="startEditShop('${item.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('shop', '${item.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
             const sortedAdminEffectifs = [...globalEffectifs].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
             updateEffectifSyncControl();
             document.getElementById('admin-list-effectifs').innerHTML = sortedAdminEffectifs.map((r, idx) => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center effectif-row" draggable="true" data-id="${r.id}" ondragstart="dragEffectifStart(event)" ondragend="dragEffectifEnd(event)" ondragover="dragEffectifOver(event)" ondrop="dropEffectif(event)"><div class="flex items-center gap-2"><div class="effectif-drag-handle cursor-grab active:cursor-grabbing text-gray-500 hover:text-white transition px-1" title="Glisser pour réordonner"><svg width="10" height="16" viewBox="0 0 10 16" fill="currentColor"><circle cx="2" cy="2" r="1.5"/><circle cx="8" cy="2" r="1.5"/><circle cx="2" cy="8" r="1.5"/><circle cx="8" cy="8" r="1.5"/><circle cx="2" cy="14" r="1.5"/><circle cx="8" cy="14" r="1.5"/></svg></div><div class="flex flex-col gap-1"><button onclick="moveEffectif('${r.id}', -1)" ${idx === 0 ? 'disabled' : ''} class="w-6 h-6 flex items-center justify-center rounded-md bg-white/10 hover:bg-aerix-purple text-white text-xs transition disabled:opacity-20 disabled:cursor-not-allowed" title="Monter">▲</button><button onclick="moveEffectif('${r.id}', 1)" ${idx === sortedAdminEffectifs.length - 1 ? 'disabled' : ''} class="w-6 h-6 flex items-center justify-center rounded-md bg-white/10 hover:bg-aerix-purple text-white text-xs transition disabled:opacity-20 disabled:cursor-not-allowed" title="Descendre">▼</button></div><div><div class="text-white font-bold text-sm flex items-center gap-2">${r.name} <span class="bg-white/10 text-[9px] px-2 py-0.5 rounded-full">${r.players?.length||0} j.</span></div><div class="text-xs text-gray-500">${r.game || 'Général'}</div></div></div><div class="flex gap-2"><button onclick="startEditEffectif('${r.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('effectifs', '${r.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
@@ -10006,6 +10045,28 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
         }
 
         // --- EDITION BOUTIQUE ---
+        const SHOP_PRESET_SIZES = ['XS','S','M','L','XL','2XL','3XL','4XL'];
+        let tempShopSizes = [];
+        function sortShopSizes() { tempShopSizes.sort((a, b) => { const ia = SHOP_PRESET_SIZES.indexOf(a), ib = SHOP_PRESET_SIZES.indexOf(b); return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib); }); }
+        function renderShopSizeAdmin() {
+            const el = document.getElementById('shop-size-chips'); if (!el) return;
+            const all = [...SHOP_PRESET_SIZES, ...tempShopSizes.filter(s => !SHOP_PRESET_SIZES.includes(s))];
+            el.innerHTML = all.map(s => `<button type="button" class="cs-chip ${tempShopSizes.includes(s) ? 'active' : ''}" data-size="${escapeHtml(s)}">${escapeHtml(s)}</button>`).join('');
+            el.onclick = e => {
+                const b = e.target.closest('[data-size]'); if (!b) return;
+                const s = b.dataset.size;
+                tempShopSizes = tempShopSizes.includes(s) ? tempShopSizes.filter(x => x !== s) : [...tempShopSizes, s];
+                sortShopSizes(); renderShopSizeAdmin();
+            };
+        }
+        function shopAdminAddSize() {
+            const inp = document.getElementById('shop-size-custom'); if (!inp) return;
+            const v = inp.value.trim().slice(0, 20);
+            if (v && !tempShopSizes.includes(v)) { tempShopSizes.push(v); sortShopSizes(); }
+            inp.value = ''; renderShopSizeAdmin();
+        }
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', renderShopSizeAdmin); else renderShopSizeAdmin();
+
         function startEditShop(id) {
             const item = globalShop.find(s => s.id === id); if(!item) return;
             document.getElementById('edit-shop-id').value = item.id;
@@ -10013,12 +10074,15 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
             document.getElementById('add-shop-available').value = item.available === false ? '0' : '1';
             tempShopImages = item.images ? [...item.images] : (item.image ? [item.image] : []);
             renderShopPreviews();
+            tempShopSizes = shopItemSizes(item); sortShopSizes(); renderShopSizeAdmin();
+            document.getElementById('add-shop-customizable').checked = !!item.customizable;
             document.getElementById('shop-form-title').innerText = "Modifier le produit";
             document.getElementById('shop-cancel-btn').classList.remove('hidden');
         }
         function resetShopForm() {
             document.getElementById('edit-shop-id').value = ''; document.getElementById('add-shop-name').value = ''; document.getElementById('add-shop-available').value = '1';
             tempShopImages = []; renderShopPreviews();
+            tempShopSizes = []; renderShopSizeAdmin(); document.getElementById('add-shop-customizable').checked = false;
             document.getElementById('shop-form-title').innerText = "Ajouter un produit"; document.getElementById('shop-cancel-btn').classList.add('hidden');
         }
         async function saveShopItem() {
@@ -10035,8 +10099,9 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
                         'error'
                     );
                 }
-                if(id) await db.collection("shop").doc(id).update({ name, available, images });
-                else await db.collection("shop").add({ name, available, images });
+                const sizes = [...tempShopSizes], customizable = !!document.getElementById('add-shop-customizable').checked;
+                if(id) await db.collection("shop").doc(id).update({ name, available, images, sizes, customizable });
+                else await db.collection("shop").add({ name, available, images, sizes, customizable });
                 showToast("Produit sauvegardé !"); resetShopForm(); switchAdminTab('boutique');
             } catch(e) {
                 console.error('saveShopItem', e);
@@ -12000,16 +12065,99 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
         window.addEventListener('popstate', navigateFromHash);
         window.addEventListener('resize', refreshAdminTabPill, { passive: true });
 
+        // ===== BOUTIQUE : tailles + personnalisation nom / numéro + demande de commande =====
+        let shopSel = { index: -1, size: '', custom: false, name: '', number: '' };
+        function shopItemSizes(item) {
+            const raw = (item && (item.sizes || item.availableSizes || item.sizeOptions || item.variants)) || [];
+            return Array.isArray(raw)
+                ? raw.map(v => typeof v === 'string' ? v : (v.label || v.size || v.name || '')).filter(Boolean)
+                : (typeof raw === 'string' ? raw.split(/[,;|]/).map(v => v.trim()).filter(Boolean) : []);
+        }
+        function shopCleanName(v) { return String(v || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase().replace(/[-_.]/g, ' ').replace(/[^A-Z ]/g, '').replace(/ {2,}/g, ' ').replace(/^ /, '').slice(0, 12); }
+        function shopCleanNumber(v) { return String(v || '').replace(/\D/g, '').slice(0, 2); }
+        function shopPreviewUpdate() {
+            const n = document.getElementById('shop-prev-name'), x = document.getElementById('shop-prev-num'), box = document.getElementById('shop-back-preview');
+            if (n) n.textContent = shopSel.name || 'NOM';
+            if (x) x.textContent = shopSel.number !== '' ? shopSel.number : '00';
+            if (box) { box.classList.toggle('is-empty-name', !shopSel.name); box.classList.toggle('is-empty', !shopSel.name && shopSel.number === ''); }
+        }
+        function shopRenderOptions(item, index) {
+            const en = currentLang === 'en';
+            shopSel = { index, size: '', custom: false, name: '', number: '' };
+            const sizes = shopItemSizes(item);
+            const sizesEl = document.getElementById('modal-product-sizes');
+            sizesEl.innerHTML = sizes.length
+                ? `<div class="w-full"><div class="shop-opt-label">${en ? 'Choose your size' : 'Choisis ta taille'}</div><div class="flex flex-wrap gap-2" id="shop-size-picker">${sizes.map(s => `<button type="button" class="size-chip" data-size="${escapeHtml(s)}">${escapeHtml(s)}</button>`).join('')}</div></div>`
+                : '';
+            const picker = document.getElementById('shop-size-picker');
+            if (picker) picker.onclick = e => {
+                const b = e.target.closest('[data-size]'); if (!b) return;
+                shopSel.size = b.dataset.size;
+                picker.querySelectorAll('.size-chip').forEach(c => c.classList.toggle('is-selected', c === b));
+            };
+
+            const cEl = document.getElementById('modal-product-custom');
+            cEl.innerHTML = item.customizable ? `
+                <div class="w-full shop-custom-box">
+                    <label class="shop-custom-toggle"><input type="checkbox" id="shop-custom-check"><span>${en ? 'Personalise with my name &amp; number' : 'Personnaliser avec mon nom &amp; numéro'}</span></label>
+                    <div id="shop-custom-fields" class="hidden">
+                        <div style="display:grid;grid-template-columns:1fr 92px;gap:12px;margin-top:16px">
+                            <div><div class="shop-opt-label">${en ? 'Name' : 'Nom'} <span>${en ? '(letters, 12 max)' : '(lettres, 12 max)'}</span></div><input id="shop-custom-name" type="text" maxlength="12" autocomplete="off" spellcheck="false" placeholder="${en ? 'YOUR NAME' : 'TON NOM'}" class="shop-input is-falcon" style="text-transform:uppercase"></div>
+                            <div><div class="shop-opt-label">${en ? 'Number' : 'Numéro'}</div><input id="shop-custom-number" type="text" inputmode="numeric" maxlength="2" autocomplete="off" placeholder="00" class="shop-input is-falcon" style="text-align:center"></div>
+                        </div>
+                        <div class="shop-back-preview is-empty" id="shop-back-preview"><div class="shop-back-label">${en ? 'Back preview' : 'Aperçu du dos'}</div><div class="shop-back-name" id="shop-prev-name">NOM</div><div class="shop-back-num" id="shop-prev-num">00</div></div>
+                    </div>
+                </div>` : '';
+            const chk = document.getElementById('shop-custom-check');
+            if (chk) {
+                const fields = document.getElementById('shop-custom-fields');
+                const nameIn = document.getElementById('shop-custom-name'), numIn = document.getElementById('shop-custom-number');
+                chk.onchange = () => { shopSel.custom = chk.checked; fields.classList.toggle('hidden', !chk.checked); if (chk.checked) nameIn.focus(); };
+                nameIn.oninput = () => { const v = shopCleanName(nameIn.value); nameIn.value = v; shopSel.name = v; shopPreviewUpdate(); };
+                numIn.oninput = () => { const v = shopCleanNumber(numIn.value); numIn.value = v; shopSel.number = v; shopPreviewUpdate(); };
+            }
+
+            const oEl = document.getElementById('modal-product-order');
+            const ok = item.available !== false;
+            oEl.innerHTML = `<button type="button" id="shop-order-btn" class="shop-order-btn" onclick="submitShopOrder()" ${ok ? '' : 'disabled'}>${ok ? (en ? 'Request this item' : 'Demander cet article') : (en ? 'Currently unavailable' : 'Actuellement indisponible')}</button>${ok ? `<p class="shop-order-note">${en ? 'Your request is sent to the AERIX team as a ticket (follow it in “My tickets”).' : 'Ta demande est envoyée à l’équipe AERIX sous forme de ticket (suivi dans « Mes tickets »).'}</p>` : ''}`;
+        }
+        async function submitShopOrder() {
+            const en = currentLang === 'en';
+            const item = globalShop[shopSel.index];
+            if (!item || item.available === false) return;
+            const sizes = shopItemSizes(item);
+            if (sizes.length && !shopSel.size) return showToast(en ? 'Choose a size.' : 'Choisis une taille.', 'error');
+            const custom = !!item.customizable && shopSel.custom;
+            if (custom && !shopSel.name && shopSel.number === '') return showToast(en ? 'Enter a name and/or a number.' : 'Saisis un nom et/ou un numéro.', 'error');
+            if (!currentUser || !currentAccount) {
+                showToast(en ? 'Sign in to send your request.' : 'Connecte-toi pour envoyer ta demande.', 'error');
+                closeProductModal(); openAccountModal();
+                return;
+            }
+            const perso = custom
+                ? [shopSel.name ? `Nom « ${shopSel.name} »` : '', shopSel.number !== '' ? `Numéro ${shopSel.number}` : ''].filter(Boolean).join(' · ')
+                : 'Aucune';
+            const message = ['Demande de commande boutique', '', `Produit : ${item.name}`, `Taille : ${shopSel.size || 'Non précisée'}`, `Personnalisation : ${perso}`].join('\n');
+            const btn = document.getElementById('shop-order-btn');
+            if (btn) btn.disabled = true;
+            try {
+                await db.collection('contactRequests').add({ uid: currentUser.uid, username: currentAccount.username || '', email: currentUser.email || currentAccount.email || '', category: 'Commande boutique', type: 'shop-order', shopProduct: String(item.name || '').slice(0, 100), shopSize: String(shopSel.size || '').slice(0, 20), shopName: custom ? shopSel.name : '', shopNumber: custom ? shopSel.number : '', subject: `Commande boutique — ${item.name}`.slice(0, 120), message, status: 'new', adminReply: '', messages: [], unreadByUser: false, unreadByAdmin: true, createdAt: firebase.firestore.FieldValue.serverTimestamp(), updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+                closeProductModal();
+                showToast(en ? 'Request sent! Follow it in “My tickets”.' : 'Demande envoyée ! Suis-la dans « Mes tickets ».');
+            } catch (e) {
+                console.error('submitShopOrder', e);
+                if (btn) btn.disabled = false;
+                showToast(en ? 'Unable to send your request.' : 'Impossible d’envoyer ta demande.', 'error');
+            }
+        }
+
         // SLIDER PRODUIT
         let currentModalImages = [], currentModalImgIndex = 0;
         function openProductModal(index) {
             const item = globalShop[index]; if(!item) return;
             document.getElementById('modal-product-title').innerText = item.name;
             document.getElementById('modal-product-state').innerHTML = shopStateBadge(item);
-            const sizesEl = document.getElementById('modal-product-sizes');
-            const rawSizes = item.sizes || item.availableSizes || item.sizeOptions || item.variants || [];
-            const sizes = Array.isArray(rawSizes) ? rawSizes.map(v => typeof v === 'string' ? v : (v.label || v.size || v.name || '')).filter(Boolean) : (typeof rawSizes === 'string' ? rawSizes.split(/[,;|]/).map(v=>v.trim()).filter(Boolean) : []);
-            sizesEl.innerHTML = sizes.length ? `<div class="w-full"><div class="text-[10px] uppercase tracking-widest text-gray-500 font-black mb-2">Tailles disponibles</div><div class="flex flex-wrap gap-2">${sizes.map(size=>`<span class="size-chip">${escapeHtml(size)}</span>`).join('')}</div></div>` : ''; 
+            shopRenderOptions(item, index);
             currentModalImages = Array.isArray(item.images) && item.images.length > 0 ? item.images : (item.image ? [item.image] : []);
             const btnPrev = document.getElementById('slider-prev'), btnNext = document.getElementById('slider-next');
             if(currentModalImages.length > 0) {
