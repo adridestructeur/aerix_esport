@@ -5193,21 +5193,21 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
 
     <!-- MODAL : ARTICLE RÉSULTAT (PALMARÈS) -->
     <div id="palmares-article-modal" class="fixed inset-0 z-[120] hidden flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl" role="dialog" aria-modal="true" aria-label="Fenêtre de dialogue">
-        <div class="glass-panel-no-hover w-full max-w-3xl max-h-[92vh] overflow-y-auto rounded-[2rem] shadow-2xl relative">
+        <div class="glass-panel-no-hover w-full max-w-6xl max-h-[94vh] overflow-y-auto rounded-[2rem] shadow-2xl relative">
             <button type="button" id="palmares-article-share" class="absolute top-6 right-20 z-50 bg-black/60 h-10 px-4 rounded-full flex items-center gap-2 text-white text-xs font-bold border border-white/20 backdrop-blur-md hover:text-aerix-purple transition" aria-label="Partager"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg><span class="hidden sm:inline">Partager</span></button>
             <button onclick="closePalmaresArticle()" class="absolute top-6 right-6 text-white hover:text-aerix-purple z-50 bg-black/50 w-10 h-10 rounded-full flex items-center justify-center border border-white/20 backdrop-blur-md transition">✕</button>
-            <div id="palmares-article-img-wrap" class="w-full aspect-video bg-[#050505] overflow-hidden border-b border-white/10 hidden">
-                <img loading="lazy" decoding="async" id="palmares-article-img" src="" class="w-full h-full object-cover" alt="Image AERIX">
+            <div id="palmares-article-img-wrap" class="w-full aspect-video max-h-[70vh] bg-[#050505] overflow-hidden border-b border-white/10 hidden">
+                <img loading="lazy" decoding="async" id="palmares-article-img" src="" class="w-full h-full object-cover cursor-zoom-in" alt="Image AERIX" title="Cliquer pour agrandir">
             </div>
-            <div class="p-6 md:p-10">
-                <div class="flex flex-wrap gap-3 items-center mb-4" id="palmares-article-badges"></div>
-                <h3 id="palmares-article-title" class="text-2xl md:text-4xl font-black text-white mb-6 leading-tight tracking-tight"></h3>
+            <div class="p-6 md:p-12">
+                <div class="flex flex-wrap gap-3 items-center mb-5" id="palmares-article-badges"></div>
+                <h3 id="palmares-article-title" class="text-3xl md:text-5xl font-black text-white mb-8 leading-tight tracking-tight"></h3>
                 <div id="palmares-article-meta" class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8"></div>
-                <div class="flex items-center gap-2 text-xs text-gray-500 font-medium mb-6">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                <div class="flex items-center gap-2 text-sm text-gray-500 font-medium mb-6">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                     <span id="palmares-article-date"></span>
                 </div>
-                <div id="palmares-article-desc" class="text-sm text-gray-300 rich-editor-content aerix-md"></div>
+                <div id="palmares-article-desc" class="text-base md:text-lg leading-relaxed text-gray-300 rich-editor-content aerix-md"></div>
             </div>
         </div>
     </div>
@@ -8505,6 +8505,8 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
 
             const imgWrap = document.getElementById('palmares-article-img-wrap');
             aerixModalGallery('palmares-article-img-wrap', 'palmares-article-img', aerixItemImages(item));
+            const __artImg = document.getElementById('palmares-article-img'), __artList = aerixItemImages(item);
+            if (__artImg) __artImg.onclick = () => { const cur = __artImg.getAttribute('src') || __artList[0]; if (cur) openImageViewer(cur, item.title || '', __artList); };
 
             document.getElementById('palmares-article-title').textContent = item.title || '';
 
@@ -8527,7 +8529,7 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
                     </div>`;
             } else {
                 const groupedResults = getSimracingResults(item);
-                metaEl.innerHTML = `<div class="sm:col-span-3 bg-black/50 rounded-xl p-4 border border-white/5"><div class="flex items-center justify-between gap-3 mb-3"><span class="text-xs text-gray-500 uppercase font-bold tracking-widest">Classement des pilotes</span><span class="text-xs text-gray-400">${groupedResults.length} résultat${groupedResults.length > 1 ? 's' : ''}</span></div><div class="space-y-2">${groupedResults.map((r, index) => `<div class="grid grid-cols-[minmax(0,1fr)_auto] gap-3 items-center py-3 border-b border-white/5 last:border-0"><div class="min-w-0"><div class="text-sm text-white font-bold">Équipage ${index + 1}</div><div class="text-xs text-gray-300 break-words mt-1">${escapeHtml(r.driver || 'Pilote non renseigné')}</div><div class="text-xs text-gray-500 break-words mt-1">${escapeHtml([r.split, r.car].filter(Boolean).join(' · ') || '—')}${r.polePosition ? ' · Pole position' : ''}</div></div><span class="text-sm font-black text-white">${normalizeSimracingPosition(r.position)}</span></div>`).join('')}</div></div>`;
+                metaEl.innerHTML = `<div class="sm:col-span-3 bg-black/50 rounded-xl p-4 border border-white/5"><div class="flex items-center justify-between gap-3 mb-3"><span class="text-sm text-gray-500 uppercase font-bold tracking-widest">Classement des pilotes</span><span class="text-sm text-gray-400">${groupedResults.length} résultat${groupedResults.length > 1 ? 's' : ''}</span></div><div class="md:grid md:grid-cols-2 md:gap-x-10">${groupedResults.map((r, index) => `<div class="grid grid-cols-[minmax(0,1fr)_auto] gap-3 items-center py-3 border-b border-white/5 last:border-0"><div class="min-w-0"><div class="text-base text-white font-bold">Équipage ${index + 1}</div><div class="text-sm text-gray-300 break-words mt-1">${escapeHtml(r.driver || 'Pilote non renseigné')}</div><div class="text-sm text-gray-500 break-words mt-1">${escapeHtml([r.split, r.car].filter(Boolean).join(' · ') || '—')}${r.polePosition ? ' · Pole position' : ''}</div></div><span class="text-xl font-black text-white">${normalizeSimracingPosition(r.position)}</span></div>`).join('')}</div></div>`;
             }
 
             document.getElementById('palmares-article-date').textContent = item.date || 'Non daté';
