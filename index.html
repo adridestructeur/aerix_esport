@@ -8322,8 +8322,8 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
             });
             return out;
         }
-        // Position représentative : positions distinctes triées (P1 · P3 · P7),
-        // au-delà de 3 -> « P1 · P3 · P7 +2 ». Les détails restent dans l'article.
+        // Position représentative : toutes les positions distinctes, triées (P1 · P3 · P7), sans aucune limite.
+        // Le détail par équipage reste dans l'article.
         function getSimracingPositionSummary(results) {
             const nums = new Set(), others = [], seenOther = new Set();
             (results || []).forEach(r => {
@@ -8335,7 +8335,7 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
             });
             const parts = [...[...nums].sort((a, b) => a - b).map(n => `P${n}`), ...others];
             if (!parts.length) return '';
-            return parts.length <= 3 ? parts.join(' · ') : `${parts.slice(0, 3).join(' · ')} +${parts.length - 3}`;
+            return parts.join(' · ');
         }
         function getSimracingCardSummary(item) {
             const results = getSimracingResults(item);
@@ -8475,9 +8475,9 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
                 else {
                     const cardSummary = getSimracingCardSummary(p);
                     layoutHTML = `
-                        <div class="flex justify-between items-start mb-4">
+                        <div class="flex justify-between items-start gap-3 mb-4">
                             ${getGameBadge(p.game)}
-                            <span class="text-xs font-bold px-2 py-1 rounded-md border bg-aerix-lmu/20 text-aerix-lmu border-aerix-lmu/30">${cardSummary.position}</span>
+                            <span class="text-xs font-bold px-2 py-1 rounded-md border bg-aerix-lmu/20 text-aerix-lmu border-aerix-lmu/30 min-w-0 max-w-[70%] text-right break-words">${cardSummary.position}</span>
                         </div>
                         ${imgHTML}
                         <h4 class="text-xl font-bold text-white mb-1 tracking-tight leading-tight" data-translate-src="${escapeHtml(p.title || '')}">${escapeHtml(p.title)}</h4>
@@ -11055,7 +11055,7 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
 
             res.innerHTML = results.length ? results.map(p => {
                 const id = String(p.id || '').replace(/'/g, "\\'");
-                return `<button type="button" onclick="openCompetitionResult('${id}')" class="glass-panel p-4 rounded-2xl border border-white/10 flex items-center justify-between gap-4 text-left w-full hover:border-aerix-purple/40 transition"><span class="min-w-0"><span class="block text-white font-bold">${escapeHtml(p.title || (en ? 'Result' : 'Résultat'))}</span><span class="block text-xs text-gray-500 mt-1">${escapeHtml(p.game || (en ? 'General' : 'Général'))} ${p.date ? '· ' + escapeHtml(p.date) : ''}</span></span><span class="text-xs font-bold text-aerix-purple shrink-0">${p.result ? escapeHtml(p.result) : (p.game === 'Rocket League' ? escapeHtml(p.position || '') : getSimracingPositionSummary(getSimracingResults(p)))} ↗</span></button>`;
+                return `<button type="button" onclick="openCompetitionResult('${id}')" class="glass-panel p-4 rounded-2xl border border-white/10 flex items-center justify-between gap-4 text-left w-full hover:border-aerix-purple/40 transition"><span class="min-w-0"><span class="block text-white font-bold">${escapeHtml(p.title || (en ? 'Result' : 'Résultat'))}</span><span class="block text-xs text-gray-500 mt-1">${escapeHtml(p.game || (en ? 'General' : 'Général'))} ${p.date ? '· ' + escapeHtml(p.date) : ''}</span></span><span class="text-xs font-bold text-aerix-purple max-w-[45%] text-right break-words">${p.result ? escapeHtml(p.result) : (p.game === 'Rocket League' ? escapeHtml(p.position || '') : getSimracingPositionSummary(getSimracingResults(p)))} ↗</span></button>`;
             }).join('') : '';
 
             if (archive) {
@@ -12129,6 +12129,12 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
             }, 300);
         }
         function navigateFromHash() {
+            // Identifiant d'article éventuel dans le hash (#palmares/ID), lu AVANT tout retour anticipé :
+            // un lien partagé du type ?lang=fr&page=palmares#palmares/ID doit ouvrir l'article.
+            const rawHash = (window.location.hash || '').slice(1);
+            const hashParts = rawHash.split('/');
+            let hashItemId = '';
+            try { hashItemId = hashParts.length > 1 ? decodeURIComponent(hashParts.slice(1).join('/')) : ''; } catch (e) {}
             const route = aerixRouteFromPath();
             if (route.isRoute) {
                 if (typeof currentLang !== 'undefined' && currentLang !== route.lang) {
@@ -12137,13 +12143,13 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
                     if (typeof applyLanguageContent === 'function') applyLanguageContent(route.lang);
                 }
                 navigate(route.pageId, false);
+                if (hashItemId && hashParts[0] === route.pageId && ['annonces', 'palmares', 'competition'].includes(route.pageId)) startDeepLink(route.pageId, hashItemId);
                 return;
             }
-            const raw = (window.location.hash || '#home').slice(1) || 'home';
+            const raw = rawHash || 'home';
             const parts = raw.split('/');
             const pageId = parts[0] || 'home';
-            let itemId = '';
-            try { itemId = parts.length > 1 ? decodeURIComponent(parts.slice(1).join('/')) : ''; } catch (e) {}
+            let itemId = hashItemId;
             const target = document.getElementById('page-' + pageId) ? pageId : 'home';
             navigate(target, false);
             if (itemId && ['annonces', 'palmares', 'competition'].includes(target)) startDeepLink(target, itemId);
