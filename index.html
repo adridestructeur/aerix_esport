@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" data-aerix-version="16">
+<html lang="fr" data-aerix-version="17">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -5877,16 +5877,14 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
                         </select>
                     </div>
 
-                    <!-- Champs de résultats simracing -->
-                    <div id="palm-fields-sim" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                        <input type="text" id="add-palm-position" placeholder="Position (ex: P1, Top 10)" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm font-bold outline-none focus:border-aerix-lmu transition">
-                        <input type="text" id="add-palm-split" placeholder="Catégorie / Split (ex: GTE, Split 2)" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-lmu transition">
-                        <input type="text" id="add-palm-car" placeholder="Voiture (ex: Porsche 911 RSR)" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-lmu transition">
+                    <!-- Plusieurs résultats dans une seule publication -->
+                    <div id="palm-fields-sim" class="mb-4">
+                        <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+                            <div><h5 class="text-sm font-bold text-white">Résultats des pilotes</h5><p class="text-xs text-gray-500 mt-1">Ajoute chaque pilote ou équipage et son classement. Tous seront regroupés dans le même post.</p></div>
+                            <button type="button" onclick="addPalmResultRow()" class="px-4 py-2 rounded-lg bg-aerix-purple/15 border border-aerix-purple/30 text-purple-300 text-xs font-bold hover:bg-aerix-purple/25 transition">+ Ajouter un résultat</button>
+                        </div>
+                        <div id="palm-results-rows" class="space-y-3"></div>
                     </div>
-                    <label class="flex items-center gap-3 rounded-xl border border-amber-400/20 bg-amber-400/5 p-4 mb-4 cursor-pointer">
-                        <input type="checkbox" id="add-palm-pole-position" class="w-5 h-5 accent-amber-400">
-                        <span class="text-sm font-bold text-white">Pole position obtenue ?</span>
-                    </label>
 
                     <div class="grid grid-cols-1 gap-4 mb-4">
                         <input type="text" id="add-palm-date" placeholder="Date (ex: 12 Mars 2026)" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple transition">
@@ -8431,19 +8429,18 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
                         </div>`;
                 } 
                 else {
+                    const groupedResults = Array.isArray(p.results) && p.results.length ? p.results : [{ driver: p.driver || '', position: p.position || '', split: p.split || '', car: p.car || '' }];
+                    const resultPreview = groupedResults.slice(0, 4).map(r => `
+                        <div class="flex items-center justify-between gap-3 py-1.5 border-b border-white/5 last:border-0">
+                            <span class="text-sm text-gray-300 truncate">${escapeHtml(r.driver || r.split || 'Pilote')}</span>
+                            <span class="text-sm font-black text-white shrink-0">${normalizeSimracingPosition(r.position)}</span>
+                        </div>`).join('');
                     layoutHTML = `
-                        <div class="flex justify-between items-start mb-4">
-                            ${getGameBadge(p.game)}
-                            <span class="text-xs font-bold px-2 py-1 rounded-md border bg-aerix-lmu/20 text-aerix-lmu border-aerix-lmu/30">${normalizeSimracingPosition(p.position)}</span>
-                        </div>
+                        <div class="flex justify-between items-start mb-4">${getGameBadge(p.game)}<span class="text-xs font-bold px-2 py-1 rounded-md border bg-aerix-lmu/20 text-aerix-lmu border-aerix-lmu/30">${groupedResults.length} résultat${groupedResults.length > 1 ? 's' : ''}</span></div>
                         ${imgHTML}
                         <h4 class="text-xl font-bold text-white mb-1 tracking-tight leading-tight" data-translate-src="${escapeHtml(p.title || '')}">${escapeHtml(p.title)}</h4>
-                        <span class="text-xs text-gray-500 font-medium mb-4 block flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg> ${escapeHtml(p.date || 'Non daté')}</span>
-                        
-                        <div class="bg-black/50 rounded-xl p-4 border border-white/5 space-y-2">
-                            <div class="flex justify-between items-center"><span class="text-xs text-gray-500 uppercase font-bold tracking-widest">Catégorie</span><span class="text-sm text-white font-bold bg-white/5 px-2 py-1 rounded">${escapeHtml(p.split || 'N/A')}</span></div>
-                            <div class="flex justify-between items-center"><span class="text-xs text-gray-500 uppercase font-bold tracking-widest">Voiture</span><span class="text-sm text-white font-bold bg-white/5 px-2 py-1 rounded">${escapeHtml(p.car || 'N/A')}</span></div>
-                        </div>`;
+                        <span class="text-xs text-gray-500 font-medium mb-4 block flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5"></path></svg> ${escapeHtml(p.date || 'Non daté')}</span>
+                        <div class="bg-black/50 rounded-xl p-4 border border-white/5">${resultPreview}${groupedResults.length > 4 ? `<p class="text-xs text-gray-500 mt-2">+ ${groupedResults.length - 4} autres résultats</p>` : ''}</div>`;
                 }
 
                 __html += `
@@ -8484,10 +8481,8 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
                         <div class="font-bold text-gray-400 uppercase text-sm truncate w-1/3 text-right">${escapeHtml(item.opponent || 'Adversaire')}</div>
                     </div>`;
             } else {
-                metaEl.innerHTML = `
-                    <div class="bg-black/50 rounded-xl p-3 border border-white/5"><span class="block text-xs text-gray-500 uppercase font-bold tracking-widest mb-1">Catégorie</span><span class="text-sm text-white font-bold">${escapeHtml(item.split || 'N/A')}</span></div>
-                    <div class="bg-black/50 rounded-xl p-3 border border-white/5"><span class="block text-xs text-gray-500 uppercase font-bold tracking-widest mb-1">Voiture</span><span class="text-sm text-white font-bold">${escapeHtml(item.car || 'N/A')}</span></div>
-                    <div class="bg-black/50 rounded-xl p-3 border border-white/5"><span class="block text-xs text-gray-500 uppercase font-bold tracking-widest mb-1">Position</span><span class="text-sm text-white font-bold">${normalizeSimracingPosition(item.position)}</span></div>`;
+                const groupedResults = Array.isArray(item.results) && item.results.length ? item.results : [{ driver: item.driver || '', position: item.position || '', split: item.split || '', car: item.car || '', polePosition: item.polePosition }];
+                metaEl.innerHTML = `<div class="sm:col-span-3 bg-black/50 rounded-xl p-4 border border-white/5"><div class="flex items-center justify-between gap-3 mb-3"><span class="text-xs text-gray-500 uppercase font-bold tracking-widest">Classement des pilotes</span><span class="text-xs text-gray-400">${groupedResults.length} résultat${groupedResults.length > 1 ? 's' : ''}</span></div><div class="space-y-2">${groupedResults.map((r, index) => `<div class="grid grid-cols-[32px_minmax(0,1fr)_auto] gap-3 items-center py-2 border-b border-white/5 last:border-0"><span class="text-xs text-gray-500 font-bold">${String(index + 1).padStart(2, '0')}</span><div class="min-w-0"><div class="text-sm text-white font-bold truncate">${escapeHtml(r.driver || 'Pilote / équipage')}</div><div class="text-xs text-gray-500 truncate">${escapeHtml([r.split, r.car].filter(Boolean).join(' · ') || '—')}${r.polePosition ? ' · Pole position' : ''}</div></div><span class="text-sm font-black text-white">${normalizeSimracingPosition(r.position)}</span></div>`).join('')}</div></div>`;
             }
 
             document.getElementById('palmares-article-date').textContent = item.date || 'Non daté';
@@ -10392,10 +10387,60 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
             } catch(e) { showToast("Erreur lors du réordonnancement", "error"); }
         }
 
+        // --- RÉSULTATS MULTIPLES PAR PUBLICATION (SIMRACING) ---
+        let palmResultRowCounter = 0;
+        function addPalmResultRow(result = {}) {
+            const host = document.getElementById('palm-results-rows');
+            if (!host) return;
+            const rowId = `palm-result-${++palmResultRowCounter}`;
+            const row = document.createElement('div');
+            row.className = 'palm-result-row rounded-xl border border-white/10 bg-black/20 p-3';
+            row.dataset.rowId = rowId;
+            row.innerHTML = `
+                <div class="flex items-center justify-between gap-2 mb-3"><span class="text-xs font-bold uppercase tracking-wider text-gray-400">Résultat <span class="palm-result-number"></span></span><button type="button" class="palm-remove-result text-xs text-red-300 hover:text-red-200 px-2 py-1 rounded bg-red-500/10" onclick="removePalmResultRow('${rowId}')">Retirer</button></div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+                    <input data-field="driver" type="text" value="${escapeHtml(result.driver || '')}" placeholder="Pilote / équipage" class="bg-black/50 border border-white/10 rounded-lg px-3 py-2.5 text-white text-sm outline-none focus:border-aerix-lmu">
+                    <input data-field="position" type="text" value="${escapeHtml(result.position || '')}" placeholder="Position (ex: P1)" class="bg-black/50 border border-white/10 rounded-lg px-3 py-2.5 text-white text-sm font-bold outline-none focus:border-aerix-lmu">
+                    <input data-field="split" type="text" value="${escapeHtml(result.split || '')}" placeholder="Catégorie / Split" class="bg-black/50 border border-white/10 rounded-lg px-3 py-2.5 text-white text-sm outline-none focus:border-aerix-lmu">
+                    <input data-field="car" type="text" value="${escapeHtml(result.car || '')}" placeholder="Voiture" class="bg-black/50 border border-white/10 rounded-lg px-3 py-2.5 text-white text-sm outline-none focus:border-aerix-lmu">
+                </div>
+                <label class="inline-flex items-center gap-2 mt-3 text-xs text-gray-300"><input data-field="polePosition" type="checkbox" class="w-4 h-4 accent-amber-400" ${result.polePosition ? 'checked' : ''}> Pole position</label>`;
+            host.appendChild(row);
+            refreshPalmResultRows();
+        }
+        function removePalmResultRow(rowId) {
+            const host = document.getElementById('palm-results-rows');
+            host?.querySelector(`[data-row-id="${rowId}"]`)?.remove();
+            if (host && !host.querySelector('.palm-result-row')) addPalmResultRow();
+            refreshPalmResultRows();
+        }
+        function refreshPalmResultRows() {
+            const rows = [...document.querySelectorAll('#palm-results-rows .palm-result-row')];
+            rows.forEach((row, index) => {
+                row.querySelector('.palm-result-number').textContent = String(index + 1).padStart(2, '0');
+                row.querySelector('.palm-remove-result').classList.toggle('hidden', rows.length === 1);
+            });
+        }
+        function getPalmResultRows() {
+            return [...document.querySelectorAll('#palm-results-rows .palm-result-row')].map(row => {
+                const field = key => row.querySelector(`[data-field="${key}"]`);
+                return { driver: field('driver').value.trim(), position: normalizeSimracingPosition(field('position').value), split: field('split').value.trim(), car: field('car').value.trim(), polePosition: field('polePosition').checked };
+            }).filter(r => r.driver || r.position !== 'Classé' || r.split || r.car || r.polePosition);
+        }
+        function setPalmResultRows(results) {
+            const host = document.getElementById('palm-results-rows');
+            if (!host) return;
+            host.innerHTML = ''; palmResultRowCounter = 0;
+            (Array.isArray(results) && results.length ? results : [{}]).forEach(addPalmResultRow);
+        }
+        // Première ligne prête dès l'ouverture de l'administration.
+        setPalmResultRows([{}]);
+
         // --- EDITION PALMARÈS (DYNAMIQUE RL / SIMRACING) ---
         function togglePalmaresFields() {
-            // Le formulaire de création est désormais dédié au simracing.
             document.getElementById('palm-fields-sim')?.classList.remove('hidden');
+            const host = document.getElementById('palm-results-rows');
+            if (host && !host.querySelector('.palm-result-row')) setPalmResultRows([{}]);
         }
 
         function startEditPalmares(id) {
@@ -10404,57 +10449,49 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
             document.getElementById('add-palm-title').value = item.title;
             document.getElementById('add-palm-date').value = item.date || '';
             document.getElementById('add-palm-game').value = item.game || 'Le Mans Ultimate';
-            // Compatibilité : les anciens résultats Rocket League restent éditables sans réafficher leurs champs spécifiques.
             if (item.game === 'Rocket League' && ![...document.getElementById('add-palm-game').options].some(o => o.value === 'Rocket League')) {
                 const legacyOption = document.createElement('option'); legacyOption.value = 'Rocket League'; legacyOption.textContent = 'Rocket League (ancien résultat)'; legacyOption.hidden = true;
                 document.getElementById('add-palm-game').appendChild(legacyOption);
             }
             setMdEditorValue('add-palm-desc', aerixDescToMarkdown(item.desc, item.descFormat));
-            
-            togglePalmaresFields(); // Met à jour l'affichage selon le jeu choisi
-            
-            // Simracing Fields
-            document.getElementById('add-palm-position').value = normalizeSimracingPosition(item.position);
-            document.getElementById('add-palm-split').value = item.split || '';
-            document.getElementById('add-palm-car').value = item.car || '';
-            document.getElementById('add-palm-pole-position').checked = item.polePosition === true;
-            
-            aerixImgSetLoad('palm', item);
-            document.getElementById('palmares-form-title').innerText = "Modifier le Résultat"; document.getElementById('palmares-cancel-btn').classList.remove('hidden');
-        }
-        
-        function resetPalmaresForm() {
-            document.getElementById('edit-palmares-id').value = ''; document.getElementById('add-palm-title').value = ''; document.getElementById('add-palm-date').value = ''; document.getElementById('add-palm-game').value = 'Le Mans Ultimate';
-            const legacyOption = [...document.getElementById('add-palm-game').options].find(o => o.value === 'Rocket League'); if (legacyOption) legacyOption.remove();
-            document.getElementById('add-palm-position').value = ''; document.getElementById('add-palm-split').value = ''; document.getElementById('add-palm-car').value = '';
-            setMdEditorValue('add-palm-desc', '');
-            
             togglePalmaresFields();
-
-            aerixImgSetClear('palm');
-            document.getElementById('palmares-form-title').innerText = "Déclarer un Résultat"; document.getElementById('palmares-cancel-btn').classList.add('hidden');
+            const legacyResults = item.results?.length ? item.results : [{ driver: item.driver || '', position: item.position || '', split: item.split || '', car: item.car || '', polePosition: item.polePosition === true }];
+            setPalmResultRows(legacyResults);
+            aerixImgSetLoad('palm', item);
+            document.getElementById('palmares-form-title').innerText = 'Modifier la publication';
+            document.getElementById('palmares-cancel-btn').classList.remove('hidden');
         }
-        
+
+        function resetPalmaresForm() {
+            document.getElementById('edit-palmares-id').value = '';
+            document.getElementById('add-palm-title').value = '';
+            document.getElementById('add-palm-date').value = '';
+            document.getElementById('add-palm-game').value = 'Le Mans Ultimate';
+            const legacyOption = [...document.getElementById('add-palm-game').options].find(o => o.value === 'Rocket League'); if (legacyOption) legacyOption.remove();
+            setPalmResultRows([{}]);
+            setMdEditorValue('add-palm-desc', '');
+            togglePalmaresFields();
+            aerixImgSetClear('palm');
+            document.getElementById('palmares-form-title').innerText = 'Déclarer un Résultat';
+            document.getElementById('palmares-cancel-btn').classList.add('hidden');
+        }
+
         async function savePalmares() {
             const id = document.getElementById('edit-palmares-id').value, title = document.getElementById('add-palm-title').value, date = document.getElementById('add-palm-date').value, game = document.getElementById('add-palm-game').value;
-            
-            if(!title) return showToast("Titre/Compétition obligatoire.", "error");
-
+            if(!title) return showToast('Titre/Compétition obligatoire.', 'error');
             const desc = document.getElementById('add-palm-desc').value.trim();
             const __pimgs = await aerixImgSetOptimized('palm'); if (!__pimgs) return;
             let data = { title, date, game, image: __pimgs.image, images: __pimgs.images, desc, descFormat: 'md' };
-
             if (game !== 'Rocket League') {
-                data.position = normalizeSimracingPosition(document.getElementById('add-palm-position').value);
-                data.split = document.getElementById('add-palm-split').value;
-                data.car = document.getElementById('add-palm-car').value;
-                data.polePosition = document.getElementById('add-palm-pole-position').checked;
+                const results = getPalmResultRows();
+                if (!results.length) return showToast('Ajoute au moins un résultat.', 'error');
+                data.results = results;
+                Object.assign(data, results[0]); // compatibilité avec les anciens affichages et statistiques
             }
-
             try {
-                if(id) await db.collection("palmares").doc(id).update(data); else await db.collection("palmares").add(data);
-                showToast("Résultat sauvegardé !"); resetPalmaresForm();
-            } catch(e) { showToast("Erreur de sauvegarde", "error"); }
+                if(id) await db.collection('palmares').doc(id).update(data); else await db.collection('palmares').add(data);
+                showToast('Publication sauvegardée !'); resetPalmaresForm();
+            } catch(e) { showToast('Erreur de sauvegarde', 'error'); }
         }
 
         // --- GESTION PALMARÈS GLOBAUX ---
