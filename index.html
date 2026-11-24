@@ -8303,6 +8303,49 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
             return escapeHtml(raw);
         }
 
+        // --- RÉSULTATS SIMRACING : le tableau `results` est la source de vérité ---
+        // Anciennes publications (sans tableau) : on reconstruit UN résultat depuis driver/position/split/car/polePosition.
+        function getSimracingResults(item) {
+            if (item && Array.isArray(item.results) && item.results.length) return item.results.filter(r => r && typeof r === 'object');
+            return [{ driver: item?.driver || '', position: item?.position || '', split: item?.split || '', car: item?.car || '', polePosition: item?.polePosition === true }];
+        }
+        // Valeurs distinctes d'un champ (catégorie / voiture), ordre d'apparition conservé,
+        // doublons ignorés sans tenir compte de la casse, des espaces ni de la ponctuation.
+        function getSimracingDistinct(results, field) {
+            const seen = new Set(), out = [];
+            (results || []).forEach(r => {
+                const value = String(r?.[field] ?? '').trim();
+                if (!value) return;
+                const key = value.toLowerCase().replace(/[^a-z0-9\u00C0-\u024F]+/g, '');
+                if (!key || seen.has(key)) return;
+                seen.add(key); out.push(value);
+            });
+            return out;
+        }
+        // Position représentative : positions distinctes triées (P1 · P3 · P7),
+        // au-delà de 3 -> « P1 · P3 · P7 +2 ». Les détails restent dans l'article.
+        function getSimracingPositionSummary(results) {
+            const nums = new Set(), others = [], seenOther = new Set();
+            (results || []).forEach(r => {
+                const raw = String(r?.position ?? '').trim();
+                if (!raw || raw.toLowerCase() === 'classé') return;
+                const m = raw.match(/^p?\s*(\d+)(?:er|e|ème|eme)?$/i);
+                if (m) { nums.add(Number(m[1])); return; }
+                if (!seenOther.has(raw.toLowerCase())) { seenOther.add(raw.toLowerCase()); others.push(normalizeSimracingPosition(raw)); }
+            });
+            const parts = [...[...nums].sort((a, b) => a - b).map(n => `P${n}`), ...others];
+            if (!parts.length) return '';
+            return parts.length <= 3 ? parts.join(' · ') : `${parts.slice(0, 3).join(' · ')} +${parts.length - 3}`;
+        }
+        function getSimracingCardSummary(item) {
+            const results = getSimracingResults(item);
+            return {
+                position: getSimracingPositionSummary(results) || 'Classé',
+                categories: getSimracingDistinct(results, 'split').join(' · ') || 'N/A',
+                cars: getSimracingDistinct(results, 'car').join(' · ') || 'N/A'
+            };
+        }
+
         // RÉSULTATS & PALMARÈS — BASCULE FRONT-END
         let palmaresView = 'resultats';
         function setPalmaresView(view) {
@@ -8336,11 +8379,12 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
             if (!container) return;
             const stats = document.getElementById('achievements-stats');
             const results = (Array.isArray(globalPalmares) ? globalPalmares : []).filter(p => !(isRLHidden('palmares') && p.game === 'Rocket League'));
-            const details = p => [p.position,p.result,p.title,p.description,p.split,p.category].filter(Boolean).join(' ').toLowerCase();
+            const simRes = p => p.game === 'Rocket League' ? [p] : getSimracingResults(p);
+            const details = p => [p.position,p.result,p.title,p.description,p.split,p.category,...simRes(p).flatMap(r => [r.position, r.split])].filter(Boolean).join(' ').toLowerCase();
             const position = p => { const raw=String(p.position||p.result||'').trim().toLowerCase(); const m=raw.match(/^p?\s*(\d+)/)||raw.match(/(\d+)\s*(?:er|e|ème|eme)/); return m?Number(m[1]):null; };
-            const top5=results.filter(p=>{const n=position(p);return (n!==null&&n<=5)||/top\s*5|top\s*cinq/.test(details(p));}).length;
-            const podiums=results.filter(p=>{const n=position(p);return (n!==null&&n<=3)||/podium|top\s*3/.test(details(p));}).length;
-            const poles=results.filter(p=>p.polePosition === true || /pole\s*position/.test(details(p))).length;
+            const top5=results.filter(p=>simRes(p).some(r=>{const n=position(r);return n!==null&&n<=5;})||/top\s*5|top\s*cinq/.test(details(p))).length;
+            const podiums=results.filter(p=>simRes(p).some(r=>{const n=position(r);return n!==null&&n<=3;})||/podium|top\s*3/.test(details(p))).length;
+            const poles=results.filter(p=>simRes(p).some(r=>r.polePosition === true)||/pole\s*position/.test(details(p))).length;
             const EN = currentLang==='en';
             const ICO = {
                 flag:'<path d="M5 21V4"/><path d="M5 4h13l-2.5 4 2.5 4H5"/>',
@@ -8429,18 +8473,18 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
                         </div>`;
                 } 
                 else {
-                    const firstResult = Array.isArray(p.results) && p.results.length ? p.results[0] : p;
+                    const cardSummary = getSimracingCardSummary(p);
                     layoutHTML = `
                         <div class="flex justify-between items-start mb-4">
                             ${getGameBadge(p.game)}
-                            <span class="text-xs font-bold px-2 py-1 rounded-md border bg-aerix-lmu/20 text-aerix-lmu border-aerix-lmu/30">${normalizeSimracingPosition(firstResult.position)}</span>
+                            <span class="text-xs font-bold px-2 py-1 rounded-md border bg-aerix-lmu/20 text-aerix-lmu border-aerix-lmu/30">${cardSummary.position}</span>
                         </div>
                         ${imgHTML}
                         <h4 class="text-xl font-bold text-white mb-1 tracking-tight leading-tight" data-translate-src="${escapeHtml(p.title || '')}">${escapeHtml(p.title)}</h4>
                         <span class="text-xs text-gray-500 font-medium mb-4 block flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4v4h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg> ${escapeHtml(p.date || 'Non daté')}</span>
                         <div class="bg-black/50 rounded-xl p-4 border border-white/5 space-y-2">
-                            <div class="flex justify-between items-center"><span class="text-xs text-gray-500 uppercase font-bold tracking-widest">Catégorie</span><span class="text-sm text-white font-bold bg-white/5 px-2 py-1 rounded">${escapeHtml(firstResult.split || 'N/A')}</span></div>
-                            <div class="flex justify-between items-center"><span class="text-xs text-gray-500 uppercase font-bold tracking-widest">Voiture</span><span class="text-sm text-white font-bold bg-white/5 px-2 py-1 rounded">${escapeHtml(firstResult.car || 'N/A')}</span></div>
+                            <div class="flex justify-between items-center gap-3"><span class="text-xs text-gray-500 uppercase font-bold tracking-widest shrink-0">Catégorie</span><span class="text-sm text-white font-bold bg-white/5 px-2 py-1 rounded text-right min-w-0 break-words">${escapeHtml(cardSummary.categories)}</span></div>
+                            <div class="flex justify-between items-center gap-3"><span class="text-xs text-gray-500 uppercase font-bold tracking-widest shrink-0">Voiture</span><span class="text-sm text-white font-bold bg-white/5 px-2 py-1 rounded text-right min-w-0 break-words">${escapeHtml(cardSummary.cars)}</span></div>
                         </div>`;
                 }
 
@@ -8469,7 +8513,7 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
                 let badgeClass = item.result === 'Victoire' ? 'bg-aerix-win/20 text-aerix-win border-aerix-win/30' : 'bg-aerix-loss/20 text-aerix-loss border-aerix-loss/30';
                 badges.push(`<span class="text-xs font-bold px-2 py-1 rounded-md border ${badgeClass}">${escapeHtml(item.result || 'Résultat')}</span>`);
             } else {
-                badges.push(`<span class="text-xs font-bold px-2 py-1 rounded-md border bg-aerix-lmu/20 text-aerix-lmu border-aerix-lmu/30">${normalizeSimracingPosition(item.position)}</span>`);
+                badges.push(`<span class="text-xs font-bold px-2 py-1 rounded-md border bg-aerix-lmu/20 text-aerix-lmu border-aerix-lmu/30">${getSimracingCardSummary(item).position}</span>`);
             }
             document.getElementById('palmares-article-badges').innerHTML = badges.join('');
 
@@ -8482,8 +8526,8 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
                         <div class="font-bold text-gray-400 uppercase text-sm truncate w-1/3 text-right">${escapeHtml(item.opponent || 'Adversaire')}</div>
                     </div>`;
             } else {
-                const groupedResults = Array.isArray(item.results) && item.results.length ? item.results : [{ driver: item.driver || '', position: item.position || '', split: item.split || '', car: item.car || '', polePosition: item.polePosition }];
-                metaEl.innerHTML = `<div class="sm:col-span-3 bg-black/50 rounded-xl p-4 border border-white/5"><div class="flex items-center justify-between gap-3 mb-3"><span class="text-xs text-gray-500 uppercase font-bold tracking-widest">Classement des pilotes</span><span class="text-xs text-gray-400">${groupedResults.length} résultat${groupedResults.length > 1 ? 's' : ''}</span></div><div class="space-y-2">${groupedResults.map((r, index) => `<div class="grid grid-cols-[minmax(0,1fr)_auto] gap-3 items-center py-3 border-b border-white/5 last:border-0"><div class="min-w-0"><div class="text-sm text-white font-bold">Équipage ${index + 1}</div><div class="text-xs text-gray-300 truncate mt-1">${escapeHtml(r.driver || 'Pilote non renseigné')}</div><div class="text-xs text-gray-500 truncate mt-1">${escapeHtml([r.split, r.car].filter(Boolean).join(' · ') || '—')}${r.polePosition ? ' · Pole position' : ''}</div></div><span class="text-sm font-black text-white">${normalizeSimracingPosition(r.position)}</span></div>`).join('')}</div></div>`;
+                const groupedResults = getSimracingResults(item);
+                metaEl.innerHTML = `<div class="sm:col-span-3 bg-black/50 rounded-xl p-4 border border-white/5"><div class="flex items-center justify-between gap-3 mb-3"><span class="text-xs text-gray-500 uppercase font-bold tracking-widest">Classement des pilotes</span><span class="text-xs text-gray-400">${groupedResults.length} résultat${groupedResults.length > 1 ? 's' : ''}</span></div><div class="space-y-2">${groupedResults.map((r, index) => `<div class="grid grid-cols-[minmax(0,1fr)_auto] gap-3 items-center py-3 border-b border-white/5 last:border-0"><div class="min-w-0"><div class="text-sm text-white font-bold">Équipage ${index + 1}</div><div class="text-xs text-gray-300 break-words mt-1">${escapeHtml(r.driver || 'Pilote non renseigné')}</div><div class="text-xs text-gray-500 break-words mt-1">${escapeHtml([r.split, r.car].filter(Boolean).join(' · ') || '—')}${r.polePosition ? ' · Pole position' : ''}</div></div><span class="text-sm font-black text-white">${normalizeSimracingPosition(r.position)}</span></div>`).join('')}</div></div>`;
             }
 
             document.getElementById('palmares-article-date').textContent = item.date || 'Non daté';
@@ -10456,7 +10500,7 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
             }
             setMdEditorValue('add-palm-desc', aerixDescToMarkdown(item.desc, item.descFormat));
             togglePalmaresFields();
-            const legacyResults = item.results?.length ? item.results : [{ driver: item.driver || '', position: item.position || '', split: item.split || '', car: item.car || '', polePosition: item.polePosition === true }];
+            const legacyResults = getSimracingResults(item);
             setPalmResultRows(legacyResults);
             aerixImgSetLoad('palm', item);
             document.getElementById('palmares-form-title').innerText = 'Modifier la publication';
@@ -11011,7 +11055,7 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
 
             res.innerHTML = results.length ? results.map(p => {
                 const id = String(p.id || '').replace(/'/g, "\\'");
-                return `<button type="button" onclick="openCompetitionResult('${id}')" class="glass-panel p-4 rounded-2xl border border-white/10 flex items-center justify-between gap-4 text-left w-full hover:border-aerix-purple/40 transition"><span class="min-w-0"><span class="block text-white font-bold">${escapeHtml(p.title || (en ? 'Result' : 'Résultat'))}</span><span class="block text-xs text-gray-500 mt-1">${escapeHtml(p.game || (en ? 'General' : 'Général'))} ${p.date ? '· ' + escapeHtml(p.date) : ''}</span></span><span class="text-xs font-bold text-aerix-purple shrink-0">${escapeHtml(p.result || p.position || '')} ↗</span></button>`;
+                return `<button type="button" onclick="openCompetitionResult('${id}')" class="glass-panel p-4 rounded-2xl border border-white/10 flex items-center justify-between gap-4 text-left w-full hover:border-aerix-purple/40 transition"><span class="min-w-0"><span class="block text-white font-bold">${escapeHtml(p.title || (en ? 'Result' : 'Résultat'))}</span><span class="block text-xs text-gray-500 mt-1">${escapeHtml(p.game || (en ? 'General' : 'Général'))} ${p.date ? '· ' + escapeHtml(p.date) : ''}</span></span><span class="text-xs font-bold text-aerix-purple shrink-0">${p.result ? escapeHtml(p.result) : (p.game === 'Rocket League' ? escapeHtml(p.position || '') : getSimracingPositionSummary(getSimracingResults(p)))} ↗</span></button>`;
             }).join('') : '';
 
             if (archive) {
