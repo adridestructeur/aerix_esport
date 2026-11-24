@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" data-aerix-version="17">
+<html lang="fr" data-aerix-version="18">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -8429,18 +8429,19 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
                         </div>`;
                 } 
                 else {
-                    const groupedResults = Array.isArray(p.results) && p.results.length ? p.results : [{ driver: p.driver || '', position: p.position || '', split: p.split || '', car: p.car || '' }];
-                    const resultPreview = groupedResults.slice(0, 4).map(r => `
-                        <div class="flex items-center justify-between gap-3 py-1.5 border-b border-white/5 last:border-0">
-                            <span class="text-sm text-gray-300 truncate">${escapeHtml(r.driver || r.split || 'Pilote')}</span>
-                            <span class="text-sm font-black text-white shrink-0">${normalizeSimracingPosition(r.position)}</span>
-                        </div>`).join('');
+                    const firstResult = Array.isArray(p.results) && p.results.length ? p.results[0] : p;
                     layoutHTML = `
-                        <div class="flex justify-between items-start mb-4">${getGameBadge(p.game)}<span class="text-xs font-bold px-2 py-1 rounded-md border bg-aerix-lmu/20 text-aerix-lmu border-aerix-lmu/30">${groupedResults.length} résultat${groupedResults.length > 1 ? 's' : ''}</span></div>
+                        <div class="flex justify-between items-start mb-4">
+                            ${getGameBadge(p.game)}
+                            <span class="text-xs font-bold px-2 py-1 rounded-md border bg-aerix-lmu/20 text-aerix-lmu border-aerix-lmu/30">${normalizeSimracingPosition(firstResult.position)}</span>
+                        </div>
                         ${imgHTML}
                         <h4 class="text-xl font-bold text-white mb-1 tracking-tight leading-tight" data-translate-src="${escapeHtml(p.title || '')}">${escapeHtml(p.title)}</h4>
-                        <span class="text-xs text-gray-500 font-medium mb-4 block flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5"></path></svg> ${escapeHtml(p.date || 'Non daté')}</span>
-                        <div class="bg-black/50 rounded-xl p-4 border border-white/5">${resultPreview}${groupedResults.length > 4 ? `<p class="text-xs text-gray-500 mt-2">+ ${groupedResults.length - 4} autres résultats</p>` : ''}</div>`;
+                        <span class="text-xs text-gray-500 font-medium mb-4 block flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4v4h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg> ${escapeHtml(p.date || 'Non daté')}</span>
+                        <div class="bg-black/50 rounded-xl p-4 border border-white/5 space-y-2">
+                            <div class="flex justify-between items-center"><span class="text-xs text-gray-500 uppercase font-bold tracking-widest">Catégorie</span><span class="text-sm text-white font-bold bg-white/5 px-2 py-1 rounded">${escapeHtml(firstResult.split || 'N/A')}</span></div>
+                            <div class="flex justify-between items-center"><span class="text-xs text-gray-500 uppercase font-bold tracking-widest">Voiture</span><span class="text-sm text-white font-bold bg-white/5 px-2 py-1 rounded">${escapeHtml(firstResult.car || 'N/A')}</span></div>
+                        </div>`;
                 }
 
                 __html += `
@@ -8482,7 +8483,7 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
                     </div>`;
             } else {
                 const groupedResults = Array.isArray(item.results) && item.results.length ? item.results : [{ driver: item.driver || '', position: item.position || '', split: item.split || '', car: item.car || '', polePosition: item.polePosition }];
-                metaEl.innerHTML = `<div class="sm:col-span-3 bg-black/50 rounded-xl p-4 border border-white/5"><div class="flex items-center justify-between gap-3 mb-3"><span class="text-xs text-gray-500 uppercase font-bold tracking-widest">Classement des pilotes</span><span class="text-xs text-gray-400">${groupedResults.length} résultat${groupedResults.length > 1 ? 's' : ''}</span></div><div class="space-y-2">${groupedResults.map((r, index) => `<div class="grid grid-cols-[32px_minmax(0,1fr)_auto] gap-3 items-center py-2 border-b border-white/5 last:border-0"><span class="text-xs text-gray-500 font-bold">${String(index + 1).padStart(2, '0')}</span><div class="min-w-0"><div class="text-sm text-white font-bold truncate">${escapeHtml(r.driver || 'Pilote / équipage')}</div><div class="text-xs text-gray-500 truncate">${escapeHtml([r.split, r.car].filter(Boolean).join(' · ') || '—')}${r.polePosition ? ' · Pole position' : ''}</div></div><span class="text-sm font-black text-white">${normalizeSimracingPosition(r.position)}</span></div>`).join('')}</div></div>`;
+                metaEl.innerHTML = `<div class="sm:col-span-3 bg-black/50 rounded-xl p-4 border border-white/5"><div class="flex items-center justify-between gap-3 mb-3"><span class="text-xs text-gray-500 uppercase font-bold tracking-widest">Classement des pilotes</span><span class="text-xs text-gray-400">${groupedResults.length} résultat${groupedResults.length > 1 ? 's' : ''}</span></div><div class="space-y-2">${groupedResults.map((r, index) => `<div class="grid grid-cols-[minmax(0,1fr)_auto] gap-3 items-center py-3 border-b border-white/5 last:border-0"><div class="min-w-0"><div class="text-sm text-white font-bold">Équipage ${index + 1}</div><div class="text-xs text-gray-300 truncate mt-1">${escapeHtml(r.driver || 'Pilote non renseigné')}</div><div class="text-xs text-gray-500 truncate mt-1">${escapeHtml([r.split, r.car].filter(Boolean).join(' · ') || '—')}${r.polePosition ? ' · Pole position' : ''}</div></div><span class="text-sm font-black text-white">${normalizeSimracingPosition(r.position)}</span></div>`).join('')}</div></div>`;
             }
 
             document.getElementById('palmares-article-date').textContent = item.date || 'Non daté';
