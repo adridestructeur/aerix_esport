@@ -4615,7 +4615,7 @@ body.theme-light #page-palmares #palmares-view-toggle .filter-btn.active{backgro
 #page-palmares #filters-palmares .filter-btn{min-height:34px;padding:.4rem .95rem;font-size:.66rem}
 
 /* Scoreboard */
-#page-palmares #achievements-stats.pal-scoreboard:not(.hidden){display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;margin-bottom:1.75rem;border:1px solid var(--pal-line);border-radius:26px;overflow:hidden;position:relative;background:var(--pal-line);box-shadow:0 26px 70px rgba(0,0,0,.28)}
+#page-palmares #achievements-stats.pal-scoreboard:not(.hidden){display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;margin-bottom:1.75rem;border:1px solid var(--pal-line);border-radius:26px;overflow:hidden;position:relative;background:var(--pal-line);box-shadow:0 26px 70px rgba(0,0,0,.28)}
 #page-palmares .pal-scoreboard::before{content:"";position:absolute;inset:0 0 auto 0;height:2px;z-index:2;background:linear-gradient(90deg,transparent,rgba(var(--pal-rgb),.95),transparent)}
 #page-palmares .pal-stat{position:relative;padding:2rem 1.6rem 1.9rem;text-align:left;background:var(--pal-cell);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);transition:background .25s ease}
 #page-palmares .pal-stat:hover{background:linear-gradient(180deg,rgba(var(--pal-rgb),.10),var(--pal-cell))}
@@ -4649,6 +4649,35 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
 #page-palmares .pal-card p{position:relative;margin-top:.55rem;font-size:.86rem;line-height:1.65;color:var(--pal-mute)}
 
 @media (max-width:900px){#page-palmares #achievements-stats.pal-scoreboard:not(.hidden){grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* Palmarès : filtres saison / jeu, dernière victoire, répartition catégorie / voiture */
+#page-palmares #achievements-filters:not(.hidden){display:flex;flex-direction:column;gap:.7rem;margin-bottom:1.5rem}
+#page-palmares #achievements-filters:empty{display:none !important}
+#page-palmares .pal-filter-row{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem 1rem}
+#page-palmares .pal-filter-lab{min-width:74px;font-size:.66rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--pal-mute)}
+#page-palmares #achievements-filters .filter-btn{min-height:34px;padding:.4rem .95rem;font-size:.66rem}
+#page-palmares #achievements-insights:not(.hidden){display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.1rem;margin-bottom:1.75rem}
+#page-palmares #achievements-insights:empty{display:none !important}
+#page-palmares .pal-lastwin{grid-column:1/-1;display:flex;align-items:center;gap:1.3rem;width:100%;text-align:left;padding:1.4rem 1.6rem;border:1px solid var(--pal-line);border-radius:22px;background:linear-gradient(135deg,rgba(var(--pal-rgb),.14),var(--pal-cell) 55%);cursor:pointer;transition:transform .2s ease,border-color .2s ease}
+#page-palmares .pal-lastwin:hover{transform:translateY(-2px);border-color:rgba(var(--pal-rgb),.55)}
+#page-palmares .pal-lastwin-none{cursor:default}
+#page-palmares .pal-lastwin-none:hover{transform:none;border-color:var(--pal-line)}
+#page-palmares .pal-lastwin-ico{flex:none;width:52px;height:52px;display:flex;align-items:center;justify-content:center;border-radius:16px;color:rgb(var(--pal-rgb));border:1px solid rgba(var(--pal-rgb),.35);background:rgba(var(--pal-rgb),.12)}
+#page-palmares .pal-lastwin-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:.25rem}
+#page-palmares .pal-lastwin-title{font-size:1.35rem;font-weight:850;letter-spacing:-.025em;color:var(--pal-fg);overflow-wrap:anywhere}
+#page-palmares .pal-lastwin-meta{font-size:.82rem;color:var(--pal-mute);overflow-wrap:anywhere}
+#page-palmares .pal-lastwin-cta{flex:none;font-size:.72rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgb(var(--pal-rgb))}
+#page-palmares .pal-panel{padding:1.5rem;border:1px solid var(--pal-line);border-radius:22px;background:var(--pal-cell)}
+#page-palmares .pal-panel .pal-stat-lab{margin:0 0 .6rem}
+#page-palmares .pal-row{padding:.85rem 0 1rem;border-bottom:1px solid var(--pal-line)}
+#page-palmares .pal-row:last-child{border-bottom:0;padding-bottom:.4rem}
+#page-palmares .pal-row-top{display:flex;justify-content:space-between;align-items:baseline;gap:1rem}
+#page-palmares .pal-row-name{font-weight:800;color:var(--pal-fg);overflow-wrap:anywhere}
+#page-palmares .pal-row-win{flex:none;font-size:.78rem;color:var(--pal-mute)}
+#page-palmares .pal-row-win b{font-size:1.5rem;font-weight:900;color:var(--pal-fg);margin-right:.3rem}
+#page-palmares .pal-row-sub{margin-top:.2rem;font-size:.76rem;color:var(--pal-mute)}
+#page-palmares .pal-row-bar{display:block;margin-top:.55rem;height:3px;border-radius:3px;background:rgba(127,127,127,.14);overflow:hidden}
+#page-palmares .pal-row-bar i{display:block;height:100%;width:var(--p,0%);background:linear-gradient(90deg,rgba(var(--pal-rgb),.4),rgb(var(--pal-rgb)))}
+@media (max-width:900px){#page-palmares #achievements-insights:not(.hidden){grid-template-columns:minmax(0,1fr)}#page-palmares .pal-lastwin{flex-wrap:wrap}}
 @media (max-width:520px){
   #page-palmares #palmares-view-toggle .filter-btn{padding:.55rem 1.1rem}
   #page-palmares .pal-stat{padding:1.6rem 1.1rem 1.5rem}
@@ -4922,7 +4951,9 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
                 </div>
             </div>
             <div id="palmares-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+            <div id="achievements-filters" class="hidden"></div>
             <div id="achievements-stats" class="hidden pal-scoreboard"></div>
+            <div id="achievements-insights" class="hidden"></div>
             <div id="achievements-container" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </main>
 
@@ -5886,8 +5917,15 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
                         <div id="palm-results-rows" class="space-y-3"></div>
                     </div>
 
-                    <div class="grid grid-cols-1 gap-4 mb-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <input type="text" id="add-palm-date" placeholder="Date (ex: 12 Mars 2026)" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple transition">
+                        <div class="flex flex-col gap-2">
+                            <select id="add-palm-season" onchange="onPalmSeasonChange()" class="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple transition">
+                                <option value="">Aucune saison</option>
+                                <option value="__new__">➕ Créer une nouvelle saison…</option>
+                            </select>
+                            <input type="text" id="add-palm-season-new" maxlength="40" placeholder="Nom de la saison (ex: Saison 26/27)" class="hidden bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-aerix-purple transition">
+                        </div>
                     </div>
 
                     <!-- ÉDITEUR RICHE (article détaillé du résultat) -->
@@ -8346,6 +8384,39 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
             };
         }
 
+        // --- SAISONS & FILTRES DE L'ONGLET PALMARÈS ---
+        // Une saison est simplement un libellé (ex. « Saison 26/27 ») porté par chaque publication (champ `season`).
+        // La liste des saisons est déduite des publications : aucune nouvelle collection Firestore n'est nécessaire.
+        function palSeasonKey(s) { return String(s || '').trim().toLowerCase().replace(/\s+/g, ' '); }
+        function palNormKey(s) { return String(s || '').trim().toLowerCase().replace(/[^a-z0-9\u00C0-\u024F]+/g, ''); }
+        function getPalmSeasons(items) {
+            const src = Array.isArray(items) ? items : (Array.isArray(globalPalmares) ? globalPalmares : []);
+            const seen = new Set(), out = [];
+            sortByDateDesc([...src]).forEach(p => {   // la saison de la publication la plus récente vient en premier
+                const label = String(p?.season || '').trim().replace(/\s+/g, ' ');
+                const key = palSeasonKey(label);
+                if (!key || seen.has(key)) return;
+                seen.add(key); out.push(label);
+            });
+            return out;
+        }
+        let palFilters = { season: 'Tous', game: 'Tous' };
+        function setPalFilter(kind, value) {
+            if (kind !== 'season' && kind !== 'game') return;
+            palFilters[kind] = value || 'Tous';
+            renderAchievements();
+        }
+        function renderPalFilters(seasons, games) {
+            const el = document.getElementById('achievements-filters');
+            if (!el) return;
+            const en = currentLang === 'en';
+            const chip = (kind, val, label, active) => `<button type="button" data-kind="${kind}" data-val="${escapeHtml(val)}" onclick="setPalFilter(this.dataset.kind,this.dataset.val)" class="filter-btn${active ? ' active' : ''}">${escapeHtml(label)}</button>`;
+            const rows = [];
+            if (seasons.length) rows.push(`<div class="pal-filter-row"><span class="pal-filter-lab">${en ? 'Season' : 'Saison'}</span><div class="flex flex-wrap gap-2">${chip('season', 'Tous', en ? 'All seasons' : 'Toutes les saisons', palFilters.season === 'Tous')}${seasons.map(s => chip('season', s, s, palSeasonKey(s) === palSeasonKey(palFilters.season))).join('')}</div></div>`);
+            if (games.length > 1) rows.push(`<div class="pal-filter-row"><span class="pal-filter-lab">${en ? 'Game' : 'Jeu'}</span><div class="flex flex-wrap gap-2">${chip('game', 'Tous', en ? 'All games' : 'Tous les jeux', palFilters.game === 'Tous')}${games.map(g => chip('game', g, g, g === palFilters.game)).join('')}</div></div>`);
+            el.innerHTML = rows.join('');
+        }
+
         // RÉSULTATS & PALMARÈS — BASCULE FRONT-END
         let palmaresView = 'resultats';
         function setPalmaresView(view) {
@@ -8354,10 +8425,14 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
             const resultsContainer = document.getElementById('palmares-container');
             const achievementsContainer = document.getElementById('achievements-container');
             const achievementsStats = document.getElementById('achievements-stats');
+            const achievementsFilters = document.getElementById('achievements-filters');
+            const achievementsInsights = document.getElementById('achievements-insights');
             const filters = document.getElementById('filters-palmares');
             if (resultsContainer) resultsContainer.classList.toggle('hidden', palmaresView !== 'resultats');
             if (achievementsContainer) achievementsContainer.classList.toggle('hidden', palmaresView !== 'palmares');
             if (achievementsStats) achievementsStats.classList.toggle('hidden', palmaresView !== 'palmares');
+            if (achievementsFilters) achievementsFilters.classList.toggle('hidden', palmaresView !== 'palmares');
+            if (achievementsInsights) achievementsInsights.classList.toggle('hidden', palmaresView !== 'palmares');
             if (filters) filters.classList.toggle('hidden', palmaresView !== 'resultats');
             if (palmaresView === 'resultats') renderPalmares();
             else renderAchievements();
@@ -8378,28 +8453,45 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
             const container = document.getElementById('achievements-container');
             if (!container) return;
             const stats = document.getElementById('achievements-stats');
-            const results = (Array.isArray(globalPalmares) ? globalPalmares : []).filter(p => !(isRLHidden('palmares') && p.game === 'Rocket League'));
+            const allResults = (Array.isArray(globalPalmares) ? globalPalmares : []).filter(p => !(isRLHidden('palmares') && p.game === 'Rocket League'));
+            // Filtres saison / jeu : toutes les statistiques ci-dessous se recalculent sur la sélection.
+            const seasonList = getPalmSeasons(allResults);
+            const gameList = [...new Set(allResults.map(p => p.game).filter(Boolean))];
+            if (palFilters.season !== 'Tous' && !seasonList.some(s => palSeasonKey(s) === palSeasonKey(palFilters.season))) palFilters.season = 'Tous';
+            if (palFilters.game !== 'Tous' && !gameList.includes(palFilters.game)) palFilters.game = 'Tous';
+            const results = allResults.filter(p => (palFilters.season === 'Tous' || palSeasonKey(p.season) === palSeasonKey(palFilters.season)) && (palFilters.game === 'Tous' || p.game === palFilters.game));
+            renderPalFilters(seasonList, gameList);
             const simRes = p => p.game === 'Rocket League' ? [p] : getSimracingResults(p);
             const details = p => [p.position,p.result,p.title,p.description,p.split,p.category,...simRes(p).flatMap(r => [r.position, r.split])].filter(Boolean).join(' ').toLowerCase();
             const position = p => { const raw=String(p.position||p.result||'').trim().toLowerCase(); const m=raw.match(/^p?\s*(\d+)/)||raw.match(/(\d+)\s*(?:er|e|ème|eme)/); return m?Number(m[1]):null; };
             const top5=results.filter(p=>simRes(p).some(r=>{const n=position(r);return n!==null&&n<=5;})||/top\s*5|top\s*cinq/.test(details(p))).length;
             const podiums=results.filter(p=>simRes(p).some(r=>{const n=position(r);return n!==null&&n<=3;})||/podium|top\s*3/.test(details(p))).length;
             const poles=results.filter(p=>simRes(p).some(r=>r.polePosition === true)||/pole\s*position/.test(details(p))).length;
+            // Victoires et abandons : comptés par engagement (chaque pilote/équipage d'une publication), pas par publication.
+            const entries = results.flatMap(simRes);
+            const isWin = r => position(r) === 1 || String(r.result || '').trim().toLowerCase() === 'victoire';
+            const isDnf = r => /^\s*(dnf|abd|abandon)/i.test(String(r.position || r.result || ''));
+            const wins = entries.filter(isWin).length, dnfs = entries.filter(isDnf).length;
+            const pctE = n => entries.length ? Math.round(n / entries.length * 100) : 0;
             const EN = currentLang==='en';
             const ICO = {
                 flag:'<path d="M5 21V4"/><path d="M5 4h13l-2.5 4 2.5 4H5"/>',
                 trophy:'<path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/>',
                 medal:'<path d="M8 3l4 7 4-7"/><circle cx="12" cy="15" r="5"/><path d="M12 13v4M10.5 14.2L12 13"/>',
-                bolt:'<path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/>'
+                bolt:'<path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/>',
+                crown:'<path d="M3 8l4 4 5-7 5 7 4-4-2 11H5L3 8z"/>',
+                dnf:'<circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/>'
             };
             const svg = k => `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICO[k]}</svg>`;
             const pct = n => results.length ? Math.round(n / results.length * 100) : 0;
             const ofRes = EN ? 'of results' : 'des résultats';
             const statCards = [
-                {v:results.length, l:EN?'Results logged':'Résultats enregistrés', s:EN?'All disciplines':'Toutes disciplines', i:'flag', p:100},
+                {v:results.length, l:EN?'Results logged':'Résultats enregistrés', s:[palFilters.season !== 'Tous' ? palFilters.season : '', palFilters.game !== 'Tous' ? palFilters.game : ''].filter(Boolean).join(' · ') || (EN?'All disciplines':'Toutes disciplines'), i:'flag', p:100},
+                {v:wins, l:EN?'Wins':'Victoires', s:`${pctE(wins)} % ${EN?'of entries':'des engagements'}`, i:'crown', p:pctE(wins)},
                 {v:top5, l:'Top 5', s:`${pct(top5)} % ${ofRes}`, i:'trophy', p:pct(top5)},
                 {v:podiums, l:'Podiums', s:`${pct(podiums)} % ${ofRes}`, i:'medal', p:pct(podiums)},
-                {v:poles, l:'Pole positions', s:`${pct(poles)} % ${ofRes}`, i:'bolt', p:pct(poles)}
+                {v:poles, l:'Pole positions', s:`${pct(poles)} % ${ofRes}`, i:'bolt', p:pct(poles)},
+                {v:dnfs, l:'DNF', s:`${pctE(dnfs)} % ${EN?'of entries':'des engagements'}`, i:'dnf', p:pctE(dnfs)}
             ];
             if (stats) {
                 const sig = statCards.map(c => c.v).join('-') + currentLang;
@@ -8414,6 +8506,45 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
                         <span class="pal-stat-bar"><i></i></span>
                     </div>`).join('');
                 if (!same) animatePalCounters(stats);
+            }
+            // Dernière victoire (cliquable) + répartition par catégorie / voiture
+            const ins = document.getElementById('achievements-insights');
+            if (ins) {
+                const lw = sortByDateDesc([...results]).find(p => simRes(p).some(isWin));
+                let lastWinHTML = '';
+                if (lw) {
+                    const lines = simRes(lw).filter(isWin).map(r => [r.driver, r.split, r.car].filter(Boolean).join(' · ')).filter(Boolean);
+                    lastWinHTML = `<button type="button" class="pal-lastwin" onclick="openPalmaresArticle('${escapeHtml(lw.id)}')">
+                        <span class="pal-lastwin-ico">${svg('crown')}</span>
+                        <span class="pal-lastwin-body">
+                            <span class="pal-stat-lab">${EN ? 'Latest win' : 'Dernière victoire'}</span>
+                            <span class="pal-lastwin-title">${escapeHtml(lw.title || (EN ? 'Result' : 'Résultat'))}</span>
+                            <span class="pal-lastwin-meta">${escapeHtml([lw.date, lw.game, lw.season].filter(Boolean).join(' · '))}</span>
+                            ${lines.map(l => `<span class="pal-lastwin-meta">${escapeHtml(l)}</span>`).join('')}
+                        </span>
+                        <span class="pal-lastwin-cta">${EN ? 'Open article' : 'Voir l’article'} →</span>
+                    </button>`;
+                } else if (entries.length) {
+                    lastWinHTML = `<div class="pal-lastwin pal-lastwin-none"><span class="pal-lastwin-ico">${svg('crown')}</span><span class="pal-lastwin-body"><span class="pal-stat-lab">${EN ? 'Latest win' : 'Dernière victoire'}</span><span class="pal-lastwin-meta">${EN ? 'No win recorded for this selection.' : 'Aucune victoire enregistrée pour cette sélection.'}</span></span></div>`;
+                }
+                const groupBy = field => {
+                    const map = new Map();
+                    entries.forEach(r => {
+                        const label = String(r[field] ?? '').trim(), key = palNormKey(label);
+                        if (!key) return;
+                        let g = map.get(key); if (!g) { g = { label, n: 0, w: 0, pod: 0, dnf: 0 }; map.set(key, g); }
+                        g.n++; if (isWin(r)) g.w++;
+                        const pn = position(r); if (pn !== null && pn <= 3) g.pod++;
+                        if (isDnf(r)) g.dnf++;
+                    });
+                    return [...map.values()].sort((a, b) => b.w - a.w || b.n - a.n || a.label.localeCompare(b.label));
+                };
+                const panel = (title, rows) => {
+                    if (!rows.length) return '';
+                    const maxW = Math.max(...rows.map(g => g.w));
+                    return `<section class="pal-panel"><div class="pal-stat-lab">${title}</div>${rows.map(g => `<div class="pal-row" style="--p:${maxW ? Math.round(g.w / maxW * 100) : 0}%"><div class="pal-row-top"><span class="pal-row-name">${escapeHtml(g.label)}</span><span class="pal-row-win"><b>${g.w}</b>${EN ? (g.w > 1 ? 'wins' : 'win') : (g.w > 1 ? 'victoires' : 'victoire')}</span></div><div class="pal-row-sub">${g.n} ${EN ? (g.n > 1 ? 'entries' : 'entry') : (g.n > 1 ? 'engagements' : 'engagement')} · ${g.pod} podium${g.pod > 1 ? 's' : ''} · ${g.dnf} DNF</div><span class="pal-row-bar"><i></i></span></div>`).join('')}</section>`;
+                };
+                ins.innerHTML = lastWinHTML + panel(EN ? 'By category' : 'Par catégorie', groupBy('split')) + panel(EN ? 'By car' : 'Par voiture', groupBy('car'));
             }
             const items = [...(globalAchievements || [])].sort((a,b) => {
                 const ao = Number(a.order ?? 999999), bo = Number(b.order ?? 999999);
@@ -9970,7 +10101,8 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
             const sortedAdminEffectifs = [...globalEffectifs].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
             updateEffectifSyncControl();
             document.getElementById('admin-list-effectifs').innerHTML = sortedAdminEffectifs.map((r, idx) => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center effectif-row" draggable="true" data-id="${r.id}" ondragstart="dragEffectifStart(event)" ondragend="dragEffectifEnd(event)" ondragover="dragEffectifOver(event)" ondrop="dropEffectif(event)"><div class="flex items-center gap-2"><div class="effectif-drag-handle cursor-grab active:cursor-grabbing text-gray-500 hover:text-white transition px-1" title="Glisser pour réordonner"><svg width="10" height="16" viewBox="0 0 10 16" fill="currentColor"><circle cx="2" cy="2" r="1.5"/><circle cx="8" cy="2" r="1.5"/><circle cx="2" cy="8" r="1.5"/><circle cx="8" cy="8" r="1.5"/><circle cx="2" cy="14" r="1.5"/><circle cx="8" cy="14" r="1.5"/></svg></div><div class="flex flex-col gap-1"><button onclick="moveEffectif('${r.id}', -1)" ${idx === 0 ? 'disabled' : ''} class="w-6 h-6 flex items-center justify-center rounded-md bg-white/10 hover:bg-aerix-purple text-white text-xs transition disabled:opacity-20 disabled:cursor-not-allowed" title="Monter">▲</button><button onclick="moveEffectif('${r.id}', 1)" ${idx === sortedAdminEffectifs.length - 1 ? 'disabled' : ''} class="w-6 h-6 flex items-center justify-center rounded-md bg-white/10 hover:bg-aerix-purple text-white text-xs transition disabled:opacity-20 disabled:cursor-not-allowed" title="Descendre">▼</button></div><div><div class="text-white font-bold text-sm flex items-center gap-2">${r.name} <span class="bg-white/10 text-[9px] px-2 py-0.5 rounded-full">${r.players?.length||0} j.</span></div><div class="text-xs text-gray-500">${r.game || 'Général'}</div></div></div><div class="flex gap-2"><button onclick="startEditEffectif('${r.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('effectifs', '${r.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
-            document.getElementById('admin-list-palmares').innerHTML = sortByDateDesc(globalPalmares).map(p => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm truncate max-w-[150px]">${p.title}</div><div class="text-xs text-gray-500">${p.game || 'Général'}</div></div><div class="flex gap-2"><button onclick="startEditPalmares('${p.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('palmares', '${p.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
+            refreshPalmSeasonOptions();
+            document.getElementById('admin-list-palmares').innerHTML = sortByDateDesc(globalPalmares).map(p => `<div class="glass-panel p-4 rounded-xl flex justify-between items-center"><div><div class="text-white font-bold text-sm truncate max-w-[150px]">${p.title}</div><div class="text-xs text-gray-500">${p.game || 'Général'}${p.season ? ' · ' + escapeHtml(p.season) : ''}</div></div><div class="flex gap-2"><button onclick="startEditPalmares('${p.id}')" class="text-white text-xs bg-white/10 hover:bg-aerix-purple px-3 py-1.5 rounded-lg transition">Éditer</button><button onclick="deleteItem('palmares', '${p.id}')" class="text-red-400 text-xs bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition">Suppr</button></div></div>`).join('');
             const eventsEl = document.getElementById('admin-list-evenements');
             if (eventsEl) {
                 const sortedEvents = [...(globalEvents || [])].sort((a, b) => parseAERIXDate(a.datetime || a.date || '') - parseAERIXDate(b.datetime || b.date || ''));
@@ -10483,6 +10615,36 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
         // Première ligne prête dès l'ouverture de l'administration.
         setPalmResultRows([{}]);
 
+        // --- SAISON D'UNE PUBLICATION (liste déduite des publications + création d'une nouvelle saison) ---
+        function refreshPalmSeasonOptions(selected) {
+            const sel = document.getElementById('add-palm-season');
+            if (!sel) return;
+            const inp = document.getElementById('add-palm-season-new');
+            const current = selected === undefined ? sel.value : selected;
+            const cur = String(current || '').trim();
+            const seasons = getPalmSeasons();
+            if (cur && cur !== '__new__' && !seasons.some(s => palSeasonKey(s) === palSeasonKey(cur))) seasons.unshift(cur);
+            sel.innerHTML = '<option value="">Aucune saison</option>' + seasons.map(s => `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join('') + '<option value="__new__">➕ Créer une nouvelle saison…</option>';
+            const match = seasons.find(s => palSeasonKey(s) === palSeasonKey(cur));
+            sel.value = current === '__new__' ? '__new__' : (match || '');
+            if (inp) { inp.classList.toggle('hidden', sel.value !== '__new__'); if (sel.value !== '__new__') inp.value = ''; }
+        }
+        function onPalmSeasonChange() {
+            const sel = document.getElementById('add-palm-season'), inp = document.getElementById('add-palm-season-new');
+            if (!sel || !inp) return;
+            inp.classList.toggle('hidden', sel.value !== '__new__');
+            if (sel.value === '__new__') inp.focus(); else inp.value = '';
+        }
+        // '' = sans saison ; null = « nouvelle saison » choisie mais nom vide
+        function getPalmSeasonValue() {
+            const sel = document.getElementById('add-palm-season');
+            if (!sel) return '';
+            if (sel.value !== '__new__') return sel.value;
+            const typed = (document.getElementById('add-palm-season-new')?.value || '').trim().replace(/\s+/g, ' ').slice(0, 40);
+            if (!typed) return null;
+            return getPalmSeasons().find(s => palSeasonKey(s) === palSeasonKey(typed)) || typed;
+        }
+
         // --- EDITION PALMARÈS (DYNAMIQUE RL / SIMRACING) ---
         function togglePalmaresFields() {
             document.getElementById('palm-fields-sim')?.classList.remove('hidden');
@@ -10505,6 +10667,7 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
             const legacyResults = getSimracingResults(item);
             setPalmResultRows(legacyResults);
             aerixImgSetLoad('palm', item);
+            refreshPalmSeasonOptions(item.season || '');
             document.getElementById('palmares-form-title').innerText = 'Modifier la publication';
             document.getElementById('palmares-cancel-btn').classList.remove('hidden');
         }
@@ -10514,6 +10677,7 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
             document.getElementById('add-palm-title').value = '';
             document.getElementById('add-palm-date').value = '';
             document.getElementById('add-palm-game').value = 'Le Mans Ultimate';
+            refreshPalmSeasonOptions('');
             const legacyOption = [...document.getElementById('add-palm-game').options].find(o => o.value === 'Rocket League'); if (legacyOption) legacyOption.remove();
             setPalmResultRows([{}]);
             setMdEditorValue('add-palm-desc', '');
@@ -10526,9 +10690,11 @@ Division : ${division}\nPseudo : ${pseudo}\nNiveau : ${rank || 'Non précisé'}\
         async function savePalmares() {
             const id = document.getElementById('edit-palmares-id').value, title = document.getElementById('add-palm-title').value, date = document.getElementById('add-palm-date').value, game = document.getElementById('add-palm-game').value;
             if(!title) return showToast('Titre/Compétition obligatoire.', 'error');
+            const season = getPalmSeasonValue();
+            if (season === null) return showToast('Saisis le nom de la nouvelle saison.', 'error');
             const desc = document.getElementById('add-palm-desc').value.trim();
             const __pimgs = await aerixImgSetOptimized('palm'); if (!__pimgs) return;
-            let data = { title, date, game, image: __pimgs.image, images: __pimgs.images, desc, descFormat: 'md' };
+            let data = { title, date, game, season, image: __pimgs.image, images: __pimgs.images, desc, descFormat: 'md' };
             if (game !== 'Rocket League') {
                 const results = getPalmResultRows();
                 if (!results.length) return showToast('Ajoute au moins un résultat.', 'error');
