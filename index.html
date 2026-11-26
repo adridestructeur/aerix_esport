@@ -6342,6 +6342,14 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
         
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
+        // Cache local (IndexedDB) : les images sont stockées dans les documents Firestore ; sans cache elles étaient
+        // retéléchargées à chaque visite. Avec le cache, les visites suivantes s'affichent depuis l'appareil
+        // (puis se mettent à jour en direct). Sans risque : si le navigateur ne le permet pas, le site fonctionne comme avant.
+        try {
+            if (typeof db.enablePersistence === 'function') {
+                db.enablePersistence({ synchronizeTabs: true }).catch(err => console.info('Cache Firestore local indisponible :', err && err.code));
+            }
+        } catch (e) { console.info('Cache Firestore local indisponible', e); }
         const auth = firebase.auth();
 
         // Firebase Auth : conserver la session du compte entre les visites.
@@ -7499,7 +7507,23 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
         }
 
         // INITIALISATION BDD
+        // Les résultats contiennent des images : on les charge EN PREMIER quand le visiteur arrive sur Résultats / Compétition
+        // (sinon ils attendaient derrière la boutique, les effectifs, etc.). L'écouteur n'est lancé qu'une seule fois.
+        let __palmaresListening = false;
+        function listenPalmares() {
+            if (__palmaresListening) return;
+            __palmaresListening = true;
+            db.collection("palmares").onSnapshot((snapshot) => { globalPalmares = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); savePublicCollectionCache("palmares", globalPalmares); scheduleRender(renderPalmares); scheduleRender(renderAchievements); renderCompetitionPage(); renderPerformancePage(); scheduleAdminRender(); }, (e) => console.error('palmares', e));
+        }
+        function aerixLandingPage() {
+            try {
+                const route = aerixRouteFromPath();
+                if (route && route.isRoute) return route.pageId;
+                return ((window.location.hash || '').slice(1).split('/')[0]) || 'home';
+            } catch (e) { return 'home'; }
+        }
         function startSync() {
+            if (['palmares', 'competition'].includes(aerixLandingPage())) listenPalmares();
             subscribeTournament();
             db.collection('siteConfig').doc('public').onSnapshot(snapshot => {
                 currentSiteSettings = snapshot.exists ? { ...DEFAULT_SITE_SETTINGS, ...snapshot.data() } : { ...DEFAULT_SITE_SETTINGS };
@@ -7522,7 +7546,7 @@ body.theme-light #page-palmares #achievements-container > .pal-card,body.theme-w
                 scheduleRender(renderEffectifs);
                 scheduleAdminRender();
             }, (e) => { console.warn('playerCards indisponibles (vérifier les règles Firestore)', e); globalPlayerCards = []; scheduleRender(renderEffectifs); scheduleAdminRender(); });
-            db.collection("palmares").onSnapshot((snapshot) => { globalPalmares = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); savePublicCollectionCache("palmares", globalPalmares); scheduleRender(renderPalmares); scheduleRender(renderAchievements); renderCompetitionPage(); renderPerformancePage(); scheduleAdminRender(); }, (e) => console.error('palmares', e));
+            listenPalmares();
             db.collection("achievements").onSnapshot((snapshot) => { globalAchievements = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); savePublicCollectionCache("achievements", globalAchievements); scheduleRender(renderAchievements); scheduleAdminRender(); }, () => { globalAchievements = []; scheduleRender(renderAchievements); scheduleAdminRender(); });
             db.collection("annonces").onSnapshot((snapshot) => { globalAnnonces = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); globalAnnonces = sortByDateDesc(globalAnnonces); savePublicCollectionCache("annonces", globalAnnonces); scheduleRender(renderAnnonces); renderMediaPage(); scheduleAdminRender(); }, error => { globalAnnonces = []; db.collection("annonces").get().then(s => { globalAnnonces = s.docs.map(doc => ({ id: doc.id, ...doc.data() })); globalAnnonces = sortByDateDesc(globalAnnonces); savePublicCollectionCache("annonces", globalAnnonces); scheduleRender(renderAnnonces); scheduleAdminRender(); }).catch(e => console.error('annonces fallback', e)); });
             db.collection("partners").onSnapshot((snapshot) => { globalPartners = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); savePublicCollectionCache("partners", globalPartners); scheduleRender(renderPartners); scheduleRender(renderPartnersMarquee); scheduleAdminRender(); }, (e) => console.error('partners', e));
